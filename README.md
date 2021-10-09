@@ -1,2 +1,2 @@
 # mfunsPlayer
-just a normal videoPlayer with danmaku
+Mfuns的PC端播放器
