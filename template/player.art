@@ -1,0 +1,150 @@
+
+<div class="mfunsPlayer-video-wrap">
+    <div class="mfunsPlayer-mask">
+        <div class="mfunsPlayer-menu">
+            {{ each contextmenu }}
+                <div class="mfunsPlayer-menu-item">
+                    <a{{ if $value.link }} target="_blank"{{ /if }} href="{{ $value.link || 'javascript:void(0);' }}">{{ $value.text }}</a>
+                </div>
+            {{ /each }}
+        </div>
+    </div>
+    <div class="mfunsPlayer-headBar">
+        <div class="mfunsPlayer-headBar-title">{{video[0].title}}</div>
+    </div>
+    <div class="mfunsPlayer-loading">
+        <div></div>
+        <p>正在缓冲...</p>
+    </div>
+    <div class="mfunsPlayer-danmaku"{{ if danmaku && danmaku.bottm }} style="margin:{{ danmaku.bottm }}px 0"{{ /if }}>
+        <div class="mfunsPlayer-danmaku-item mfunsPlayer-danmaku-item--demo"></div>
+    </div>
+    <div class="mfunsPlayer-video-mask">
+        {{ include './video.art' video[currentVideo] }}
+    </div>
+    
+    <div class="mfunsPlayer-notice" ></div>
+    <div class="voice"></div>
+    
+    <div class="advanceDanmaku_pre_box"></div>
+    
+
+    
+<div class="mfunsPlayer-controller-mask">
+    <div  class="mfunsPlayer-bezel" ></div>
+
+    <div class="mfunsPlayer-controller">
+        <div class="mfunsPlayer-bar-wrap" >
+         <div class="mfunsPlayer-bar" >
+            <div class="mfunsPlayer-barTime hidden"></div>
+            <div class="mfunsPlayer-preview"></div>
+            <div class="mfunsPlayer-bufferedBar" ></div>
+            <div class="mfunsPlayer-playedBar" >
+                <div class="mfunsPlayer-thumb hidden" ></div>
+            </div>
+          </div>
+        </div>	
+        <div class="mfunsPlayer-controller-wrap ">
+            <div class="mfunsPlayer-controller-left">
+                
+                <div class="player_btn"><div class="icon_pause"></div></div>
+                {{ if video.length > 1}}
+                <div class="mfunsPlayer-controller-skip">
+                    <div class="mfunsPlayer-controller-tip">下一话</div>
+                </div>
+                {{ /if }}
+                <span class="currentTime"></span>
+                <span class="total"></span>
+            </div>
+            
+            
+           
+            <div class="mfunsPlayer-controller-right">
+               {{if video.length>1}}
+                <div class="mfunsPlayer-squirtle">
+                    <div class="mfunsPlayer-squirtle-info">选集</div>
+                    <div class="mfunsPlayer-squirtle-mask">
+                        <div class="mfunsPlayer-squirtle-list">
+                            {{ each video }}
+                            <div class="mfunsPlayer-squirtle-item">{{ $value.title }}</div>
+                            {{ /each }}
+                        </div>
+                    </div>
+                </div>
+                {{ /if }}
+                <div class="mfunsPlayer-speed">
+                    <div class="mfunsPlayer-speed-info">倍速</div>
+                    <div class="mfunsPlayer-speed-mask">
+                        <div class="mfunsPlayer-speed-list">
+                            <div class="mfunsPlayer-speed-item" data-speed="2.0">2.0x</div>
+                            <div class="mfunsPlayer-speed-item" data-speed="1.5">1.5x</div>
+                            <div class="mfunsPlayer-speed-item" data-speed="1.25">1.25x</div>
+                            <div class="mfunsPlayer-speed-item focus" data-speed="1.0">1.0x</div>
+                            <div class="mfunsPlayer-speed-item" data-speed="0.75">0.75x</div>
+                            <div class="mfunsPlayer-speed-item" data-speed="0.5">0.5x</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mfunsPlayer-controller-volume right_icon">
+                    <div class="mfunsPlayer-controller-volume-mask">
+                         <div class="mfunsPlayer-controller-volume-wrap">
+                        <div class="mfunsPlayer-controller-volume-num"></div>
+                        <div class="mfunsPlayer-controller-volume-bar">
+                           <div class="mfunsPlayer-controller-volume-full">
+                               <div class="mfunsPlayer-controller-volume-dot"></div>
+                               <div class="mfunsPlayer-controller-volume-percentage"></div>
+                           </div> 
+                        </div>
+                    </div>
+                    </div>
+                    <i class="mfunsPlayer-controller-volume-icon"></i>
+                </div>
+                <div class="mfunsPlayer-controller-set right_icon" >
+                    <i class="mfunsPlayer-controller-set-icon"></i>
+                </div>
+                {{ if !isFireFox  }} 
+                <div class="mfunsPlayer-controller-troggle right_icon">
+                    <i class="mfunsPlayer-controller-troggle-icon"></i>
+                    <div class="mfunsPlayer-controller-tip">画中画</div>
+                </div>
+                {{ /if }}
+                <div class="mfunsPlayer-controller-web-full right_icon" >
+                    <i class="mfunsPlayer-controller-web-full-icon" ></i>
+                    <div class="mfunsPlayer-controller-tip">网页全屏</div>
+                </div>
+                <div class="mfunsPlayer-controller-full right_icon" >
+                    <i class="mfunsPlayer-controller-full-icon" ></i>
+                    <div class="mfunsPlayer-controller-tip">进入全屏</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+ {{ if danmaku.api }}   
+<div class="mfunsPlayer-footBar">
+    <div class="mfunsPlayer-video-danmaku-details">
+        <div class="mfunsPlayer-video-danmaku-count">共 0 条弹幕</div>
+        <!-- <div> <a href="">高级弹幕></a></div> -->
+    </div>
+    <div class="mfunsPlayer-video-danmaku-root">
+        {{ if danmaku.showDanmaku }} 
+        <div class="mfunsPlayer-video-danmaku-button open"></div>
+         {{ else }}
+         <div class="mfunsPlayer-video-danmaku-button close"></div>
+        {{ /if }}
+        
+        
+    <div class="mfunsPlayer-video-danmaku-set"></div>
+     <div class="input_box">
+        <input type="text" autocompleted="new-password"  placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
+        <div class="danmaku_style">A</div>
+        <div class="emit">发送</div>
+    </div>
+    </div>
+</div>
+{{ /if }}
+
+</div>

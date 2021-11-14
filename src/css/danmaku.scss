@@ -1,0 +1,72 @@
+.mfunsPlayer-danmaku {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    font-size: 22px;
+    color: #fff;
+    z-index: 102;
+}
+@media screen and (max-width: 600px) {
+    .mfunsPlayer-danmaku {
+       font-size:14px;
+    }
+}
+.mfunsPlayer-danmaku-top,
+    .mfunsPlayer-danmaku-bottom {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        visibility: hidden;
+        white-space: pre;
+    }
+.mfunsPlayer-danmaku-top.mfunsPlayer-danmaku-move,
+.mfunsPlayer-danmaku-bottom.mfunsPlayer-danmaku-move{
+            will-change: visibility;
+            animation: danmaku-center 4s linear;
+            animation-play-state: paused;
+    }
+.mfunsPlayer-danmaku-top.mfunsPlayer-danmaku-move,
+.mfunsPlayer-danmaku-bottom.mfunsPlayer-danmaku-move.mfunsPlayer-danmaku-run{
+            animation-play-state: running;
+    }
+.mfunsPlayer-danmaku-item {
+    display: inline-block;
+    pointer-events: none;
+    user-select: none;
+    cursor: default;
+    white-space: pre;
+    font-weight: 600;
+    font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+    text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+}
+.mfunsPlayer-danmaku--demo {
+    position: absolute;
+    visibility: hidden;
+}
+.mfunsPlayer-danmaku-right {
+    position: absolute;
+    right: 0;
+    white-space: pre;
+    transform: translateX(100%);
+}
+.mfunsPlayer-danmaku-right.mfunsPlayer-danmaku-move {
+        will-change: transform;
+        animation: danmaku 5s linear;
+        animation-play-state: paused;
+}
+
+@keyframes danmaku {
+        from {
+            transform: translateX(100%);
+        }
+    }
+@keyframes danmaku-center {
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}

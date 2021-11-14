@@ -1,0 +1,160 @@
+.danmakuEditor {
+	width: 180px;
+	height: 150px;
+	background: #333;
+	position: absolute;
+	z-index: 99999;
+	border-radius: 4px;
+	display: none;
+}
+
+.danmaku_type {
+	overflow: hidden;
+	width: 150px;
+	height: 20px;
+	margin: 20px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #fff;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+.danmaku_type div{
+	width: 50px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	font-size: 13px;
+	border-right: 1px solid #fff;
+	color: #fff;
+	overflow: hidden;
+}
+
+.danmaku_type .focus {
+	color: #000;
+	background: #f6f6f6;
+}
+
+.danmaku_type :last-child {
+	border: none;
+}
+
+.danmaku_color {
+	width: 85%;
+	height: 80px;
+	margin: 20px auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	cursor: pointer;
+}
+
+.danmaku_color i {
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+	background: #fff;
+	border-radius: 50%;
+	border: 2px solid .333;
+}
+
+.danmaku_color :nth-child(5n) {
+	margin-right: 0;
+}
+
+.danmaku_color .focus {
+	border: 2px solid #f5f5f5;
+}
+.advanceDanmakuEditor_mask{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9998;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+	display: none;
+	
+}
+.advanceDanmakuEditor{
+	width: 80%;
+	height: 80%;
+	margin: 3% auto;
+	background: #333;
+	border-radius: 2px;
+	position: relative;
+	padding: 2%;
+	border:1px solid .555;
+	animation: down 0.35s;
+}
+.danmuku_link{
+	height: 30px;
+	margin:2% 0 0 3%;
+}
+.danmuku_link a{
+	color: #7B7FF7;
+}
+.exit_edit{
+	position: absolute;
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	top: 0;
+	right: 0;
+	font-size: 20px;
+	cursor: pointer;
+	color: #fff;
+}
+.exit_edit:hover{
+	color: red;
+}
+.editor_title{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 3%;
+	font-weight: 600;
+	color: #fff;
+}
+#danmaku_code{
+	width: 94%;
+	height: 78%;
+	border: 1px solid .000;
+	margin: 0 auto;
+}
+.editor_footer{
+	width: 94%;
+    margin: 1% auto;	
+	
+}
+/* .btn_box{
+	width: 40%;
+	height: 20px;
+} */
+.editor_btn{
+	margin-left: 10px;
+	width: 40px;
+	height: 20px;
+	float: right;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 14px;
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	
+}
+
+.editor_clear{
+  background: #EB2626;	
+}
+.editor_preview{
+  background: #74D064;
+}
+.editor_emit{
+ background: #7B7FF7;
+}
