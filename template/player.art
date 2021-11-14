@@ -90,10 +90,7 @@
                          <div class="mfunsPlayer-controller-volume-wrap">
                         <div class="mfunsPlayer-controller-volume-num"></div>
                         <div class="mfunsPlayer-controller-volume-bar">
-                           <div class="mfunsPlayer-controller-volume-full">
-                               <div class="mfunsPlayer-controller-volume-dot"></div>
-                               <div class="mfunsPlayer-controller-volume-percentage"></div>
-                           </div> 
+                            {{ include './slider-vertical.art' }}
                         </div>
                     </div>
                     </div>

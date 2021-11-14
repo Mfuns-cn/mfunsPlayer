@@ -1,3 +1,4 @@
+import { Slider, Slider_vertical } from "../../../componentsTest/components";
 import utils from "./utils";
 // import Thumbnails from './thumbnails';
 // import Icons from './icons';
@@ -6,6 +7,7 @@ class Controller {
   constructor(player) {
     this.player = player;
     this.template = player.template;
+    this.components = player.components;
     this.video = player.video;
     this.autoHideTimer = null;
     this.volumeHideTimer = null;
@@ -161,13 +163,13 @@ class Controller {
   }
   initSpeedButton() {
     for (let i = 0; i < this.player.template.speedItem.length; i++) {
-      this.player.template.speedItem[i].addEventListener("click", () => {
+      this.template.speedItem[i].addEventListener("click", () => {
         const currentSpeed = this.player.template.speedItem[i].dataset.speed;
         this.player.speed(currentSpeed);
-        this.player.template.speedItem[i].classList.add("focus");
-        this.player.template.speedInfo.innerHTML = currentSpeed !== "1.0" ? currentSpeed + "x" : "倍速";
+        this.template.speedItem[i].classList.add("focus");
+        this.template.speedInfo.innerHTML = currentSpeed !== "1.0" ? currentSpeed + "x" : "倍速";
 
-        this.player.template.speedItem.forEach((element, index) => {
+        this.template.speedItem.forEach((element, index) => {
           if (index !== i) {
             element.classList.remove("focus");
           }
@@ -176,12 +178,30 @@ class Controller {
     }
   }
   initVolumeButton() {
-    const vHeight = 60;
-
+    const THIS = this
+    this.components.volumeSlider = new Slider_vertical(this.template.volumeBar, 0, 100, 1, this.player.options.volume * 100,{
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.volumeMask.classList.add("show");
+      },
+      change(value) {   // 更改进度条值，不修改绑定数据
+        THIS.template.volumeNum.innerText = Math.round(value)
+      },
+      update(value) {   // 更改进度条值，修改绑定数据
+        THIS.video.volume = value * 0.01
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.volumeMask.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.volumeMask.classList.remove("show");
+      }
+    } )
+    /*
     const volumeMove = (event) => {
       const e = event || window.event;
-      this.isControl = true;
-      this.player.template.volumeMask.classList.add("show");
       let rg = (e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar);
       const percentage = (vHeight - rg) / vHeight;
       this.player.volume(percentage);
@@ -192,11 +212,6 @@ class Controller {
       this.player.template.volumeMask.classList.remove("show");
       document.removeEventListener(utils.nameMap.dragEnd, volumeUp);
       document.removeEventListener(utils.nameMap.dragMove, volumeMove);
-      if (!this.player.template.volumeMask.classList.contains("show")) {
-        setTimeout(() => {
-          this.isControl = false;
-        }, 150);
-      }
     };
     this.player.template.volumeBar.addEventListener("click", (event) => {
       const e = event || window.event;
@@ -207,7 +222,7 @@ class Controller {
     this.player.template.volumeBar.addEventListener(utils.nameMap.dragStart, (event) => {
       document.addEventListener(utils.nameMap.dragMove, volumeMove);
       document.addEventListener(utils.nameMap.dragEnd, volumeUp);
-    });
+    });*/
     this.player.template.volumeMask.addEventListener("click", (event) => {
       window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
     });
@@ -215,13 +230,11 @@ class Controller {
       if (this.player.video.muted) {
         this.player.video.muted = false;
         if (this.video.volume) this.player.template.volumeIcon.classList.remove("volume-icon-off");
-        this.player.bar.set("volume", this.video.volume - 0.2, "height");
-        this.template.volumeNum.innerHTML = `${(this.video.volume * 100).toFixed(0)}`;
+        this.components.volumeSlider.change(this.video.volume * 100);
       } else {
         this.player.video.muted = true;
         this.player.template.volumeIcon.classList.add("volume-icon-off");
-        this.player.bar.set("volume", 0, "height");
-        this.template.volumeNum.innerHTML = "0";
+        this.components.volumeSlider.change(0);
       }
     });
   }
