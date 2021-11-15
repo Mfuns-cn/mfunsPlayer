@@ -298,15 +298,13 @@
 								margin-bottom: 2px;
 							}
 							.mfunsPlayer-controller-volume-bar{
-								width: 30px;
-								margin: 0 auto;
+								width: 100%;
 								height: 60px;
 								position: relative;
-								display: flex;
-								.mfunsPlayer-controller-volume-full{
-									height: 60px;
-									width: 2px;
-									border-radius: 1.5px;
+								cursor: pointer;
+								.slider-track{
+									width: 4px;
+									border-radius: 2px;
 									background: #fff;
 									margin: 0 auto;
 									display: flex;
@@ -315,20 +313,21 @@
 									align-items: center;
 									cursor: pointer;
 								}
-								.mfunsPlayer-controller-volume-dot{
-									width: 12px;
-									height: 12px;
-									border-radius: 6px;
-									background: #00a1d6;
-									z-index: 2;
+								.slider-bar{
+									border-radius: 2px;
+									background: #0ba396;
 									cursor: pointer;
 								}
-								.mfunsPlayer-controller-volume-percentage{
-									width: 2px;
-									border-radius: 1.5px;
-									background: #0ba396;
-									margin: 0 auto;
-									cursor: pointer;
+								.slider-thumb-track{
+									position: relative;
+									height: calc(100% - 12px);
+								}
+								.slider-thumb{
+									width: 12px;
+									height: 12px;
+									border-radius: 100%;
+									background: #00a1d6;
+									z-index: 2;
 								}
 							}
 						}
