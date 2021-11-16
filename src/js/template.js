@@ -16,7 +16,6 @@ class Template {
     this.container.innerHTML = Player(options);
     const $ = this.container.querySelector.bind(this.container);
     const $all = this.container.querySelectorAll.bind(this.container);
-    // this.container = $(".mfunsPlayer");
     this.mask = $(".mfunsPlayer-mask");
     this.canvas = $(".mfuns_canvas");
     this.video = $(".mfunsPlayer-video");
@@ -25,9 +24,6 @@ class Template {
     this.emit = $(".emit");
     this.fullButton = $(".mfunsPlayer-controller-fullButton");
     this.danmakuRoot = $(".mfunsPlayer-video-danmaku-root");
-
-    // this.control_right = $(".control_right");
-    // this.emitTop = $(".top");
     this.menu = $(".mfunsPlayer-menu");
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
@@ -37,6 +33,7 @@ class Template {
     this.text = $(".mfunsPlayer-danmaku-text");
     this.color = $(".color");
     this.headBar = $(".mfunsPlayer-headBar");
+    this.headTitle = $(".mfunsPlayer-headBar-title");
     this.barWrap = $(".mfunsPlayer-bar-wrap");
     this.bar = $(".mfunsPlayer-bar");
     this.playedBar = $(".mfunsPlayer-playedBar");
@@ -47,6 +44,7 @@ class Template {
     this.tipItem = $all(".mfunsPlayer-controller-tip");
     this.speedInfo = $(".mfunsPlayer-speed-info");
     this.speedItem = $all(".mfunsPlayer-speed-item");
+    this.skip = $(".mfunsPlayer-controller-skip");
     this.squirtleItem = $all(".mfunsPlayer-squirtle-item");
     this.volume = $(".mfunsPlayer-controller-volume");
     this.volumeMask = $(".mfunsPlayer-controller-volume-mask");
@@ -67,7 +65,6 @@ class Template {
     this.footBar = $(".mfunsPlayer-footBar");
     this.loading = $(".mfunsPlayer-loading");
     this.load = $(".loader_box");
-    this.list_btn = $(".list_danmaku");
     this.troggle = $(".mfunsPlayer-controller-troggle");
     this.play_btn = $(".play_button");
     this.notice = $(".mfunsPlayer-notice");

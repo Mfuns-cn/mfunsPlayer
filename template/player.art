@@ -4,13 +4,13 @@
         <div class="mfunsPlayer-menu">
             {{ each contextmenu }}
                 <div class="mfunsPlayer-menu-item">
-                    <a{{ if $value.link }} target="_blank"{{ /if }} href="{{ $value.link || 'javascript:void(0);' }}">{{ $value.text }}</a>
+                    <a {{ if $value.link }} target="_blank"{{ /if }} href="{{ $value.link || 'javascript:void(0);' }}">{{ $value.text }}</a>
                 </div>
             {{ /each }}
         </div>
     </div>
     <div class="mfunsPlayer-headBar">
-        <div class="mfunsPlayer-headBar-title">{{video[0].title}}</div>
+        <div class="mfunsPlayer-headBar-title">{{video[currentVideo].title}}</div>
     </div>
     <div class="mfunsPlayer-loading">
         <div></div>

@@ -11,13 +11,16 @@ class Controller {
     this.volumeHideTimer = null;
     this.isSetVolume = false;
     this.isControl = false;
+    this.controlLeaved = false;
     this.clickFlag = 0;
     this.controllTimer = null;
     this.showDanmaku = player.showDanmaku;
     this.player.template.videoWrap.addEventListener("mousemove", () => {
       this.setAutoHide();
     });
-
+    this.player.template.controller.addEventListener("click", (event) => {
+      window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
+    });
     this.isControllerfocus();
     this.initPlayButton();
     if (player.options.dragable) {
@@ -30,22 +33,24 @@ class Controller {
     this.initFullButton();
     this.initTroggle();
     this.initSpeedButton();
+    this.initSquirtleButton();
   }
   isControllerfocus() {
     this.template.controller.onmouseenter = () => {
       this.isControl = true;
+      this.controlLeaved = false;
     };
     this.template.controller.onmouseleave = () => {
       this.isControl = false;
+      this.controlLeaved = true;
     };
   }
   initPlayButton() {
-    if (this.player.videoLoaded) {
-      this.template.videoWrap.addEventListener("click", () => this.handleClick());
-      this.template.player_btn.addEventListener("click", () => this.player.toggle());
-    }
+    this.template.videoWrap.addEventListener("click", () => this.handleClick());
+    this.template.player_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
+    console.log("click");
     if (!this.isControl && !this.player.isShowMenu) {
       this.player.toggle();
     } else {
@@ -68,7 +73,6 @@ class Controller {
 
     const thumbUp = (e) => {
       this.player.unableTimeupdate = false;
-
       document.removeEventListener(utils.nameMap.dragEnd, thumbUp);
       document.removeEventListener(utils.nameMap.dragMove, thumbMove);
       let percentage =
@@ -81,7 +85,7 @@ class Controller {
       this.player.bar.set("played", percentage, "width");
       this.player.seek(this.player.bar.get("played") * this.player.video.duration);
       setTimeout(() => {
-        this.isControl = false;
+        if (this.controlLeaved) this.isControl = false;
       }, 50);
     };
     this.player.template.barWrap.addEventListener(utils.nameMap.dragStart, () => {
@@ -144,24 +148,22 @@ class Controller {
     });
   }
   initSquirtleButton() {
-    for (let i = 0; i < this.player.template.speedItem.length; i++) {
-      this.player.template.speedItem[i].addEventListener("click", () => {
-        const currentSpeed = this.player.template.speedItem[i].dataset.speed;
-        this.player.speed(currentSpeed);
-        this.player.template.speedItem[i].classList.add("focus");
-        this.player.template.speedInfo.innerHTML = currentSpeed !== "1.0" ? currentSpeed + "x" : "倍速";
-
-        this.player.template.speedItem.forEach((element, index) => {
-          if (index !== i) {
-            element.classList.remove("focus");
-          }
-        });
+    for (let i = 0; i < this.player.template.squirtleItem.length; i++) {
+      this.player.template.squirtleItem[i].addEventListener("click", (event) => {
+        window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
+        this.player.switchVideo(i);
       });
     }
+    this.player.template.skip.addEventListener("click", () => {
+      const nextVideo = this.player.currentVideo + 1;
+      this.player.switchVideo(nextVideo);
+    });
   }
+
   initSpeedButton() {
     for (let i = 0; i < this.player.template.speedItem.length; i++) {
-      this.player.template.speedItem[i].addEventListener("click", () => {
+      this.player.template.speedItem[i].addEventListener("click", (event) => {
+        window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
         const currentSpeed = this.player.template.speedItem[i].dataset.speed;
         this.player.speed(currentSpeed);
         this.player.template.speedItem[i].classList.add("focus");
@@ -208,9 +210,7 @@ class Controller {
       document.addEventListener(utils.nameMap.dragMove, volumeMove);
       document.addEventListener(utils.nameMap.dragEnd, volumeUp);
     });
-    this.player.template.volumeMask.addEventListener("click", (event) => {
-      window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
-    });
+
     this.player.template.volumeIcon.addEventListener("click", (event) => {
       if (this.player.video.muted) {
         this.player.video.muted = false;
@@ -227,9 +227,9 @@ class Controller {
   }
   initDanmakuButton() {
     this.player.template.danmakuButton.addEventListener("click", () => {
-      this.showDanmaku = !this.showDanmaku;
-      this.player.danmaku.showing = this.showDanmaku;
-      if (this.showDanmaku) {
+      this.player.showDanmaku = !this.player.showDanmaku;
+      this.player.danmaku.showing = this.player.showDanmaku;
+      if (this.player.showDanmaku) {
         this.player.template.danmakuButton.classList.add("open");
         this.player.template.danmakuButton.classList.remove("close");
         this.player.danmaku.show();

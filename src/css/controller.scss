@@ -185,10 +185,11 @@
 								&.focus{
 									color: #7b7ff7;
 									padding:0 15px 0 30px ;
+									position: relative;
 									&::before{
 									 content: "";
 									 position: absolute;
-									 top: 15px;
+									 top: 10px;
 									 left: 15px;
 									 border-color: transparent transparent transparent #7b7ff7;
 									 border-style: solid;

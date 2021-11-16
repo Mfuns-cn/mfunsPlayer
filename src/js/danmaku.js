@@ -11,7 +11,7 @@ class Danmaku {
     };
     this.danIndex = 0;
     this.dan = [];
-    this.showing = true;
+    this.showing = this.options.isShow;
     this._opacity = this.options.opacity;
     this.events = this.options.events;
     this.unlimited = this.options.unlimited;
@@ -21,12 +21,7 @@ class Danmaku {
   }
 
   load() {
-    let apiurl;
-    if (this.options.api.maximum) {
-      apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}&max=${this.options.api.maximum}`;
-    } else {
-      apiurl = `${this.options.api.address}`;
-    }
+    let apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
     const endpoints = (this.options.api.addition || []).slice(0);
     endpoints.push(apiurl);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
@@ -43,8 +38,8 @@ class Danmaku {
     });
   }
 
-  reload(newAPI) {
-    this.options.api = newAPI;
+  reload(newId) {
+    this.options.api.id = newId;
     this.dan = [];
     this.clear();
     this.load();
@@ -299,7 +294,7 @@ class Danmaku {
 
   resize() {
     const danWidth = this.container.offsetWidth;
-    const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
+    const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-right");
     for (let i = 0; i < items.length; i++) {
       items[i].style.transform = `translateX(-${danWidth}px)`;
     }

@@ -22,14 +22,16 @@ export default class mfunsPlayer {
     this.container.classList.add("mfunsPlayer");
     this.unableTimeupdate = false;
     this.isPlayEnd = false;
+    this.isSwitched = false;
     this.isShowMenu = false;
     this.plugins = {};
     this.playTimer = null;
     this.video = this.template.video;
+    this.currentVideo = this.options.currentVideo;
     this.bar = new Bar(this.template);
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
-      this.danmaku = new Danmaku({
+      this.danmakuOptions = {
         container: this.template.danmaku,
         opacity: this.options.danmaku.opacity,
         callback: (length) => {
@@ -42,22 +44,22 @@ export default class mfunsPlayer {
         borderColor: this.options.theme,
         height: this.arrow ? 24 : 30,
         time: () => this.video.currentTime,
+        isShow: this.showDanmaku,
         api: {
-          id: this.options.danmaku.id,
+          id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
           token: this.options.danmaku.token,
         },
         events: this.events,
-      });
+      };
+      this.danmaku = new Danmaku(this.danmakuOptions);
     }
-
     this.controller = new Controller(this);
     this.timer = new Timer(this);
     this.fullScreen = new FullScreen(this);
     this.contextMenu = new ContextMenu(this);
     this.hotkey = new HotKey(this);
 
-    getVideoTime(this.template);
     this.volume(this.options.volume);
     this.initVideo(this.video, this.options.video.type);
     this.arrow = this.container.offsetWidth <= 500;
@@ -241,7 +243,12 @@ export default class mfunsPlayer {
     if (this.options.video.length > 1 && this.options.currentVideo <= this.template.squirtleItem.length) {
       this.template.squirtleItem[this.options.currentVideo].classList.add("focus");
     }
-    this.on("canplay", () => {});
+    this.on("canplay", () => {
+      if (this.isSwitched) {
+        this.play();
+      }
+      this.isSwitched = false;
+    });
 
     this.on("loadstart", () => {
       this.notice("正在加载视频内容...", true);
@@ -253,7 +260,7 @@ export default class mfunsPlayer {
     this.on("loadedmetadata", () => {
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
-      this.controller.initPlayButton();
+      getVideoTime(this.template);
     });
     this.on("progress", () => {
       const percentage = video.buffered.length ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
@@ -302,10 +309,26 @@ export default class mfunsPlayer {
     }
   }
   switchVideo(index) {
+    this.currentVideo = index;
+    this.handleSwitchVideo(index);
     this.bar.set("loaded", 0, "width");
     this.bar.set("played", 0, "width");
+    this.isSwitched = true;
     const currentVideo = this.options.video[index];
-    this.initVideo(currentVideo.url, currentVideo.type);
+    this.danmaku.reload(currentVideo.danId);
+    this.video.src = currentVideo.url;
+    this.template.headTitle.innerText = `${currentVideo.title}`;
+  }
+  handleSwitchVideo(index) {
+    const total = this.template.squirtleItem.length - 1;
+    if (index > total) return;
+    this.template.skip.style.display = index === total ? "none" : "block";
+    this.template.squirtleItem[index].classList.add("focus");
+    this.template.squirtleItem.forEach((element, i) => {
+      if (i !== index) {
+        element.classList.remove("focus");
+      }
+    });
   }
   disableVideoEvents(event) {}
 
