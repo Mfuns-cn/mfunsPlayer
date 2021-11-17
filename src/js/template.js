@@ -90,8 +90,11 @@ class Template {
     this.editor_emit = $(".editor_emit");
     this.danmakuEditor = $(".danmakuEditor");
     this.danmaku_style = $(".danmaku_style");
-    this.danmaku_type = $(".danmaku_type");
-    this.danmaku_color = $(".danmaku_color");
+    this.danmaku_fontsize_picker = $(".mfunsPlayer-danmaku-fontsize-picker");
+    this.danmaku_type_picker = $(".mfunsPlayer-danmaku-type-picker");
+    this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
+    this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
+    this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
     this.voice = $(".voice");
   }
 }

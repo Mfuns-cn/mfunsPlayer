@@ -62,7 +62,7 @@
             <div class="mfunsPlayer-controller-right">
                {{if video.length>1}}
                 <div class="mfunsPlayer-squirtle">
-                    <div class="mfunsPlayer-squirtle-info">选集</div>
+                    <div class="mfunsPlayer-controller-label mfunsPlayer-squirtle-info">选集</div>
                     <div class="mfunsPlayer-squirtle-mask">
                         <div class="mfunsPlayer-squirtle-list">
                             {{ each video }}
@@ -73,9 +73,9 @@
                 </div>
                 {{ /if }}
                 <div class="mfunsPlayer-speed">
-                    <div class="mfunsPlayer-speed-info">倍速</div>
-                    <div class="mfunsPlayer-speed-mask">
-                        <div class="mfunsPlayer-speed-list">
+                    <div class="mfunsPlayer-controller-label mfunsPlayer-speed-info">倍速</div>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-speed-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-speed-list">
                             <div class="mfunsPlayer-speed-item" data-speed="2.0">2.0x</div>
                             <div class="mfunsPlayer-speed-item" data-speed="1.5">1.5x</div>
                             <div class="mfunsPlayer-speed-item" data-speed="1.25">1.25x</div>
@@ -86,31 +86,31 @@
                     </div>
                 </div>
                 <div class="mfunsPlayer-controller-volume right_icon">
-                    <div class="mfunsPlayer-controller-volume-mask">
-                         <div class="mfunsPlayer-controller-volume-wrap">
-                        <div class="mfunsPlayer-controller-volume-num"></div>
-                        <div class="mfunsPlayer-controller-volume-bar">
-                            {{ include './slider-vertical.art' }}
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-controller-volume-mask">
+                         <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-volume-wrap">
+                            <div class="mfunsPlayer-controller-volume-num"></div>
+                            <div class="mfunsPlayer-controller-volume-bar mfunsPlayer-slider">
+                                {{ include './slider-vertical.art' }}
+                            </div>
                         </div>
                     </div>
-                    </div>
-                    <i class="mfunsPlayer-controller-volume-icon"></i>
+                    <i class="mfunsPlayer-controller-button mfunsPlayer-controller-volume-icon"></i>
                 </div>
                 <div class="mfunsPlayer-controller-set right_icon" >
-                    <i class="mfunsPlayer-controller-set-icon"></i>
+                    <i class="mfunsPlayer-controller-button mfunsPlayer-controller-set-icon"></i>
                 </div>
                 {{ if !isFireFox  }} 
                 <div class="mfunsPlayer-controller-troggle right_icon">
-                    <i class="mfunsPlayer-controller-troggle-icon"></i>
+                    <i class="mfunsPlayer-controller-button mfunsPlayer-controller-troggle-icon"></i>
                     <div class="mfunsPlayer-controller-tip">画中画</div>
                 </div>
                 {{ /if }}
                 <div class="mfunsPlayer-controller-web-full right_icon" >
-                    <i class="mfunsPlayer-controller-web-full-icon" ></i>
+                    <i class="mfunsPlayer-controller-button mfunsPlayer-controller-web-full-icon" ></i>
                     <div class="mfunsPlayer-controller-tip">网页全屏</div>
                 </div>
                 <div class="mfunsPlayer-controller-full right_icon" >
-                    <i class="mfunsPlayer-controller-full-icon" ></i>
+                    <i class="mfunsPlayer-controller-button mfunsPlayer-controller-full-icon" ></i>
                     <div class="mfunsPlayer-controller-tip">进入全屏</div>
                 </div>
                 
@@ -137,7 +137,36 @@
     <div class="mfunsPlayer-video-danmaku-set"></div>
      <div class="input_box">
         <input type="text" autocompleted="new-password"  placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
-        <div class="danmaku_style">A</div>
+        <div class="mfunsPlayer-controller-danmaku_style">
+            <div class="danmaku_style">A</div>
+            <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku_style-mask">
+                <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku_style-wrap">
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">字号</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
+                            <li class="picker-item danmaku-fontsize-small" data-value="18">小</li>
+                            <li class="picker-item danmaku-fontsize-normal" data-value="24">中</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">类型</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-type-picker">
+                            <li class="picker-item danmaku-type-top" data-value="top">顶部</li>
+                            <li class="picker-item danmaku-type-normal" data-value="normal">滚动</li>
+                            <li class="picker-item danmaku-type-bottom" data-value="bottom">底部</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">颜色</div>
+                        <input class="mfunsPlayer-danmaku-color-input mfunsPlayer-input" type="text" value="#"/>
+                        <div class="mfunsPlayer-danmaku-color-preview"></div>
+                    </div>
+                    <ul class="mfunsPlayer-danmaku-color-picker">
+                        {{ include './color-picker.art' }}
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="emit">发送</div>
     </div>
     </div>

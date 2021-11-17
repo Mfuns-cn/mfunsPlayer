@@ -2,17 +2,18 @@ import utils from "./utils.js"
 
 // 滑动条
 
-/**
- * 横向滑动条
- *
- * @param {Object} el 需要绑定的dom对象
- * @param {Number} min 最小值
- * @param {Number} max 最大值
- * @param {Number} step 步长(若不填或为0，则没有步长限制
- * @param {Number} value 默认值(不填的情况下默认值为0)
- * @param {Object} callbacks 回调函数键值对，分start, change, update, end四种状态，分别触发对应函数
- */
+
 export class Slider {
+    /**
+     * 横向滑动条
+     *
+     * @param {Object} el 需要绑定的dom对象
+     * @param {Number} min 最小值
+     * @param {Number} max 最大值
+     * @param {Number} step 步长(若不填或为0，则没有步长限制)
+     * @param {Number} value 默认值(不填的情况下默认值为0)
+     * @param {Object} callbacks 回调函数键值对，分start, change, update, end四种状态，分别触发对应函数
+     */
     constructor(el, min, max, step, value = 0, callbacks = {}) {
         const THIS = this
         this.el = el
@@ -80,10 +81,12 @@ export class Slider {
             document.addEventListener(utils.nameMap.dragEnd, removeEvent)
         })
         
+        // 创建组件后应执行的函数(参数为this)
+        if (this.callbacks.created) {this.callbacks.created(this)}
         // 根据数值设置滑块初始位置
         this.update(this.value)
     }
-    change(value) {         // 修改滑动条值，不执行回调函数
+    change(value, ...args) {         // 修改滑动条值，不执行回调函数
         this.value = value <= this.min ? this.min : value >= this.max ? this.max : value
         // 计算滑块位置
         let per = (this.value - this.min) / (this.max - this.min)
@@ -94,23 +97,23 @@ export class Slider {
         if (this.callbacks.change) {this.callbacks.change(value, ...args)}
     }
     update(value, ...args) {         // 更新数据并修改滑动条数值
-        this.change(value)
+        this.change(value, ...args)
         // 执行相应函数
         if (this.callbacks.update) {this.callbacks.update(value, ...args)}
     }
 }
 
-/**
- * 纵向滑动条
- *
- * @param {Object} el 需要绑定的dom对象
- * @param {Number} min 最小值
- * @param {Number} max 最大值
- * @param {Number} step 步长(若不填或为0，则没有步长限制
- * @param {Number} value 默认值(不填的情况下默认值为0)
- * @param {Object} callbacks 回调函数键值对，分start, change, update, end四种状态，分别触发对应函数
- */
 export class Slider_vertical {
+    /**
+     * 纵向滑动条
+     *
+     * @param {Object} el 需要绑定的dom对象
+     * @param {Number} min 最小值
+     * @param {Number} max 最大值
+     * @param {Number} step 步长(若不填或为0，则没有步长限制
+     * @param {Number} value 默认值(不填的情况下默认值为0)
+     * @param {Object} callbacks 回调函数键值对，分created, start, change, update, end五种状态，分别触发对应函数
+     */
     constructor(el, min, max, step, value = 0, callbacks = {}) {
         const THIS = this
         this.el = el
@@ -125,8 +128,6 @@ export class Slider_vertical {
         this.thumbTrack = this.track.querySelector('.slider-thumb-track')  // 滑块轨道
         this.thumb = this.track.querySelector('.slider-thumb')
         
-        // 设置滑块初始位置
-        this.update(value)
         this.el.addEventListener(utils.nameMap.dragStart, function (event) {
             const e = event || window.event;
             // 滑块长度
@@ -186,7 +187,10 @@ export class Slider_vertical {
             document.addEventListener(utils.nameMap.dragMove, mousemoveEvent)
             document.addEventListener(utils.nameMap.dragEnd, removeEvent)
         })
-        
+        // 创建组件后应执行的函数(参数为this)
+        if (this.callbacks.created) {this.callbacks.created(this)}
+        // 设置滑块初始位置
+        this.update(value)
     }
     change(value, ...args) {
         this.value = value <= this.min ? this.min : value >= this.max ? this.max : value
@@ -199,8 +203,51 @@ export class Slider_vertical {
         if (this.callbacks.change) {this.callbacks.change(value, ...args)}
     }
     update(value, ...args) {
-        this.change(value)
+        this.change(value, ...args)
         // 执行相应函数
         if (this.callbacks.update) {this.callbacks.update(value, ...args)}
+    }
+}
+
+
+ export class Picker {
+    /**
+     * 单选选择器
+     *
+     * @param {Object} group 需要绑定的选择器容器对象
+     * @param {Number} value 默认值(不填的情况下默认值为null)
+     * @param {Object} callbacks 回调函数键值对，分created, change, pick三种状态，分别触发对应函数
+     */
+    constructor (group, value = null ,callbacks = {}) {
+        const THIS = this
+        this.group = group    // 标签组
+        this.items = group.querySelectorAll(".picker-item")       // 标签集合
+        this.value = value
+        this.callbacks = callbacks    // 更新数据时需要执行的函数
+        this.valueList = []
+        this.items.forEach(item => {
+            this.valueList.push(item.getAttribute('data-value'))
+            item.addEventListener('click', function(){
+                THIS.pick(item.getAttribute('data-value'))
+            })
+        });
+        // 创建组件后应执行的函数(参数为this)
+        if (this.callbacks.created) {this.callbacks.created(this)}
+        this.pick(this.value)
+    }
+    change(value, ...args) {
+        this.items.forEach((n, i) => {
+            if (n.getAttribute('data-value') == value) {
+                n.classList.add('picked')
+            } else {
+                n.classList.remove('picked')
+            }
+        })
+        this.value = value
+        if (this.callbacks.change) {this.callbacks.change(value, ...args)}
+    }
+    pick(value, ...args) {
+        this.change(value, ...args)
+        if (this.callbacks.pick) {this.callbacks.pick(value, ...args)}
     }
 }

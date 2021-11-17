@@ -1,10 +1,11 @@
-import { Slider, Slider_vertical } from "../../../componentsTest/components";
+import { Picker, Slider, Slider_vertical } from "./components";
 import utils from "./utils";
 // import Thumbnails from './thumbnails';
 // import Icons from './icons';
 
 class Controller {
   constructor(player) {
+    const THIS = this
     this.player = player;
     this.template = player.template;
     this.components = player.components;
@@ -16,6 +17,9 @@ class Controller {
     this.clickFlag = 0;
     this.controllTimer = null;
     this.showDanmaku = player.showDanmaku;
+    this.danmakuFontsize = 24
+    this.danmakuType = "normal"
+    this.danmakuColor = "#FFFFFF"
     this.player.template.videoWrap.addEventListener("mousemove", () => {
       this.setAutoHide();
     });
@@ -27,6 +31,7 @@ class Controller {
     }
     if (player.options.danmaku) {
       this.initDanmakuButton();
+      this.initDanmakuStyleButton();
     }
     this.initVolumeButton();
     this.initFullButton();
@@ -199,30 +204,6 @@ class Controller {
         THIS.player.template.volumeMask.classList.remove("show");
       }
     } )
-    /*
-    const volumeMove = (event) => {
-      const e = event || window.event;
-      let rg = (e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar);
-      const percentage = (vHeight - rg) / vHeight;
-      this.player.volume(percentage);
-
-      window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
-    };
-    const volumeUp = (event) => {
-      this.player.template.volumeMask.classList.remove("show");
-      document.removeEventListener(utils.nameMap.dragEnd, volumeUp);
-      document.removeEventListener(utils.nameMap.dragMove, volumeMove);
-    };
-    this.player.template.volumeBar.addEventListener("click", (event) => {
-      const e = event || window.event;
-      let rg = (e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar);
-      const percentage = (vHeight - rg) / vHeight;
-      this.player.volume(percentage);
-    });
-    this.player.template.volumeBar.addEventListener(utils.nameMap.dragStart, (event) => {
-      document.addEventListener(utils.nameMap.dragMove, volumeMove);
-      document.addEventListener(utils.nameMap.dragEnd, volumeUp);
-    });*/
     this.player.template.volumeMask.addEventListener("click", (event) => {
       window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
     });
@@ -252,6 +233,50 @@ class Controller {
         this.player.danmaku.hide();
       }
     });
+  }
+  initDanmakuStyleButton() {
+    const THIS = this
+    this.components.danmakuFontsizePicker = new Picker(this.template.danmaku_fontsize_picker, 24, {
+      pick(value) {
+        // 有关字体大小值的更改请写在此处
+        THIS.danmakuFontsize = value
+        console.log(`已选择字体大小：${THIS.danmakuFontsize}`)
+      }
+    })
+    this.components.danmakuTypePicker = new Picker(this.template.danmaku_type_picker, "normal", {
+      pick(value) {
+        // 有关弹幕模式值的更改请写在此处
+        THIS.danmakuType = value
+        console.log(`已选择弹幕模式：${THIS.danmakuType}`)
+      }
+    })
+    this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, "#FFFFFF", {
+      created(picker) {
+        // 组件创建后给颜色方块上色
+        picker.items.forEach(item=>{
+          item.style["background-color"] = item.getAttribute('data-value')
+        })
+      },
+      pick(value) {
+        if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
+          // 有关弹幕颜色值的更改请写在此处
+          THIS.danmakuColor = value
+          console.log(`已选择弹幕颜色：${THIS.danmakuColor}`)
+          THIS.template.danmaku_color_input.value = value
+          THIS.template.danmaku_color_preview.style["background-color"] = value
+          if (value != value.toUpperCase()) {
+            THIS.components.danmakuColorPicker.change(value.toUpperCase())
+          }
+        }
+      }
+    })
+    this.template.danmaku_color_input.addEventListener('input', function () {
+      this.value = '#' + this.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6)
+      THIS.components.danmakuColorPicker.pick(this.value)
+    })
+    this.template.danmaku_color_preview.addEventListener('click', function () {
+      THIS.components.danmakuColorPicker.pick(THIS.danmakuColor)
+    })
   }
   initTroggle() {
     if (this.player.template.troggle) {
