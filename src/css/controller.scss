@@ -1,3 +1,5 @@
+@import './theme';
+
 .mfunsPlayer-controller-mask{
 	width: 100%;
 	height: 100px;
@@ -38,6 +40,10 @@
 		&.hide{
 			display: none;
 		}
+	
+	.mfunsPlayer-controller-button {
+		height: 30px;
+	}
         
 		.mfunsPlayer-controller-wrap {
 			height: calc(100% - 15px);
@@ -63,6 +69,9 @@
 				font-size: 10px;
 				opacity: 0;
 				z-index: 1001;
+			}
+			.mfunsPlayer-controller-button {
+				height: 30px;
 			}
 			.mfunsPlayer-controller-left{
 				max-width:200px ;
@@ -90,7 +99,7 @@
 				}
 				.mfunsPlayer-controller-skip{
 					width: 22px;
-					height: 22px;
+					height: 30px;
 					margin: 0 7px;
 					background: url('../icon/skip-next.svg') no-repeat;
 					background-size: 100% 100%;
@@ -219,32 +228,19 @@
 					 }
 					}
                     .mfunsPlayer-speed-mask {
-						display: none;
-						position: absolute;
-						bottom: 100%;
-						left: -50%;
-						margin-left: -10px;
-						/* margin-left: 10px; */
-						width: 80px;
-						padding-bottom: 17px;
-						z-index: 9;
+						// 浮动面板通用样式已移动
+						// .mfunsPlayer-controller-panel-mask
                         .mfunsPlayer-speed-list {
 							font-weight: 400;
 							width: 80px;
-							border-radius: 2px;
-							background: rgba(28, 28, 28, 0.9);
-							padding: 5px 0;
-							transition: all .3s ease-in-out;
-							overflow: hidden;
-							color: #fff;
-							text-align: center;
 							.mfunsPlayer-speed-item {
 								height: 30px;
 								box-sizing: border-box;
+								text-align: center;
 								cursor: pointer;
 								line-height: 30px;
 								&.focus{
-									color: #7b7ff7;
+									color: $theme-color;
 								}
 								&:hover {
 									background-color: rgba(255, 255, 255, .1);
@@ -265,7 +261,6 @@
 					}
 					.mfunsPlayer-controller-volume-icon{
 						width: 22px;
-						height: 22px;
 						background: url(../icon/volume-high.svg);
 						background-size: 100% 100%;
 						&.volume-icon-off{
@@ -274,21 +269,11 @@
 						}
 					}
 					.mfunsPlayer-controller-volume-mask{
-						position: absolute;
-						width: 32px;
-						padding-bottom: 20px;
-						bottom: 100%;
-						display: none;
-						&.show{
-							display: block;
-						}
+						// 浮动面板通用样式已移动
+						// .mfunsPlayer-controller-panel-mask
 						.mfunsPlayer-controller-volume-wrap{
-							cursor: default;
 							width: 32px;
 							height: 100px;
-							background: rgba(21,21,21,.9);
-							border-radius: 2px;
-							z-index: 10;
 							.mfunsPlayer-controller-volume-num{
 								color: #e5e9ef;
 								width: 100%;
@@ -299,37 +284,18 @@
 								margin-bottom: 2px;
 							}
 							.mfunsPlayer-controller-volume-bar{
-								width: 30px;
-								margin: 0 auto;
+								width: 100%;
 								height: 60px;
 								position: relative;
-								display: flex;
-								.mfunsPlayer-controller-volume-full{
-									height: 60px;
-									width: 2px;
-									border-radius: 1.5px;
+								cursor: pointer;
+								.slider-track{
 									background: #fff;
-									margin: 0 auto;
-									display: flex;
-									flex-direction: column;
-									justify-content: flex-end;
-									align-items: center;
-									cursor: pointer;
 								}
-								.mfunsPlayer-controller-volume-dot{
-									width: 12px;
-									height: 12px;
-									border-radius: 6px;
-									background: #00a1d6;
-									z-index: 2;
-									cursor: pointer;
-								}
-								.mfunsPlayer-controller-volume-percentage{
-									width: 2px;
-									border-radius: 1.5px;
+								.slider-bar{
 									background: #0ba396;
-									margin: 0 auto;
-									cursor: pointer;
+								}
+								.slider-thumb{
+									background: #00a1d6;
 								}
 							}
 						}
@@ -342,7 +308,6 @@
 				.mfunsPlayer-controller-set{
 					.mfunsPlayer-controller-set-icon{
 						width: 21px;
-						height: 21px;
 						background: url(../icon/cog.svg);
 						background-size: 100% 100%;	
 					}
@@ -352,7 +317,6 @@
                 .mfunsPlayer-controller-troggle{
 					.mfunsPlayer-controller-troggle-icon{
 						width: 22px;
-						height: 22px;
 						background: url('../icon/picture-in-picture.svg');
 						background-size: 100% 100%;
 					}
@@ -363,8 +327,7 @@
                        display: none;
 					}
 					.mfunsPlayer-controller-web-full-icon{
-						width: 24px;
-						height: 20px;
+						width: 21px;
 						&.mfunsPlayer-controller-web-full-icon{
 							background-image: url(../icon/fullscreen-web-fill.svg);
 							background-size: 100% 100%;
@@ -381,8 +344,7 @@
 				//全屏
                 .mfunsPlayer-controller-full{
 					.mfunsPlayer-controller-full-icon{
-						width: 24px;
-						height: 21px;
+						width: 22px;
 						background-size: 100% 100%;
 						background-image: url(../icon/fullscreen-fill.svg);
 						background-size: 100% 100%;
@@ -434,22 +396,85 @@
 		position: relative;
 		width: 85%;
 		height: 100%;
-		.danmaku_style {
+		.mfunsPlayer-controller-danmaku_style {
 			position: absolute;
 			top: 50%;
 			left: 10px;
-			color: #999;
-			font-weight: 600;
-			text-align: center;
 			width: 15px;
-			height: 16px;
+			height: 30px;
 			line-height: 16px;
 			margin-top: -8px;
-			border-bottom: 2px solid #999;
-			cursor: pointer;
 			&:hover{
-				color: #7b7ff7;
-				border-color: #7b7ff7;	
+				.mfunsPlayer-danmaku_style-mask {
+					display: block;
+				}
+			}
+			.danmaku_style {
+				color: #999;
+				font-weight: 600;
+				text-align: center;
+				width: 15px;
+				height: 16px;
+				cursor: pointer;
+				border-bottom: 2px solid #999;
+				&:hover{
+					color: #7b7ff7;
+					border-color: #7b7ff7;	
+				}
+			}
+			.mfunsPlayer-danmaku_style-mask {
+				.mfunsPlayer-controller-danmaku_style-wrap{
+					font-size: 12px;
+					width: 180px;
+					
+					.row-title{
+						width: 40px;
+					}
+					.mfunsPlayer-control-panel-danmaku_style{
+						text-align: left;
+						height: 150px;
+						width: 180px;
+						padding-top: 5px;
+					}
+					.mfunsPlayer-danmaku-size-picker, .mfunsPlayer-danmaku-type-picker {
+						display: inline-block;
+						line-height: 0;
+					}
+					.mfunsPlayer-control-panel-danmaku_style .row-title {
+						width: 40px;
+					}
+					
+					.mfunsPlayer-danmaku-color-input{
+						display: inline-block;
+						width: 60px;
+					}
+					.mfunsPlayer-danmaku-color-preview{
+						display: inline-block;
+						width: 36px;
+						height: 18px;
+						line-height: 20px;
+						margin-left: 5px;
+						border-radius: $theme-border-radius;
+						border: 2px solid #FFFFFFA0;
+					}
+					.mfunsPlayer-danmaku-color-picker{
+						margin: 10px auto 5px;
+						width: 120px;
+						text-align: center;
+						line-height: 0;
+						.picker-item {
+							display: inline-block;
+							width: 14px;
+							height: 14px;
+							border-radius: $theme-border-radius;
+							border: 2px solid #00000040;
+							margin-bottom: 4px;
+							&.picked {
+								border-color: #FFF;
+							}
+						}
+					}
+				}
 			}
 		}
 		
@@ -485,4 +510,35 @@
     
 }
 
-
+.mfunsPlayer {
+	.mfunsPlayer-controller-panel-mask {		// 浮动面板遮罩
+		position: absolute;
+		padding-bottom: 20px;
+		bottom: 100%;
+		left:50%;
+		transform: translateX(-50%);
+		z-index: 200;
+		display: none;
+		&.show{
+			display: block;
+		}
+		&:hover{
+			display: block;
+		}
+		.mfunsPlayer-controller-panel {			// 浮动面板
+			cursor: default;
+			overflow: hidden;
+			background: rgba(21,21,21,.9);
+			color: #FFFFFF;
+			border-radius: 2px;
+			.mfunsPlayer-panel-row{
+				display: flex;
+				margin: 5px 10px 10px;
+				.row-title{
+					height: 22px;
+					line-height: 22px;
+				}
+			}
+		}
+	}
+}

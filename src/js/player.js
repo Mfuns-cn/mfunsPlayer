@@ -25,6 +25,7 @@ export default class mfunsPlayer {
     this.isSwitched = false;
     this.isShowMenu = false;
     this.plugins = {};
+    this.components = {}
     this.playTimer = null;
     this.video = this.template.video;
     this.currentVideo = this.options.currentVideo;
@@ -59,8 +60,8 @@ export default class mfunsPlayer {
     this.fullScreen = new FullScreen(this);
     this.contextMenu = new ContextMenu(this);
     this.hotkey = new HotKey(this);
+    console.log(this.components)
 
-    this.volume(this.options.volume);
     this.initVideo(this.video, this.options.video.type);
     this.arrow = this.container.offsetWidth <= 500;
 
@@ -337,9 +338,9 @@ export default class mfunsPlayer {
     if (!isNaN(percentage)) {
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.bar.set("volume", percentage * 0.8, "height");
+      console.log(this.components)
+      this.components.volumeSlider.change(percentage * 100);
       const formatPercentage = `${(percentage * 100).toFixed(0)}`;
-      this.template.volumeNum.innerHTML = formatPercentage;
 
       this.notice(`音量：${formatPercentage}%`);
 
