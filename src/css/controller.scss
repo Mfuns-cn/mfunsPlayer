@@ -47,7 +47,7 @@
         
 		.mfunsPlayer-controller-wrap {
 			height: calc(100% - 15px);
-			line-height: calc(100% - 15px);
+			//line-height: calc(100% - 15px);
 			position: relative;
 			margin: 10px 0 5px;
 			display: flex;
@@ -113,11 +113,31 @@
 						}
 					}
 				}
-				
-				.currentTime,
-				.total {
+				.mfunsPlayer-controller-time {
+					width: 90px;
+					text-align: center;
 					font-size: 13px;
 					margin-left: 5px;
+					.mfunsPlayer-controller-time-input{
+						display: none;
+						width: 60px;
+						margin: auto;
+						font-size: 13px;
+						text-align: center;
+					}
+					.mfunsPlayer-controller-time-label{
+						width: 100%;
+						white-space:nowrap;
+						text-align: center;
+					}
+					&.inputting {
+						.mfunsPlayer-controller-time-input{
+							display: block;
+						}
+						.mfunsPlayer-controller-time-label{
+							display: none;
+						}
+					}
 				}
 			}
           

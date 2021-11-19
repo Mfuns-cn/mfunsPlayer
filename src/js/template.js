@@ -68,8 +68,11 @@ class Template {
     this.troggle = $(".mfunsPlayer-controller-troggle");
     this.play_btn = $(".play_button");
     this.notice = $(".mfunsPlayer-notice");
+    this.controllerTime = $(".mfunsPlayer-controller-time");
+    this.time_label = $(".mfunsPlayer-controller-time-label");
     this.currentTime = $(".currentTime");
     this.total = $(".total");
+    this.time_input = $(".mfunsPlayer-controller-time-input");
     this.danmakuList = $(".danmakuList");
     this.danmakuListContent = $(".danmakuList_content");
     this.headOfList = $(".headOfList");

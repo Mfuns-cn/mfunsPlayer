@@ -62,6 +62,7 @@ new mfunsPlayer({
       type: "mp4", //视频类型
       title: "", //视频标题（选传）
       danId:100 //弹幕id(选传)
+      danLink: "" //外部弹幕文件链接(选传)
     },
   ],
   //以下为选传配置

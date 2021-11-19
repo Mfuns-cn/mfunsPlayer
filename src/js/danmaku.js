@@ -21,7 +21,12 @@ class Danmaku {
   }
 
   load() {
-    let apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
+    let apiurl
+    if (this.options.api.link) {
+      apiurl = `${this.options.api.link}`;
+    } else {
+      apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
+    }
     const endpoints = (this.options.api.addition || []).slice(0);
     endpoints.push(apiurl);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
@@ -38,8 +43,9 @@ class Danmaku {
     });
   }
 
-  reload(newId) {
+  reload(newId, newLink = '') {
     this.options.api.id = newId;
+    this.options.api.link = newLink;
     this.dan = [];
     this.clear();
     this.load();

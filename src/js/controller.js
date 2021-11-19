@@ -31,6 +31,7 @@ class Controller {
     this.initPlayButton();
     if (player.options.dragable) {
       this.initPlayedBar();
+      this.initTimeLabel();
     }
     if (player.options.danmaku) {
       this.initDanmakuButton();
@@ -75,7 +76,7 @@ class Controller {
       percentage = Math.min(percentage, 1);
       this.player.bar.set("played", percentage, "width");
       this.player.template.barTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
-      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration) + " /";
+      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
     };
 
     const thumbUp = (e) => {
@@ -88,7 +89,7 @@ class Controller {
         this.player.template.barWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration) + " /";
+      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
       this.player.bar.set("played", percentage, "width");
       this.player.seek(this.player.bar.get("played") * this.player.video.duration);
       setTimeout(() => {
@@ -142,7 +143,29 @@ class Controller {
       }
     });
   }
-
+  initTimeLabel() {
+    this.player.template.time_label.addEventListener("click", () => {
+      this.player.template.controllerTime.classList.add("inputting")
+      this.player.template.time_input.value = utils.secondToTime(this.player.video.currentTime)
+      this.player.template.time_input.focus()
+    })
+    this.player.template.time_input.addEventListener("blur", () => {
+      this.player.template.controllerTime.classList.remove("inputting")
+    })
+    this.player.template.time_input.addEventListener("keydown", (e) => {
+      var e = e || window.event
+      if (e.keyCode == 13) {
+        this.player.template.video.currentTime = utils.textToSecond(this.player.template.time_input.value)
+        //tem.video.play()
+        this.player.template.controllerTime.classList.remove('inputting')
+        this.player.template.time_input.value = ''
+      }
+      if (e.keyCode == 27) {
+        this.player.template.controllerTime.classList.remove('inputting')
+        this.player.template.time_input.value = ''
+      }
+    })
+  }
   initFullButton() {
     this.player.template.browserFullButton.addEventListener("click", () => {
       // window.removeEventListener("resize");

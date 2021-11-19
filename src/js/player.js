@@ -47,6 +47,7 @@ export default class mfunsPlayer {
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
         api: {
+          link: this.options.video[this.options.currentVideo].danLink,
           id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
           token: this.options.danmaku.token,
@@ -102,10 +103,13 @@ export default class mfunsPlayer {
     }
     // this.isPlayEnd = false;
     this.video.currentTime = time;
-
+    /*
+    已转移至video监听事件
     if (this.danmaku) {
       this.danmaku.seek();
     }
+    */
+    
   }
   pause() {
     this.video.pause();
@@ -295,7 +299,7 @@ export default class mfunsPlayer {
       if (!this.unableTimeupdate) {
         this.bar.set("played", this.video.currentTime / this.video.duration, "width");
         const ct = parseInt(this.video.currentTime);
-        this.template.currentTime.innerText = utils.secondToTime(ct) + " /";
+        this.template.currentTime.innerText = utils.secondToTime(ct);
       }
     });
     this.on("ended", () => {
@@ -303,6 +307,9 @@ export default class mfunsPlayer {
       if (this.endedCallback) this.endedCallback(this.video.currentTime);
       this.playEnd = true;
     });
+    this.on("seeking", () => {
+      this.danmaku.seek()
+    })
     for (let i = 0; i < this.events.videoEvents.length; i++) {
       video.addEventListener(this.events.videoEvents[i], () => {
         this.events.trigger(this.events.videoEvents[i]);
@@ -316,7 +323,7 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     this.isSwitched = true;
     const currentVideo = this.options.video[index];
-    this.danmaku.reload(currentVideo.danId);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
   }

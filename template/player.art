@@ -53,8 +53,14 @@
                     <div class="mfunsPlayer-controller-tip">下一话</div>
                 </div>
                 {{ /if }}
-                <span class="currentTime"></span>
-                <span class="total"></span>
+                <div class="mfunsPlayer-controller-time">
+                    <div class="mfunsPlayer-controller-time-label">
+                        <span class="currentTime">00:00</span>
+                        <span>/</span>
+                        <span class="total">23:33</span>
+                    </div>
+                    <input class="mfunsPlayer-controller-time-input mfunsPlayer-input"/>
+                </div>
             </div>
             
             
