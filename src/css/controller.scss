@@ -445,7 +445,7 @@
 			.mfunsPlayer-danmaku_style-mask {
 				.mfunsPlayer-controller-danmaku_style-wrap{
 					font-size: 12px;
-					width: 180px;
+					width: 280px;
 					
 					.row-title{
 						width: 40px;
@@ -456,7 +456,7 @@
 						width: 180px;
 						padding-top: 5px;
 					}
-					.mfunsPlayer-danmaku-size-picker, .mfunsPlayer-danmaku-type-picker {
+					.mfunsPlayer-danmaku-fontsize-picker, .mfunsPlayer-danmaku-type-picker {
 						display: inline-block;
 						line-height: 0;
 					}
@@ -479,7 +479,7 @@
 					}
 					.mfunsPlayer-danmaku-color-picker{
 						margin: 10px auto 5px;
-						width: 120px;
+						width: auto;
 						text-align: center;
 						line-height: 0;
 						.picker-item {

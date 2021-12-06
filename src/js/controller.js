@@ -18,8 +18,8 @@ class Controller {
     this.clickFlag = 0;
     this.controllTimer = null;
     this.showDanmaku = player.showDanmaku;
-    this.danmakuFontsize = 24
-    this.danmakuType = "normal"
+    this.danmakuFontsize = 22
+    this.danmakuType = "right"
     this.danmakuColor = "#FFFFFF"
     this.player.template.videoWrap.addEventListener("mousemove", () => {
       this.setAutoHide();
@@ -258,21 +258,21 @@ class Controller {
   }
   initDanmakuStyleButton() {
     const THIS = this
-    this.components.danmakuFontsizePicker = new Picker(this.template.danmaku_fontsize_picker, 24, {
+    this.components.danmakuFontsizePicker = new Picker(this.template.danmaku_fontsize_picker, this.danmakuFontsize, {
       pick(value) {
         // 有关字体大小值的更改请写在此处
         THIS.danmakuFontsize = value
         console.log(`已选择字体大小：${THIS.danmakuFontsize}`)
       }
     })
-    this.components.danmakuTypePicker = new Picker(this.template.danmaku_type_picker, "normal", {
+    this.components.danmakuTypePicker = new Picker(this.template.danmaku_type_picker, this.danmakuType, {
       pick(value) {
         // 有关弹幕模式值的更改请写在此处
         THIS.danmakuType = value
         console.log(`已选择弹幕模式：${THIS.danmakuType}`)
       }
     })
-    this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, "#FFFFFF", {
+    this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
       created(picker) {
         // 组件创建后给颜色方块上色
         picker.items.forEach(item=>{
