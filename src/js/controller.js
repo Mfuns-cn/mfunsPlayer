@@ -273,12 +273,6 @@ class Controller {
       }
     })
     this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
-      created(picker) {
-        // 组件创建后给颜色方块上色
-        picker.items.forEach(item=>{
-          item.style["background-color"] = item.getAttribute('data-value')
-        })
-      },
       pick(value) {
         if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
           // 有关弹幕颜色值的更改请写在此处

@@ -173,7 +173,9 @@
                         <div class="mfunsPlayer-danmaku-color-preview"></div>
                     </div>
                     <ul class="mfunsPlayer-danmaku-color-picker">
-                        {{ include './color-picker.art' }}
+                        {{ each pickerColors }}
+                        <li class="picker-item" data-value="{{ $value }}" style="background-color:{{ $value }}"></li>
+                        {{ /each }}
                     </ul>
                 </div>
             </div>
