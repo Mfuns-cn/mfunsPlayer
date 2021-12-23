@@ -278,7 +278,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.remove("mfunsPlayer-paused");
       this.container.classList.add("mfunsPlayer-playing");
-      this.template.player_btn.children[0].className = "icon_play";
+      this.template.player_btn.classList.remove("button-paused");
       this.template.bezel.classList.add("bezel_play");
       if (this.playCallback) this.playCallback(this.video.currentTime);
       this.playTimer = setTimeout(() => {
@@ -290,7 +290,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
-      this.template.player_btn.children[0].className = "icon_pause";
+      this.template.player_btn.classList.add("button-paused");
       this.template.bezel.style.display = "block";
       this.template.bezel.classList.remove("bezel_play");
       if (this.pauseCallback) this.pauseCallback(this.video.currentTime);
@@ -363,9 +363,9 @@ export default class mfunsPlayer {
 
   switchVolumeIcon(percentage) {
     if (percentage > 0) {
-      this.template.volumeIcon.classList.remove("volume-icon-off");
+      this.template.volumeIcon.classList.remove("button-volume-off");
     } else {
-      this.template.volumeIcon.classList.add("volume-icon-off");
+      this.template.volumeIcon.classList.add("button-volume-off");
     }
   }
   speed(rate) {

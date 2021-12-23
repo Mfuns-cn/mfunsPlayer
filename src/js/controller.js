@@ -232,11 +232,11 @@ class Controller {
     this.player.template.volumeIcon.addEventListener("click", (event) => {
       if (this.player.video.muted) {
         this.player.video.muted = false;
-        if (this.video.volume) this.player.template.volumeIcon.classList.remove("volume-icon-off");
+        if (this.video.volume) this.player.template.volumeIcon.classList.remove("button-volume-off");
         this.components.volumeSlider.change(this.video.volume * 100);
       } else {
         this.player.video.muted = true;
-        this.player.template.volumeIcon.classList.add("volume-icon-off");
+        this.player.template.volumeIcon.classList.add("button-volume-off");
         this.components.volumeSlider.change(0);
       }
     });
@@ -311,6 +311,12 @@ class Controller {
         }
       });
     }
+    this.video.addEventListener('enterpictureinpicture', () => {
+      this.player.template.troggle.classList.add('button-picture-in-picture')
+    })
+    this.video.addEventListener('leavepictureinpicture', () => {
+      this.player.template.troggle.classList.remove('button-picture-in-picture')
+    })
   }
   setAutoHide(delay = 1500) {
     this.show();

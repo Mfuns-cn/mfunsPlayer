@@ -29,23 +29,19 @@
                 .mfunsPlayer-video-danmaku-button{
                     width: 23px;
 		            height: 23px;
-                    &.close{
-                        background: url("../icon/barrage-full.svg");
-                        background-size: 100% 100%;
-                    }
+                    color: #f5f5f5;
                 }
                 .mfunsPlayer-video-danmaku-set{
                     width: 23px;
 		            height: 23px;
-                    background: url("../icon/barrage-set-full.svg");
-			        background-size: 100% 100%;
+                    color: #f5f5f5;
                 }
                 .danmaku_style{
-                    color: #f5f5f5;
-                    border-bottom: 2px solid #f5f5f5;
-                    &:hover{
-                        color: #7b7ff7;
-                        border-color: #7b7ff7;	
+                    .icon-text {
+                        color: #f5f5f5;
+                        &:hover{
+                            color: #7b7ff7;
+                        }
                     }
                 }
                 .mfunsPlayer-danmaku-text{
@@ -110,8 +106,11 @@
                         } 
                         
                         .mfunsPlayer-controller-full{
-                            i{
-                              background-image: url(../icon/fullscreen-exit.svg);
+                            .icon-fullscreen {
+                                display: none;
+                            }
+                            .icon-fullscreen-exit {
+                                display: block;
                             }
                         }
                     }
@@ -147,9 +146,12 @@
         .mfunsPlayer-controller-mask{ 
             .mfunsPlayer-controller{
             .mfunsPlayer-controller-right{
-                .mfunsPlayer-controller-full{
-                    i{
-                    background-image: url(../icon/fullscreen-fill.svg) !important;
+                .mfunsPlayer-controller-web-full{
+                    .icon-web-fullscreen {
+                        display: none;
+                    }
+                    .icon-web-fullscreen-exit {
+                        display: block;
                     }
                 }
             }
