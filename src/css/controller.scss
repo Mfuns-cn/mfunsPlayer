@@ -29,21 +29,21 @@
 		}
 	}
 	.mfunsPlayer-controller {
-		height: 45%;
+		height: 45px;
 		position: absolute;
 		bottom: 0;
 		left: 0;
 		right: 0;
-		padding: 0 20px;
+		padding: 0 15px;
 		z-index: 11;
 		color: #fff;
 		&.hide{
 			display: none;
 		}
-	
-	.mfunsPlayer-controller-button {
-		height: 30px;
-	}
+
+		.mfunsPlayer-controller-button {
+			color: #fff;
+		}
         
 		.mfunsPlayer-controller-wrap {
 			height: calc(100% - 15px);
@@ -70,20 +70,12 @@
 				opacity: 0;
 				z-index: 1001;
 			}
-			.mfunsPlayer-controller-button {
-				height: 30px;
-			}
-			.mfunsPlayer-controller-left{
+			.mfunsPlayer-controller-left {
 				max-width:200px ;
 				display: flex;
 				align-items: center;
 				overflow:hidden ;
-				.player_btn {
-					margin:0 3px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
+				.mfunsPlayer-controller-play {
 					.icon-play {
 						display: none;
 					}
@@ -96,14 +88,7 @@
 						}
 					}
 				}
-				.mfunsPlayer-controller-skip{
-					width: 22px;
-					height: 30px;
-					margin: 0 7px;
-					background-size: 100% 100%;
-					display: flex;
-					justify-content: center;
-					cursor: pointer;
+				.mfunsPlayer-controller-next{
 					&:hover{
 						.mfunsPlayer-controller-tip{
 							transform: scale(1);
@@ -146,35 +131,13 @@
   //控制器右功能键
 			
 			.mfunsPlayer-controller-right {
-				width: 36%;
 				height: 100%;
-				max-width: 380px;
+				min-width: 200px;
 				display: flex;
-				justify-content: space-around;
+				justify-content: flex-end;
 				align-items: center;
-				.right_icon {
-					font-size: 12px;
-					display: flex;
-					justify-content: center;
-					cursor: pointer;
-					&:hover{
-						.mfunsPlayer-controller-tip{
-							transform: scale(1);
-							opacity: 1;
-						}
-					}
-					
-				}
 				//选集
-                .mfunsPlayer-squirtle{
-					position: relative;
-					height: 100%;
-					z-index: 2;
-					display: none;
-					justify-content: center;
-					align-items: center;
-					font-size: 14px;
-					font-weight: 600;
+                .mfunsPlayer-controller-pagelist{
 					cursor: pointer;
 					&:hover  {
 						.mfunsPlayer-squirtle-mask {
@@ -182,13 +145,6 @@
 						}
 					}
                     .mfunsPlayer-squirtle-mask {
-						display: none;
-						position: absolute;
-						bottom: 100%;
-						left: -50%;
-						transform: translateX(-40%);
-						padding-bottom: 17px;
-						z-index: 9;
 						.mfunsPlayer-squirtle-list {
 							max-height: 300px;
 							overflow-y: auto;
@@ -225,8 +181,6 @@
 									 border-style: solid;
 									 border-width: 5px 8px;	
 									}
-									  
-									
 								}
 							}
 					    }
@@ -234,15 +188,8 @@
 				}
 
 				//倍速
-                .mfunsPlayer-speed {
-					position: relative;
-					height: 100%;
-					z-index: 2;
-					display: flex;
-					align-items: center;
-					font-weight: 600;
-					font-size: 14px;
-					cursor: pointer;
+                .mfunsPlayer-controller-speed {
+					width: 40px;
 					&:hover{
 					  .mfunsPlayer-speed-mask  {
 						display: block;
@@ -267,22 +214,18 @@
 									background-color: rgba(255, 255, 255, .1);
 								}
 							}
-
 						}
 					}
 				}
 
 				//音量
 				.mfunsPlayer-controller-volume{
-					position: relative;
 					&:hover{
 						.mfunsPlayer-controller-volume-mask{
 							display: block;
 						}
 					}
 					.mfunsPlayer-controller-volume-icon{
-						width: 22px;
-						background-size: 100% 100%;
 						.icon-volume-off {
 							display: none;
 						}
@@ -326,22 +269,18 @@
 								}
 							}
 						}
-						
-						
 					}
 				}
                
 				//设置
-				.mfunsPlayer-controller-set{
-					.mfunsPlayer-controller-set-icon{
-						width: 21px;
-						background: url(../icon/cog.svg);
-						background-size: 100% 100%;	
-					}
+				/*
+				.mfunsPlayer-controller-settings{
+					
 				}
+				*/
 
 				//画中画
-                .mfunsPlayer-controller-troggle{
+                .mfunsPlayer-controller-pip{
 					.icon-picture-in-picture-exit{
 						display: none;
 					}
@@ -355,44 +294,37 @@
 					}
 				}
                 //网页全屏
-				.mfunsPlayer-controller-web-full{
+				.mfunsPlayer-controller-webfull{
 					&.hide{
                        display: none;
 					}
                     .icon-web-fullscreen-exit {
                         display: none;
                     }
-					
 				}
-
 				//全屏
-                .mfunsPlayer-controller-full{
+                .mfunsPlayer-controller-fullscreen{
 					.icon-fullscreen-exit {
 						display: none;
 					}
-					
 				}
-
 			}
 		}
 	}
-
-
 }
 
 
 .mfunsPlayer-video-danmaku-root {
-	width: 60%;
 	display: flex;
+	flex-grow:1;
 	justify-content: space-between;
 	align-items: center;
 	padding: 2px;
-	height: 70%;
-	.mfunsPlayer-video-danmaku-button{
-		width: 20px;
-		height: 30px;
-		cursor: pointer;
+	height: 100%;
+	.mfunsPlayer-controller-icon{
 		color: #999;
+	}
+	.mfunsPlayer-controller-danmaku-trigger {
 		.icon-danmaku{
 			color: rgb(66, 226, 244);
 		}
@@ -408,54 +340,45 @@
 		}
 	}
 	
-	.mfunsPlayer-video-danmaku-set{
-		width: 20px;
-		height: 30px;
-		cursor: pointer;
-		color: #999;
-		
+	
+	.mfunsPlayer-controller-danmaku-settings{
+		&:hover {
+			.mfunsPlayer-danmaku-settings-mask {
+				display: block;
+			}
+		}
 	}
 	
     .input_box {
 		display: flex;
+		flex-grow: 1;
 		align-items: center;
 		position: relative;
-		width: 85%;
 		height: 100%;
-		.mfunsPlayer-controller-danmaku_style {
-			position: absolute;
-			top: 11px;
-			left: 10px;
-			width: 21px;
-			height: 30px;
-			line-height: 16px;
-			margin-top: -8px;
+		border-left: 1px solid #e7e7e7;
+		margin-left: 5px;
+		background: hsla(0,0%,100%,.35);
+		.mfunsPlayer-controller-danmaku-style {
 			&:hover{
 				.mfunsPlayer-danmaku_style-mask {
 					display: block;
 				}
 			}
-			.danmaku_style {
-				width: 100%;
-				height: 30px;
-				cursor: pointer;
-				.icon-text {
-					color: #999;
-					line-height: 30px;
-					&:hover{
-						color: #7b7ff7;
-					}
+			.icon-text {
+				&:hover{
+					color: #7b7ff7;
 				}
 			}
 			.mfunsPlayer-danmaku_style-mask {
-				font-size: 12px;
 				.mfunsPlayer-controller-danmaku_style-fulloptions-wrap{
+					font-size: 12px;
 					width: 280px;
 					.mfunsPlayer-danmaku-color-picker {
 						width: auto;
 					}
 				}
 				.mfunsPlayer-controller-danmaku_style-wrap{
+					font-size: 12px;
 					width: 180px;
 					.mfunsPlayer-danmaku-color-picker {
 						width: 120px;
@@ -515,28 +438,25 @@
 			flex: 5;
 			height: 100%;
 			outline: none;
-			border: 1px solid #e7e7e7;
-			border-right: none;
-			background: hsla(0,0%,100%,.35);
-			border-radius: 3px 0 0 3px;
-			padding-left: 40px;
+			border: none;
+			margin-left: 5px;
 			color: #999;
+			background-color: transparent;
 			box-sizing: border-box;
 			&::-webkit-input-placeholder{
 				color: #999;
 			}
 		}
 		.emit {
-			flex: 1;
-			min-width: 40px;
+			width: 60px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			height: 100%;
+			height: 32px;
 			font-size: 12px;
 			color: #fff;
 			background: #7b7ff7;
-			border-radius: 0 3px 3px 0;
+			border-radius: $theme-border-radius;
 			cursor: pointer;
 		}
     }
@@ -544,9 +464,29 @@
 }
 
 .mfunsPlayer {
-	.mfunsPlayer-controller-button {
-		font-size: 21px;
-		line-height: 30px;
+	.mfunsPlayer-controller-button {			// 按钮
+		position: relative;
+		height: 30px;
+		font-size: 12px;
+		padding: 0 5px;
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+		&:hover{
+			.mfunsPlayer-controller-tip{
+				transform: scale(1);
+				opacity: 1;
+			}
+		}
+		.mfunsPlayer-controller-icon {
+			font-size: 21px;
+			line-height: 30px;
+		}
+		.mfunsPlayer-controller-label {
+			font-size: 14px;
+			line-height: 30px;
+			font-weight: 600;
+		}
 	}
 	.mfunsPlayer-controller-panel-mask {		// 浮动面板遮罩
 		position: absolute;
@@ -568,6 +508,7 @@
 			background: rgba(21,21,21,.9);
 			color: #FFFFFF;
 			border-radius: 2px;
+			font-size: 13px;
 			.mfunsPlayer-panel-row{
 				display: flex;
 				margin: 5px 10px 10px;

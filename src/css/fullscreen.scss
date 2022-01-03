@@ -1,3 +1,5 @@
+@import './theme';
+
 .mfunsPlayer-video-wrap {
     &:-webkit-full-screen {
         width: 100%;
@@ -22,21 +24,15 @@
             }
             .mfunsPlayer-video-danmaku-root{
                 width: 40%;
-                height: 75%;
+                height: 30px;
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                .mfunsPlayer-video-danmaku-button{
-                    width: 23px;
-		            height: 23px;
-                    color: #f5f5f5;
+                .input_box{
+                    border :none;
+                    border-radius: $theme-border-radius;
                 }
-                .mfunsPlayer-video-danmaku-set{
-                    width: 23px;
-		            height: 23px;
-                    color: #f5f5f5;
-                }
-                .danmaku_style{
+                .mfunsPlayer-controller-danmaku-style{
                     .icon-text {
                         color: #f5f5f5;
                         &:hover{
@@ -51,9 +47,13 @@
                         color: #fff;
                     }
                 }
+                .emit{
+                    height: 100%;
+                    border-radius:0 $theme-border-radius $theme-border-radius 0;
+                }
             }
             .mfunsPlayer-controller{
-                height: 65%;
+                height: 50px;
                 .mfunsPlayer-controller-wrap{
                     .mfunsPlayer-video-danmaku-root{
                             display: flex;
@@ -76,36 +76,7 @@
                         }
                     }
                     .mfunsPlayer-controller-right {
-                        display: flex;
-                        .mfunsPlayer-speed{
-                           .mfunsPlayer-speed-info{
-                              font-size: 16px;
-                           }
-                        }
-                        
-                        .mfunsPlayer-squirtle{
-                            display: flex;
-                            .mfunsPlayer-squirtle-info{
-                              font-size: 16px;
-                            }
-                        }
-                        
-                        .mfunsPlayer-controller-volume-icon{
-                            width: 27px !important;
-                            height: 27px !important;
-                        }
-                        .mfunsPlayer-controller-web-full-icon{
-                            width: 22px !important;
-                            height: 22px !important;
-                        }
-                        .mfunsPlayer-controller-set-icon,
-                        .mfunsPlayer-controller-troggle-icon,
-                        .mfunsPlayer-controller-full-icon{
-                            width: 24px !important;
-                            height: 24px !important;
-                        } 
-                        
-                        .mfunsPlayer-controller-full{
+                        .mfunsPlayer-controller-fullscreen{
                             .icon-fullscreen {
                                 display: none;
                             }
@@ -134,6 +105,9 @@
                     }
                 }
             }
+            .mfunsPlayer-controller-button {			// 按钮
+                padding: 0 7px;
+            }
     }
     &.mfunsPlayer-web-fullscreen{
         @extend :-webkit-full-screen;
@@ -145,16 +119,24 @@
         height: 100% !important;
         .mfunsPlayer-controller-mask{ 
             .mfunsPlayer-controller{
-            .mfunsPlayer-controller-right{
-                .mfunsPlayer-controller-web-full{
-                    .icon-web-fullscreen {
-                        display: none;
-                    }
-                    .icon-web-fullscreen-exit {
-                        display: block;
+                .mfunsPlayer-controller-right{
+                    .mfunsPlayer-controller-webfull{
+                        .icon-web-fullscreen {
+                            display: none;
+                        }
+                        .icon-web-fullscreen-exit {
+                            display: block;
+                        }
                     }
                 }
-            }
+                .mfunsPlayer-controller-fullscreen{
+                    .icon-fullscreen {
+                        display: block !important;
+                    }
+                    .icon-fullscreen-exit {
+                        display: none !important;
+                    }
+                }
             }
         }
     }

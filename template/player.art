@@ -47,13 +47,13 @@
         <div class="mfunsPlayer-controller-wrap ">
             <div class="mfunsPlayer-controller-left">
                 
-                <div class="player_btn button-paused">
-                    <div class="mfunsPlayer-controller-button icon-play"></div>
-                    <div class="mfunsPlayer-controller-button icon-pause"></div>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-play button-paused">
+                    <div class="mfunsPlayer-controller-icon icon-play"></div>
+                    <div class="mfunsPlayer-controller-icon icon-pause"></div>
                 </div>
                 {{ if video.length > 1}}
-                <div class="mfunsPlayer-controller-skip">
-                    <i class="mfunsPlayer-controller-button icon-skip"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-next">
+                    <i class="mfunsPlayer-controller-icon icon-skip"></i>
                     <div class="mfunsPlayer-controller-tip">下一话</div>
                 </div>
                 {{ /if }}
@@ -71,10 +71,10 @@
            
             <div class="mfunsPlayer-controller-right">
                {{if video.length>1}}
-                <div class="mfunsPlayer-squirtle">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pagelist">
                     <div class="mfunsPlayer-controller-label mfunsPlayer-squirtle-info">选集</div>
-                    <div class="mfunsPlayer-squirtle-mask">
-                        <div class="mfunsPlayer-squirtle-list">
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-squirtle-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-squirtle-list">
                             {{ each video }}
                             <div class="mfunsPlayer-squirtle-item">{{ $value.title }}</div>
                             {{ /each }}
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 {{ /if }}
-                <div class="mfunsPlayer-speed">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-speed">
                     <div class="mfunsPlayer-controller-label mfunsPlayer-speed-info">倍速</div>
                     <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-speed-mask">
                         <div class="mfunsPlayer-controller-panel mfunsPlayer-speed-list">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mfunsPlayer-controller-volume right_icon">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-volume">
                     <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-controller-volume-mask">
                          <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-volume-wrap">
                             <div class="mfunsPlayer-controller-volume-num"></div>
@@ -105,28 +105,28 @@
                         </div>
                     </div>
                     <div class="mfunsPlayer-controller-volume-icon">
-                        <i class="mfunsPlayer-controller-button icon-volume"></i>
-                        <i class="mfunsPlayer-controller-button icon-volume-off"></i>
+                        <i class="mfunsPlayer-controller-icon icon-volume"></i>
+                        <i class="mfunsPlayer-controller-icon icon-volume-off"></i>
                     </div>
                 </div>
-                <div class="mfunsPlayer-controller-set right_icon" >
-                    <i class="mfunsPlayer-controller-button icon-settings"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
+                    <i class="mfunsPlayer-controller-icon icon-settings"></i>
                 </div>
                 {{ if !isFireFox  }} 
-                <div class="mfunsPlayer-controller-troggle right_icon">
-                    <i class="mfunsPlayer-controller-button icon-picture-in-picture"></i>
-                    <i class="mfunsPlayer-controller-button icon-picture-in-picture-exit"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pip">
+                    <i class="mfunsPlayer-controller-icon icon-picture-in-picture"></i>
+                    <i class="mfunsPlayer-controller-icon icon-picture-in-picture-exit"></i>
                     <div class="mfunsPlayer-controller-tip">画中画</div>
                 </div>
                 {{ /if }}
-                <div class="mfunsPlayer-controller-web-full right_icon" >
-                    <i class="mfunsPlayer-controller-button icon-web-fullscreen"></i>
-                    <i class="mfunsPlayer-controller-button icon-web-fullscreen-exit"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-webfull">
+                    <i class="mfunsPlayer-controller-icon icon-web-fullscreen"></i>
+                    <i class="mfunsPlayer-controller-icon icon-web-fullscreen-exit"></i>
                     <div class="mfunsPlayer-controller-tip">网页全屏</div>
                 </div>
-                <div class="mfunsPlayer-controller-full right_icon" >
-                    <i class="mfunsPlayer-controller-button icon-fullscreen"></i>
-                    <i class="mfunsPlayer-controller-button icon-fullscreen-exit"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-fullscreen">
+                    <i class="mfunsPlayer-controller-icon icon-fullscreen"></i>
+                    <i class="mfunsPlayer-controller-icon icon-fullscreen-exit"></i>
                     <div class="mfunsPlayer-controller-tip">进入全屏</div>
                 </div>
                 
@@ -139,32 +139,29 @@
  {{ if danmaku.api }}   
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
-        <div class="mfunsPlayer-video-danmaku-count">共 0 条弹幕</div>
+        <div class="mfunsPlayer-video-danmaku-count">弹幕 · 0</div>
         <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
     <div class="mfunsPlayer-video-danmaku-root">
         {{ if danmaku.showDanmaku }} 
-        <div class="mfunsPlayer-video-danmaku-button open">
-            <i class="mfunsPlayer-controller-button icon-danmaku"></i>
-            <i class="mfunsPlayer-controller-button icon-danmaku-off"></i>
+        <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger open">
+            <i class="mfunsPlayer-controller-icon icon-danmaku"></i>
+            <i class="mfunsPlayer-controller-icon icon-danmaku-off"></i>
         </div>
          {{ else }}
-         <div class="mfunsPlayer-video-danmaku-button close">
-            <i class="mfunsPlayer-controller-button icon-danmaku"></i>
-            <i class="mfunsPlayer-controller-button icon-danmaku-off"></i>
+         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger close">
+            <i class="mfunsPlayer-controller-icon icon-danmaku"></i>
+            <i class="mfunsPlayer-controller-icon icon-danmaku-off"></i>
          </div>
         {{ /if }}
         
         
-    <div class="mfunsPlayer-video-danmaku-set">
-        <i class="mfunsPlayer-controller-button icon-danmaku-settings"></i>
+    <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-settings">
+        <i class="mfunsPlayer-controller-icon icon-danmaku-settings"></i>
     </div>
-     <div class="input_box">
-        <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
-        <div class="mfunsPlayer-controller-danmaku_style">
-            <div class="danmaku_style">
-                <i class="mfunsPlayer-controller-button icon-text"></i>
-            </div>
+    <div class="input_box">
+        <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-style">
+            <i class="mfunsPlayer-controller-icon icon-text"></i>
             <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku_style-mask">
                 {{ if danmaku.editor == 1 }} 
                 <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku_style-fulloptions-wrap">
@@ -230,6 +227,7 @@
             {{ /if }} 
             </div>
         </div>
+        <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
         <div class="emit">发送</div>
     </div>
     </div>
