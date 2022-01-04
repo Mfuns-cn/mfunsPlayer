@@ -4,6 +4,7 @@
     .mfunsPlayer-slider {       // 滑动条形态样式
         .slider-track{
             width: 4px;
+            height: 4px;
             border-radius: 2px;
             margin: 0 auto;
             display: flex;
@@ -18,6 +19,7 @@
         }
         .slider-thumb-track{
             position: relative;
+            width: calc(100% - 12px);
             height: calc(100% - 12px);
         }
         .slider-thumb{

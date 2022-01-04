@@ -12,7 +12,7 @@ export class Slider {
      * @param {Number} max 最大值
      * @param {Number} step 步长(若不填或为0，则没有步长限制)
      * @param {Number} value 默认值(不填的情况下默认值为0)
-     * @param {Object} callbacks 回调函数键值对，分start, change, update, end四种状态，分别触发对应函数
+     * @param {Object} callbacks 回调函数键值对，分created, start, change, update, end五种状态，分别触发对应函数
      */
     constructor(el, min, max, step, value = 0, callbacks = {}) {
         const THIS = this
@@ -40,7 +40,7 @@ export class Slider {
             // 鼠标X位置
             let clientX = (e.clientX || e.changedTouches[0].clientX)
             // 滑动条位置
-            let nLeft = utils.getElementViewLeft(this)
+            let nLeft = Math.round(utils.getBoundingClientRectViewLeft(this))
             // 计算滑块位置
             let nLength = clientX - nLeft - thumbTrackX
             // 限制滑块移动位置
@@ -249,5 +249,68 @@ export class Slider_vertical {
     pick(value, ...args) {
         this.change(value, ...args)
         if (this.callbacks.pick) {this.callbacks.pick(value, ...args)}
+    }
+}
+
+
+export class MultiPicker {
+    /**
+     * 多选选择器
+     *
+     * @param {Object} group 需要绑定的选择器容器对象
+     * @param {Number} value 默认值(不填的情况下默认值为null)
+     * @param {Object} callbacks 回调函数键值对，分created, pick, unpick, update四种状态，分别触发对应函数
+     */
+    constructor (group, value ,callbacks = {}) {
+        const THIS = this
+        this.group = group    // 标签组
+        this.items = group.querySelectorAll(".picker-item")       // 标签集合
+        this.value = new Set()
+        this.callbacks = callbacks    // 更新数据时需要执行的函数
+        this.valueList = []
+        this.domMap = new Map()
+        this.items.forEach(item => {
+            this.valueList.push(item.getAttribute('data-value'))
+            this.domMap.set(item.getAttribute('data-value'), item)
+            item.addEventListener('click', function(){
+                let val = this.getAttribute('data-value')
+                if (THIS.value.has(val)) {
+                    THIS.unpick(val)
+                } else {
+                    THIS.pick(val)
+                }
+            })
+        });
+        // 创建组件后应执行的函数(参数为this)
+        if (this.callbacks.created) {this.callbacks.created(this)}
+        this.pick(value)
+    }
+    pick(val, ...args) {
+        if(typeof(val) == "string") {
+            this.domMap.get(val).classList.add('picked')
+            this.value.add(val)
+            if (this.callbacks.pick) {this.callbacks.pick(val, ...args)}
+        } else if (typeof(val) == "array") {
+            this.items.forEach((n) => {
+                this.domMap.get(n).classList.add('picked')
+                this.value.add(n)
+                if (this.callbacks.pick) {this.callbacks.pick(n, ...args)}
+            })
+        }
+        if (this.callbacks.update) {this.callbacks.update(this.value, ...args)}
+    }
+    unpick(val, ...args) {
+        if(typeof(val) == "string") {
+            this.domMap.get(val).classList.remove('picked')
+            this.value.delete(val)
+            if (this.callbacks.unpick) {this.callbacks.unpick(val, ...args)}
+        } else if (typeof(val) == "array") {
+            this.items.forEach((n) => {
+                this.domMap.get(n).classList.remove('picked')
+                this.value.delete(n)
+                if (this.callbacks.unpick) {this.callbacks.unpick(n, ...args)}
+            })
+        }
+        if (this.callbacks.update) {this.callbacks.update(this.value, ...args)}
     }
 }

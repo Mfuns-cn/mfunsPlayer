@@ -1,4 +1,4 @@
-import { Picker, Slider, Slider_vertical } from "./components";
+import { Picker, MultiPicker, Slider, Slider_vertical } from "./components";
 import utils from "./utils";
 // import Thumbnails from './thumbnails';
 // import Icons from './icons';
@@ -35,6 +35,7 @@ class Controller {
     }
     if (player.options.danmaku) {
       this.initDanmakuButton();
+      this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
     }
     this.initVolumeButton();
@@ -255,6 +256,66 @@ class Controller {
         this.player.danmaku.hide();
       }
     });
+  }
+  initDanmakuSettingsButton() {
+    console.log('hellooo')
+    const THIS = this
+    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, null, {
+      created(thisArg) {
+        console.log(thisArg)
+      },
+      pick(value) {
+        console.log(`屏蔽弹幕类型：${value}`)
+      },
+      unpick(value) {
+        console.log(`取消屏蔽弹幕类型：${value}`)
+      },
+      update(value) {
+        console.log(`已屏蔽的弹幕类型有：${[...value]}`)
+      }
+    })
+    this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, 100, {
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.danmakuSettings_panel.classList.add("show");
+      },
+      update(value) {
+        // 有关弹幕透明度更改请写在此处
+        console.log(`已更改透明度：${value}%`)
+      },
+      change(value) {
+        THIS.template.danmaku_opacity_value.innerText = `${value}%`
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.danmakuSettings_panel.classList.remove("show");
+      }
+    })
+    this.components.danmakuShowareaSlider = new Slider(this.template.danmaku_showarea_slider, 1, 5, 1, 1, {
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.danmakuSettings_panel.classList.add("show");
+      },
+      update(value) {
+        // 有关弹幕显示区域的更改请写在此处
+        console.log(`已更改显示区域：${["0","1/4","半屏","3/4","不重叠","不限"][value]}`)
+      },
+      change(value) {
+        THIS.template.danmaku_showarea_value.innerText = ["0","1/4","半屏","3/4","不重叠","不限"][value]
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.danmakuSettings_panel.classList.remove("show");
+      }
+    })
   }
   initDanmakuStyleButton() {
     const THIS = this

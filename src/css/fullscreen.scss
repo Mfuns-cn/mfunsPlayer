@@ -32,12 +32,20 @@
                     border :none;
                     border-radius: $theme-border-radius;
                 }
+                .mfunsPlayer-controller-button {
+                    padding: 0 5px;
+                }
                 .mfunsPlayer-controller-danmaku-style{
                     .icon-text {
                         color: #f5f5f5;
                         &:hover{
                             color: #7b7ff7;
                         }
+                    }
+                }
+                .mfunsPlayer-controller-danmaku-settings{
+                    .icon-danmaku-settings {
+                        color: #f5f5f5;
                     }
                 }
                 .mfunsPlayer-danmaku-text{
@@ -106,7 +114,7 @@
                 }
             }
             .mfunsPlayer-controller-button {			// 按钮
-                padding: 0 7px;
+                padding: 0 10px;
             }
     }
     &.mfunsPlayer-web-fullscreen{

@@ -28,8 +28,14 @@ class Template {
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
     this.danmakuCount = $(".mfunsPlayer-video-danmaku-count");
-    this.danmakuButton = $(".mfunsPlayer-controller-danmaku-trigger"); // 弹幕开关
-    this.danmakuSet = $(".mfunsPlayer-controller-danmaku-settings"); // 弹幕设置
+    this.danmakuButton = $(".mfunsPlayer-controller-danmaku-trigger");        // 弹幕开关
+    this.danmakuSettings = $(".mfunsPlayer-controller-danmaku-settings");     // 弹幕设置
+    this.danmakuSettings_panel = $(".mfunsPlayer-danmaku-settings-mask");
+    this.danmaku_filter_picker = $(".mfunsPlayer-danmaku-filter-picker");     // 类型屏蔽选择器
+    this.danmaku_opacity_slider = $(".mfunsPlayer-danmaku-opacity-slider")    // 不透明度滑动条
+    this.danmaku_opacity_value = $(".mfunsPlayer-danmaku-opacity-value")      // 不透明度显示
+    this.danmaku_showarea_slider = $(".mfunsPlayer-danmaku-showarea-slider")  // 显示区域滑动条
+    this.danmaku_showarea_value = $(".mfunsPlayer-danmaku-showarea-value")     // 显示区域显示
     this.text = $(".mfunsPlayer-danmaku-text");
     this.color = $(".color");
     this.headBar = $(".mfunsPlayer-headBar");

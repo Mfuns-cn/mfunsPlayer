@@ -158,6 +158,34 @@
         
     <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-settings">
         <i class="mfunsPlayer-controller-icon icon-danmaku-settings"></i>
+        <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku-settings-mask">
+            <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-settings-wrap">
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">类型屏蔽</div>
+                    <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-filter-picker">
+                        <li class="picker-item" data-value="right">滚动</li>
+                        <li class="picker-item" data-value="top">顶部</li>
+                        <li class="picker-item" data-value="bottom">底部</li>
+                        <li class="picker-item" data-value="color">彩色</li>
+                        <li class="picker-item" data-value="special">高级</li>
+                    </ul>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">不透明度</div>
+                    <div class="mfunsPlayer-danmaku-opacity-slider mfunsPlayer-slider">
+                        {{ include './slider.art' }}
+                    </div>
+                    <div class="mfunsPlayer-danmaku-opacity-value row-value">-</div>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">显示区域</div>
+                    <div class="mfunsPlayer-danmaku-showarea-slider mfunsPlayer-slider">
+                        {{ include './slider.art' }}
+                    </div>
+                    <div class="mfunsPlayer-danmaku-showarea-value row-value">-</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="input_box">
         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-style">

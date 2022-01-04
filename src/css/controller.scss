@@ -42,6 +42,7 @@
 		}
 
 		.mfunsPlayer-controller-button {
+			padding: 0 7px;
 			color: #fff;
 		}
         
@@ -70,11 +71,16 @@
 				opacity: 0;
 				z-index: 1001;
 			}
+			.mfunsPlayer-controller-button:hover{
+				.mfunsPlayer-controller-tip{
+					transform: scale(1);
+					opacity: 1;
+				}
+			}
 			.mfunsPlayer-controller-left {
 				max-width:200px ;
 				display: flex;
 				align-items: center;
-				overflow:hidden ;
 				.mfunsPlayer-controller-play {
 					.icon-play {
 						display: none;
@@ -89,12 +95,6 @@
 					}
 				}
 				.mfunsPlayer-controller-next{
-					&:hover{
-						.mfunsPlayer-controller-tip{
-							transform: scale(1);
-							opacity: 1;
-						}
-					}
 					.icon-skip {
 						font-size: 16px;
 					}
@@ -321,6 +321,9 @@
 	align-items: center;
 	padding: 2px;
 	height: 100%;
+	.mfunsPlayer-controller-button {
+		padding: 0 5px;
+	}
 	.mfunsPlayer-controller-icon{
 		color: #999;
 	}
@@ -345,6 +348,37 @@
 		&:hover {
 			.mfunsPlayer-danmaku-settings-mask {
 				display: block;
+			}
+		}
+		.mfunsPlayer-danmaku-settings-mask {
+			.mfunsPlayer-controller-danmaku-settings-wrap{
+				font-size: 12px;
+				width: 280px;
+			}
+			.row-title{
+				width: 60px;
+			}
+			.row-value{
+				width: 40px;
+				text-align: right;
+			}
+			.mfunsPlayer-picker {
+				display: inline-block;
+				//line-height: 0;
+			}
+			.mfunsPlayer-slider{
+				position: relative;
+				width: 160px;
+				cursor: pointer;
+				.slider-track{
+					background: #fff;
+				}
+				.slider-bar{
+					background: #7B7FF7;
+				}
+				.slider-thumb{
+					background: #7B7FF7;
+				}
 			}
 		}
 	}
@@ -468,16 +502,9 @@
 		position: relative;
 		height: 30px;
 		font-size: 12px;
-		padding: 0 5px;
 		display: flex;
 		justify-content: center;
 		cursor: pointer;
-		&:hover{
-			.mfunsPlayer-controller-tip{
-				transform: scale(1);
-				opacity: 1;
-			}
-		}
 		.mfunsPlayer-controller-icon {
 			font-size: 21px;
 			line-height: 30px;
@@ -516,6 +543,11 @@
 					color: $translucent-light-white;
 					height: 22px;
 					line-height: 22px;
+				}
+				.row-value{
+					height: 22px;
+					line-height: 22px;
+					color: $translucent-white;
 				}
 			}
 		}
