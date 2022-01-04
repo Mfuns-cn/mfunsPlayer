@@ -39,7 +39,7 @@
                     .icon-text {
                         color: #f5f5f5;
                         &:hover{
-                            color: #7b7ff7;
+                            color: $theme-color-light;
                         }
                     }
                 }
@@ -69,19 +69,6 @@
                     .mfunsPlayer-controller-left{
                         width: auto;
                         padding-right: 16px;
-                        .player_btn {
-                            margin-right: 7px;
-                            .icon_pause,.icon_play{
-                                width: 34px;
-                                height: 34px;
-                            }
-                        }
-                         
-                        .mfunsPlayer-controller-skip{
-                            margin: 0 10px;
-                            width: 24px;
-					        height: 24px;
-                        }
                     }
                     .mfunsPlayer-controller-right {
                         .mfunsPlayer-controller-fullscreen{
@@ -148,5 +135,4 @@
             }
         }
     }
-
 }

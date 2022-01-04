@@ -38,11 +38,12 @@ class Controller {
       this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
     }
+    this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
     this.initTroggle();
     this.initSpeedButton();
-    this.initSquirtleButton();
+    this.initPagelistButton();
   }
   isControllerfocus() {
     this.template.controller.onmouseenter = () => {
@@ -56,7 +57,7 @@ class Controller {
   }
   initPlayButton() {
     this.template.videoWrap.addEventListener("click", () => this.handleClick());
-    this.template.player_btn.addEventListener("click", () => this.player.toggle());
+    this.template.play_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
     console.log("click");
@@ -168,24 +169,24 @@ class Controller {
     })
   }
   initFullButton() {
-    this.player.template.browserFullButton.addEventListener("click", () => {
+    this.player.template.fullscreen_btn.addEventListener("click", () => {
       // window.removeEventListener("resize");
       this.player.fullScreen.toggle("browser");
       this.player.resize();
     });
-    this.player.template.webFullButton.addEventListener("click", () => {
+    this.player.template.webfull_btn.addEventListener("click", () => {
       this.player.fullScreen.toggle("web");
       this.player.resize();
     });
   }
-  initSquirtleButton() {
-    for (let i = 0; i < this.player.template.squirtleItem.length; i++) {
-      this.player.template.squirtleItem[i].addEventListener("click", (event) => {
+  initPagelistButton() {
+    for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
+      this.player.template.pagelistItem[i].addEventListener("click", (event) => {
         window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
         this.player.switchVideo(i);
       });
     }
-    this.player.template.skip.addEventListener("click", () => {
+    this.player.template.next_btn.addEventListener("click", () => {
       const nextVideo = this.player.currentVideo + 1;
       this.player.switchVideo(nextVideo);
     });
@@ -207,6 +208,26 @@ class Controller {
         });
       });
     }
+  }
+  initRepeatButton() {
+    if(this.video.loop) {
+      this.player.template.repeat_btn.classList.add("button-repeat")
+      this.player.template.repeat_tip.innerText = "关闭洗脑循环"
+    } else {
+      this.player.template.repeat_btn.classList.remove("button-repeat")
+      this.player.template.repeat_tip.innerText = "洗脑循环"
+    }
+    this.player.template.repeat_btn.addEventListener("click", () => {
+      if(this.video.loop) {
+        this.player.template.repeat_btn.classList.remove("button-repeat")
+        this.player.template.repeat_tip.innerText = "洗脑循环"
+        this.video.loop = false
+      } else {
+        this.player.template.repeat_btn.classList.add("button-repeat")
+        this.player.template.repeat_tip.innerText = "关闭洗脑循环"
+        this.video.loop = true
+      }
+    })
   }
   initVolumeButton() {
     const THIS = this
@@ -243,16 +264,16 @@ class Controller {
     });
   }
   initDanmakuButton() {
-    this.player.template.danmakuButton.addEventListener("click", () => {
+    this.player.template.danmaku_btn.addEventListener("click", () => {
       this.player.showDanmaku = !this.player.showDanmaku;
       this.player.danmaku.showing = this.player.showDanmaku;
       if (this.player.showDanmaku) {
-        this.player.template.danmakuButton.classList.add("open");
-        this.player.template.danmakuButton.classList.remove("close");
+        this.player.template.danmaku_btn.classList.add("open");
+        this.player.template.danmaku_btn.classList.remove("close");
         this.player.danmaku.show();
       } else {
-        this.player.template.danmakuButton.classList.add("close");
-        this.player.template.danmakuButton.classList.remove("open");
+        this.player.template.danmaku_btn.classList.add("close");
+        this.player.template.danmaku_btn.classList.remove("open");
         this.player.danmaku.hide();
       }
     });
@@ -356,8 +377,8 @@ class Controller {
     })
   }
   initTroggle() {
-    if (this.player.template.troggle) {
-      this.player.template.troggle.addEventListener("click", () => {
+    if (this.player.template.pip_btn) {
+      this.player.template.pip_btn.addEventListener("click", () => {
         if (!document.pictureInPictureElement) {
           //开启
           this.video.requestPictureInPicture().catch((error) => {
@@ -373,10 +394,10 @@ class Controller {
       });
     }
     this.video.addEventListener('enterpictureinpicture', () => {
-      this.player.template.troggle.classList.add('button-picture-in-picture')
+      this.player.template.pip_btn.classList.add('button-picture-in-picture')
     })
     this.video.addEventListener('leavepictureinpicture', () => {
-      this.player.template.troggle.classList.remove('button-picture-in-picture')
+      this.player.template.pip_btn.classList.remove('button-picture-in-picture')
     })
   }
   setAutoHide(delay = 1500) {

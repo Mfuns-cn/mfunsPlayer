@@ -77,7 +77,7 @@ class FullScreen {
       this.lastScrollPosition = utils.getScrollPosition();
     }
     this.cancel(anotherType);
-    // if (this.player.template.danmakuButton.className === "mfunsPlayer-video-danmaku-button open") {
+    // if (this.player.template.danmaku_btn.className === "mfunsPlayer-video-danmaku-button open") {
     //   this.danmakuOpend = true;
     // }
 
@@ -95,17 +95,15 @@ class FullScreen {
         } else if (this.player.template.videoWrap.webkitEnterFullScreen) {
           this.player.template.videoWrap.webkitEnterFullScreen();
         }
-        const fullscreenTip = this.singleVideo + (utils.isFirefox ? 1 : 2);
-        this.player.template.tipItem[fullscreenTip].innerHTML = "退出全屏";
-        this.player.template.webFullButton.classList.add("hide");
+        this.player.template.fullscreen_tip.innerText = "退出全屏";
+        this.player.template.webfull_btn.classList.add("hide");
         this.handleFullscrren();
         this.player.events.trigger("browserfullscreen");
         break;
       case "web":
         this.player.template.videoWrap.classList.add("mfunsPlayer-web-fullscreen");
         document.body.classList.add("mfunsPlayer-web-fullscreen-fix");
-        const webscreenTip = this.singleVideo + (utils.isFirefox ? 0 : 1);
-        this.player.template.tipItem[webscreenTip].innerHTML = "退出网页全屏";
+        this.player.template.webfull_tip.innerText = "退出网页全屏";
 
         this.handleFullscrren();
         this.player.events.trigger("webfullscreen");
@@ -136,17 +134,15 @@ class FullScreen {
           document.msExitFullscreen();
         }
         this.handleExitFullscreen("browser");
-        const fullscreenTip = this.singleVideo + (utils.isFirefox ? 1 : 2);
-        this.player.template.webFullButton.classList.remove("hide");
+        this.player.template.webfull_btn.classList.remove("hide");
         if (!!this.player.template.tipItem.length) {
-          this.player.template.tipItem[fullscreenTip].innerHTML = "进入全屏";
+          this.player.template.fullscreen_tip.innerText = "进入全屏";
         }
         break;
       case "web":
         this.player.template.videoWrap.classList.remove("mfunsPlayer-web-fullscreen");
         document.body.classList.remove("mfunsPlayer-web-fullscreen-fix");
-        const webscreenTip = this.singleVideo + (utils.isFirefox ? 0 : 1);
-        this.player.template.tipItem[webscreenTip].innerHTML = "网页全屏";
+        this.player.template.webfull_tip.innerText = "网页全屏";
         this.handleExitFullscreen("web");
         // this.player.events.trigger("webfullscreen");
         break;

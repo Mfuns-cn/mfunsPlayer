@@ -245,8 +245,8 @@ export default class mfunsPlayer {
   }
   initVideo(video, type) {
     this.initMSE(video, type);
-    if (this.options.video.length > 1 && this.options.currentVideo <= this.template.squirtleItem.length) {
-      this.template.squirtleItem[this.options.currentVideo].classList.add("focus");
+    if (this.options.video.length > 1 && this.options.currentVideo <= this.template.pagelistItem.length) {
+      this.template.pagelistItem[this.options.currentVideo].classList.add("focus");
     }
     this.on("canplay", () => {
       if (this.isSwitched) {
@@ -278,7 +278,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.remove("mfunsPlayer-paused");
       this.container.classList.add("mfunsPlayer-playing");
-      this.template.player_btn.classList.remove("button-paused");
+      this.template.play_btn.classList.remove("button-paused");
       this.template.bezel.classList.add("bezel_play");
       if (this.playCallback) this.playCallback(this.video.currentTime);
       this.playTimer = setTimeout(() => {
@@ -290,7 +290,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
-      this.template.player_btn.classList.add("button-paused");
+      this.template.play_btn.classList.add("button-paused");
       this.template.bezel.style.display = "block";
       this.template.bezel.classList.remove("bezel_play");
       if (this.pauseCallback) this.pauseCallback(this.video.currentTime);
@@ -328,11 +328,11 @@ export default class mfunsPlayer {
     this.template.headTitle.innerText = `${currentVideo.title}`;
   }
   handleSwitchVideo(index) {
-    const total = this.template.squirtleItem.length - 1;
+    const total = this.template.pagelistItem.length - 1;
     if (index > total) return;
-    this.template.skip.style.display = index === total ? "none" : "block";
-    this.template.squirtleItem[index].classList.add("focus");
-    this.template.squirtleItem.forEach((element, i) => {
+    this.template.next_btn.style.display = index === total ? "none" : "block";
+    this.template.pagelistItem[index].classList.add("focus");
+    this.template.pagelistItem.forEach((element, i) => {
       if (i !== index) {
         element.classList.remove("focus");
       }

@@ -58,7 +58,7 @@
 		    .mfunsPlayer-controller-tip{
 				position: absolute;
 				bottom: 140%;
-				padding:0 3px;
+				padding:2px 4px;
 				max-width: 70px;
 				white-space: nowrap;
 				height: 20px;
@@ -66,7 +66,7 @@
 				background: rgba(28, 28, 28, 0.9);
 				transition: all .2s ease-in-out;
 				transform: scale(0);
-				border-radius: 2px;
+				border-radius: $theme-border-radius;
 				font-size: 10px;
 				opacity: 0;
 				z-index: 1001;
@@ -95,7 +95,7 @@
 					}
 				}
 				.mfunsPlayer-controller-next{
-					.icon-skip {
+					.icon-next {
 						font-size: 16px;
 					}
 				}
@@ -140,21 +140,21 @@
                 .mfunsPlayer-controller-pagelist{
 					cursor: pointer;
 					&:hover  {
-						.mfunsPlayer-squirtle-mask {
+						.mfunsPlayer-pagelist-mask {
 							display: block;
 						}
 					}
-                    .mfunsPlayer-squirtle-mask {
-						.mfunsPlayer-squirtle-list {
+                    .mfunsPlayer-pagelist-mask {
+						.mfunsPlayer-pagelist-list {
 							max-height: 300px;
 							overflow-y: auto;
 							font-weight: 400;
-							border-radius: 2px;
+							border-radius: $theme-border-radius;
 							background: rgba(28, 28, 28, 0.9);
 							padding: 5px 0;
 							transition: all .3s ease-in-out;
 							color: #fff;
-							.mfunsPlayer-squirtle-item {
+							.mfunsPlayer-pagelist-item {
 								width: 320px;
 								
 								white-space: nowrap;
@@ -169,7 +169,7 @@
 								 background-color: rgba(255, 255, 255, .1);
 								}
 								&.focus{
-									color: #7b7ff7;
+									color: $theme-color;
 									padding:0 15px 0 30px ;
 									position: relative;
 									&::before{
@@ -177,7 +177,7 @@
 									 position: absolute;
 									 top: 10px;
 									 left: 15px;
-									 border-color: transparent transparent transparent #7b7ff7;
+									 border-color: transparent transparent transparent $theme-color;
 									 border-style: solid;
 									 border-width: 5px 8px;	
 									}
@@ -217,7 +217,20 @@
 						}
 					}
 				}
-
+				//洗脑循环
+				.mfunsPlayer-controller-repeat{
+					.icon-repeat{
+						display: none;
+					}
+					&.button-repeat {
+						.icon-repeat-off{
+							display: none;
+						}
+						.icon-repeat{
+							display: block;
+						}
+					}
+				}
 				//音量
 				.mfunsPlayer-controller-volume{
 					&:hover{
@@ -262,10 +275,10 @@
 									background: #fff;
 								}
 								.slider-bar{
-									background: #0ba396;
+									background: $theme-color;
 								}
 								.slider-thumb{
-									background: #00a1d6;
+									background: $theme-color;
 								}
 							}
 						}
@@ -374,10 +387,10 @@
 					background: #fff;
 				}
 				.slider-bar{
-					background: #7B7FF7;
+					background: $theme-color;
 				}
 				.slider-thumb{
-					background: #7B7FF7;
+					background: $theme-color;
 				}
 			}
 		}
@@ -394,24 +407,24 @@
 		background: hsla(0,0%,100%,.35);
 		.mfunsPlayer-controller-danmaku-style {
 			&:hover{
-				.mfunsPlayer-danmaku_style-mask {
+				.mfunsPlayer-danmaku-style-mask {
 					display: block;
 				}
 			}
 			.icon-text {
 				&:hover{
-					color: #7b7ff7;
+					color: $theme-color;
 				}
 			}
-			.mfunsPlayer-danmaku_style-mask {
-				.mfunsPlayer-controller-danmaku_style-fulloptions-wrap{
+			.mfunsPlayer-danmaku-style-mask {
+				.mfunsPlayer-controller-danmaku-style-fulloptions-wrap{
 					font-size: 12px;
 					width: 280px;
 					.mfunsPlayer-danmaku-color-picker {
 						width: auto;
 					}
 				}
-				.mfunsPlayer-controller-danmaku_style-wrap{
+				.mfunsPlayer-controller-danmaku-style-wrap{
 					font-size: 12px;
 					width: 180px;
 					.mfunsPlayer-danmaku-color-picker {
@@ -421,7 +434,7 @@
 				.row-title{
 					width: 40px;
 				}
-				.mfunsPlayer-control-panel-danmaku_style{
+				.mfunsPlayer-control-panel-danmaku-style{
 					text-align: left;
 					height: 150px;
 					width: 180px;
@@ -431,7 +444,7 @@
 					display: inline-block;
 					line-height: 0;
 				}
-				.mfunsPlayer-control-panel-danmaku_style .row-title {
+				.mfunsPlayer-control-panel-danmaku-style .row-title {
 					width: 40px;
 				}
 				
@@ -489,7 +502,7 @@
 			height: 32px;
 			font-size: 12px;
 			color: #fff;
-			background: #7b7ff7;
+			background: $theme-color;
 			border-radius: $theme-border-radius;
 			cursor: pointer;
 		}
@@ -517,7 +530,7 @@
 	}
 	.mfunsPlayer-controller-panel-mask {		// 浮动面板遮罩
 		position: absolute;
-		padding-bottom: 20px;
+		padding-bottom: 15px;
 		bottom: 100%;
 		left:50%;
 		transform: translateX(-50%);
@@ -534,7 +547,7 @@
 			overflow: hidden;
 			background: rgba(21,21,21,.9);
 			color: #FFFFFF;
-			border-radius: 2px;
+			border-radius: $theme-border-radius;
 			font-size: 13px;
 			.mfunsPlayer-panel-row{
 				display: flex;
