@@ -86,6 +86,7 @@ export default class mfunsPlayer {
       },
       true
     );
+    this.rescale = this.rescale.bind(this)
 
     index++;
     instances.push(this);
@@ -383,9 +384,32 @@ export default class mfunsPlayer {
         this.template.barWrap.offsetWidth
       );
     }
+    window.removeEventListener("resize", this.rescale)
+    if (this.controller.videoScale) {
+      this.rescale()
+      this.video.style['object-fit'] = "fill"
+      window.addEventListener("resize", this.rescale)
+    } else {
+      this.video.style['object-fit'] = ""
+      this.video.style.width = ""
+      this.video.style.height = ""
+    }
     this.events.trigger("resize");
   }
-
+  rescale(){
+    // 保持视频宽高比例
+    //    (父元素宽/父元素高) * (视频宽%/视频高%) = 比例宽/比例高
+    // => (父元素宽/父元素高) * (比例高/比例宽) = (视频高%/视频宽%)
+    let hscale = this.template.videoMask.clientWidth * this.controller.videoScale[1]
+    let wscale = this.template.videoMask.clientHeight * this.controller.videoScale[0]
+    if (wscale > hscale) {
+      this.video.style.width = `100%`
+      this.video.style.height = `${hscale / wscale * 100}%`
+    } else {
+      this.video.style.height = `100%`
+      this.video.style.width = `${wscale / hscale * 100}%`
+    }
+  }
   notice(text, alive = false, time = 2000, opacity = 0.8) {
     this.template.notice.innerHTML = text;
     this.template.notice.style.opacity = opacity;

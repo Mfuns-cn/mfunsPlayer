@@ -1,4 +1,4 @@
-import { Picker, MultiPicker, Slider, Slider_vertical } from "./components";
+import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components";
 import utils from "./utils";
 // import Thumbnails from './thumbnails';
 // import Icons from './icons';
@@ -21,6 +21,7 @@ class Controller {
     this.danmakuFontsize = 22
     this.danmakuType = "right"
     this.danmakuColor = "#FFFFFF"
+    this.videoScale = false
     this.player.template.videoWrap.addEventListener("mousemove", () => {
       this.setAutoHide();
     });
@@ -44,6 +45,7 @@ class Controller {
     this.initTroggle();
     this.initSpeedButton();
     this.initPagelistButton();
+    this.initSettingsButton();
   }
   isControllerfocus() {
     this.template.controller.onmouseenter = () => {
@@ -262,6 +264,40 @@ class Controller {
         this.components.volumeSlider.change(0);
       }
     });
+  }
+  initSettingsButton () {
+    const THIS = this;
+    this.components.videoScalePicker = new Picker(this.template.video_scale_picker, "auto", {
+      pick(value) {
+        if (value == "auto") {
+          THIS.videoScale = false
+        } else {
+          value.replace(/^([0-9]+)-([0-9]+)$/, (match, w, h) => {
+            if (match) {
+              THIS.videoScale = [Number(w), Number(h)]
+            }
+          })
+        }
+        console.log(`视频比例已调整为：${value}`)
+        THIS.player.resize()
+      }
+    })
+    this.components.videoBorderhiddenSwitch = new Switch(this.template.video_borderhidden_switch, true, {
+      on() {  // 打开开关
+        console.log("已隐藏黑边")
+      },
+      off() { // 关闭开关
+        console.log("已显示黑边")
+      }
+    })
+    this.components.videoNextpageSwitch = new Switch(this.template.video_nextpage_switch, true, {
+      on() {  // 打开开关
+        console.log("已开启自动换P")
+      },
+      off() { // 关闭开关
+        console.log("已关闭自动换P")
+      }
+    })
   }
   initDanmakuButton() {
     this.player.template.danmaku_btn.addEventListener("click", () => {

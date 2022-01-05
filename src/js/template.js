@@ -65,6 +65,10 @@ class Template {
     this.fullscreen_btn = $(".mfunsPlayer-controller-fullscreen"); // 全屏按钮
     this.fullscreen_tip = $(".mfunsPlayer-controller-fullscreen .mfunsPlayer-controller-tip");  // 全屏提示
     this.browserFullButtonIcon = $(".mfunsPlayer-controller-full-icon");
+    this.settings_btn = $(".mfunsPlayer-controller-settings")
+    this.video_scale_picker = $(".mfunsPlayer-video-scale-picker")  // 视频比例选择器
+    this.video_borderhidden_switch = $(".mfunsPlayer-video-borderhidden-switch")  // 隐藏黑边开关
+    this.video_nextpage_switch = $(".mfunsPlayer-video-nextpage-switch")  // 自动换P开关
     // this.switch_btn = $(".switch");
     this.range = $(".range");
     this.play_btn = $(".mfunsPlayer-controller-play");  // 播放按钮

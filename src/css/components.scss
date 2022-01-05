@@ -37,13 +37,71 @@
             line-height: 20px;
             border-radius: 2px;
             border: transparent solid 1px;
+            transition: color .2s;
             &.picked{
                 border: transparent solid 1px;
                 border-color: $theme-color;
                 color: $theme-color;
             }
+            &:hover{
+                color: $theme-color-light;
+            }
+            &:active{
+                color: $theme-color;
+            }
         }
     } 
+    .mfunsPlayer-switch{
+        height: 22px;
+        .mfunsPlayer-switch-checkbox{
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 4px 0;
+            width: 13px;
+            height: 13px;
+            border-radius: $theme-border-radius;
+            border: solid;
+            border-width: 1px;
+            border-color: $translucent-light-white;
+            box-sizing: border-box;
+            transition: all .2s;
+        }
+        .mfunsPlayer-switch-label{
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 22px;
+            margin: 0 2px;
+            transition: all .2s;
+        }
+        &:hover{
+            .mfunsPlayer-switch-checkbox{
+                border-color: $theme-color-light;
+            }
+            .mfunsPlayer-switch-label{
+                color: $theme-color-light;
+            }
+        }
+        &:active{
+            .mfunsPlayer-switch-checkbox{
+                border-color: $theme-color;
+            }
+            .mfunsPlayer-switch-label{
+                color: $theme-color;
+            }
+        }
+        &.switch-on{
+            .mfunsPlayer-switch-checkbox{
+                background-color: $theme-color;
+                border-color: $theme-color;
+                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+DQogICAgPHBvbHlnb24gcG9pbnRzPSI0MCA3LjkyOSAyMCAyNy45MjkgMTAgMTcuOTI5IDIuOTI5IDI1IDIwIDQyLjA3MSA0Ny4wNzEgMTUgNDAgNy45MjkiIGZpbGw9IiNGRkYiLz4NCjwvc3ZnPg==');
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+    
 
     .mfunsPlayer-input {
         height: 20px;

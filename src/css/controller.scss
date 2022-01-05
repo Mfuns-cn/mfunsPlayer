@@ -103,7 +103,7 @@
 					width: 90px;
 					text-align: center;
 					font-size: 13px;
-					margin-left: 5px;
+					margin: 0 5px;
 					.mfunsPlayer-controller-time-input{
 						display: none;
 						width: 60px;
@@ -123,6 +123,20 @@
 						.mfunsPlayer-controller-time-label{
 							display: none;
 						}
+					}
+				}
+			}
+			//洗脑循环
+			.mfunsPlayer-controller-repeat{
+				.icon-repeat{
+					display: none;
+				}
+				&.button-repeat {
+					.icon-repeat-off{
+						display: none;
+					}
+					.icon-repeat{
+						display: block;
 					}
 				}
 			}
@@ -217,20 +231,6 @@
 						}
 					}
 				}
-				//洗脑循环
-				.mfunsPlayer-controller-repeat{
-					.icon-repeat{
-						display: none;
-					}
-					&.button-repeat {
-						.icon-repeat-off{
-							display: none;
-						}
-						.icon-repeat{
-							display: block;
-						}
-					}
-				}
 				//音量
 				.mfunsPlayer-controller-volume{
 					&:hover{
@@ -286,11 +286,24 @@
 				}
                
 				//设置
-				/*
 				.mfunsPlayer-controller-settings{
-					
+					.mfunsPlayer-settings-mask {
+						.mfunsPlayer-controller-settings-wrap{
+							font-size: 12px;
+							width: 200px;
+						}
+						.row-title{
+							width: 60px;
+						}
+						.mfunsPlayer-picker {
+							display: inline-block;
+							//line-height: 0;
+						}
+						.mfunsPlayer-switch{
+							width: 80px;
+						}
+					}
 				}
-				*/
 
 				//画中画
                 .mfunsPlayer-controller-pip{
@@ -358,11 +371,6 @@
 	
 	
 	.mfunsPlayer-controller-danmaku-settings{
-		&:hover {
-			.mfunsPlayer-danmaku-settings-mask {
-				display: block;
-			}
-		}
 		.mfunsPlayer-danmaku-settings-mask {
 			.mfunsPlayer-controller-danmaku-settings-wrap{
 				font-size: 12px;
@@ -526,6 +534,11 @@
 			font-size: 14px;
 			line-height: 30px;
 			font-weight: 600;
+		}
+		&:hover{
+			.mfunsPlayer-controller-panel-mask {
+				display: block;
+			}
 		}
 	}
 	.mfunsPlayer-controller-panel-mask {		// 浮动面板遮罩

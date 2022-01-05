@@ -84,7 +84,7 @@ export class Slider {
         // 创建组件后应执行的函数(参数为this)
         if (this.callbacks.created) {this.callbacks.created(this)}
         // 根据数值设置滑块初始位置
-        this.update(this.value)
+        setTimeout(()=>{this.update(this.value)},0)
     }
     change(value, ...args) {         // 修改滑动条值，不执行回调函数
         this.value = value <= this.min ? this.min : value >= this.max ? this.max : value
@@ -190,7 +190,7 @@ export class Slider_vertical {
         // 创建组件后应执行的函数(参数为this)
         if (this.callbacks.created) {this.callbacks.created(this)}
         // 设置滑块初始位置
-        this.update(value)
+        setTimeout(()=>{this.update(this.value)},0)
     }
     change(value, ...args) {
         this.value = value <= this.min ? this.min : value >= this.max ? this.max : value
@@ -233,7 +233,7 @@ export class Slider_vertical {
         });
         // 创建组件后应执行的函数(参数为this)
         if (this.callbacks.created) {this.callbacks.created(this)}
-        this.pick(this.value)
+        setTimeout(()=>{this.pick(this.value)},0)
     }
     change(value, ...args) {
         this.items.forEach((n, i) => {
@@ -283,7 +283,7 @@ export class MultiPicker {
         });
         // 创建组件后应执行的函数(参数为this)
         if (this.callbacks.created) {this.callbacks.created(this)}
-        this.pick(value)
+        setTimeout(()=>{this.pick(this.value)},0)
     }
     pick(val, ...args) {
         if(typeof(val) == "string") {
@@ -312,5 +312,47 @@ export class MultiPicker {
             })
         }
         if (this.callbacks.update) {this.callbacks.update(this.value, ...args)}
+    }
+}
+
+
+export class Switch {
+    /**
+     * 开关
+     *
+     * @param {Object} group 需要绑定的开关容器对象
+     * @param {Boolean} value 默认值(不填的情况下默认值为false)
+     * @param {Object} callbacks 回调函数键值对，分created, on, off, update四种状态，分别触发对应函数
+     */
+    constructor (el, value = false ,callbacks = {}) {
+        const THIS = this
+        this.el = el
+        this.value = value
+        this.callbacks = callbacks    // 更新数据时需要执行的函数
+        this.el.addEventListener('click', () => {
+            this.update(!this.value)
+        })
+        // 创建组件后应执行的函数(参数为this)
+        if (this.callbacks.created) {this.callbacks.created(this)}
+        setTimeout(()=>{this.update(this.value)},0)
+    }
+    on(...args) {
+        this.value = true
+        this.el.classList.add("switch-on")
+        if (this.callbacks.on) {this.callbacks.on(...args)}
+        if (this.callbacks.update) {this.callbacks.update(...args)}
+    }
+    off(...args) {
+        this.value = false
+        this.el.classList.remove("switch-on")
+        if (this.callbacks.off) {this.callbacks.off(...args)}
+        if (this.callbacks.update) {this.callbacks.update(...args)}
+    }
+    update(value, ...args){
+        if(value){
+            this.on(...args)
+        } else {
+            this.off(...args)
+        }
     }
 }

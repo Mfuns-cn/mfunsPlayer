@@ -65,6 +65,11 @@
                     </div>
                     <input class="mfunsPlayer-controller-time-input mfunsPlayer-input"/>
                 </div>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-repeat">
+                    <i class="mfunsPlayer-controller-icon icon-repeat"></i>
+                    <i class="mfunsPlayer-controller-icon icon-repeat-off"></i>
+                    <div class="mfunsPlayer-controller-tip">洗脑循环</div>
+                </div>
             </div>
             
             
@@ -95,11 +100,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-repeat">
-                    <i class="mfunsPlayer-controller-icon icon-repeat"></i>
-                    <i class="mfunsPlayer-controller-icon icon-repeat-off"></i>
-                    <div class="mfunsPlayer-controller-tip">洗脑循环</div>
-                </div>
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-volume">
                     <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-controller-volume-mask">
                          <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-volume-wrap">
@@ -116,6 +116,28 @@
                 </div>
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
                     <i class="mfunsPlayer-controller-icon icon-settings"></i>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-settings-wrap">
+                            <div class="mfunsPlayer-panel-row">
+                                <div class="row-title">视频比例</div>
+                                <ul class="mfunsPlayer-picker mfunsPlayer-video-scale-picker">
+                                    <li class="picker-item" data-value="auto">自动</li>
+                                    <li class="picker-item" data-value="4-3">4:3</li>
+                                    <li class="picker-item" data-value="16-9">16:9</li>
+                                </ul>
+                            </div>
+                            <div class="mfunsPlayer-panel-row">
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-borderhidden-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">隐藏黑边</div>
+                                </div>
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">自动换P</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {{ if !isFireFox  }} 
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pip">
