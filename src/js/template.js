@@ -1,8 +1,10 @@
 import Player from "../../template/player.art";
+import DanmakuAuxiliary from "../../template/danmakuAuxiliary.art";
 import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
+    this.danmakuAuxiliary = options.danmaku.auxiliary;
     options.isFireFox = utils.isFirefox;
     this.init(options);
     if (!options.blackBorder) {
@@ -13,7 +15,7 @@ class Template {
       ((this.videoWrap.clientWidth * 9) / 16 + (options.blackBorder ? 100 : 0)).toFixed(2) + "px";
   }
   init(options) {
-    this.container.innerHTML = Player(options);
+    this.container.innerHTML = Player(options);   // 注入播放器DOM
     const $ = this.container.querySelector.bind(this.container);
     const $all = this.container.querySelectorAll.bind(this.container);
     this.mask = $(".mfunsPlayer-mask");
@@ -85,18 +87,12 @@ class Template {
     this.currentTime = $(".currentTime");
     this.total = $(".total");
     this.time_input = $(".mfunsPlayer-controller-time-input");
-    this.danmakuList = $(".danmakuList");
-    this.danmakuListContent = $(".danmakuList_content");
     this.headOfList = $(".headOfList");
     this.footOfList = $(".footOfList");
     this.closeList = $(".closeList_btn");
     this.advancedDanmaku_btn = $(".advancedDanmaku_btn");
     this.advancePre = $(".advanceDanmaku_pre_box");
     this.ade_mask = $(".advanceDanmakuEditor_mask");
-    this.ade = $(".advanceDanmakuEditor");
-    this.ade_footer = $(".editor_footer");
-    this.ade_close = $(".exit_edit");
-    this.ade_code = $("#danmaku_code");
     this.editor_clear = $(".editor_clear");
     this.editor_preview = $(".editor_preview");
     this.editor_emit = $(".editor_emit");
@@ -108,6 +104,20 @@ class Template {
     this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
     this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
     this.voice = $(".voice");
+    if (this.danmakuAuxiliary) {
+      this.danmakuAuxiliary.classList.add("mfunsPlayer-danmaku-auxiliary")
+      this.danmakuAuxiliary.innerHTML = DanmakuAuxiliary(options)  // 注入弹幕功能区DOM
+      this.danmaku_list_panel = this.danmakuAuxiliary.querySelector(".mfunsPlayer-danmaku-list-panel")  // 弹幕列表面板
+      this.danmaku_list_container = this.danmakuAuxiliary.querySelector(".mfunsPlayer-danmaku-list-container") // 弹幕列表容器
+      this.danmaku_list = this.danmakuAuxiliary.querySelector(".mfunsPlayer-danmaku-list")    // 弹幕列表
+      this.ade_panel = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-panel")              // 高级弹幕编辑器面板(Advanced Danmaku Editor)
+      this.ade_prebox = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-prebox")         // 高级弹幕编辑框
+      this.ade_clear = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-clear")          // 高级弹幕编辑清除
+      this.ade_preview = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-preview")        // 高级弹幕编辑预览
+      this.ade_emit = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-emit")           // 高级弹幕发送
+      this.ade_btn = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-button")           // 高级弹幕面板按钮
+      this.ade_exit_btn = this.danmakuAuxiliary.querySelector(".mfunsPlayer-ade-exit-button") // 退出高级弹幕面板按钮
+    };
   }
 }
 export default Template;

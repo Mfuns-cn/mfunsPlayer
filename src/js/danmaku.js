@@ -39,7 +39,7 @@ class Danmaku {
 
       this.options.callback(this.dan.length);
 
-      this.events && this.events.trigger("danmaku_load_end");
+      this.events && this.events.trigger("danmaku_load_end", this.dan);
     });
   }
 
