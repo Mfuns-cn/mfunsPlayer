@@ -47,6 +47,7 @@ class Events {
 
       "danmaku_load_start",   // 弹幕开始加载
       "danmaku_load_end",     // 弹幕加载完毕
+      "danmaku_load_failed",  // 弹幕加载失败
     ];
   }
 

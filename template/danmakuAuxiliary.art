@@ -6,6 +6,11 @@
         <div class="mfunsPlayer-danmaku-list-container">
             <div class="mfunsPlayer-danmaku-list"></div>
         </div>
+        <div class="mfunsPlayer-danmaku-list-status">
+            <div class="status-loading-text">弹幕列表装填中……</div>
+            <div class="status-failed-text">弹幕加载失败 X_X</div>
+            <div class="status-empty-text">还没有弹幕哦，快来发弹幕^_^</div>
+        </div>
     </div>
     <div class="mfunsPlayer-danmaku-auxiliary-foot">
         <div class="flex-left"></div>

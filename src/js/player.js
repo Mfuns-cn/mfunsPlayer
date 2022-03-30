@@ -10,6 +10,7 @@ import ContextMenu from "./contextmenu";
 import Template from "./template";
 import utils from "./utils";
 import { getVideoTime } from "./video";
+import DanmakuAuxiliary from "./danmakuAuxiliary";
 
 let index = 0;
 const instances = [];
@@ -30,6 +31,7 @@ export default class mfunsPlayer {
     this.video = this.template.video;
     this.currentVideo = this.options.currentVideo;
     this.bar = new Bar(this.template);
+    this.danmakuAuxiliary = null
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
       this.danmakuOptions = {
@@ -423,5 +425,8 @@ export default class mfunsPlayer {
         this.events.trigger("notice_hide");
       }, time);
     }
+  }
+  mountDanmakuAuxiliary(el) {
+    this.danmakuAuxiliary = new DanmakuAuxiliary(this, el)
   }
 }

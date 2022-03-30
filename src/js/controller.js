@@ -38,10 +38,6 @@ class Controller {
       this.initDanmakuButton();
       this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
-      if (player.options.danmaku.auxiliary) {
-        this.initDanmakuList();
-        this.initAdvancedDanmakuEditor();
-      }
     }
     this.initRepeatButton();
     this.initVolumeButton();
@@ -438,39 +434,6 @@ class Controller {
     })
     this.video.addEventListener('leavepictureinpicture', () => {
       this.player.template.pip_btn.classList.remove('button-picture-in-picture')
-    })
-  }
-  initDanmakuList() {
-    this.player.on("danmaku_load_end", (dan) => {
-      let danList = ''
-      dan.forEach((danmaku)=>{
-        let row = `
-        <div class="list-row" title="${danmaku.text}\n0000-00-00 00:00 @ ${utils.secondToTime(danmaku.time, false)}">
-          <span class="list-cell col-time">${utils.secondToTime(danmaku.time, false)}</span><span class="list-cell col-text">${danmaku.text}</span><span class="list-cell col-date">${'00-00-00 00:00'}</span>
-        </div>
-        `
-        danList += row
-      })
-      this.player.template.danmaku_list.innerHTML = danList
-    })
-  }
-  initAdvancedDanmakuEditor() {
-    this.player.template.ade_btn.addEventListener('click', () => {
-      this.player.template.danmaku_list_panel.style["display"] = "none"
-      this.player.template.ade_panel.style["display"] = ""
-    })
-    this.player.template.ade_exit_btn.addEventListener('click', () => {
-      this.player.template.danmaku_list_panel.style["display"] = ""
-      this.player.template.ade_panel.style["display"] = "none"
-    })
-    this.player.template.ade_clear.addEventListener('click', () => {
-      console.log("清空编辑框")
-    })
-    this.player.template.ade_preview.addEventListener('click', () => {
-      console.log("高级弹幕预览")
-    })
-    this.player.template.ade_emit.addEventListener('click', () => {
-      console.log("发送高级弹幕")
     })
   }
   setAutoHide(delay = 1500) {

@@ -15,6 +15,7 @@ class Danmaku {
     this._opacity = this.options.opacity;
     this.events = this.options.events;
     this.unlimited = this.options.unlimited;
+    this.loaded = false   // 弹幕是否加载完毕
     this._measure("");
 
     this.load();
@@ -30,6 +31,7 @@ class Danmaku {
     const endpoints = (this.options.api.addition || []).slice(0);
     endpoints.push(apiurl);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
+    this.loaded = false
 
     this._readAllEndpoints(endpoints, (results) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
@@ -40,6 +42,7 @@ class Danmaku {
       this.options.callback(this.dan.length);
 
       this.events && this.events.trigger("danmaku_load_end", this.dan);
+      this.loaded = true
     });
   }
 
@@ -70,6 +73,7 @@ class Danmaku {
           }
         },
         error: (msg) => {
+          this.events && this.events.trigger("danmaku_load_failed");
           this.options.error(msg || "弹幕加载失败");
           results[i] = [];
 
