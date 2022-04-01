@@ -39,12 +39,14 @@ class Controller {
       this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
     }
+    if (player.options.video.length > 1) {
+      this.initPagelistButton();
+    }
     this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
     this.initTroggle();
     this.initSpeedButton();
-    this.initPagelistButton();
     this.initSettingsButton();
   }
   isControllerfocus() {
