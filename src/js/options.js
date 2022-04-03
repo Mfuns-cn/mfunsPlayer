@@ -5,7 +5,7 @@ export default (options) => {
   const defaultOption = {
     container: options.element || document.getElementsByClassName("mfunsPlayer")[0],
     autoPlay: false,
-    dragable: true,
+    draggable: true,
     blackBorder: true,
     theme: "#b7daff",
     loop: false,

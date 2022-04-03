@@ -51,7 +51,7 @@ new mfunsPlayer({
   theme: "#666", //主题
   autoPlay: false, //自动播放
   blackBorder: false, // 播放器黑边
-  dragable: false, //进度条是否可拖拽
+  draggable: false, //进度条是否可拖拽
   hotkey: true, //是否启用快捷键
   volume: 0.7, //视频初始音量
   currentVideo: 0 //当前播放视频的下标

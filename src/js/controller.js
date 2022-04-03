@@ -30,7 +30,7 @@ class Controller {
     });
     this.isControllerfocus();
     this.initPlayButton();
-    if (player.options.dragable) {
+    if (player.options.draggable) {
       this.initPlayedBar();
       this.initTimeLabel();
     }
@@ -317,12 +317,8 @@ class Controller {
     });
   }
   initDanmakuSettingsButton() {
-    console.log('hellooo')
     const THIS = this
     this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, null, {
-      created(thisArg) {
-        console.log(thisArg)
-      },
       pick(value) {
         console.log(`屏蔽弹幕类型：${value}`)
       },

@@ -16,7 +16,7 @@
         <div></div>
         <p>正在缓冲...</p>
     </div>
-    <div class="mfunsPlayer-danmaku"{{ if danmaku && danmaku.bottm }} style="margin:{{ danmaku.bottm }}px 0"{{ /if }}>
+    <div class="mfunsPlayer-danmaku"{{ if danmaku && danmaku.bottom }} style="margin:{{ danmaku.bottom }}px 0"{{ /if }}>
         <div class="mfunsPlayer-danmaku-item mfunsPlayer-danmaku-item--demo"></div>
     </div>
     <div class="mfunsPlayer-video-mask">

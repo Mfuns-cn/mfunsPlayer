@@ -1,7 +1,7 @@
 {
   "name": "mfuns-player",
-  "version": "2.2.0",
-  "description": "基于canvas的弹幕播放器",
+  "version": "2.1.0",
+  "description": "基于css的弹幕播放器",
   "main": "src/ts/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

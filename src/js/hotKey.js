@@ -21,7 +21,7 @@ export default class HotKey {
                 break;
               case 37:
                 event.preventDefault();
-                if (!player.options.dragable) {
+                if (!player.options.draggable) {
                   break;
                 }
                 player.seek(player.video.currentTime - 5);
@@ -29,7 +29,7 @@ export default class HotKey {
                 break;
               case 39:
                 event.preventDefault();
-                if (!player.options.dragable) {
+                if (!player.options.draggable) {
                   break;
                 }
                 player.seek(player.video.currentTime + 5);

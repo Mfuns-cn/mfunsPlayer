@@ -2,6 +2,9 @@
 
 .mfunsPlayer-danmaku-auxiliary {
 	font-size: 12px;
+	* {
+		box-sizing: content-box;
+	}
 	.mfunsPlayer-danmaku-list-panel {
 		height: 100%;
 		.mfunsPlayer-danmaku-list-head, .list-row {
