@@ -321,6 +321,7 @@ export default class mfunsPlayer {
   }
   handleSwitchVideo(index) {
     const total = this.template.squirtleItem.length - 1;
+    this.currentVideo = index;
     if (index > total) return;
     this.template.skip.style.display = index === total ? "none" : "block";
     this.template.squirtleItem[index].classList.add("focus");

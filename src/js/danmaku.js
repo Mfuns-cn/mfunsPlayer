@@ -199,28 +199,37 @@ class Danmaku {
         });
 
         const itemWidth = this._measure(dan[i].text);
+        const isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
         let tunnel;
 
         // adjust
         switch (dan[i].type) {
           case "right":
             tunnel = getTunnel(item, dan[i].type, itemWidth);
-            if (tunnel >= 0) {
+            if (tunnel >= 0 || isSubtitle) {
               item.style.width = itemWidth + 1 + "px";
-              item.style.top = itemHeight * tunnel + "px";
+              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
               item.style.transform = `translateX(-${danWidth}px)`;
+            }
+            break;
+          case "left":
+            tunnel = getTunnel(item, dan[i].type, itemWidth);
+            if (tunnel >= 0 || isSubtitle) {
+              item.style.width = itemWidth + 1 + "px";
+              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
+              item.style.transform = `translateX(${danWidth}px)`;
             }
             break;
           case "top":
             tunnel = getTunnel(item, dan[i].type);
-            if (tunnel >= 0) {
-              item.style.top = itemHeight * tunnel + "px";
+            if (tunnel >= 0 || isSubtitle) {
+              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
             }
             break;
           case "bottom":
             tunnel = getTunnel(item, dan[i].type);
-            if (tunnel >= 0) {
-              item.style.bottom = itemHeight * tunnel + "px";
+            if (tunnel >= 0 || isSubtitle) {
+              item.style.bottom = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
             }
             break;
           default:
