@@ -47,35 +47,50 @@
         <div class="mfunsPlayer-controller-wrap ">
             <div class="mfunsPlayer-controller-left">
                 
-                <div class="player_btn"><div class="icon_pause"></div></div>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-play button-paused">
+                    <div class="mfunsPlayer-controller-icon icon-play"></div>
+                    <div class="mfunsPlayer-controller-icon icon-pause"></div>
+                </div>
                 {{ if video.length > 1}}
-                <div class="mfunsPlayer-controller-skip">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-next">
+                    <i class="mfunsPlayer-controller-icon icon-next"></i>
                     <div class="mfunsPlayer-controller-tip">下一话</div>
                 </div>
                 {{ /if }}
-                <span class="currentTime"></span>
-                <span class="total"></span>
+                <div class="mfunsPlayer-controller-time">
+                    <div class="mfunsPlayer-controller-time-label">
+                        <span class="currentTime">00:00</span>
+                        <span>/</span>
+                        <span class="total">23:33</span>
+                    </div>
+                    <input class="mfunsPlayer-controller-time-input mfunsPlayer-input"/>
+                </div>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-repeat">
+                    <i class="mfunsPlayer-controller-icon icon-repeat"></i>
+                    <i class="mfunsPlayer-controller-icon icon-repeat-off"></i>
+                    <div class="mfunsPlayer-controller-tip">洗脑循环</div>
+                </div>
             </div>
             
             
            
             <div class="mfunsPlayer-controller-right">
                {{if video.length>1}}
-                <div class="mfunsPlayer-squirtle">
-                    <div class="mfunsPlayer-squirtle-info">选集</div>
-                    <div class="mfunsPlayer-squirtle-mask">
-                        <div class="mfunsPlayer-squirtle-list">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pagelist">
+                    <div class="mfunsPlayer-controller-label mfunsPlayer-pagelist-info">选集</div>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-pagelist-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-pagelist-list">
                             {{ each video }}
-                            <div class="mfunsPlayer-squirtle-item">{{ $value.title }}</div>
+                            <div class="mfunsPlayer-pagelist-item">{{ $value.title }}</div>
                             {{ /each }}
                         </div>
                     </div>
                 </div>
                 {{ /if }}
-                <div class="mfunsPlayer-speed">
-                    <div class="mfunsPlayer-speed-info">倍速</div>
-                    <div class="mfunsPlayer-speed-mask">
-                        <div class="mfunsPlayer-speed-list">
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-speed">
+                    <div class="mfunsPlayer-controller-label mfunsPlayer-speed-info">倍速</div>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-speed-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-speed-list">
                             <div class="mfunsPlayer-speed-item" data-speed="2.0">2.0x</div>
                             <div class="mfunsPlayer-speed-item" data-speed="1.5">1.5x</div>
                             <div class="mfunsPlayer-speed-item" data-speed="1.25">1.25x</div>
@@ -85,38 +100,62 @@
                         </div>
                     </div>
                 </div>
-                <div class="mfunsPlayer-controller-volume right_icon">
-                    <div class="mfunsPlayer-controller-volume-mask">
-                         <div class="mfunsPlayer-controller-volume-wrap">
-                        <div class="mfunsPlayer-controller-volume-num"></div>
-                        <div class="mfunsPlayer-controller-volume-bar">
-                           <div class="mfunsPlayer-controller-volume-full">
-                               <div class="mfunsPlayer-controller-volume-dot"></div>
-                               <div class="mfunsPlayer-controller-volume-percentage"></div>
-                           </div> 
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-volume">
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-controller-volume-mask">
+                         <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-volume-wrap">
+                            <div class="mfunsPlayer-controller-volume-num"></div>
+                            <div class="mfunsPlayer-controller-volume-bar mfunsPlayer-slider">
+                                {{ include './slider-vertical.art' }}
+                            </div>
                         </div>
                     </div>
+                    <div class="mfunsPlayer-controller-volume-icon">
+                        <i class="mfunsPlayer-controller-icon icon-volume"></i>
+                        <i class="mfunsPlayer-controller-icon icon-volume-off"></i>
                     </div>
-                    <i class="mfunsPlayer-controller-volume-icon"></i>
                 </div>
-                <div class="mfunsPlayer-controller-set right_icon" >
-                    <i class="mfunsPlayer-controller-set-icon"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
+                    <i class="mfunsPlayer-controller-icon icon-settings"></i>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask">
+                        <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-settings-wrap">
+                            <div class="mfunsPlayer-panel-row">
+                                <div class="row-title">视频比例</div>
+                                <ul class="mfunsPlayer-picker mfunsPlayer-video-scale-picker">
+                                    <li class="picker-item" data-value="auto">自动</li>
+                                    <li class="picker-item" data-value="4-3">4:3</li>
+                                    <li class="picker-item" data-value="16-9">16:9</li>
+                                </ul>
+                            </div>
+                            <div class="mfunsPlayer-panel-row">
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-borderhidden-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">隐藏黑边</div>
+                                </div>
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">自动换P</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {{ if !isFireFox  }} 
-                <div class="mfunsPlayer-controller-troggle right_icon">
-                    <i class="mfunsPlayer-controller-troggle-icon"></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pip">
+                    <i class="mfunsPlayer-controller-icon icon-picture-in-picture"></i>
+                    <i class="mfunsPlayer-controller-icon icon-picture-in-picture-exit"></i>
                     <div class="mfunsPlayer-controller-tip">画中画</div>
                 </div>
                 {{ /if }}
-                <div class="mfunsPlayer-controller-web-full right_icon" >
-                    <i class="mfunsPlayer-controller-web-full-icon" ></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-webfull">
+                    <i class="mfunsPlayer-controller-icon icon-web-fullscreen"></i>
+                    <i class="mfunsPlayer-controller-icon icon-web-fullscreen-exit"></i>
                     <div class="mfunsPlayer-controller-tip">网页全屏</div>
                 </div>
-                <div class="mfunsPlayer-controller-full right_icon" >
-                    <i class="mfunsPlayer-controller-full-icon" ></i>
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-fullscreen">
+                    <i class="mfunsPlayer-controller-icon icon-fullscreen"></i>
+                    <i class="mfunsPlayer-controller-icon icon-fullscreen-exit"></i>
                     <div class="mfunsPlayer-controller-tip">进入全屏</div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -126,21 +165,123 @@
  {{ if danmaku.api }}   
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
-        <div class="mfunsPlayer-video-danmaku-count">共 0 条弹幕</div>
+        <div class="mfunsPlayer-video-danmaku-count">共0条弹幕</div>
         <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
     <div class="mfunsPlayer-video-danmaku-root">
         {{ if danmaku.showDanmaku }} 
-        <div class="mfunsPlayer-video-danmaku-button open"></div>
+        <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger open">
+            <i class="mfunsPlayer-controller-icon icon-danmaku"></i>
+            <i class="mfunsPlayer-controller-icon icon-danmaku-off"></i>
+        </div>
          {{ else }}
-         <div class="mfunsPlayer-video-danmaku-button close"></div>
+         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger close">
+            <i class="mfunsPlayer-controller-icon icon-danmaku"></i>
+            <i class="mfunsPlayer-controller-icon icon-danmaku-off"></i>
+         </div>
         {{ /if }}
         
         
-    <div class="mfunsPlayer-video-danmaku-set"></div>
-     <div class="input_box">
-        <input type="text" autocompleted="new-password"  placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
-        <div class="danmaku_style">A</div>
+    <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-settings">
+        <i class="mfunsPlayer-controller-icon icon-danmaku-settings"></i>
+        <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku-settings-mask">
+            <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-settings-wrap">
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">类型屏蔽</div>
+                    <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-filter-picker">
+                        <li class="picker-item" data-value="right">滚动</li>
+                        <li class="picker-item" data-value="top">顶部</li>
+                        <li class="picker-item" data-value="bottom">底部</li>
+                        <li class="picker-item" data-value="color">彩色</li>
+                        <li class="picker-item" data-value="special">高级</li>
+                    </ul>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">不透明度</div>
+                    <div class="mfunsPlayer-danmaku-opacity-slider mfunsPlayer-slider">
+                        {{ include './slider.art' }}
+                    </div>
+                    <div class="mfunsPlayer-danmaku-opacity-value row-value">-</div>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">显示区域</div>
+                    <div class="mfunsPlayer-danmaku-showarea-slider mfunsPlayer-slider">
+                        {{ include './slider.art' }}
+                    </div>
+                    <div class="mfunsPlayer-danmaku-showarea-value row-value">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="input_box">
+        <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-style">
+            <i class="mfunsPlayer-controller-icon icon-text"></i>
+            <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku-style-mask">
+                {{ if danmaku.editor == 1 }} 
+                <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-style-fulloptions-wrap">
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">字号</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
+                            <li class="picker-item" data-value="12">超小</li>
+                            <li class="picker-item" data-value="16">小</li>
+                            <li class="picker-item" data-value="0">标准</li>
+                            <li class="picker-item" data-value="26">大</li>
+                            <li class="picker-item" data-value="34">超大</li>
+                            <li class="picker-item" data-value="42">特大</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">类型</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-type-picker">
+                            <li class="picker-item" data-value="top">顶部</li>
+                            <li class="picker-item" data-value="right">滚动</li>
+                            <li class="picker-item" data-value="bottom">底部</li>
+                            <li class="picker-item" data-value="left">逆向</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">颜色</div>
+                        <input class="mfunsPlayer-danmaku-color-input mfunsPlayer-input" type="text" value="#"/>
+                        <div class="mfunsPlayer-danmaku-color-preview"></div>
+                    </div>
+                    <ul class="mfunsPlayer-danmaku-color-picker">
+                        {{ each pickerColors }}
+                        <li class="picker-item" data-value="{{ $value }}" style="background-color:{{ $value }}"></li>
+                        {{ /each }}
+                    </ul>
+                </div>
+            {{ else }}
+                <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-style-wrap">
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">字号</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
+                            <li class="picker-item" data-value="16">小</li>
+                            <li class="picker-item" data-value="0">标准</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">类型</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-type-picker">
+                            <li class="picker-item" data-value="top">顶部</li>
+                            <li class="picker-item" data-value="right">滚动</li>
+                            <li class="picker-item" data-value="bottom">底部</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-panel-row">
+                        <div class="row-title">颜色</div>
+                        <input class="mfunsPlayer-danmaku-color-input mfunsPlayer-input" type="text" value="#"/>
+                        <div class="mfunsPlayer-danmaku-color-preview"></div>
+                    </div>
+                    <ul class="mfunsPlayer-danmaku-color-picker">
+                        {{ each pickerColors }}
+                        <li class="picker-item" data-value="{{ $value }}" style="background-color:{{ $value }}"></li>
+                        {{ /each }}
+                    </ul>
+                </div>
+            {{ /if }} 
+            </div>
+        </div>
+        <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
         <div class="emit">发送</div>
     </div>
     </div>

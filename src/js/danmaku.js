@@ -15,16 +15,23 @@ class Danmaku {
     this._opacity = this.options.opacity;
     this.events = this.options.events;
     this.unlimited = this.options.unlimited;
+    this.loaded = false   // 弹幕是否加载完毕
     this._measure("");
 
     this.load();
   }
 
   load() {
-    let apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
+    let apiurl
+    if (this.options.api.link) {
+      apiurl = `${this.options.api.link}`;
+    } else {
+      apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
+    }
     const endpoints = (this.options.api.addition || []).slice(0);
     endpoints.push(apiurl);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
+    this.loaded = false
 
     this._readAllEndpoints(endpoints, (results) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
@@ -34,12 +41,14 @@ class Danmaku {
 
       this.options.callback(this.dan.length);
 
-      this.events && this.events.trigger("danmaku_load_end");
+      this.events && this.events.trigger("danmaku_load_end", this.dan);
+      this.loaded = true
     });
   }
 
-  reload(newId) {
+  reload(newId, newLink = '') {
     this.options.api.id = newId;
+    this.options.api.link = newLink;
     this.dan = [];
     this.clear();
     this.load();
@@ -64,6 +73,7 @@ class Danmaku {
           }
         },
         error: (msg) => {
+          this.events && this.events.trigger("danmaku_load_failed");
           this.options.error(msg || "弹幕加载失败");
           results[i] = [];
 

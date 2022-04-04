@@ -1,0 +1,42 @@
+<div class="mfunsPlayer-danmaku-list-panel">
+    <div class="mfunsPlayer-danmaku-list-wrap">
+        <div class="mfunsPlayer-danmaku-list-head">
+            <span class="list-column col-time">时间</span><span class="list-column col-text">弹幕内容</span><span class="list-column col-date">发送时间</span>
+        </div>
+        <div class="mfunsPlayer-danmaku-list-container">
+            <div class="mfunsPlayer-danmaku-list"></div>
+        </div>
+        <div class="mfunsPlayer-danmaku-list-status">
+            <div class="status-loading-text">弹幕列表装填中……</div>
+            <div class="status-failed-text">弹幕加载失败 X_X</div>
+            <div class="status-empty-text">还没有弹幕哦，快来发弹幕^_^</div>
+        </div>
+    </div>
+    <div class="mfunsPlayer-danmaku-auxiliary-foot">
+        <div class="flex-left"></div>
+        <div class="flex-right">
+            <div class="mfunsPlayer-controller-button mfunsPlayer-ade-button" title="高级弹幕">
+                <i class="mfunsPlayer-controller-icon icon-advanced-danmaku"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mfunsPlayer-ade-panel" style="display: none">
+    <div class="mfunsPlayer-ade-wrap">
+        <div class="mfunsPlayer-ade-head">高级弹幕编辑器</div>
+        <div class="mfunsPlayer-ade-prebox"></div>
+        <div class="mfunsPlayer-ade-foot">
+            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-clear">清空</span>
+            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
+            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
+        </div>
+    </div>
+    <div class="mfunsPlayer-danmaku-auxiliary-foot">
+        <div class="flex-left">高级弹幕手册</div>
+        <div class="flex-right">
+            <div class="mfunsPlayer-controller-button mfunsPlayer-ade-exit-button" title="返回">
+                <i class="mfunsPlayer-controller-icon icon-left-arrow"></i>
+            </div>
+        </div>
+    </div>
+</div>

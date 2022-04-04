@@ -56,6 +56,10 @@ module.exports = {
         test: /\.art$/,
         loader: "art-template-loader",
       },
+      {
+        test: /\.(woff2?|eot|ttf|otf)$/i,
+        loader: "url-loader",
+      },
     ],
   },
 };

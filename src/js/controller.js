@@ -1,11 +1,14 @@
+import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components";
 import utils from "./utils";
 // import Thumbnails from './thumbnails';
 // import Icons from './icons';
 
 class Controller {
   constructor(player) {
+    const THIS = this
     this.player = player;
     this.template = player.template;
+    this.components = player.components;
     this.video = player.video;
     this.autoHideTimer = null;
     this.volumeHideTimer = null;
@@ -15,6 +18,10 @@ class Controller {
     this.clickFlag = 0;
     this.controllTimer = null;
     this.showDanmaku = player.showDanmaku;
+    this.danmakuFontsize = 22
+    this.danmakuType = "right"
+    this.danmakuColor = "#FFFFFF"
+    this.videoScale = false
     this.player.template.videoWrap.addEventListener("mousemove", () => {
       this.setAutoHide();
     });
@@ -25,15 +32,22 @@ class Controller {
     this.initPlayButton();
     if (player.options.dragable) {
       this.initPlayedBar();
+      this.initTimeLabel();
     }
     if (player.options.danmaku) {
       this.initDanmakuButton();
+      this.initDanmakuSettingsButton();
+      this.initDanmakuStyleButton();
     }
+    if (player.options.video.length > 1) {
+      this.initPagelistButton();
+    }
+    this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
     this.initTroggle();
     this.initSpeedButton();
-    this.initSquirtleButton();
+    this.initSettingsButton();
   }
   isControllerfocus() {
     this.template.controller.onmouseenter = () => {
@@ -47,7 +61,7 @@ class Controller {
   }
   initPlayButton() {
     this.template.videoWrap.addEventListener("click", () => this.handleClick());
-    this.template.player_btn.addEventListener("click", () => this.player.toggle());
+    this.template.play_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
     console.log("click");
@@ -68,7 +82,7 @@ class Controller {
       percentage = Math.min(percentage, 1);
       this.player.bar.set("played", percentage, "width");
       this.player.template.barTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
-      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration) + " /";
+      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
     };
 
     const thumbUp = (e) => {
@@ -81,7 +95,7 @@ class Controller {
         this.player.template.barWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration) + " /";
+      this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
       this.player.bar.set("played", percentage, "width");
       this.player.seek(this.player.bar.get("played") * this.player.video.duration);
       setTimeout(() => {
@@ -135,26 +149,48 @@ class Controller {
       }
     });
   }
-
+  initTimeLabel() {
+    this.player.template.time_label.addEventListener("click", () => {
+      this.player.template.controllerTime.classList.add("inputting")
+      this.player.template.time_input.value = utils.secondToTime(this.player.video.currentTime)
+      this.player.template.time_input.focus()
+    })
+    this.player.template.time_input.addEventListener("blur", () => {
+      this.player.template.controllerTime.classList.remove("inputting")
+    })
+    this.player.template.time_input.addEventListener("keydown", (e) => {
+      var e = e || window.event
+      if (e.keyCode == 13) {
+        this.player.template.video.currentTime = utils.textToSecond(this.player.template.time_input.value)
+        //tem.video.play()
+        this.player.template.controllerTime.classList.remove('inputting')
+        this.player.template.time_input.value = ''
+      }
+      if (e.keyCode == 27) {
+        this.player.template.controllerTime.classList.remove('inputting')
+        this.player.template.time_input.value = ''
+      }
+    })
+  }
   initFullButton() {
-    this.player.template.browserFullButton.addEventListener("click", () => {
+    this.player.template.fullscreen_btn.addEventListener("click", () => {
       // window.removeEventListener("resize");
       this.player.fullScreen.toggle("browser");
       this.player.resize();
     });
-    this.player.template.webFullButton.addEventListener("click", () => {
+    this.player.template.webfull_btn.addEventListener("click", () => {
       this.player.fullScreen.toggle("web");
       this.player.resize();
     });
   }
-  initSquirtleButton() {
-    for (let i = 0; i < this.player.template.squirtleItem.length; i++) {
-      this.player.template.squirtleItem[i].addEventListener("click", (event) => {
+  initPagelistButton() {
+    for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
+      this.player.template.pagelistItem[i].addEventListener("click", (event) => {
         window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
         this.player.switchVideo(i);
       });
     }
-    this.player.template.skip.addEventListener("click", () => {
+    this.player.template.next_btn.addEventListener("click", () => {
       const nextVideo = this.player.currentVideo + 1;
       this.player.switchVideo(nextVideo);
     });
@@ -166,10 +202,10 @@ class Controller {
         window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
         const currentSpeed = this.player.template.speedItem[i].dataset.speed;
         this.player.speed(currentSpeed);
-        this.player.template.speedItem[i].classList.add("focus");
-        this.player.template.speedInfo.innerHTML = currentSpeed !== "1.0" ? currentSpeed + "x" : "倍速";
+        this.template.speedItem[i].classList.add("focus");
+        this.template.speedInfo.innerHTML = currentSpeed !== "1.0" ? currentSpeed + "x" : "倍速";
 
-        this.player.template.speedItem.forEach((element, index) => {
+        this.template.speedItem.forEach((element, index) => {
           if (index !== i) {
             element.classList.remove("focus");
           }
@@ -177,72 +213,210 @@ class Controller {
       });
     }
   }
-  initVolumeButton() {
-    const vHeight = 60;
-
-    const volumeMove = (event) => {
-      const e = event || window.event;
-      this.isControl = true;
-      this.player.template.volumeMask.classList.add("show");
-      let rg = (e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar);
-      const percentage = (vHeight - rg) / vHeight;
-      this.player.volume(percentage);
-
-      window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
-    };
-    const volumeUp = (event) => {
-      this.player.template.volumeMask.classList.remove("show");
-      document.removeEventListener(utils.nameMap.dragEnd, volumeUp);
-      document.removeEventListener(utils.nameMap.dragMove, volumeMove);
-      if (!this.player.template.volumeMask.classList.contains("show")) {
-        setTimeout(() => {
-          this.isControl = false;
-        }, 150);
+  initRepeatButton() {
+    if(this.video.loop) {
+      this.player.template.repeat_btn.classList.add("button-repeat")
+      this.player.template.repeat_tip.innerText = "关闭洗脑循环"
+    } else {
+      this.player.template.repeat_btn.classList.remove("button-repeat")
+      this.player.template.repeat_tip.innerText = "洗脑循环"
+    }
+    this.player.template.repeat_btn.addEventListener("click", () => {
+      if(this.video.loop) {
+        this.player.template.repeat_btn.classList.remove("button-repeat")
+        this.player.template.repeat_tip.innerText = "洗脑循环"
+        this.video.loop = false
+      } else {
+        this.player.template.repeat_btn.classList.add("button-repeat")
+        this.player.template.repeat_tip.innerText = "关闭洗脑循环"
+        this.video.loop = true
       }
-    };
-    this.player.template.volumeBar.addEventListener("click", (event) => {
-      const e = event || window.event;
-      let rg = (e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar);
-      const percentage = (vHeight - rg) / vHeight;
-      this.player.volume(percentage);
-    });
-    this.player.template.volumeBar.addEventListener(utils.nameMap.dragStart, (event) => {
-      document.addEventListener(utils.nameMap.dragMove, volumeMove);
-      document.addEventListener(utils.nameMap.dragEnd, volumeUp);
-    });
-
+    })
+  }
+  initVolumeButton() {
+    const THIS = this
+    this.components.volumeSlider = new Slider_vertical(this.template.volumeBar, 0, 100, 1, this.player.options.volume * 100,{
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.volumeMask.classList.add("show");
+      },
+      change(value) {   // 更改进度条值，不修改绑定数据
+        THIS.template.volumeNum.innerText = Math.round(value)
+      },
+      update(value) {   // 更改进度条值，修改绑定数据
+        THIS.video.volume = value * 0.01
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.volumeMask.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.volumeMask.classList.remove("show");
+      }
+    })
     this.player.template.volumeIcon.addEventListener("click", (event) => {
       if (this.player.video.muted) {
         this.player.video.muted = false;
-        if (this.video.volume) this.player.template.volumeIcon.classList.remove("volume-icon-off");
-        this.player.bar.set("volume", this.video.volume - 0.2, "height");
-        this.template.volumeNum.innerHTML = `${(this.video.volume * 100).toFixed(0)}`;
+        if (this.video.volume) this.player.template.volumeIcon.classList.remove("button-volume-off");
+        this.components.volumeSlider.change(this.video.volume * 100);
       } else {
         this.player.video.muted = true;
-        this.player.template.volumeIcon.classList.add("volume-icon-off");
-        this.player.bar.set("volume", 0, "height");
-        this.template.volumeNum.innerHTML = "0";
+        this.player.template.volumeIcon.classList.add("button-volume-off");
+        this.components.volumeSlider.change(0);
       }
     });
   }
+  initSettingsButton () {
+    const THIS = this;
+    this.components.videoScalePicker = new Picker(this.template.video_scale_picker, "auto", {
+      pick(value) {
+        if (value == "auto") {
+          THIS.videoScale = false
+        } else {
+          value.replace(/^([0-9]+)-([0-9]+)$/, (match, w, h) => {
+            if (match) {
+              THIS.videoScale = [Number(w), Number(h)]
+            }
+          })
+        }
+        console.log(`视频比例已调整为：${value}`)
+        THIS.player.resize()
+      }
+    })
+    this.components.videoBorderhiddenSwitch = new Switch(this.template.video_borderhidden_switch, true, {
+      on() {  // 打开开关
+        console.log("已隐藏黑边")
+      },
+      off() { // 关闭开关
+        console.log("已显示黑边")
+      }
+    })
+    this.components.videoNextpageSwitch = new Switch(this.template.video_nextpage_switch, true, {
+      on() {  // 打开开关
+        console.log("已开启自动换P")
+      },
+      off() { // 关闭开关
+        console.log("已关闭自动换P")
+      }
+    })
+  }
   initDanmakuButton() {
-    this.player.template.danmakuButton.addEventListener("click", () => {
+    this.player.template.danmaku_btn.addEventListener("click", () => {
       this.player.showDanmaku = !this.player.showDanmaku;
       this.player.danmaku.showing = this.player.showDanmaku;
       if (this.player.showDanmaku) {
-        this.player.template.danmakuButton.classList.add("open");
-        this.player.template.danmakuButton.classList.remove("close");
+        this.player.template.danmaku_btn.classList.add("open");
+        this.player.template.danmaku_btn.classList.remove("close");
         this.player.danmaku.show();
       } else {
-        this.player.template.danmakuButton.classList.add("close");
-        this.player.template.danmakuButton.classList.remove("open");
+        this.player.template.danmaku_btn.classList.add("close");
+        this.player.template.danmaku_btn.classList.remove("open");
         this.player.danmaku.hide();
       }
     });
   }
+  initDanmakuSettingsButton() {
+    console.log('hellooo')
+    const THIS = this
+    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, null, {
+      created(thisArg) {
+        console.log(thisArg)
+      },
+      pick(value) {
+        console.log(`屏蔽弹幕类型：${value}`)
+      },
+      unpick(value) {
+        console.log(`取消屏蔽弹幕类型：${value}`)
+      },
+      update(value) {
+        console.log(`已屏蔽的弹幕类型有：${[...value]}`)
+      }
+    })
+    this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, 100, {
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.danmakuSettings_panel.classList.add("show");
+      },
+      update(value) {
+        // 有关弹幕透明度更改请写在此处
+        console.log(`已更改透明度：${value}%`)
+      },
+      change(value) {
+        THIS.template.danmaku_opacity_value.innerText = `${value}%`
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.danmakuSettings_panel.classList.remove("show");
+      }
+    })
+    this.components.danmakuShowareaSlider = new Slider(this.template.danmaku_showarea_slider, 1, 5, 1, 1, {
+      start() {   // 开始调节滑动条（点按）
+        THIS.isControl = true;
+        THIS.template.danmakuSettings_panel.classList.add("show");
+      },
+      update(value) {
+        // 有关弹幕显示区域的更改请写在此处
+        console.log(`已更改显示区域：${["0","1/4","半屏","3/4","不重叠","不限"][value]}`)
+      },
+      change(value) {
+        THIS.template.danmaku_showarea_value.innerText = ["0","1/4","半屏","3/4","不重叠","不限"][value]
+      },
+      end() {       // 结束滑动条调节（松手）
+        if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
+          setTimeout(() => {
+            THIS.isControl = false;
+          }, 150);
+        }
+        THIS.player.template.danmakuSettings_panel.classList.remove("show");
+      }
+    })
+  }
+  initDanmakuStyleButton() {
+    const THIS = this
+    this.components.danmakuFontsizePicker = new Picker(this.template.danmaku_fontsize_picker, this.danmakuFontsize, {
+      pick(value) {
+        // 有关字体大小值的更改请写在此处
+        THIS.danmakuFontsize = value
+        console.log(`已选择字体大小：${THIS.danmakuFontsize}`)
+      }
+    })
+    this.components.danmakuTypePicker = new Picker(this.template.danmaku_type_picker, this.danmakuType, {
+      pick(value) {
+        // 有关弹幕模式值的更改请写在此处
+        THIS.danmakuType = value
+        console.log(`已选择弹幕模式：${THIS.danmakuType}`)
+      }
+    })
+    this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
+      pick(value) {
+        if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
+          // 有关弹幕颜色值的更改请写在此处
+          THIS.danmakuColor = value
+          console.log(`已选择弹幕颜色：${THIS.danmakuColor}`)
+          THIS.template.danmaku_color_input.value = value
+          THIS.template.danmaku_color_preview.style["background-color"] = value
+          if (value != value.toUpperCase()) {
+            THIS.components.danmakuColorPicker.change(value.toUpperCase())
+          }
+        }
+      }
+    })
+    this.template.danmaku_color_input.addEventListener('input', function () {
+      this.value = '#' + this.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6)
+      THIS.components.danmakuColorPicker.pick(this.value)
+    })
+    this.template.danmaku_color_preview.addEventListener('click', function () {
+      THIS.components.danmakuColorPicker.pick(THIS.danmakuColor)
+    })
+  }
   initTroggle() {
-    if (this.player.template.troggle) {
-      this.player.template.troggle.addEventListener("click", () => {
+    if (this.player.template.pip_btn) {
+      this.player.template.pip_btn.addEventListener("click", () => {
         if (!document.pictureInPictureElement) {
           //开启
           this.video.requestPictureInPicture().catch((error) => {
@@ -257,6 +431,12 @@ class Controller {
         }
       });
     }
+    this.video.addEventListener('enterpictureinpicture', () => {
+      this.player.template.pip_btn.classList.add('button-picture-in-picture')
+    })
+    this.video.addEventListener('leavepictureinpicture', () => {
+      this.player.template.pip_btn.classList.remove('button-picture-in-picture')
+    })
   }
   setAutoHide(delay = 1500) {
     this.show();

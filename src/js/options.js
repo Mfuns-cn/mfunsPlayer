@@ -17,6 +17,7 @@ export default (options) => {
     contextmenu: [],
     mutex: true,
     pluginOptions: { hls: {}, flv: {}, dash: {}, webtorrent: {} },
+    pickerColors: ["#FE0302","#FFFF00","#00CD00","#00FF00","#4E6EF2","#89D5FF","#7B7FF7","#757575","#FFFFFF","#FB7229"],
   };
   options = Object.assign(defaultOption, options);
   if (options.video) {

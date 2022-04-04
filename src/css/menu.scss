@@ -1,7 +1,9 @@
+@import './theme.scss';
+
 .mfunsPlayer-menu {
     position: absolute;
     width: 170px;
-    border-radius: 2px;
+    border-radius: $theme-border-radius;
     background: rgba(28, 28, 28, 0.85);
     padding: 5px 0;
     overflow: hidden;

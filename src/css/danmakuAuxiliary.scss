@@ -1,0 +1,126 @@
+@import './theme';
+
+.mfunsPlayer-danmaku-auxiliary {
+	font-size: 12px;
+	.mfunsPlayer-danmaku-list-panel {
+		height: 100%;
+		.mfunsPlayer-danmaku-list-head, .list-row {
+			line-height: 24px;
+			height: 24px;
+			white-space: nowrap;
+		}
+		.list-column, .list-cell {
+			display: inline-block;
+			height: 100%;
+			padding: 0 4px;
+			overflow:hidden;
+			&.col-time {
+				padding-left: 8px;
+				width: 40px;
+			}
+			&.col-date {
+				padding-right: 8px;
+				width: 90px;
+			}
+			&.col-text {
+				width: calc(100% - 162px);
+				text-overflow: ellipsis;
+				white-space:overflow;
+			}
+		}
+		.mfunsPlayer-danmaku-list-wrap {
+			position: relative;
+			overflow: hidden;
+			width: 100%;
+			height: calc(100% - 40px);
+			.mfunsPlayer-danmaku-list-container {
+				overflow: hidden;
+				position: absolute;
+				overflow-y: auto;
+				scrollbar-width: thin;
+				top: 24px;
+				left: 0;
+				width: 100%;
+				height: calc(100% - 24px);
+				&::-webkit-scrollbar {
+					width: 5px;
+					
+				}
+				&::-webkit-scrollbar-thumb {
+					background-color: $text-grey;
+				}
+			}
+			.mfunsPlayer-danmaku-list-status {
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                div {
+                    text-align: center;
+                    display: none;
+                    color: $text-grey;
+                }
+                &.status-loading {
+                    .status-loading-text {
+                        display: block;
+                    }
+                }
+                &.status-failed {
+                    .status-failed-text {
+                        display: block;
+                    }
+                }
+                &.status-empty {
+                    .status-empty-text {
+                        display: block;
+                    }
+                }
+			}
+		}
+	}
+	.mfunsPlayer-ade-panel {
+		height: 100%;
+		.mfunsPlayer-ade-wrap {
+			height: calc(100% - 40px);
+			padding: 0 8px;
+		}
+		.mfunsPlayer-ade-head {
+			height: 30px;
+			line-height: 30px;
+			font-weight: bold;
+		}
+		.mfunsPlayer-ade-prebox {
+			height: calc(100% - 70px);
+			border: 1px solid $light-grey;
+			border-radius: $theme-border-radius;
+		}
+		.mfunsPlayer-ade-foot {
+			margin-top: 6px;
+			height: 24px;
+			user-select: none;
+			.mfunsPlayer-ade-button {
+				cursor: pointer;
+				height: 22px;
+				line-height: 22px;
+				padding: 0 5px;
+				display: inline-block;
+				border-radius: $theme-border-radius;
+				border: 1px solid $text-grey;
+				color: $text-grey;
+			}
+			.mfunsPlayer-ade-emit {
+				border: 1px solid $theme-color;
+				color: $theme-color;
+			}
+		}
+	}
+	.mfunsPlayer-danmaku-auxiliary-foot {
+		display: flex;
+		align-items: center;
+		height: 40px;
+		justify-content: space-between;
+		box-sizing: border-box;
+		border-top: 1px solid #e7e7e7;
+		padding: 0 8px;
+		color: $text-grey;
+	}
+}

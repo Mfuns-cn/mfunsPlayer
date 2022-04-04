@@ -1,12 +1,13 @@
 const isMobile = /mobile/i.test(window.navigator.userAgent);
 const utils = {
   /**
-   * Parse second to time string
+   * Parse second to time string 将秒数转换为时间文本
    *
    * @param {Number} second
+   * @param {Boolean} showHour
    * @return {String} 00:00 or 00:00:00
    */
-  secondToTime: (second) => {
+  secondToTime: (second, showHour = true) => {
     second = second || 0;
     if (second === 0 || second === Infinity || second.toString() === "NaN") {
       return "00:00";
@@ -15,9 +16,29 @@ const utils = {
     const hour = Math.floor(second / 3600);
     const min = Math.floor((second - hour * 3600) / 60);
     const sec = Math.floor(second - hour * 3600 - min * 60);
-    return (hour > 0 ? [hour, min, sec] : [min, sec]).map(add0).join(":");
+    if (showHour) {
+      return (hour > 0 ? [hour, min, sec] : [min, sec]).map(add0).join(":");
+    } else {
+      return [hour * 60 + min, sec].map(add0).join(":");
+    }
   },
 
+  /**
+   * 将时间文本转换为秒数
+   *
+   * @param {String} str 冒号分隔的时间文本，支持全角冒号
+   * @return {Number} second
+   */
+  textToSecond: (str) => {
+    let arr = str.split(/[:：]/).slice(-3);
+    let sec = parseInt(arr[arr.length - 1]);
+    let min = parseInt(arr[arr.length - 2]);
+    let hour = parseInt(arr[arr.length - 3]);
+    sec = sec ? sec : 0;
+    min = min ? min : 0;
+    hour = hour ? hour : 0;
+    return sec + min * 60 + hour * 3600;
+  },
   /**
    * control play progress
    */
@@ -145,7 +166,7 @@ const utils = {
       case 2:
         return "bottom";
       default:
-        return "top";
+        return "right";
     }
   },
 };

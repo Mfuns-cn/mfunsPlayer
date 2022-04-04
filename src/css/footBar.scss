@@ -1,15 +1,16 @@
 .mfunsPlayer-footBar{
-    height: 50px;
+    height: 40px;
     width: 100%;
     display: flex;
     position: relative;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 15px;
     background-color: #fff;
-    box-shadow: 0px 0px 3px #bbb;
     box-sizing: border-box;
     .mfunsPlayer-video-danmaku-details{
+        font-size: 13px;
+        padding-right: 5px;
         .mfunsPlayer-video-danmaku-count{
             color: #666
         }

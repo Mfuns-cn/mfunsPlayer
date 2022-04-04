@@ -10,6 +10,7 @@ import ContextMenu from "./contextmenu";
 import Template from "./template";
 import utils from "./utils";
 import { getVideoTime } from "./video";
+import DanmakuAuxiliary from "./danmakuAuxiliary";
 
 let index = 0;
 const instances = [];
@@ -25,10 +26,12 @@ export default class mfunsPlayer {
     this.isSwitched = false;
     this.isShowMenu = false;
     this.plugins = {};
+    this.components = {};
     this.playTimer = null;
     this.video = this.template.video;
     this.currentVideo = this.options.currentVideo;
     this.bar = new Bar(this.template);
+    this.danmakuAuxiliary = null;
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
       this.danmakuOptions = {
@@ -46,6 +49,7 @@ export default class mfunsPlayer {
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
         api: {
+          link: this.options.video[this.options.currentVideo].danLink,
           id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
           token: this.options.danmaku.token,
@@ -59,8 +63,8 @@ export default class mfunsPlayer {
     this.fullScreen = new FullScreen(this);
     this.contextMenu = new ContextMenu(this);
     this.hotkey = new HotKey(this);
+    console.log(this.components);
 
-    this.volume(this.options.volume);
     this.initVideo(this.video, this.options.video.type);
     this.arrow = this.container.offsetWidth <= 500;
 
@@ -84,6 +88,7 @@ export default class mfunsPlayer {
       },
       true
     );
+    this.rescale = this.rescale.bind(this);
 
     index++;
     instances.push(this);
@@ -101,10 +106,12 @@ export default class mfunsPlayer {
     }
     // this.isPlayEnd = false;
     this.video.currentTime = time;
-
+    /*
+    已转移至video监听事件
     if (this.danmaku) {
       this.danmaku.seek();
     }
+    */
   }
   pause() {
     this.video.pause();
@@ -240,8 +247,8 @@ export default class mfunsPlayer {
   }
   initVideo(video, type) {
     this.initMSE(video, type);
-    if (this.options.video.length > 1 && this.options.currentVideo <= this.template.squirtleItem.length) {
-      this.template.squirtleItem[this.options.currentVideo].classList.add("focus");
+    if (this.options.video.length > 1 && this.options.currentVideo <= this.template.pagelistItem.length) {
+      this.template.pagelistItem[this.options.currentVideo].classList.add("focus");
     }
     this.on("canplay", () => {
       if (this.isSwitched) {
@@ -273,7 +280,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.remove("mfunsPlayer-paused");
       this.container.classList.add("mfunsPlayer-playing");
-      this.template.player_btn.children[0].className = "icon_play";
+      this.template.play_btn.classList.remove("button-paused");
       this.template.bezel.classList.add("bezel_play");
       if (this.playCallback) this.playCallback(this.video.currentTime);
       this.playTimer = setTimeout(() => {
@@ -285,7 +292,7 @@ export default class mfunsPlayer {
       this.controller.setAutoHide();
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
-      this.template.player_btn.children[0].className = "icon_pause";
+      this.template.play_btn.classList.add("button-paused");
       this.template.bezel.style.display = "block";
       this.template.bezel.classList.remove("bezel_play");
       if (this.pauseCallback) this.pauseCallback(this.video.currentTime);
@@ -294,13 +301,16 @@ export default class mfunsPlayer {
       if (!this.unableTimeupdate) {
         this.bar.set("played", this.video.currentTime / this.video.duration, "width");
         const ct = parseInt(this.video.currentTime);
-        this.template.currentTime.innerText = utils.secondToTime(ct) + " /";
+        this.template.currentTime.innerText = utils.secondToTime(ct);
       }
     });
     this.on("ended", () => {
       this.bar.set("played", 1, "width");
       if (this.endedCallback) this.endedCallback(this.video.currentTime);
       this.playEnd = true;
+    });
+    this.on("seeking", () => {
+      this.danmaku.seek();
     });
     for (let i = 0; i < this.events.videoEvents.length; i++) {
       video.addEventListener(this.events.videoEvents[i], () => {
@@ -315,17 +325,16 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     this.isSwitched = true;
     const currentVideo = this.options.video[index];
-    this.danmaku.reload(currentVideo.danId);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
   }
   handleSwitchVideo(index) {
-    const total = this.template.squirtleItem.length - 1;
-    this.currentVideo = index;
+    const total = this.template.pagelistItem.length - 1;
     if (index > total) return;
-    this.template.skip.style.display = index === total ? "none" : "block";
-    this.template.squirtleItem[index].classList.add("focus");
-    this.template.squirtleItem.forEach((element, i) => {
+    this.template.next_btn.style.display = index === total ? "none" : "block";
+    this.template.pagelistItem[index].classList.add("focus");
+    this.template.pagelistItem.forEach((element, i) => {
       if (i !== index) {
         element.classList.remove("focus");
       }
@@ -338,9 +347,9 @@ export default class mfunsPlayer {
     if (!isNaN(percentage)) {
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.bar.set("volume", percentage * 0.8, "height");
+      console.log(this.components);
+      this.components.volumeSlider.change(percentage * 100);
       const formatPercentage = `${(percentage * 100).toFixed(0)}`;
-      this.template.volumeNum.innerHTML = formatPercentage;
 
       this.notice(`音量：${formatPercentage}%`);
 
@@ -356,9 +365,9 @@ export default class mfunsPlayer {
 
   switchVolumeIcon(percentage) {
     if (percentage > 0) {
-      this.template.volumeIcon.classList.remove("volume-icon-off");
+      this.template.volumeIcon.classList.remove("button-volume-off");
     } else {
-      this.template.volumeIcon.classList.add("volume-icon-off");
+      this.template.volumeIcon.classList.add("button-volume-off");
     }
   }
   speed(rate) {
@@ -376,9 +385,32 @@ export default class mfunsPlayer {
         this.template.barWrap.offsetWidth
       );
     }
+    window.removeEventListener("resize", this.rescale);
+    if (this.controller.videoScale) {
+      this.rescale();
+      this.video.style["object-fit"] = "fill";
+      window.addEventListener("resize", this.rescale);
+    } else {
+      this.video.style["object-fit"] = "";
+      this.video.style.width = "";
+      this.video.style.height = "";
+    }
     this.events.trigger("resize");
   }
-
+  rescale() {
+    // 保持视频宽高比例
+    //    (父元素宽/父元素高) * (视频宽%/视频高%) = 比例宽/比例高
+    // => (父元素宽/父元素高) * (比例高/比例宽) = (视频高%/视频宽%)
+    let hscale = this.template.videoMask.clientWidth * this.controller.videoScale[1];
+    let wscale = this.template.videoMask.clientHeight * this.controller.videoScale[0];
+    if (wscale > hscale) {
+      this.video.style.width = `100%`;
+      this.video.style.height = `${(hscale / wscale) * 100}%`;
+    } else {
+      this.video.style.height = `100%`;
+      this.video.style.width = `${(wscale / hscale) * 100}%`;
+    }
+  }
   notice(text, alive = false, time = 2000, opacity = 0.8) {
     this.template.notice.innerHTML = text;
     this.template.notice.style.opacity = opacity;
@@ -392,5 +424,8 @@ export default class mfunsPlayer {
         this.events.trigger("notice_hide");
       }, time);
     }
+  }
+  mountDanmakuAuxiliary(el) {
+    this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
   }
 }

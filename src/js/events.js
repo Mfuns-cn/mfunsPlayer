@@ -28,22 +28,26 @@ class Events {
       "waiting",
     ];
     this.playerEvents = [
-      "danmaku_show",
-      "danmaku_hide",
+      "danmaku_show",         // 显示弹幕
+      "danmaku_hide",         // 隐藏弹幕
       "danmaku_clear",
       "danmaku_loaded",
-      "danmaku_send",
+      "danmaku_send",         // 发送弹幕
       "danmaku_opacity",
-      "contextmenu_show",
-      "contextmenu_hide",
+      "contextmenu_show",     // 显示右键菜单
+      "contextmenu_hide",     // 隐藏右键菜单
       "notice_show",
       "notice_hide",
       "destroy",
       "resize",
-      "fullscreen",
-      "fullscreen_cancel",
-      "webfullscreen",
-      "webfullscreen_cancel",
+      "fullscreen",           // 进入全屏模式
+      "fullscreen_cancel",    // 退出全屏模式
+      "webfullscreen",        // 进入网页全屏
+      "webfullscreen_cancel", // 退出网页全屏
+
+      "danmaku_load_start",   // 弹幕开始加载
+      "danmaku_load_end",     // 弹幕加载完毕
+      "danmaku_load_failed",  // 弹幕加载失败
     ];
   }
 

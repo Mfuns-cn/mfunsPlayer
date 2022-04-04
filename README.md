@@ -54,14 +54,15 @@ new mfunsPlayer({
   dragable: false, //进度条是否可拖拽
   hotkey: true, //是否启用快捷键
   volume: 0.7, //视频初始音量
-  currentVideo:0 //当前播放视频的下标
+  currentVideo: 0 //当前播放视频的下标
   video: [ //type:ObjectArray
     {
       url: "", //视频链接地址（必传）
       pic: "", //视频预览图链接地址（不传默认为视频第1帧）
       type: "mp4", //视频类型
       title: "", //视频标题（选传）
-      danId:100 //弹幕id(选传)
+      danId: 100, //弹幕id(选传)
+      danLink: "", //外部弹幕文件链接(选传)
     },
   ],
   //以下为选传配置
@@ -69,6 +70,7 @@ new mfunsPlayer({
     api: "", //弹幕接口基准地址
     bottom: "0", //弹幕距离视频底部的距离
     showDanmaku: true, //初始化完成是否自动开启弹幕
+    editor: 0 //弹幕样式面板类型，0为普通权限面板，1为特殊权限面板（不传默认为普通权限面板）
   },
   advanceDanmaku: {
     api: "", //高级弹幕接口地址
