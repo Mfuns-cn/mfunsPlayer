@@ -3,9 +3,10 @@
 .mfunsPlayer {
     .mfunsPlayer-slider {       // 滑动条形态样式
         .slider-track{
-            width: 4px;
-            height: 4px;
-            border-radius: 2px;
+            width: 2px;
+            height: 2px;
+            border-radius: 1px;
+            background: #e5e9ef;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -14,6 +15,7 @@
             cursor: pointer;
         }
         .slider-bar{
+            background: $theme-color;
             border-radius: 2px;
             cursor: pointer;
         }
@@ -26,6 +28,7 @@
             width: 12px;
             height: 12px;
             border-radius: 100%;
+            background: $theme-color;
             z-index: 2;
         }
     }
@@ -38,6 +41,7 @@
             border-radius: 2px;
             border: transparent solid 1px;
             transition: color .2s;
+            cursor: pointer;
             &.picked{
                 border: transparent solid 1px;
                 border-color: $theme-color;

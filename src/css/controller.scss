@@ -271,9 +271,9 @@
 								height: 60px;
 								position: relative;
 								cursor: pointer;
-								.slider-track{
-									background: #fff;
-								}
+								// .slider-track{
+								// 	background: #fff;
+								// }
 								.slider-bar{
 									background: $theme-color;
 								}
@@ -391,15 +391,6 @@
 				position: relative;
 				width: 160px;
 				cursor: pointer;
-				.slider-track{
-					background: #fff;
-				}
-				.slider-bar{
-					background: $theme-color;
-				}
-				.slider-thumb{
-					background: $theme-color;
-				}
 			}
 		}
 	}
@@ -475,11 +466,12 @@
 					line-height: 0;
 					.picker-item {
 						display: inline-block;
+						margin-bottom: 4px;
 						width: 14px;
 						height: 14px;
 						border-radius: $theme-border-radius;
 						border: 2px solid #00000040;
-						margin-bottom: 4px;
+						cursor: pointer;
 						&.picked {
 							border-color: #FFF;
 						}

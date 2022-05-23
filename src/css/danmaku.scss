@@ -45,18 +45,33 @@
     position: absolute;
     visibility: hidden;
 }
-.mfunsPlayer-danmaku-right {
+
+.mfunsPlayer-danmaku-right{
     position: absolute;
     right: 0;
     white-space: pre;
     transform: translateX(100%);
+    &.mfunsPlayer-danmaku-move {
+    will-change: transform;
+    animation: danmaku 5s linear;
+    &.low{
+        animation: danmaku 7.5s linear;
+        // animation-play-state: paused;
+    }
+    &.lowest{
+        animation: danmaku 10s linear;
+        // animation-play-state: paused;
+    }
+    &.fast{
+        animation: danmaku 3s linear;
+        // animation-play-state: paused;
+    }
+    &.fastest{
+        animation: danmaku 2s linear;
+        // animation-play-state: paused;
+    }
+  }
 }
-.mfunsPlayer-danmaku-right.mfunsPlayer-danmaku-move {
-        will-change: transform;
-        animation: danmaku 5s linear;
-        animation-play-state: paused;
-}
-
 @keyframes danmaku {
         from {
             transform: translateX(100%);

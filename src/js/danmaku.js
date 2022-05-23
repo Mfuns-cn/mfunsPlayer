@@ -6,6 +6,7 @@ class Danmaku {
     this.container = this.options.container;
     this.danTunnel = {
       right: {},
+      left: {},
       top: {},
       bottom: {},
     };
@@ -13,16 +14,27 @@ class Danmaku {
     this.dan = [];
     this.showing = this.options.isShow;
     this._opacity = this.options.opacity;
+    this._fontScale = this.options.fontScale;
+    this._speed = this.options.speed;
+    this._limitArea = this.options.limitArea;
     this.events = this.options.events;
+    this.topLimit = false;
+    this.bottomLimit = false;
+    this.leftLimit = false;
+    this.rightLimit = false;
+    this.colorLimit = false;
+    this.advanceLimit = false;
     this.unlimited = this.options.unlimited;
-    this.loaded = false   // 弹幕是否加载完毕
+    this.loaded = false; // 弹幕是否加载完毕
+    this.paused = true;
     this._measure("");
 
     this.load();
   }
 
   load() {
-    let apiurl
+    let apiurl;
+    console.log(this.unlimited);
     if (this.options.api.link) {
       apiurl = `${this.options.api.link}`;
     } else {
@@ -31,7 +43,7 @@ class Danmaku {
     const endpoints = (this.options.api.addition || []).slice(0);
     endpoints.push(apiurl);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
-    this.loaded = false
+    this.loaded = false;
 
     this._readAllEndpoints(endpoints, (results) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
@@ -42,11 +54,11 @@ class Danmaku {
       this.options.callback(this.dan.length);
 
       this.events && this.events.trigger("danmaku_load_end", this.dan);
-      this.loaded = true
+      this.loaded = true;
     });
   }
 
-  reload(newId, newLink = '') {
+  reload(newId, newLink = "") {
     this.options.api.id = newId;
     this.options.api.link = newLink;
     this.dan = [];
@@ -87,22 +99,46 @@ class Danmaku {
   }
 
   send(dan, callback) {}
-
+  checkShield = (dan) => {
+    let type = typeof dan.type !== "string" ? utils.number2Type(dan.type) : dan.type;
+    if (this[`${type}Limit`]) {
+      return false;
+    }
+    return true;
+  };
   frame() {
     if (this.dan.length && !this.paused && this.showing) {
       let item = this.dan[this.danIndex];
       const dan = [];
       while (item && this.options.time() > parseFloat(item.time)) {
-        dan.push(item);
+        if (this.checkShield(item)) {
+          dan.push(item);
+        }
         item = this.dan[++this.danIndex];
       }
-      this.draw(dan);
+      if (this.colorLimit) {
+        this.draw(
+          dan.filter((el) => {
+            return el.color === 16777215;
+          })
+        );
+      } else {
+        this.draw(dan);
+      }
     }
     window.requestAnimationFrame(() => {
       this.frame();
     });
   }
-
+  limitArea(areaType) {
+    //"1/4", "半屏", "3/4", "不重叠", "不限"
+    this._limitArea = Math.min(areaType / 4, 1);
+    this.unlimited = areaType > 4;
+    this.shield("bottom", areaType < 4);
+  }
+  shield(type, flag = false) {
+    this[`${type}Limit`] = flag;
+  }
   opacity(percentage) {
     if (percentage !== undefined) {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
@@ -115,9 +151,48 @@ class Danmaku {
     }
     return this._opacity;
   }
-
+  size(scale) {
+    this.events && this.events.trigger("danmaku_size", this.__fontScale);
+    this._fontScale = scale;
+    return this._fontScale;
+  }
+  speed(speed) {
+    let speedName;
+    if (speed !== undefined) {
+      switch (speed) {
+        case 0.5:
+          speedName = "lowest";
+          break;
+        case 0.75:
+          speedName = "low";
+          break;
+        case 1:
+          speedName = "";
+          break;
+        case 1.25:
+          speedName = "fast";
+          break;
+        case 1.5:
+          speedName = "fastest";
+          break;
+        default:
+          break;
+      }
+      const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-move");
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("subtitle")) return;
+        if (!!speedName) {
+          items[i].classList.add(speedName);
+        }
+        if (!!this._speed) {
+          items[i].classList.remove(this._speed);
+        }
+      }
+    }
+    this._speed = speedName;
+  }
   /**
-   * Push a danmaku into DPlayer
+   * Push a danmaku into Player
    *
    * @param {Object Array} dan - {text, color, type}
    * text - danmaku content
@@ -158,7 +233,7 @@ class Danmaku {
                 ele.addEventListener("animationend", () => {
                   this.danTunnel[type][i + ""].splice(0, 1);
                 });
-                return i % itemY;
+                return parseInt(i % (itemY * this._limitArea));
               }
             }
           } else {
@@ -166,7 +241,7 @@ class Danmaku {
             ele.addEventListener("animationend", () => {
               this.danTunnel[type][i + ""].splice(0, 1);
             });
-            return i % itemY;
+            return parseInt(i % (itemY * this._limitArea));
           }
         }
         return -1;
@@ -182,22 +257,24 @@ class Danmaku {
         if (typeof dan[i].type !== "string") {
           dan[i].type = utils.number2Type(dan[i].type);
         }
-
+        dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
         if (!dan[i].color) {
           dan[i].color = 16777215;
         }
+
         const item = document.createElement("div");
-        // if (!this.paused) {
-        //   item.classList.add("mfunsPlayer-danmaku-run");
-        // } else {
-        //   item.classList.remove("mfunsPlayer-danmaku-run");
-        // }
+        if (!this.paused) {
+          item.classList.add("mfunsPlayer-danmaku-run");
+        } else {
+          item.classList.remove("mfunsPlayer-danmaku-run");
+        }
         item.classList.add("mfunsPlayer-danmaku-item");
         item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
+
         if (dan[i].border) {
           item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text}</span>`;
         } else {
-          item.innerHTML = dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
+          item.innerHTML = dan[i].text;
         }
         item.style.opacity = this._opacity;
         if (typeof dan[i].color !== "string") {

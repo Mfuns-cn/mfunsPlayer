@@ -1,13 +1,18 @@
 export default class HotKey {
   constructor(player) {
     window.onresize = () => {
-      if (!this.checkFull()) {
+      if (!player.fullScreen.isFullScreen("browser") && !player.fullScreen.isFullScreen("web")) {
         player.fullScreen.cancel("browser");
-      } else {
+        const danmakuRoot = player.template.danmakuRoot;
+        if ([...player.template.controllerWrap.childNodes].indexOf(danmakuRoot) > -1) {
+          player.template.controllerWrap.removeChild(danmakuRoot);
+          player.template.footBar.appendChild(danmakuRoot);
+        }
       }
     };
     if (player.options.hotkey) {
       document.addEventListener("keydown", (e) => {
+        console.log(e);
         if (player.focus) {
           const tag = document.activeElement.tagName.toUpperCase();
           const editable = document.activeElement.getAttribute("contenteditable");
@@ -15,6 +20,9 @@ export default class HotKey {
             const event = e || window.event;
             let percentage;
             switch (event.keyCode) {
+              case 27:
+                player.fullScreen.cancel("web");
+                break;
               case 32:
                 event.preventDefault();
                 player.toggle();

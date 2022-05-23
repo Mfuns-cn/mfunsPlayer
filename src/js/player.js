@@ -48,6 +48,7 @@ export default class mfunsPlayer {
         height: this.arrow ? 24 : 30,
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
+        unlimited: false,
         api: {
           link: this.options.video[this.options.currentVideo].danLink,
           id: this.options.video[this.options.currentVideo].danId,
@@ -63,14 +64,9 @@ export default class mfunsPlayer {
     this.fullScreen = new FullScreen(this);
     this.contextMenu = new ContextMenu(this);
     this.hotkey = new HotKey(this);
-    console.log(this.components);
-
     this.initVideo(this.video, this.options.video.type);
     this.arrow = this.container.offsetWidth <= 500;
-
-    if (this.options.autoplay) {
-      this.play();
-    }
+    this.options.autoplay && this.play();
     if (this.options.playCallback) this.playCallback = options.playCallback;
     if (this.options.pauseCallback) this.pauseCallback = options.pauseCallback;
     if (this.options.endedCallback) this.endedCallback = options.endedCallback;
@@ -251,20 +247,21 @@ export default class mfunsPlayer {
       this.template.pagelistItem[this.options.currentVideo].classList.add("focus");
     }
     this.on("canplay", () => {
-      if (this.isSwitched) {
-        this.play();
-      }
+      this.isSwitched && this.play();
       this.isSwitched = false;
     });
 
     this.on("loadstart", () => {
       this.notice("正在加载视频内容...", true);
+      this.template.loading.classList.add("show");
       this.videoLoaded = false;
     });
     this.on("error", () => {
-      this.notice("视频播放失败，请检查网络情况");
+      this.notice("视频播放失败，请检查网络情况", true);
+      this.template.loading.classList.remove("show");
     });
     this.on("loadedmetadata", () => {
+      this.template.loading.classList.remove("show");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
       getVideoTime(this.template);
@@ -375,9 +372,7 @@ export default class mfunsPlayer {
     return rate;
   }
   resize() {
-    if (this.danmaku) {
-      this.danmaku.resize();
-    }
+    this.danmaku && this.danmaku.resize();
     if (this.controller.thumbnails) {
       this.controller.thumbnails.resize(
         160,
@@ -417,7 +412,7 @@ export default class mfunsPlayer {
     if (this.noticeTime) {
       clearTimeout(this.noticeTime);
     }
-    // this.events.trigger("notice_show", text);
+    this.events.trigger("notice_show", text);
     if (time > 0 && !alive) {
       this.noticeTime = setTimeout(() => {
         this.template.notice.style.opacity = 0;

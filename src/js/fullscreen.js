@@ -49,7 +49,7 @@ class FullScreen {
   isFullScreen(type = "browser") {
     switch (type) {
       case "browser":
-        return (
+        return !!(
           document.fullscreenElement ||
           document.mozFullScreenElement ||
           document.webkitFullscreenElement ||
@@ -60,13 +60,9 @@ class FullScreen {
     }
   }
   handleFullscrren(type) {
-    const anotherType = type === "browser" ? "web" : "browser";
-    const anotherTypeOn = this.isFullScreen(anotherType);
-    if (anotherTypeOn) {
-      this.cancel(anotherType);
-    }
     const danmakuRoot = this.player.template.danmakuRoot;
-    if (danmakuRoot) {
+    if (danmakuRoot && !this.isFullScreen(type)) {
+      this.player.template.footBar.removeChild(danmakuRoot);
       this.player.template.controllerWrap.appendChild(danmakuRoot);
     }
   }
@@ -75,8 +71,10 @@ class FullScreen {
     const anotherTypeOn = this.isFullScreen(anotherType);
     if (!anotherTypeOn) {
       this.lastScrollPosition = utils.getScrollPosition();
+    } else {
+      this.cancel(anotherType);
     }
-    this.cancel(anotherType);
+
     // if (this.player.template.danmaku_btn.className === "mfunsPlayer-video-danmaku-button open") {
     //   this.danmakuOpend = true;
     // }
@@ -110,9 +108,9 @@ class FullScreen {
         break;
     }
   }
-  handleExitFullscreen() {
-    const danmakuRoot = this.player.template.controllerWrap.childNodes[5];
-    if (danmakuRoot) {
+  handleExitFullscreen(type) {
+    const danmakuRoot = this.player.template.danmakuRoot;
+    if (danmakuRoot && this.isFullScreen(type)) {
       this.player.template.controllerWrap.removeChild(danmakuRoot);
       this.player.template.footBar.appendChild(danmakuRoot);
     }
@@ -140,11 +138,11 @@ class FullScreen {
         }
         break;
       case "web":
+        this.handleExitFullscreen("web");
         this.player.template.videoWrap.classList.remove("mfunsPlayer-web-fullscreen");
         document.body.classList.remove("mfunsPlayer-web-fullscreen-fix");
         this.player.template.webfull_tip.innerText = "网页全屏";
-        this.handleExitFullscreen("web");
-        // this.player.events.trigger("webfullscreen");
+        this.player.events.trigger("webfullscreen");
         break;
     }
   }

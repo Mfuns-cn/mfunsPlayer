@@ -61,7 +61,7 @@
                     <div class="mfunsPlayer-controller-time-label">
                         <span class="currentTime">00:00</span>
                         <span>/</span>
-                        <span class="total">23:33</span>
+                        <span class="total">00:00</span>
                     </div>
                     <input class="mfunsPlayer-controller-time-input mfunsPlayer-input"/>
                 </div>
@@ -217,17 +217,17 @@
         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-style">
             <i class="mfunsPlayer-controller-icon icon-text"></i>
             <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-danmaku-style-mask">
-                {{ if danmaku.editor == 1 }} 
                 <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-style-fulloptions-wrap">
                     <div class="mfunsPlayer-panel-row">
                         <div class="row-title">字号</div>
                         <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
-                            <li class="picker-item" data-value="12">超小</li>
+                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="12">超小</li> {{ /if }}
                             <li class="picker-item" data-value="16">小</li>
-                            <li class="picker-item" data-value="0">标准</li>
-                            <li class="picker-item" data-value="26">大</li>
+                            <li class="picker-item picked" data-value="18">标准</li>
+                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="26">大</li>
                             <li class="picker-item" data-value="34">超大</li>
                             <li class="picker-item" data-value="42">特大</li>
+                            {{ /if }}
                         </ul>
                     </div>
                     <div class="mfunsPlayer-panel-row">
@@ -250,35 +250,6 @@
                         {{ /each }}
                     </ul>
                 </div>
-            {{ else }}
-                <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-danmaku-style-wrap">
-                    <div class="mfunsPlayer-panel-row">
-                        <div class="row-title">字号</div>
-                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
-                            <li class="picker-item" data-value="16">小</li>
-                            <li class="picker-item" data-value="0">标准</li>
-                        </ul>
-                    </div>
-                    <div class="mfunsPlayer-panel-row">
-                        <div class="row-title">类型</div>
-                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-type-picker">
-                            <li class="picker-item" data-value="top">顶部</li>
-                            <li class="picker-item" data-value="right">滚动</li>
-                            <li class="picker-item" data-value="bottom">底部</li>
-                        </ul>
-                    </div>
-                    <div class="mfunsPlayer-panel-row">
-                        <div class="row-title">颜色</div>
-                        <input class="mfunsPlayer-danmaku-color-input mfunsPlayer-input" type="text" value="#"/>
-                        <div class="mfunsPlayer-danmaku-color-preview"></div>
-                    </div>
-                    <ul class="mfunsPlayer-danmaku-color-picker">
-                        {{ each pickerColors }}
-                        <li class="picker-item" data-value="{{ $value }}" style="background-color:{{ $value }}"></li>
-                        {{ /each }}
-                    </ul>
-                </div>
-            {{ /if }} 
             </div>
         </div>
         <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
