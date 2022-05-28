@@ -1,5 +1,6 @@
-
+{{set divide = {flag:true} }}
 <div class="mfunsPlayer-video-wrap">
+    <div  class="mfunsPlayer-bezel" ></div>
     <div class="mfunsPlayer-mask">
         <div class="mfunsPlayer-menu">
             {{ each contextmenu }}
@@ -31,7 +32,7 @@
 
     
 <div class="mfunsPlayer-controller-mask">
-    <div  class="mfunsPlayer-bezel" ></div>
+    
 
     <div class="mfunsPlayer-controller">
         <div class="mfunsPlayer-bar-wrap" >
@@ -59,9 +60,9 @@
                 {{ /if }}
                 <div class="mfunsPlayer-controller-time">
                     <div class="mfunsPlayer-controller-time-label">
-                        <span class="currentTime">00:00</span>
+                        <span class="mfunsPlaye-video-currentTime">00:00</span>
                         <span>/</span>
-                        <span class="total">00:00</span>
+                        <span class="mfunsPlaye-video-totalTime">00:00</span>
                     </div>
                     <input class="mfunsPlayer-controller-time-input mfunsPlayer-input"/>
                 </div>
@@ -116,7 +117,7 @@
                 </div>
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
                     <i class="mfunsPlayer-controller-icon icon-settings"></i>
-                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask">
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask" {{ if danmaku && danmaku.bottm }} style="left:-50%"{{ /if }}>
                         <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-settings-wrap">
                             <div class="mfunsPlayer-panel-row">
                                 <div class="row-title">视频比例</div>
@@ -127,13 +128,25 @@
                                 </ul>
                             </div>
                             <div class="mfunsPlayer-panel-row">
+                                <div class="row-title">播放方式</div>
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-autoplay-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">自动开播</div>
+                                </div>
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">自动切集</div>
+                                </div>
+                            </div>
+                            <div class="mfunsPlayer-panel-row">
+                                <div class="row-title">其他设置</div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-borderhidden-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
                                     <div class="mfunsPlayer-switch-label">隐藏黑边</div>
                                 </div>
-                                <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-darkmode-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
-                                    <div class="mfunsPlayer-switch-label">自动换P</div>
+                                    <div class="mfunsPlayer-switch-label">夜间模式</div>
                                 </div>
                             </div>
                         </div>
@@ -200,15 +213,40 @@
                     <div class="row-title">不透明度</div>
                     <div class="mfunsPlayer-danmaku-opacity-slider mfunsPlayer-slider">
                         {{ include './slider.art' }}
+                       
                     </div>
                     <div class="mfunsPlayer-danmaku-opacity-value row-value">-</div>
                 </div>
                 <div class="mfunsPlayer-panel-row">
                     <div class="row-title">显示区域</div>
                     <div class="mfunsPlayer-danmaku-showarea-slider mfunsPlayer-slider">
-                        {{ include './slider.art' }}
+                        {{ include './slider.art' divide}}
+                        <ul class="slider-tip">
+                            <li class="slider-tip-item">1/4</li>
+                            <li class="slider-tip-item">3/4</li>
+                            <li class="slider-tip-item">不限</li>
+                        </ul>
                     </div>
                     <div class="mfunsPlayer-danmaku-showarea-value row-value">-</div>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">弹幕大小</div>
+                    <div class="mfunsPlayer-danmaku-size-slider mfunsPlayer-slider">
+                        {{ include './slider.art' }}
+                    </div>
+                    <div class="mfunsPlayer-danmaku-size-value row-value">-</div>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">弹幕速度</div>
+                    <div class="mfunsPlayer-danmaku-speed-slider mfunsPlayer-slider">
+                        {{ include './slider.art' divide}}
+                        <ul class="slider-tip">
+                            <li class="slider-tip-item">极慢</li>
+                            <li class="slider-tip-item">适中</li>
+                            <li class="slider-tip-item">极快</li>
+                        </ul>
+                    </div>
+                    <div class="mfunsPlayer-danmaku-speed-value row-value">-</div>
                 </div>
             </div>
         </div>
@@ -222,7 +260,7 @@
                         <div class="row-title">字号</div>
                         <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
                             {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="12">超小</li> {{ /if }}
-                            <li class="picker-item" data-value="16">小</li>
+                            <li class="picker-item" data-value="14">小</li>
                             <li class="picker-item picked" data-value="18">标准</li>
                             {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="26">大</li>
                             <li class="picker-item" data-value="34">超大</li>
@@ -253,7 +291,7 @@
             </div>
         </div>
         <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
-        <div class="emit">发送</div>
+        <div class="mfunsPlayer-danmaku-emit">发送</div>
     </div>
     </div>
 </div>

@@ -1,7 +1,8 @@
 @import './theme';
 
 .mfunsPlayer {
-    .mfunsPlayer-slider {       // 滑动条形态样式
+    .mfunsPlayer-slider {     
+        position: relative;  // 滑动条形态样式
         .slider-track{
             width: 2px;
             height: 2px;
@@ -13,24 +14,61 @@
             justify-content: flex-end;
             align-items: center;
             cursor: pointer;
-        }
-        .slider-bar{
-            background: $theme-color;
-            border-radius: 2px;
-            cursor: pointer;
-        }
-        .slider-thumb-track{
-            position: relative;
-            width: calc(100% - 12px);
-            height: calc(100% - 12px);
-        }
-        .slider-thumb{
-            width: 12px;
-            height: 12px;
-            border-radius: 100%;
-            background: $theme-color;
             z-index: 2;
+            .slider-bar{
+                background: $theme-color;
+                border-radius: 2px;
+                cursor: pointer;
+            }
+             .slider-thumb-track{
+                position: relative;
+                width: calc(100% - 12px);
+                height: calc(100% - 12px);
+           
+                .slider-thumb{
+                   width: 12px;
+                   height: 12px;
+                   border-radius: 100%;
+                   background: $theme-color;
+                   z-index: 2;
+                }
+                .mfunsPlayer-divider{
+                    position: absolute;
+                    top: -3px;
+                    width: calc(100% + 12px);
+                    display: flex;
+                    margin-left: -6px;
+                    justify-content: space-between;
+                    .mfunsPlayer-divider-dot{
+                       list-style: none;
+                       width: 1px;
+                       height: 6px;
+                       background: #e6e6e6;
+                    }
+                }
+           }
         }
+        
+       .slider-tip{
+            width: 140%;
+            height: 12px;
+            display: flex;
+            list-style: none;
+            position: absolute;
+            top: 50%;
+            margin-left: -57%;
+            margin-top: 6px;
+            left: 50%;
+           .slider-tip-item{
+               list-style: none;
+               flex:1;
+               font-size: 12px;
+               transform: scale(0.8);
+               color: #999;
+           }
+       }
+        
+       
     }
     .mfunsPlayer-picker{
         .picker-item{
@@ -57,6 +95,7 @@
     } 
     .mfunsPlayer-switch{
         height: 22px;
+        cursor: pointer;
         .mfunsPlayer-switch-checkbox{
             position: relative;
             display: inline-block;

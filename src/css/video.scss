@@ -24,6 +24,27 @@
 		 display: block;
 		}
 	}
+	.mfunsPlayer-bezel {
+		width: 65px;
+		height: 55px;
+		position: absolute;
+		bottom: 60px;
+		right: 15px;
+		cursor: pointer;
+		background: url(../icon/pause.png);
+		background-size: 100% 100%;
+		z-index: 103;
+		&.noborder{
+			bottom: 50px;
+		}
+		&.bezel_play {
+			background: url(../icon/play.png); 
+			background-size: 100% 100%;
+		}
+		&.hide{
+			display: none;
+		 }
+	}
 	.mfunsPlayer-loading {
 		width: 80px;
 		height: 70px;
@@ -63,6 +84,9 @@
 		align-items: center;
 		z-index: 9;
 		background: #000;
+		&.noborder{
+			height:100% ;
+		}
 		video{
 			display: block;
 			width: 100%;

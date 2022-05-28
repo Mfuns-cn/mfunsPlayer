@@ -105,8 +105,8 @@ export class Slider {
     // 修改滑动条值，不执行回调函数
     this.value = value <= this.min ? this.min : value >= this.max ? this.max : value;
     // 计算滑块位置
-    let per = (this.value - this.min) / (this.max - this.min);
-    // let per = (this.value - (this.min + 2)) / (this.max - this.min - 4);
+    // let per = (this.value - this.min) / (this.max - this.min);
+    let per = (this.value - (this.min + 2)) / (this.max - this.min - 4);
     // 修改滑块位置
     this.thumb.style.left = per * 100 + "%";
     // 修改滑动痕迹高度

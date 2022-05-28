@@ -4,10 +4,12 @@
 	justify-content: center;
 	position: relative;
 	box-sizing: content-box;
-    // overflow: hidden;
+    overflow: hidden;
     line-height: 1;
-    
-    
+    z-index: 10016;
+    &.mfunsPlayer-darkmode{
+        box-shadow: 0 0px 8px 0 rgba(255, 255, 255 ,0.5);
+    }
     &.mfunsPlayer-playing {
         .mfunsPlayer-danmaku .mfunsPlayer-danmaku-move {
             animation-play-state: running;

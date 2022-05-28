@@ -22,7 +22,20 @@ const utils = {
       return [hour * 60 + min, sec].map(add0).join(":");
     }
   },
-
+  //节流函数
+  throttle: (fn, wait) => {
+    var timer = null;
+    return function () {
+      var context = this;
+      var args = arguments;
+      if (!timer) {
+        timer = setTimeout(function () {
+          fn.apply(context, args);
+          timer = null;
+        }, wait);
+      }
+    };
+  },
   /**
    * 将时间文本转换为秒数
    *
@@ -126,11 +139,9 @@ const utils = {
       window.scrollTo(left, top);
     }
   },
-
   isFirefox: /firefox/i.test(window.navigator.userAgent),
-
   isChrome: /chrome/i.test(window.navigator.userAgent),
-
+  createArray: (count, val) => Array.from({ length: count }, (_, k) => k).map(() => val),
   storage: {
     set: (key, value) => {
       localStorage.setItem(key, value);
@@ -156,7 +167,38 @@ const utils = {
   },
 
   number2Color: (number) => "#" + ("00000" + number.toString(16)).slice(-6),
-
+  danmakuSpeed2Number: (speed) => {
+    switch (speed) {
+      case "极慢":
+        return 0.5;
+      case "较慢":
+        return 0.75;
+      case "适中":
+        return 1;
+      case "较快":
+        return 1.25;
+      case "极快":
+        return 1.5;
+      default:
+        return 1;
+    }
+  },
+  number2danmakuSpeed: (number) => {
+    switch (number) {
+      case 0.5:
+        return "极慢";
+      case 0.75:
+        return "较慢";
+      case 1:
+        return "适中";
+      case 1.25:
+        return "较快";
+      case 1.5:
+        return "极快";
+      default:
+        return "适中";
+    }
+  },
   number2Type: (number) => {
     switch (number) {
       case 0:
@@ -165,10 +207,55 @@ const utils = {
         return "top";
       case 2:
         return "bottom";
+      case 3:
+        return "left";
       default:
         return "right";
     }
   },
+  type2Number: (type) => {
+    switch (type) {
+      case "right":
+        return 0;
+      case "top":
+        return 1;
+      case "bottom":
+        return 2;
+      case "left":
+        return 3;
+      default:
+        return 0;
+    }
+  },
+
+  // number2Type: (number) => {
+  //   switch (number) {
+  //     case 1:
+  //       return "right";
+  //     case 5:
+  //       return "top";
+  //     case 4:
+  //       return "bottom";
+  //     case 6:
+  //       return "left";
+  //     default:
+  //       return "right";
+  //   }
+  // },
+  // type2number: (type) => {
+  //   switch (type) {
+  //     case "right":
+  //       return 1;
+  //     case "top":
+  //       return 5;
+  //     case "bottom":
+  //       return 4;
+  //     case "left":
+  //       return 6;
+  //     default:
+  //       return 1;
+  //   }
+  // },
 };
 
 export default utils;

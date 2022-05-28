@@ -7,12 +7,22 @@
     align-items: center;
     padding: 0 15px;
     background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-top: none ;
     box-sizing: border-box;
+    &.darkmode{
+         background: #212121;
+         color: #f6f6f6;
+         border: 1px solid #212121;
+         .input_box{
+          border-left: 1px solid #666;
+         }
+    }
     .mfunsPlayer-video-danmaku-details{
         font-size: 13px;
         padding-right: 5px;
         .mfunsPlayer-video-danmaku-count{
-            color: #666
+            color: #999
         }
     }
 }
