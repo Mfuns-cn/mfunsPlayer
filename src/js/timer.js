@@ -31,16 +31,18 @@ class Timer {
     let currentPlayPos = 0;
     let bufferingDetected = false;
     this.loadingChecker = setInterval(() => {
-      if (this.enableloadingChecker) {
+      if (this.enableloadingChecker && !this.player.video.paused) {
         // whether the video is buffering
         currentPlayPos = this.player.video.currentTime;
-        if (!bufferingDetected && currentPlayPos === lastPlayPos && !this.player.video.paused) {
+        if (!bufferingDetected && currentPlayPos === lastPlayPos) {
           this.player.template.loading.classList.add("show");
+          this.player.container.classList.add("mfunsPlayer-loading");
           this.player.danmaku.pause();
           bufferingDetected = true;
         }
-        if (bufferingDetected && currentPlayPos > lastPlayPos && !this.player.video.paused) {
+        if (bufferingDetected && currentPlayPos > lastPlayPos) {
           this.player.template.loading.classList.remove("show");
+          this.player.container.classList.remove("mfunsPlayer-loading");
           this.player.danmaku.play();
           bufferingDetected = false;
         }

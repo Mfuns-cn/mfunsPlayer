@@ -10,7 +10,19 @@
 @import './components';
 @import './danmakuAuxiliary';
 @import './font-icon';
-
+body.player-mode-blackmask .heimu {
+    z-index: 1002;
+}
+.heimu {
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.9;
+    z-index: 10015;
+}
 @keyframes close {
 	from {
 		margin-left: 12px;

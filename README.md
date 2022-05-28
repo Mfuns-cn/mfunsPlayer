@@ -49,7 +49,8 @@ function pause(time) {
 new mfunsPlayer({
   container, //容器dom
   theme: "#666", //主题
-  autoPlay: false, //自动播放
+  autoplay: false, //自动播放
+  autoSwitch: true,//自动切集
   blackBorder: false, // 播放器黑边
   draggable: false, //进度条是否可拖拽
   hotkey: true, //是否启用快捷键
@@ -60,7 +61,7 @@ new mfunsPlayer({
       url: "", //视频链接地址（必传）
       pic: "", //视频预览图链接地址（不传默认为视频第1帧）
       type: "mp4", //视频类型
-      title: "", //视频标题（选传）
+      title: "", //视频标题（必传）
       danId: 100, //弹幕id(选传)
       danLink: "", //外部弹幕文件链接(选传)
     },
@@ -70,6 +71,10 @@ new mfunsPlayer({
     api: "", //弹幕接口基准地址
     bottom: "0", //弹幕距离视频底部的距离
     showDanmaku: true, //初始化完成是否自动开启弹幕
+    opacity: 0.7, //弹幕透明度(0.1 ~ 1)
+    limitArea: 4, //弹幕区域(1.1/4  2.半屏  3.3/4屏  4.不重叠  5.不限 )
+    fontScale: 1, //弹幕字体大小缩放(0.5 ~ 1.5)
+    speed: 1,//弹幕速度(0.5, 0.75, 1, 1.25, 1.5)
     editor: 0 //弹幕样式面板类型，0为普通权限面板，1为特殊权限面板（不传默认为普通权限面板）
   },
   advanceDanmaku: {

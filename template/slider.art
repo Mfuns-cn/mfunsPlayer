@@ -1,6 +1,26 @@
-<div class="slider-track" style="position: absolute; width: 100%; top: 50%; transform: translateY(-50%); display: flex; justify-content: center; align-items: center">
-    <div class="slider-bar" style="position:absolute; left:0; height:100%"></div>
-    <div class="slider-thumb-track" style="height:0px;">
-        <div class="slider-thumb" style="position:absolute; transform:translate(-50%, -50%)"></div>
-    </div>
+<div
+  class="slider-track"
+  style="
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  "
+>
+  <div class="slider-bar" style="position: absolute; left: 0; height: 100%"></div>
+  <div class="slider-thumb-track" style="height: 0px">
+    <div class="slider-thumb" style="position: absolute; transform: translate(-50%, -50%)"></div>
+    {{if flag}}
+    <ul class="mfunsPlayer-divider">
+      <li class="mfunsPlayer-divider-dot"></li>
+      <li class="mfunsPlayer-divider-dot"></li>
+      <li class="mfunsPlayer-divider-dot"></li>
+      <li class="mfunsPlayer-divider-dot"></li>
+      <li class="mfunsPlayer-divider-dot"></li>
+    </ul>
+    {{/if}}
+  </div>
 </div>
