@@ -17,7 +17,6 @@ class Controller {
     this.controlLeaved = false;
     this.clickFlag = 0;
     this.controllTimer = null;
-    this.showDanmaku = player.showDanmaku;
     this.danmakuFontsize = "18";
     this.danmakuType = "right";
     this.danmakuColor = "#FFFFFF";
@@ -374,9 +373,7 @@ class Controller {
   }
   initDanmakuButton() {
     this.player.template.danmaku_btn.addEventListener("click", () => {
-      this.player.showDanmaku = !this.player.showDanmaku;
-      this.player.danmaku.showing = this.player.showDanmaku;
-      if (this.player.showDanmaku) {
+      if (!this.player.danmaku.showing) {
         this.player.danmaku.show();
       } else {
         this.player.danmaku.hide();
