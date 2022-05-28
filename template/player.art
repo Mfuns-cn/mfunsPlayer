@@ -117,7 +117,7 @@
                 </div>
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
                     <i class="mfunsPlayer-controller-icon icon-settings"></i>
-                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask" {{ if danmaku && danmaku.bottm }} style="left:-50%"{{ /if }}>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask" {{ if danmaku && danmaku.bottom }} style="left:-50%"{{ /if }}>
                         <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-settings-wrap">
                             <div class="mfunsPlayer-panel-row">
                                 <div class="row-title">视频比例</div>
