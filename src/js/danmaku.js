@@ -121,7 +121,7 @@ class Danmaku {
       isSubtitle: /(\/n)|(\\n)/i.test(danmakuData.text),
       border: `2px solid ${this.options.borderColor}`,
     };
-    console.log(danmaku);
+    console.log(danmakuData);
     this.dan.splice(this.danIndex, 0, danmakuData);
     this.danIndex++;
 
@@ -181,12 +181,16 @@ class Danmaku {
     if (flag) {
       this.clear(type);
       const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
-      forbidDanmaku.forEach((el) => (el.innerHTML = ""));
+      forbidDanmaku.forEach((el) => {
+        if (!el.classList.contains("subtitle")) {
+          el.innerHTML = "";
+        }
+      });
     }
     if (type === "color") {
       const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
       items.forEach((el) => {
-        if (el.style.color !== "rgb(255, 255, 255)") {
+        if (el.style.color !== "rgb(255, 255, 255)" && !el.classList.contains("subtitle")) {
           el.innerHTML = "";
         }
       });
@@ -196,6 +200,7 @@ class Danmaku {
     if (percentage !== undefined) {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
       for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("subtitle")) continue;
         items[i].style.opacity = percentage;
       }
       this._opacity = percentage;
@@ -410,7 +415,7 @@ class Danmaku {
           default:
             console.error(`Can't handled danmaku type: ${dan[i].type}`);
         }
-        console.log(tunnel);
+        // console.log(tunnel);
         if (tunnel >= 0) {
           // move
           item.classList.add("mfunsPlayer-danmaku-move");

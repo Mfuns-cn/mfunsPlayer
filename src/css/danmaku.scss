@@ -27,7 +27,7 @@
             animation: danmaku-center 4s linear;
             animation-play-state: paused;
     }
-.mfunsPlayer-danmaku-top.mfunsPlayer-danmaku-move,
+.mfunsPlayer-danmaku-top.mfunsPlayer-danmaku-move.mfunsPlayer-danmaku-run,
 .mfunsPlayer-danmaku-bottom.mfunsPlayer-danmaku-move.mfunsPlayer-danmaku-run{
             animation-play-state: running;
     }
@@ -54,21 +54,22 @@
     &.mfunsPlayer-danmaku-move {
     will-change: transform;
     animation: danmaku 5s linear;
+    animation-play-state: paused;
     &.low{
         animation: danmaku 7.5s linear;
-        // animation-play-state: paused;
+        animation-play-state: paused;
     }
     &.lowest{
         animation: danmaku 10s linear;
-        // animation-play-state: paused;
+        animation-play-state: paused;
     }
     &.fast{
         animation: danmaku 3s linear;
-        // animation-play-state: paused;
+        animation-play-state: paused;
     }
     &.fastest{
         animation: danmaku 2s linear;
-        // animation-play-state: paused;
+        animation-play-state: paused;
     }
   }
 }
@@ -78,20 +79,24 @@
     white-space: pre;
     transform: translateX(-100%);
     &.mfunsPlayer-danmaku-move {
-    will-change: transform;
-    animation: danmaku-reverse 5s linear;
-    animation-play-state: paused;
+        will-change: transform;
+        animation: danmaku-reverse 5s linear;
+        animation-play-state: paused;
     &.low{
         animation: danmaku-reverse 7.5s linear;
+        animation-play-state: paused;
     }
     &.lowest{
         animation: danmaku-reverse 10s linear;
+        animation-play-state: paused;
     }
     &.fast{
         animation: danmaku-reverse 3s linear;
+        animation-play-state: paused;
     }
     &.fastest{
         animation: danmaku-reverse 2s linear;
+        animation-play-state: paused;
     }
   }
 }
