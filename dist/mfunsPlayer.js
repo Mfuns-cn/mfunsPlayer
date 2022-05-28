@@ -3763,7 +3763,6 @@ class Controller {
     this.components.danmakuOpacitySlider = new _components__WEBPACK_IMPORTED_MODULE_0__.Slider(this.template.danmaku_opacity_slider, 10, 100, 1, opacity * 100, {
       start() {
         // 开始调节滑动条（点按）
-        console.log("--------");
         THIS.isControl = true;
         THIS.template.danmakuSettings_panel.classList.add("show");
       },
@@ -3781,7 +3780,6 @@ class Controller {
       end() {
         // 结束滑动条调节（松手）
         // if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
-        console.log("mouseup");
         setTimeout(() => {
           THIS.isControl = false;
         }, 50); // }
@@ -4185,8 +4183,17 @@ class Danmaku {
 
     if (flag) {
       this.clear(type);
-      const forbidDanmaku = document.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
+      const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
       forbidDanmaku.forEach(el => el.innerHTML = "");
+    }
+
+    if (type === "color") {
+      const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
+      items.forEach(el => {
+        if (el.style.color !== "rgb(255, 255, 255)") {
+          el.innerHTML = "";
+        }
+      });
     }
   }
 
@@ -5841,7 +5848,7 @@ class Template {
       this.bezel.classList.remove("noborder");
     }
 
-    this.videoWrap.style.height = (this.videoWrap.clientWidth * 9 / 16 + (hasBlackborder ? 100 : 0)).toFixed(2) + "px";
+    this.videoWrap.style.height = (this.container.clientWidth * 9 / 16 + (hasBlackborder ? 100 : 0)).toFixed(2) + "px";
   }
 
 }

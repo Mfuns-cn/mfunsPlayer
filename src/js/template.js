@@ -114,7 +114,7 @@ class Template {
       this.bezel.classList.remove("noborder");
     }
     this.videoWrap.style.height =
-      ((this.videoWrap.clientWidth * 9) / 16 + (hasBlackborder ? 100 : 0)).toFixed(2) + "px";
+      ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 100 : 0)).toFixed(2) + "px";
   }
 }
 export default Template;
