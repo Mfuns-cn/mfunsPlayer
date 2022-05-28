@@ -377,14 +377,18 @@ class Controller {
       this.player.showDanmaku = !this.player.showDanmaku;
       this.player.danmaku.showing = this.player.showDanmaku;
       if (this.player.showDanmaku) {
-        this.player.template.danmaku_btn.classList.add("open");
-        this.player.template.danmaku_btn.classList.remove("close");
         this.player.danmaku.show();
       } else {
-        this.player.template.danmaku_btn.classList.add("close");
-        this.player.template.danmaku_btn.classList.remove("open");
         this.player.danmaku.hide();
       }
+      this.player.on('danmaku_show', () => {
+        this.player.template.danmaku_btn.classList.add("open");
+        this.player.template.danmaku_btn.classList.remove("close");
+      })
+      this.player.on('danmaku_hide', () => {
+        this.player.template.danmaku_btn.classList.add("close");
+        this.player.template.danmaku_btn.classList.remove("open");
+      })
     });
   }
   initDanmakuEmit() {
