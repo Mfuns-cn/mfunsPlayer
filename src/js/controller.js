@@ -428,7 +428,6 @@ class Controller {
     this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, opacity * 100, {
       start() {
         // 开始调节滑动条（点按）
-        console.log("--------");
         THIS.isControl = true;
         THIS.template.danmakuSettings_panel.classList.add("show");
       },
@@ -443,7 +442,6 @@ class Controller {
       end() {
         // 结束滑动条调节（松手）
         // if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
-        console.log("mouseup");
         setTimeout(() => {
           THIS.isControl = false;
         }, 50);
