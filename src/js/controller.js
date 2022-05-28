@@ -165,9 +165,9 @@ class Controller {
       this.player.template.controllerTime.classList.remove("inputting");
       if (/([0-9]?[0-9]?:?)([0-5]?[0-9]):([0-5][0-9])$/i.test(inputVal) && this.timeEdited) {
         this.player.seek(utils.textToSecond(inputVal));
-        this.timeEdit = false;
-        this.isControl = false;
       }
+      this.timeEdit = false;
+      this.isControl = false;
     });
     this.player.template.time_input.addEventListener("keydown", (event) => {
       this.timeEdited = true;
@@ -382,14 +382,14 @@ class Controller {
         this.player.danmaku.hide();
       }
     });
-    this.player.on('danmaku_show', () => {
+    this.player.on("danmaku_show", () => {
       this.player.template.danmaku_btn.classList.add("open");
       this.player.template.danmaku_btn.classList.remove("close");
-    })
-    this.player.on('danmaku_hide', () => {
+    });
+    this.player.on("danmaku_hide", () => {
       this.player.template.danmaku_btn.classList.add("close");
       this.player.template.danmaku_btn.classList.remove("open");
-    })
+    });
   }
   initDanmakuEmit() {
     this.player.template.danmakuEmit.addEventListener("click", () => {
@@ -601,19 +601,17 @@ class Controller {
       this.player.template.pip_btn.classList.remove("button-picture-in-picture");
     });
   }
-  widescreenTrigger(widescreen) {
-
-  }
+  widescreenTrigger(widescreen) {}
   initWidescreenButton() {
-    this.template.widescreen_btn.addEventListener('click', () => {
-      this.player.widescreen = !this.player.widescreen
+    this.template.widescreen_btn.addEventListener("click", () => {
+      this.player.widescreen = !this.player.widescreen;
 
-      let widescreen = this.player.widescreen
+      let widescreen = this.player.widescreen;
       this.player.template.widescreen_btn.classList[`${widescreen ? "add" : "remove"}`]("exit");
-      this.player.events.trigger(widescreen ? "widescreen" : "widescreen_cancel")
-      console.log(widescreen ? "进入宽屏模式" : "退出宽屏模式")
+      this.player.events.trigger(widescreen ? "widescreen" : "widescreen_cancel");
+      console.log(widescreen ? "进入宽屏模式" : "退出宽屏模式");
       this.player.template.widescreen_tip.innerText = widescreen ? "退出宽屏" : "宽屏模式";
-    })
+    });
   }
   setAutoHide(delay = 1500) {
     this.show();
