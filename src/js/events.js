@@ -44,10 +44,17 @@ class Events {
       "fullscreen_cancel",    // 退出全屏模式
       "webfullscreen",        // 进入网页全屏
       "webfullscreen_cancel", // 退出网页全屏
+      "widescreen",           // 宽屏模式
+      "widescreen_cancel",    // 退出宽屏
 
       "danmaku_load_start",   // 弹幕开始加载
       "danmaku_load_end",     // 弹幕加载完毕
       "danmaku_load_failed",  // 弹幕加载失败
+
+      "darkmode_on",          // 开启关灯模式
+      "darkmode_off",         // 关闭关灯模式
+      // "fixcontroller_on",     // 开启底栏固定(未启用)
+      // "fixcontroller_off",    // 取消底栏固定(未启用)
     ];
   }
 
@@ -60,10 +67,10 @@ class Events {
     }
   }
 
-  trigger(name, info) {
+  trigger(name, ...args) {
     if (this.events[name] && this.events[name].length) {
       for (let i = 0; i < this.events[name].length; i++) {
-        this.events[name][i](info);
+        this.events[name][i](...args);
       }
     }
   }

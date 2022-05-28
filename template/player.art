@@ -131,11 +131,11 @@
                                 <div class="row-title">播放方式</div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-autoplay-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
-                                    <div class="mfunsPlayer-switch-label">自动开播</div>
+                                    <div class="mfunsPlayer-switch-label">自动播放</div>
                                 </div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
-                                    <div class="mfunsPlayer-switch-label">自动切集</div>
+                                    <div class="mfunsPlayer-switch-label">分P连播</div>
                                 </div>
                             </div>
                             <div class="mfunsPlayer-panel-row">
@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-darkmode-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
-                                    <div class="mfunsPlayer-switch-label">夜间模式</div>
+                                    <div class="mfunsPlayer-switch-label">关灯模式</div>
                                 </div>
                             </div>
                         </div>
@@ -157,6 +157,13 @@
                     <i class="mfunsPlayer-controller-icon icon-picture-in-picture"></i>
                     <i class="mfunsPlayer-controller-icon icon-picture-in-picture-exit"></i>
                     <div class="mfunsPlayer-controller-tip">画中画</div>
+                </div>
+                {{ /if }}
+                {{ if widescreenSwitch }}
+                <div class="mfunsPlayer-controller-button mfunsPlayer-controller-widescreen">
+                    <i class="mfunsPlayer-controller-icon icon-widescreen"></i>
+                    <i class="mfunsPlayer-controller-icon icon-widescreen-exit"></i>
+                    <div class="mfunsPlayer-controller-tip">宽屏模式</div>
                 </div>
                 {{ /if }}
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-webfull">

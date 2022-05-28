@@ -31,6 +31,7 @@ export default class mfunsPlayer {
     this.currentVideo = this.options.currentVideo;
     this.bar = new Bar(this.template);
     this.danmakuAuxiliary = null;
+    this.widescreen = options.widescreen
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
       this.danmakuOptions = {

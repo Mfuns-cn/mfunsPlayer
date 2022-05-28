@@ -4,13 +4,15 @@ export default (options) => {
   // default options
   const defaultOption = {
     container: options.element || document.getElementsByClassName("mfunsPlayer")[0],
-    autoplay: false,
-    autoSwitch: false,
+    autoplay: false,    // 自动播放
+    autoSwitch: false,  // 自动切P
     draggable: true,
-    blackBorder: true,
+    blackBorder: true,  // 开启黑边
     theme: "#b7daff",
-    loop: false,
-    hotkey: true,
+    loop: false,        // 洗脑循环
+    hotkey: true,       // 启用快捷键
+    widescreen: false,  // 宽屏模式
+    widescreenSwitch: false,  // 可切换宽屏模式
     preload: "metadata",
     volume: 0.7,
     apiBackend: defaultApiBackend,

@@ -59,6 +59,8 @@ class Template {
     this.volumeNum = $(".mfunsPlayer-controller-volume-num");
     this.volumePercentage = $(".mfunsPlayer-controller-volume-percentage");
     this.volumeIcon = $(".mfunsPlayer-controller-volume-icon");
+    this.widescreen_btn = $(".mfunsPlayer-controller-widescreen"); // 宽屏模式按钮
+    this.widescreen_tip = $(".mfunsPlayer-controller-widescreen .mfunsPlayer-controller-tip"); // 宽屏模式提示
     this.webfull_btn = $(".mfunsPlayer-controller-webfull"); // 网页全屏按钮
     this.webfull_tip = $(".mfunsPlayer-controller-webfull .mfunsPlayer-controller-tip"); // 网页全屏提示
     this.fullscreen_btn = $(".mfunsPlayer-controller-fullscreen"); // 全屏按钮

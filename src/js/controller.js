@@ -44,6 +44,9 @@ class Controller {
     if (player.options.video.length > 1) {
       this.initPagelistButton();
     }
+    if (player.options.widescreenSwitch) {
+      this.initWidescreenButton();
+    }
     this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
@@ -355,7 +358,7 @@ class Controller {
           THIS.player.template.footBar.classList.add("darkmode");
           THIS.player.container.classList.add("mfunsPlayer-darkmode");
           document.body.appendChild(THIS.mask);
-          console.log("已开启夜间模式");
+          console.log("已开启关灯模式");
         },
         off() {
           // 关闭开关
@@ -366,7 +369,7 @@ class Controller {
             document.body.classList.remove("player-mode-blackmask");
             document.body.removeChild(THIS.mask);
           }
-          console.log("已关闭夜间模式");
+          console.log("已关闭关灯模式");
         },
       }
     );
@@ -378,15 +381,15 @@ class Controller {
       } else {
         this.player.danmaku.hide();
       }
-      this.player.on('danmaku_show', () => {
-        this.player.template.danmaku_btn.classList.add("open");
-        this.player.template.danmaku_btn.classList.remove("close");
-      })
-      this.player.on('danmaku_hide', () => {
-        this.player.template.danmaku_btn.classList.add("close");
-        this.player.template.danmaku_btn.classList.remove("open");
-      })
     });
+    this.player.on('danmaku_show', () => {
+      this.player.template.danmaku_btn.classList.add("open");
+      this.player.template.danmaku_btn.classList.remove("close");
+    })
+    this.player.on('danmaku_hide', () => {
+      this.player.template.danmaku_btn.classList.add("close");
+      this.player.template.danmaku_btn.classList.remove("open");
+    })
   }
   initDanmakuEmit() {
     this.player.template.danmakuEmit.addEventListener("click", () => {
@@ -482,14 +485,14 @@ class Controller {
         },
       }
     );
-    // 弹幕大小调节
+    // 弹幕文字大小调节
     this.components.danmakuSizeSlider = new Slider(this.template.danmaku_size_slider, 50, 150, 1, danmakuSize * 100, {
       start() {
         THIS.isControl = true;
         THIS.template.danmakuSettings_panel.classList.add("show");
       },
       update(value, flag) {
-        // 有关弹幕显示区域的更改请写在此处
+        // 有关弹幕文字大小的更改请写在此处
         THIS.isControl = flag;
       },
       change(value) {
@@ -519,7 +522,7 @@ class Controller {
           THIS.template.danmakuSettings_panel.classList.add("show");
         },
         update(value, flag) {
-          // 有关弹幕显示区域的更改请写在此处
+          // 有关弹幕速度的更改请写在此处
           THIS.isControl = flag;
         },
         change(value) {
@@ -597,6 +600,20 @@ class Controller {
     this.video.addEventListener("leavepictureinpicture", () => {
       this.player.template.pip_btn.classList.remove("button-picture-in-picture");
     });
+  }
+  widescreenTrigger(widescreen) {
+
+  }
+  initWidescreenButton() {
+    this.template.widescreen_btn.addEventListener('click', () => {
+      this.player.widescreen = !this.player.widescreen
+
+      let widescreen = this.player.widescreen
+      this.player.template.widescreen_btn.classList[`${widescreen ? "add" : "remove"}`]("exit");
+      this.player.events.trigger(widescreen ? "widescreen" : "widescreen_cancel")
+      console.log(widescreen ? "进入宽屏模式" : "退出宽屏模式")
+      this.player.template.widescreen_tip.innerText = widescreen ? "退出宽屏" : "宽屏模式";
+    })
   }
   setAutoHide(delay = 1500) {
     this.show();

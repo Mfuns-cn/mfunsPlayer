@@ -55,7 +55,9 @@ new mfunsPlayer({
   draggable: false, //进度条是否可拖拽
   hotkey: true, //是否启用快捷键
   volume: 0.7, //视频初始音量
-  currentVideo: 0 //当前播放视频的下标
+  currentVideo: 0, //当前播放视频的下标
+  widescreenSwitch: false, // 宽屏模式是否可用
+  widescreen: false, // 宽屏模式
   video: [ //type:ObjectArray
     {
       url: "", //视频链接地址（必传）
@@ -75,7 +77,7 @@ new mfunsPlayer({
     limitArea: 4, //弹幕区域(1.1/4  2.半屏  3.3/4屏  4.不重叠  5.不限 )
     fontScale: 1, //弹幕字体大小缩放(0.5 ~ 1.5)
     speed: 1,//弹幕速度(0.5, 0.75, 1, 1.25, 1.5)
-    editor: 0 //弹幕样式面板类型，0为普通权限面板，1为特殊权限面板（不传默认为普通权限面板）
+    editor: 0 //弹幕样式面板类型，0为普通面板，1为全功能面板(不传默认为普通面板)
   },
   advanceDanmaku: {
     api: "", //高级弹幕接口地址

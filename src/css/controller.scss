@@ -312,6 +312,23 @@
 						}
 					}
 				}
+                //宽屏模式
+				.mfunsPlayer-controller-widescreen{
+					&.hide{
+                       display: none;
+					}
+                    .icon-widescreen-exit {
+                        display: none;
+                    }
+					&.exit {
+						.icon-widescreen {
+							display: none;
+						}
+						.icon-widescreen-exit {
+							display: block;
+						}
+					}
+				}
                 //网页全屏
 				.mfunsPlayer-controller-webfull{
 					&.hide{
