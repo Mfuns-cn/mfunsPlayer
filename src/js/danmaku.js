@@ -179,8 +179,16 @@ class Danmaku {
     this[`${type}Limit`] = flag;
     if (flag) {
       this.clear(type);
-      const forbidDanmaku = document.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
+      const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
       forbidDanmaku.forEach((el) => (el.innerHTML = ""));
+    }
+    if (type === "color") {
+      const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
+      items.forEach((el) => {
+        if (el.style.color !== "rgb(255, 255, 255)") {
+          el.innerHTML = "";
+        }
+      });
     }
   }
   opacity(percentage) {
