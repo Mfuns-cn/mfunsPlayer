@@ -162,9 +162,9 @@ class Controller {
       this.player.template.controllerTime.classList.remove("inputting");
       if (/([0-9]?[0-9]?:?)([0-5]?[0-9]):([0-5][0-9])$/i.test(inputVal) && this.timeEdited) {
         this.player.seek(utils.textToSecond(inputVal));
-        this.timeEdit = false;
-        this.isControl = false;
       }
+      this.timeEdit = false;
+      this.isControl = false;
     });
     this.player.template.time_input.addEventListener("keydown", (event) => {
       this.timeEdited = true;
@@ -378,14 +378,14 @@ class Controller {
       } else {
         this.player.danmaku.hide();
       }
-      this.player.on('danmaku_show', () => {
+      this.player.on("danmaku_show", () => {
         this.player.template.danmaku_btn.classList.add("open");
         this.player.template.danmaku_btn.classList.remove("close");
-      })
-      this.player.on('danmaku_hide', () => {
+      });
+      this.player.on("danmaku_hide", () => {
         this.player.template.danmaku_btn.classList.add("close");
         this.player.template.danmaku_btn.classList.remove("open");
-      })
+      });
     });
   }
   initDanmakuEmit() {

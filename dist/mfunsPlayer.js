@@ -3479,9 +3479,10 @@ class Controller {
 
       if (/([0-9]?[0-9]?:?)([0-5]?[0-9]):([0-5][0-9])$/i.test(inputVal) && this.timeEdited) {
         this.player.seek(_utils__WEBPACK_IMPORTED_MODULE_1__.default.textToSecond(inputVal));
-        this.timeEdit = false;
-        this.isControl = false;
       }
+
+      this.timeEdit = false;
+      this.isControl = false;
     });
     this.player.template.time_input.addEventListener("keydown", event => {
       this.timeEdited = true;
@@ -3706,11 +3707,11 @@ class Controller {
         this.player.danmaku.hide();
       }
 
-      this.player.on('danmaku_show', () => {
+      this.player.on("danmaku_show", () => {
         this.player.template.danmaku_btn.classList.add("open");
         this.player.template.danmaku_btn.classList.remove("close");
       });
-      this.player.on('danmaku_hide', () => {
+      this.player.on("danmaku_hide", () => {
         this.player.template.danmaku_btn.classList.add("close");
         this.player.template.danmaku_btn.classList.remove("open");
       });
@@ -4113,7 +4114,6 @@ class Danmaku {
   }
 
   send(dan) {
-    console.log(dan);
     const danmakuData = {
       time: this.options.time() + 0.52,
       size: dan.size || 18,
@@ -4126,8 +4126,10 @@ class Danmaku {
       color: danmakuData.color,
       size: danmakuData.size,
       type: danmakuData.type,
+      isSubtitle: /(\/n)|(\\n)/i.test(danmakuData.text),
       border: `2px solid ${this.options.borderColor}`
     };
+    console.log(danmaku);
     this.dan.splice(this.danIndex, 0, danmakuData);
     this.danIndex++;
     this.draw(danmaku);
@@ -4251,7 +4253,7 @@ class Danmaku {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-move");
 
       for (let i = 0; i < items.length; i++) {
-        if (items[i].classList.contains("subtitle")) return;
+        if (items[i].classList.contains("subtitle")) continue;
 
         if (!!speedName) {
           items[i].classList.add(speedName);
@@ -4276,6 +4278,7 @@ class Danmaku {
       const danHeight = this.container.offsetHeight; //弹幕容器高度
 
       const itemY = Math.floor(danHeight / itemHeight); //轨道数量
+      // console.log(itemY);
 
       if (this.tunnelHeights.right !== itemY) this.tunnelHeights.right = _utils__WEBPACK_IMPORTED_MODULE_0__.default.createArray(itemY, itemHeight);
       if (this.tunnelHeights.left !== itemY) this.tunnelHeights.left = _utils__WEBPACK_IMPORTED_MODULE_0__.default.createArray(itemY, itemHeight);
@@ -4338,7 +4341,7 @@ class Danmaku {
                 ele.addEventListener("animationend", () => {
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(0, 1);
                 });
-                return parseInt(i % (itemY * this._limitArea));
+                return i % Math.floor(itemY * this._limitArea);
               }
             }
           } else {
@@ -4346,7 +4349,7 @@ class Danmaku {
             ele.addEventListener("animationend", () => {
               this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(0, 1);
             });
-            return parseInt(i % (itemY * this._limitArea));
+            return i % Math.floor(itemY * this._limitArea);
           }
         }
 
@@ -4382,13 +4385,13 @@ class Danmaku {
 
         item.classList.add("mfunsPlayer-danmaku-item");
         item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
-        dan[i].isSubtitle = typeof dan[i].isSubtitle === "boolean" ? dan[i].isSubtitle : /(\/n)|(\\n)/i.test(dan[i].text);
-        dan[i].text = dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
+        dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
+        dan[i].isSubtitle && item.classList.add("subtitle"); // console.log(dan[i].isSubtitle);
 
         if (dan[i].border) {
-          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text}</span>`;
+          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
         } else {
-          item.innerHTML = dan[i].text;
+          item.innerHTML = dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
         }
 
         if (typeof dan[i].color !== "string") {
@@ -4397,25 +4400,25 @@ class Danmaku {
 
         item.style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
         item.style.fontSize = (+dan[i].size + 3) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
+        item.style.zIndex = dan[i].isSubtitle ? 100 : 1;
         item.addEventListener("animationend", () => {
           this.container.removeChild(item);
         });
 
         const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 18);
 
-        const isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
         let tunnel; // adjust
 
         switch (dan[i].type) {
           case "right":
             tunnel = getTunnel(item, dan[i].type, itemWidth);
 
-            if (tunnel >= 0 || isSubtitle) {
-              const maxTop = this.tunnelHeights.right.slice(0, itemY - 2).reduce((prev, cur) => prev + cur, 0);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop; // console.log(this.tunnelHeights);
 
               item.style.width = itemWidth + 1 + "px";
-              item.style.top = (isSubtitle ? 0 : top) + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(-${danWidth}px)`;
             }
 
@@ -4424,11 +4427,11 @@ class Danmaku {
           case "left":
             tunnel = getTunnel(item, dan[i].type, itemWidth);
 
-            if (tunnel >= 0 || isSubtitle) {
-              const maxTop = this.tunnelHeights.left.slice(0, itemY - 2).reduce((prev, cur) => prev + cur, 0);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
               item.style.width = itemWidth + 1 + "px";
-              item.style.top = (isSubtitle ? 0 : top) + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(${danWidth}px)`;
             }
 
@@ -4437,10 +4440,10 @@ class Danmaku {
           case "top":
             tunnel = getTunnel(item, dan[i].type);
 
-            if (tunnel >= 0 || isSubtitle) {
-              const maxTop = this.tunnelHeights.top.slice(0, itemY - 2).reduce((prev, cur) => prev + cur, 0);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.top.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.top.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
-              item.style.top = (isSubtitle ? 0 : top) + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
             }
 
             break;
@@ -4448,10 +4451,10 @@ class Danmaku {
           case "bottom":
             tunnel = getTunnel(item, dan[i].type);
 
-            if (tunnel >= 0 || isSubtitle) {
-              const maxBottom = this.tunnelHeights.bottom.slice(0, itemY - 2).reduce((prev, cur) => prev + cur, 0);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxBottom = this.tunnelHeights.bottom.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const bottom = this.tunnelHeights.bottom.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxBottom;
-              item.style.bottom = (isSubtitle ? 0 : bottom) + "px";
+              item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
 
             break;
@@ -4460,11 +4463,13 @@ class Danmaku {
             console.error(`Can't handled danmaku type: ${dan[i].type}`);
         }
 
+        console.log(tunnel);
+
         if (tunnel >= 0) {
           // move
           item.classList.add("mfunsPlayer-danmaku-move");
 
-          if (!!this._speed) {
+          if (!!this._speed && !dan[i].isSubtitle) {
             item.classList.add(this._speed);
           } // insert
 
