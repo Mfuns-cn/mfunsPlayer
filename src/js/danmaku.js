@@ -66,7 +66,7 @@ class Danmaku {
 
   reload(newId, newLink = "") {
     this.options.api.id = newId;
-    // this.options.api.link = newLink;
+    this.options.api.link = newLink;
     this.dan = [];
     this.clear();
     this.load();
