@@ -368,7 +368,7 @@
 	}
 	.mfunsPlayer-controller-danmaku-trigger {
 		.icon-danmaku{
-			color: rgb(66, 226, 244);
+			color: $theme-color-light;
 		}
 		&.open{
 			.icon-danmaku-off{
