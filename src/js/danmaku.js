@@ -141,7 +141,7 @@ class Danmaku {
   }
   checkShield = (dan) => {
     let type = typeof dan.type !== "string" ? utils.number2Type(dan.type) : dan.type;
-    if (this[`${type}Limit`]) {
+    if (this[`${type}Limit`] && !/(\/n)|(\\n)/i.test(dan.text)) {
       return false;
     }
     return true;
@@ -150,7 +150,7 @@ class Danmaku {
     if (this.dan.length && !this.paused && this.showing) {
       let item = this.dan[this.danIndex];
       const dan = [];
-      while (item && this.options.time() > parseFloat(item.time)) {
+      while (item && this.options.time() > item.time) {
         if (this.checkShield(item)) {
           dan.push(item);
         }

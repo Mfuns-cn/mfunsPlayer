@@ -4,15 +4,15 @@ export default (options) => {
   // default options
   const defaultOption = {
     container: options.element || document.getElementsByClassName("mfunsPlayer")[0],
-    autoplay: false,    // 自动播放
-    autoSwitch: false,  // 自动切P
+    autoplay: false, // 自动播放
+    autoSwitch: false, // 自动切P
     draggable: true,
-    blackBorder: true,  // 开启黑边
-    theme: "#b7daff",
-    loop: false,        // 洗脑循环
-    hotkey: true,       // 启用快捷键
-    widescreen: false,  // 宽屏模式
-    widescreenSwitch: false,  // 可切换宽屏模式
+    blackBorder: true, // 开启黑边
+    theme: "#7b7ff7",
+    loop: false, // 洗脑循环
+    hotkey: true, // 启用快捷键
+    widescreen: false, // 宽屏模式
+    widescreenSwitch: false, // 可切换宽屏模式
     preload: "metadata",
     volume: 0.7,
     apiBackend: defaultApiBackend,
@@ -37,15 +37,27 @@ export default (options) => {
   if (options.video) {
     !options.video.type && (options.video.type = "auto");
   }
+
   options.contextmenu = options.contextmenu.concat([
     {
-      text: "视频统计信息",
-      click: (player) => {},
+      text: "作者信息",
+      link: "https://www.mfuns.cn/author/7376",
     },
-
+    {
+      text: "视频统计信息",
+      click: (player) => {
+        player.infoPanel.triggle();
+      },
+    },
+    {
+      text: "快捷键说明",
+      click: (player) => {
+        player.hotkey.triggle();
+      },
+    },
     {
       text: `mfunsPlayer v2.1.0`,
-      link: "https://github.com/Mfuns-cn",
+      link: "https://github.com/Mfuns-cn/mfunsPlayer",
     },
   ]);
   return options;

@@ -1,5 +1,7 @@
 export default class HotKey {
   constructor(player) {
+    this.template = player.template;
+    this.container = player.template.hotkeyPanel;
     window.onresize = () => {
       if (!player.fullScreen.isFullScreen("browser") && !player.fullScreen.isFullScreen("web")) {
         player.fullScreen.cancel("browser");
@@ -90,6 +92,27 @@ export default class HotKey {
           }
         }
       });
+      this.template.hotkeyPanel.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+      this.template.hotkeyPanelClose.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.hide();
+      });
+    }
+  }
+  show() {
+    this.container.classList.remove("mfunsPlayer-hotkey-panel-hide");
+  }
+
+  hide() {
+    this.container.classList.add("mfunsPlayer-hotkey-panel-hide");
+  }
+  triggle() {
+    if (this.container.classList.contains("mfunsPlayer-hotkey-panel-hide")) {
+      this.show();
+    } else {
+      this.hide();
     }
   }
 }

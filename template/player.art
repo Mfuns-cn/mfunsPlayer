@@ -1,6 +1,7 @@
 {{set divide = {flag:true} }}
 <div class="mfunsPlayer-video-wrap">
     <div  class="mfunsPlayer-bezel" ></div>
+    
     <div class="mfunsPlayer-mask">
         <div class="mfunsPlayer-menu">
             {{ each contextmenu }}
@@ -14,8 +15,15 @@
         <div class="mfunsPlayer-headBar-title">{{video[currentVideo].title}}</div>
     </div>
     <div class="mfunsPlayer-loading">
-        <div></div>
-        <p>正在缓冲...</p>
+        <div class="mfunsPlayer-loading-icon">
+             <span>M</span>
+             <span>f</span>
+             <span>u</span>
+             <span>n</span>
+             <span>s</span>
+        </div>
+         <p>正在缓冲...</p>
+        <p class="mfunsPlayer-loading-speed"></p>
     </div>
     <div class="mfunsPlayer-danmaku"{{ if danmaku && danmaku.bottom }} style="margin:{{ danmaku.bottom }}px 0"{{ /if }}>
         <div class="mfunsPlayer-danmaku-item mfunsPlayer-danmaku-item--demo"></div>
@@ -23,7 +31,87 @@
     <div class="mfunsPlayer-video-mask">
         {{ include './video.art' video[currentVideo] }}
     </div>
-    
+    <div class="mfunsPlayer-info-panel mfunsPlayer-info-panel-hide">
+        <div class="mfunsPlayer-info-panel-close">[x]</div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-version">
+            <span class="mfunsPlayer-info-panel-item-title">Player version</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-fps">
+            <span class="mfunsPlayer-info-panel-item-title">Player FPS</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-type">
+            <span class="mfunsPlayer-info-panel-item-title">Video type</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-url">
+            <span class="mfunsPlayer-info-panel-item-title">Video url</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-resolution">
+            <span class="mfunsPlayer-info-panel-item-title">Video resolution</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-duration">
+            <span class="mfunsPlayer-info-panel-item-title">Video duration</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        {{ if danmaku }}
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-danmaku-id">
+            <span class="mfunsPlayer-info-panel-item-title">Danmaku id</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-danmaku-api">
+            <span class="mfunsPlayer-info-panel-item-title">Danmaku api</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        <div class="mfunsPlayer-info-panel-item mfunsPlayer-info-panel-item-danmaku-amount">
+            <span class="mfunsPlayer-info-panel-item-title">Danmaku amount</span>
+            <span class="mfunsPlayer-info-panel-item-data"></span>
+        </div>
+        {{ /if }}
+    </div>
+
+    <div class="mfunsPlayer-hotkey-panel mfunsPlayer-hotkey-panel-hide">
+        <div class="mfunsPlayer-hotkey-panel-close">[x]</div>
+        <div class="mfunsPlayer-hotkey-panel-item ">
+            <span class="mfunsPlayer-hotkey-panel-item-title">退出全屏</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">ESC</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">暂停/开始播放</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">空格</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item ">
+            <span class="mfunsPlayer-hotkey-panel-item-title">音量 + 10%</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">↑</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">音量 - 10%</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">↓</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">快进 5s</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">→</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">快退 5s</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">←</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">展示/隐藏弹幕</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">D</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">进入/退出全屏</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">F</span>
+        </div>
+        <div class="mfunsPlayer-hotkey-panel-item">
+            <span class="mfunsPlayer-hotkey-panel-item-title">静音/取消静音</span>
+            <span class="mfunsPlayer-hotkey-panel-item-data">M</span>
+        </div>
+    </div>
     <div class="mfunsPlayer-notice" ></div>
     <div class="voice"></div>
     
@@ -117,7 +205,7 @@
                 </div>
                 <div class="mfunsPlayer-controller-button mfunsPlayer-controller-settings">
                     <i class="mfunsPlayer-controller-icon icon-settings"></i>
-                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask" {{ if danmaku && danmaku.bottom }} style="left:-50%"{{ /if }}>
+                    <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-settings-mask" {{ if isFireFox }} style="left:-50%"{{ /if }}>
                         <div class="mfunsPlayer-controller-panel mfunsPlayer-controller-settings-wrap">
                             <div class="mfunsPlayer-panel-row">
                                 <div class="row-title">视频比例</div>
