@@ -4,6 +4,12 @@ class Template {
   constructor(options) {
     this.container = options.container;
     if (options.theme) {
+      this.container.style.setProperty("--themeColor", options.theme);
+      this.container
+        .style.setProperty("--themeColorLight", utils.colorLuminance(options.theme, 0.3));
+      this.container
+        .style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
+      /*
       document.getElementsByTagName("body")[0].style.setProperty("--themeColor", options.theme);
       document
         .getElementsByTagName("body")[0]
@@ -11,6 +17,7 @@ class Template {
       document
         .getElementsByTagName("body")[0]
         .style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
+      */
     }
 
     options.isFireFox = utils.isFirefox;
