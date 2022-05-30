@@ -94,7 +94,7 @@ class Danmaku {
           this.events && this.events.trigger("danmaku_load_failed");
           this.options.error(msg || "弹幕加载失败");
           results[i] = [];
-
+          console.log(msg);
           ++readCount;
           if (readCount === endpoints.length) {
             callback(results);

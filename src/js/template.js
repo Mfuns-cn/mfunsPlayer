@@ -94,6 +94,9 @@ class Template {
     this.load = $(".loader_box");
     this.pip_btn = $(".mfunsPlayer-controller-pip"); // 画中画按钮
     this.notice = $(".mfunsPlayer-notice");
+    this.noticeText = $(".mfunsPlayer-notice-text");
+    this.noticeTodo = $(".mfunsPlayer-notice-todo");
+    this.noticeClose = $(".mfunsPlayer-notice-close");
     this.controllerTime = $(".mfunsPlayer-controller-time");
     this.time_label = $(".mfunsPlayer-controller-time-label");
     this.currentTime = $(".mfunsPlaye-video-currentTime");

@@ -14,7 +14,7 @@ export default {
       })
       .catch((e) => {
         console.error(e);
-        options.error && options.error();
+        options.error && options.error(e);
       });
   },
 
@@ -42,7 +42,8 @@ export default {
       })
       .catch((e) => {
         console.error(e);
-        options.error && options.error();
+
+        options.error && options.error(e);
       });
   },
 };
