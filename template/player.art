@@ -291,7 +291,7 @@
  {{ if danmaku.api }}   
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
-        <div class="mfunsPlayer-video-danmaku-count">共0条弹幕</div>
+        <div class="mfunsPlayer-video-danmaku-count">弹幕装填中...</div>
         <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
     <div class="mfunsPlayer-video-danmaku-details-skeleton"></div>
@@ -344,14 +344,14 @@
                     <div class="mfunsPlayer-danmaku-showarea-value row-value">-</div>
                 </div>
                 <div class="mfunsPlayer-panel-row">
-                    <div class="row-title">弹幕大小</div>
+                    <div class="row-title">文字大小</div>
                     <div class="mfunsPlayer-danmaku-size-slider mfunsPlayer-slider">
                         {{ include './slider.art' }}
                     </div>
                     <div class="mfunsPlayer-danmaku-size-value row-value">-</div>
                 </div>
                 <div class="mfunsPlayer-panel-row">
-                    <div class="row-title">弹幕速度</div>
+                    <div class="row-title">移动速度</div>
                     <div class="mfunsPlayer-danmaku-speed-slider mfunsPlayer-slider">
                         {{ include './slider.art' divide}}
                         <ul class="slider-tip">
@@ -405,6 +405,8 @@
             </div>
         </div>
         <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
+        <div class="mfunsPlayer-danmaku-status-loading">弹幕功能加载中...</div>
+        <div class="mfunsPlayer-danmaku-status-not-logged-in" style="display: none">需要登录后才能发送弹幕哦~</div>
         <div class="mfunsPlayer-danmaku-emit">发送</div>
     </div>
     </div>

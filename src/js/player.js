@@ -63,6 +63,13 @@ export default class mfunsPlayer {
         events: this.events,
       };
       this.danmaku = new Danmaku(this.danmakuOptions);
+      this.on('danmaku_load_start', () => {
+        this.template.danmakuCount.innerHTML = '弹幕装填中...';
+        this.template.danmakuStatusLoading.innerHTML = '弹幕功能加载中...';
+      })
+      this.on('danmaku_load_end', () => {
+        this.template.danmakuStatusLoading.innerHTML = '正在解锁弹幕输入...';
+      })
     }
     this.autoSwitch = this.options.autoSwitch;
     this.autoplay = this.options.autoplay;

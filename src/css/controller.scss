@@ -357,7 +357,6 @@
 	flex-grow:1;
 	justify-content: space-between;
 	align-items: center;
-	padding: 2px;
 	height: 100%;
 	.mfunsPlayer-controller-button {
 		padding: 0 5px;
@@ -509,6 +508,16 @@
 			&::-webkit-input-placeholder{
 				color: #999;
 			}
+		}
+		.mfunsPlayer-danmaku-status-loading {
+			font-size: 13px;
+			flex: 5;
+			height: 32px;
+			line-height: 32px;
+			margin-left: 5px;
+			color: #999;
+			box-sizing: border-box;
+			display: none;
 		}
 		.mfunsPlayer-danmaku-emit {
 			width: 60px;

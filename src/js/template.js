@@ -111,6 +111,7 @@ class Template {
     // this.danmakuEditor = $(".danmakuEditor");
     this.danmakuEmit = $(".mfunsPlayer-danmaku-emit");
     this.danmakuText = $(".mfunsPlayer-danmaku-text");
+    this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading")
     this.danmakuStyle_btn = $(".mfunsPlayer-controller-danmaku-style"); // 弹幕样式按钮
     this.danmaku_fontsize_picker = $(".mfunsPlayer-danmaku-fontsize-picker");
     this.danmaku_type_picker = $(".mfunsPlayer-danmaku-type-picker");
