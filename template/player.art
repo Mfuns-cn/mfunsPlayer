@@ -75,44 +75,62 @@
 
     <div class="mfunsPlayer-hotkey-panel mfunsPlayer-hotkey-panel-hide">
         <div class="mfunsPlayer-hotkey-panel-close">[x]</div>
-        <div class="mfunsPlayer-hotkey-panel-item ">
-            <span class="mfunsPlayer-hotkey-panel-item-title">退出全屏</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">ESC</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">暂停/开始播放</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">空格</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item ">
-            <span class="mfunsPlayer-hotkey-panel-item-title">音量 + 10%</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">↑</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">音量 - 10%</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">↓</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">快进 5s</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">→</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">快退 5s</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">←</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">展示/隐藏弹幕</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">D</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">进入/退出全屏</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">F</span>
-        </div>
-        <div class="mfunsPlayer-hotkey-panel-item">
-            <span class="mfunsPlayer-hotkey-panel-item-title">静音/取消静音</span>
-            <span class="mfunsPlayer-hotkey-panel-item-data">M</span>
+        <div class="mfunsPlayer-hotkey-panel-title">快捷键说明</div>
+        <div class="mfunsPlayer-hotkey-panel-wrap">
+            <div class="mfunsPlayer-hotkey-panel-item ">
+                <span class="mfunsPlayer-hotkey-panel-item-title">退出全屏</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">ESC</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">暂停/开始播放</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">空格</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">发送弹幕</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">Enter</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item ">
+                <span class="mfunsPlayer-hotkey-panel-item-title">音量 + 10%</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">↑</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">音量 - 10%</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">↓</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">快进 5s</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">→</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">快退 5s</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">←</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">切集 下一P</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">&gt;</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">切集 上一P</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">&lt;</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">展示/隐藏弹幕</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">D</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">进入/退出全屏</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">F</span>
+            </div>
+            <div class="mfunsPlayer-hotkey-panel-item">
+                <span class="mfunsPlayer-hotkey-panel-item-title">静音/取消静音</span>
+                <span class="mfunsPlayer-hotkey-panel-item-data">M</span>
+            </div>
         </div>
     </div>
-    <div class="mfunsPlayer-notice" ></div>
+    <div class="mfunsPlayer-notice" >
+        <!-- <span class="mfunsPlayer-notice-text"></span>
+        <span class="mfunsPlayer-notice-todo"></span> -->
+    </div>
     <div class="voice"></div>
     
     <div class="advanceDanmaku_pre_box"></div>
@@ -276,6 +294,7 @@
         <div class="mfunsPlayer-video-danmaku-count">共0条弹幕</div>
         <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
+    <div class="mfunsPlayer-video-danmaku-details-skeleton"></div>
     <div class="mfunsPlayer-video-danmaku-root">
         {{ if danmaku.showDanmaku }} 
         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger open">
@@ -389,6 +408,7 @@
         <div class="mfunsPlayer-danmaku-emit">发送</div>
     </div>
     </div>
+    <div class="mfunsPlayer-video-danmaku-root-skeleton"></div>
 </div>
 {{ /if }}
 

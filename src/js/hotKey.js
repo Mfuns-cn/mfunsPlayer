@@ -88,6 +88,12 @@ export default class HotKey {
                   player.controller.components.volumeSlider.change(0);
                 }
                 break;
+              case 188:
+                player.switchVideo(player.currentVideo - 1);
+                break;
+              case 190:
+                player.switchVideo(player.currentVideo + 1);
+                break;
             }
           }
         }

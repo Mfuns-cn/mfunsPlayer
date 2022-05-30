@@ -13,7 +13,9 @@
 	   opacity: 0;
 	   
 	}
-
+    &.disable{
+		display: none;
+	}
 	
 	.mfunsPlayer-controller {
 		height: 45px;

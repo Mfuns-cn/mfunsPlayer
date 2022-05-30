@@ -11,14 +11,16 @@
 	position: relative;
 	z-index: 103;
 	overflow: hidden;
-    
+    &.hide{
+		display: none;
+	 }
 	.mfunsPlayer-mask {
 		position: absolute;
 		top: 0;
 		bottom: 0;
 		left: 0;
 		right: 0;
-		z-index: 105;
+		z-index: 1005;
 		display: none;
 		&.mfunsPlayer-mask-show{
 		 display: block;
@@ -30,7 +32,6 @@
 		position: absolute;
 		bottom: 60px;
 		right: 15px;
-		cursor: pointer;
 		background: url(../icon/pause.png);
 		background-size: 100% 100%;
 		z-index: 103;
@@ -76,23 +77,30 @@
 			> span{
 				width: 20px;
 				height: 35px;
+				font-size: 20px;
 				text-align: center;
 				line-height: 20px;
-			    font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+			    font-family: "Microsoft YaHei";
+				text-shadow:1px 1px 1px #666;
 				border-radius: 2px;
-				background: $theme-color;
+				color: $theme-color;
 				animation: load 1s ease infinite;
+					
 					&:nth-child(2){
 					    animation-delay:0.2s;
+						// color: $theme-color-light;
 					}
 					&:nth-child(3){
 						animation-delay:0.4s;
+						// color: $theme-color-light;
 					}
 					&:nth-child(4){
 						animation-delay:0.6s;
+						// color: $theme-color-light;
 					}
 					&:nth-child(5){
 						animation-delay:0.8s;
+						// color: $theme-color-light;
 					}
 	       }
 		}
@@ -105,11 +113,11 @@
 	   @keyframes load{
 		0%,100%{
 				height: 35px;
-				background: $theme-color;
+				color: $theme-color;
 			}
 		50%{
 				height: 20px;
-				background: $theme-color-light;
+				color: $theme-color-light;
 			}
 		}
 				

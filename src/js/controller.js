@@ -69,7 +69,7 @@ class Controller {
     this.template.play_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
-    if (!this.isControl && !this.player.isShowMenu) {
+    if (!this.isControl && !this.player.isShowMenu && this.player.videoLoaded) {
       this.player.toggle();
     } else {
       this.player.isShowMenu = false;

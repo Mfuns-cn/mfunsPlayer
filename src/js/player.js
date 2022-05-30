@@ -43,6 +43,7 @@ export default class mfunsPlayer {
         limitArea: this.options.danmaku.limitArea ?? 4,
         callback: (length) => {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
+          this.danmakuLoaded = true;
         },
         error: (msg) => {
           this.notice(msg);
@@ -287,16 +288,24 @@ export default class mfunsPlayer {
     this.on("loadstart", () => {
       this.notice("正在加载视频内容...", true);
       this.template.loading.classList.add("show");
+      this.template.headBar.classList.add("disable");
+      this.template.controllerMask.classList.add("disable");
+      this.template.bezel.classList.add("hide");
+      this.template.footBar.classList.add("loading");
       this.videoLoaded = false;
     });
     this.on("error", () => {
-      this.notice("视频播放失败，请检查视频链接状态和网络情况", true);
+      this.notice("视频播放失败，请检查网络情况", true);
       this.template.loading.classList.remove("show");
     });
     this.on("loadedmetadata", (e) => {
       this.template.loading.classList.remove("show");
+      this.template.headBar.classList.remove("disable");
+      this.template.controllerMask.classList.remove("disable");
+      this.template.bezel.classList.remove("hide");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
+      this.danmakuLoaded && this.template.footBar.classList.remove("loading");
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
       if (this.timeBeforeReload) this.seek(this.timeBeforeReload);
@@ -309,7 +318,7 @@ export default class mfunsPlayer {
       clearTimeout(this.playTimer);
       this.playEnd && this.danmaku.seek();
       this.danmaku.play();
-      this.timer.enableloadingChecker = true;
+      if (this.videoLoaded) this.timer.enableloadingChecker = true;
       this.playEnd = false;
       this.controller.setAutoHide();
       this.container.classList.remove("mfunsPlayer-paused");
@@ -356,13 +365,15 @@ export default class mfunsPlayer {
   }
   switchVideo(index) {
     const total = this.template.pagelistItem.length - 1;
-    if (index > total) return;
+    if (index > total || index < 0 || index === this.currentVideo) return;
     this.template.currentTime.innerText = "00:00";
     this.template.totalTime.innerText = "00:00";
     this.handleSwitchVideo(index, total);
     this.bar.set("loaded", 0, "width");
     this.bar.set("played", 0, "width");
     this.isSwitched = true;
+    this.danmakuLoaded = false;
+    this.template.footBar.classList.add("loading");
     const currentVideo = this.options.video[index];
     this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;
@@ -370,6 +381,7 @@ export default class mfunsPlayer {
   }
   handleSwitchVideo(index, total) {
     this.currentVideo = index;
+    this.template.loadingSpeed.innerHTML = "";
     this.template.next_btn.style.display = index === total ? "none" : "flex";
     this.template.pagelistItem[index].classList.add("focus");
     this.template.pagelistItem.forEach((element, i) => {
