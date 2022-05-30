@@ -3,10 +3,21 @@ import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
+    if (options.theme) {
+      document.getElementsByTagName("body")[0].style.setProperty("--themeColor", options.theme);
+      document
+        .getElementsByTagName("body")[0]
+        .style.setProperty("--themeColorLight", utils.colorLuminance(options.theme, 0.3));
+      document
+        .getElementsByTagName("body")[0]
+        .style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
+    }
+
     options.isFireFox = utils.isFirefox;
     this.init(options);
     this.buildVideo(options.blackBorder);
   }
+
   init(options) {
     this.container.innerHTML = Player(options); // 注入播放器DOM
     const $ = this.container.querySelector.bind(this.container);
@@ -79,6 +90,7 @@ class Template {
     this.controllerWrap = $(".mfunsPlayer-controller-wrap");
     this.footBar = $(".mfunsPlayer-footBar");
     this.loading = $(".mfunsPlayer-loading");
+    this.loadingSpeed = $(".mfunsPlayer-loading-speed");
     this.load = $(".loader_box");
     this.pip_btn = $(".mfunsPlayer-controller-pip"); // 画中画按钮
     this.notice = $(".mfunsPlayer-notice");
@@ -105,6 +117,19 @@ class Template {
     this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
     this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
     this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
+    this.infoPanel = $(".mfunsPlayer-info-panel");
+    this.infoPanelClose = $(".mfunsPlayer-info-panel-close");
+    this.infoVersion = $(".mfunsPlayer-info-panel-item-version .mfunsPlayer-info-panel-item-data");
+    this.infoFPS = $(".mfunsPlayer-info-panel-item-fps .mfunsPlayer-info-panel-item-data");
+    this.infoType = $(".mfunsPlayer-info-panel-item-type .mfunsPlayer-info-panel-item-data");
+    this.infoUrl = $(".mfunsPlayer-info-panel-item-url .mfunsPlayer-info-panel-item-data");
+    this.infoResolution = $(".mfunsPlayer-info-panel-item-resolution .mfunsPlayer-info-panel-item-data");
+    this.infoDuration = $(".mfunsPlayer-info-panel-item-duration .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuId = $(".mfunsPlayer-info-panel-item-danmaku-id .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuApi = $(".mfunsPlayer-info-panel-item-danmaku-api .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuAmount = $(".mfunsPlayer-info-panel-item-danmaku-amount .mfunsPlayer-info-panel-item-data");
+    this.hotkeyPanel = $(".mfunsPlayer-hotkey-panel");
+    this.hotkeyPanelClose = $(".mfunsPlayer-hotkey-panel-close");
     this.voice = $(".voice");
   }
   buildVideo(hasBlackborder) {

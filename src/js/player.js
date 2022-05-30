@@ -7,6 +7,7 @@ import Controller from "./controller";
 import HotKey from "./hotKey";
 import Events from "./events";
 import ContextMenu from "./contextmenu";
+import InfoPanel from "./info-panel";
 import Template from "./template";
 import utils from "./utils";
 import DanmakuAuxiliary from "./danmakuAuxiliary";
@@ -31,7 +32,7 @@ export default class mfunsPlayer {
     this.currentVideo = this.options.currentVideo;
     this.bar = new Bar(this.template);
     this.danmakuAuxiliary = null;
-    this.widescreen = options.widescreen
+    this.widescreen = options.widescreen;
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
       this.danmakuOptions = {
@@ -42,6 +43,7 @@ export default class mfunsPlayer {
         limitArea: this.options.danmaku.limitArea ?? 4,
         callback: (length) => {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
+          this.danmakuLoaded = true;
         },
         error: (msg) => {
           this.notice(msg);
@@ -69,6 +71,7 @@ export default class mfunsPlayer {
     this.fullScreen = new FullScreen(this);
     this.contextMenu = new ContextMenu(this);
     this.hotkey = new HotKey(this);
+    this.infoPanel = new InfoPanel(this);
     this.initVideo(this.video, this.options.video.type);
     this.arrow = this.container.offsetWidth <= 500;
 
@@ -124,10 +127,16 @@ export default class mfunsPlayer {
     this.timer.enableloadingChecker = false;
   }
   play() {
-    console.log("play");
-    this.video.play();
-    this.danmaku.play();
-    this.timer.enableloadingChecker = true;
+    this.video
+      .play()
+      .then(() => {
+        console.log("play");
+        // this.danmaku.play();
+      })
+      .catch((e) => {
+        this.notice("视频播放异常");
+        this.reload();
+      });
 
     if (this.options.mutex) {
       for (let i = 0; i < instances.length; i++) {
@@ -257,7 +266,7 @@ export default class mfunsPlayer {
       this.template.pagelistItem[this.options.currentVideo].classList.add("focus");
     }
     this.on("canplay", () => {
-      if (this.isSwitched || this.autoplay) {
+      if (this.isSwitched || this.autoplay || this.reloadFlag) {
         //chrome禁止自动播放视频
         this.video.play().catch(() => {
           navigator.mediaDevices
@@ -273,31 +282,43 @@ export default class mfunsPlayer {
         });
         this.autoplay = false;
         this.isSwitched = false;
+        this.reloadFlag = false;
       }
     });
     this.on("loadstart", () => {
       this.notice("正在加载视频内容...", true);
       this.template.loading.classList.add("show");
+      this.template.headBar.classList.add("disable");
+      this.template.controllerMask.classList.add("disable");
+      this.template.bezel.classList.add("hide");
+      this.template.footBar.classList.add("loading");
       this.videoLoaded = false;
     });
     this.on("error", () => {
-      this.notice("视频播放失败，请检查视频链接状态和网络情况", true);
+      this.notice("视频播放失败，请检查网络情况", true);
       this.template.loading.classList.remove("show");
     });
-    this.on("loadedmetadata", () => {
+    this.on("loadedmetadata", (e) => {
       this.template.loading.classList.remove("show");
+      this.template.headBar.classList.remove("disable");
+      this.template.controllerMask.classList.remove("disable");
+      this.template.bezel.classList.remove("hide");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
+      this.danmakuLoaded && this.template.footBar.classList.remove("loading");
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
+      if (this.timeBeforeReload) this.seek(this.timeBeforeReload);
     });
-    this.on("progress", () => {
+    this.on("progress", (e) => {
       const percentage = video.buffered.length ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
       this.bar.set("loaded", percentage, "width");
     });
     this.on("play", () => {
       clearTimeout(this.playTimer);
       this.playEnd && this.danmaku.seek();
+      this.danmaku.play();
+      if (this.videoLoaded) this.timer.enableloadingChecker = true;
       this.playEnd = false;
       this.controller.setAutoHide();
       this.container.classList.remove("mfunsPlayer-paused");
@@ -337,20 +358,22 @@ export default class mfunsPlayer {
       this.danmaku.seek();
     });
     for (let i = 0; i < this.events.videoEvents.length; i++) {
-      video.addEventListener(this.events.videoEvents[i], () => {
-        this.events.trigger(this.events.videoEvents[i]);
+      video.addEventListener(this.events.videoEvents[i], (e) => {
+        this.events.trigger(this.events.videoEvents[i], e);
       });
     }
   }
   switchVideo(index) {
     const total = this.template.pagelistItem.length - 1;
-    if (index > total) return;
+    if (index > total || index < 0 || index === this.currentVideo) return;
     this.template.currentTime.innerText = "00:00";
     this.template.totalTime.innerText = "00:00";
     this.handleSwitchVideo(index, total);
     this.bar.set("loaded", 0, "width");
     this.bar.set("played", 0, "width");
     this.isSwitched = true;
+    this.danmakuLoaded = false;
+    this.template.footBar.classList.add("loading");
     const currentVideo = this.options.video[index];
     this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;
@@ -358,6 +381,7 @@ export default class mfunsPlayer {
   }
   handleSwitchVideo(index, total) {
     this.currentVideo = index;
+    this.template.loadingSpeed.innerHTML = "";
     this.template.next_btn.style.display = index === total ? "none" : "flex";
     this.template.pagelistItem[index].classList.add("focus");
     this.template.pagelistItem.forEach((element, i) => {
@@ -398,6 +422,17 @@ export default class mfunsPlayer {
   speed(rate) {
     this.video.playbackRate = rate;
     return rate;
+  }
+  reload() {
+    this.timeBeforeReload = this.video.currentTime;
+    this.reloadFlag = true;
+    this.template.currentTime.innerText = "00:00";
+    this.template.totalTime.innerText = "00:00";
+    this.bar.set("loaded", 0, "width");
+    this.bar.set("played", 0, "width");
+    const currentVideo = this.options.video[this.currentVideo];
+    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.video.src = currentVideo.url;
   }
   resize() {
     this.danmaku && this.danmaku.resize();

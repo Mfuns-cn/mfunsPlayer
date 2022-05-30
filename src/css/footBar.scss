@@ -10,12 +10,41 @@
     border: 1px solid #e6e6e6;
     border-top: none ;
     box-sizing: border-box;
+    .mfunsPlayer-video-danmaku-details-skeleton{
+        background-image: linear-gradient(90deg, #e6e6e6 20%, #f0f0f0 47%, #f6f6f6 63%);
+        width: 150px;
+        height: 18px;
+        background-size: 200% 100%;
+        background-position: 0% 0%;
+        animation: skeleton-loading 1.4s ease infinite;
+        display: none;
+    }
+    .mfunsPlayer-video-danmaku-root-skeleton{
+        @extend .mfunsPlayer-video-danmaku-details-skeleton;
+
+        display:none;
+        width: calc(100% - 150px);
+        margin-left: 20px;
+    }
+    &.loading{
+        .mfunsPlayer-video-danmaku-details-skeleton,.mfunsPlayer-video-danmaku-root-skeleton{
+            display: block;
+        }
+        .mfunsPlayer-video-danmaku-details,.mfunsPlayer-video-danmaku-root{
+            display: none;
+        }
+       
+       
+    }
     &.darkmode{
          background: #212121;
          color: #f6f6f6;
          border: 1px solid #212121;
          .input_box{
           border-left: 1px solid #666;
+         }
+         .mfunsPlayer-video-danmaku-details-skeleton, .mfunsPlayer-video-danmaku-root-skeleton{
+            background-image: linear-gradient(90deg, #999 20%, #666 47%, #333 63%);
          }
     }
     .mfunsPlayer-video-danmaku-details{
@@ -24,5 +53,16 @@
         .mfunsPlayer-video-danmaku-count{
             color: #999
         }
+    }
+}
+
+@keyframes skeleton-loading {
+ 
+    0% {    background-position:100% 0%;
+   
+    }
+   
+    100% {    background-position: 0% 100%;
+   
     }
 }
