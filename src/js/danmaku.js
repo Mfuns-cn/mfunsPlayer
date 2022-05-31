@@ -273,7 +273,7 @@ class Danmaku {
         const eleLeft = ele.getBoundingClientRect().left || this.container.getBoundingClientRect().left + eleWidth;
         return this.container.getBoundingClientRect().left - eleLeft;
       };
-      const danSpeed = (width) => danWidth + width; //弹幕速度
+      const danSpeed = (width) => (danWidth + width) / 5; //弹幕速度
 
       //获取弹幕可进入的轨道
       const getTunnel = (ele, type, width) => {
@@ -281,8 +281,11 @@ class Danmaku {
         for (let i = 0; this.unlimited || i < itemY; i++) {
           const item = this.danTunnel[type][i + ""]; //轨道弹幕组(单轨道内的所有弹幕)
           if (item && item.length) {
-            this.tunnelHeights[type][i] = Math.max(...item.map((el) => parseInt(el.style.fontSize))) + 7;
+            //当前轨道高度
+            // this.tunnelHeights[type][i] = Math.max(...item.map((el) => parseInt(el.style.fontSize))) + 7;
+
             if (type !== "right" && type !== "left") {
+              // this.tunnelHeights[type][i] = parseInt(ele.style.fontSize) + 7;
               continue;
             }
 
@@ -290,14 +293,16 @@ class Danmaku {
             for (let j = 0; j < item.length; j++) {
               if (type === "right") {
                 const danRight = danItemRight(item[j]) - 10;
-
                 if (danRight <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danRight <= 0) {
+                  this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
+
                   //该情况表示当前轨道有滚动弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
                   break;
                 }
               }
               if (type === "left") {
                 const danLeft = danItemLeft(item[j]) - 10;
+                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
                 if (danLeft <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danLeft <= 0) {
                   //该情况表示当前轨道有逆向弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
                   break;
@@ -305,8 +310,11 @@ class Danmaku {
               }
               if (j === item.length - 1) {
                 //轨道弹幕组遍历完毕，组内所有弹幕均完全进入容器，可以向该轨道装填弹幕
+                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
                 this.danTunnel[type][i + ""].push(ele);
-
+                // ele.addEventListener("animationstart", () => {
+                //   this.tunnelHeights[type][i] = parseInt(ele.style.fontSize) + 7;
+                // });
                 ele.addEventListener("animationend", () => {
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(0, 1);
                 });
@@ -379,7 +387,12 @@ class Danmaku {
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
               // console.log(this.tunnelHeights);
+
               item.style.width = itemWidth + 1 + "px";
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(-${danWidth}px)`;
@@ -390,6 +403,10 @@ class Danmaku {
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
               item.style.width = itemWidth + 1 + "px";
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(${danWidth}px)`;
@@ -398,17 +415,49 @@ class Danmaku {
           case "top":
             tunnel = getTunnel(item, dan[i].type);
             if (tunnel >= 0 || dan[i].isSubtitle) {
-              const maxTop = this.tunnelHeights.top.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-              const top = this.tunnelHeights.top.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              // const maxTop = this.tunnelHeights.top.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              // const top = this.tunnelHeights.top.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              let topArr = [];
+              const topDan = this.danTunnel.top;
+              for (let key in topDan) {
+                topArr.push(...topDan[key]);
+              }
+              const top = topArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + 7;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
             }
             break;
           case "bottom":
             tunnel = getTunnel(item, dan[i].type);
             if (tunnel >= 0 || dan[i].isSubtitle) {
-              const maxBottom = this.tunnelHeights.bottom.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-              const bottom =
-                this.tunnelHeights.bottom.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxBottom;
+              // const maxBottom = this.tunnelHeights.bottom.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              // const bottom =
+              //   this.tunnelHeights.bottom.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxBottom;
+              let bottomArr = [];
+              const bottomDan = this.danTunnel.bottom;
+              for (let key in bottomDan) {
+                bottomArr.push(...bottomDan[key]);
+              }
+              const bottom = bottomArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + 7;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (bottom + parseInt(item.style.fontSize) + 7 > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
               item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
             break;
