@@ -46,7 +46,8 @@ export default class mfunsPlayer {
           this.danmakuLoaded = true;
         },
         error: (msg) => {
-          this.notice(msg);
+          this.notice(msg, true);
+          this.netwrokError = true;
         },
         apiBackend: this.options.apiBackend,
         borderColor: "#FFFFFF",
@@ -107,7 +108,7 @@ export default class mfunsPlayer {
 
   seek(time) {
     console.log("seek");
-
+    this.canplay = false;
     time = Math.max(time, 0);
     if (this.video.duration) {
       time = Math.min(time, this.video.duration);
@@ -134,15 +135,19 @@ export default class mfunsPlayer {
     this.timer.enableloadingChecker = false;
   }
   play() {
+    this.timer.enableloadingChecker = true;
+    if (!this.canplay) return;
+
     this.video
       .play()
       .then(() => {
         console.log("play");
-        // this.danmaku.play();
       })
       .catch((e) => {
-        this.notice("视频播放异常");
-        this.reload();
+        this.notice("视频播放异常，即将重载播放器");
+        setTimeout(() => {
+          this.reload();
+        }, 500);
       });
 
     if (this.options.mutex) {
@@ -287,22 +292,47 @@ export default class mfunsPlayer {
               this.play();
             });
         });
+
         this.autoplay = false;
         this.isSwitched = false;
         this.reloadFlag = false;
       }
+
+      console.log("canplay");
+      this.canplay = true;
     });
     this.on("loadstart", () => {
-      this.notice("正在加载视频内容...", true);
+      this.notice(`正在${this.timeBeforeReload ? "重载" : "初始化"}视频...`, true);
       this.template.loading.classList.add("show");
+      this.template.loadingSpeed.innerHTML = "";
       this.template.headBar.classList.add("disable");
       this.template.controllerMask.classList.add("disable");
       this.template.bezel.classList.add("hide");
       this.template.footBar.classList.add("loading");
       this.videoLoaded = false;
+      //一分钟后如果还处于loadstart阶段，则响应超时
+      setTimeout(() => {
+        if (!this.videoLoaded) {
+          this.template.loading.classList.remove("show");
+          this.notice("视频响应超时，您可以", true, 2000, 0.8, false, {
+            callback: () => {
+              this.reload();
+            },
+            text: "重新加载",
+          });
+        }
+      }, 60000);
     });
     this.on("error", () => {
-      this.notice("视频播放失败，请检查网络情况", true);
+      //检查视频链接
+      this.options.apiBackend.read({
+        url: this.video.src,
+        error: (err) => {
+          console.error(err);
+          this.notice("视频加载失败,请检查网络设置或视频链接是否可用", true);
+        },
+      });
+
       this.template.loading.classList.remove("show");
     });
     this.on("loadedmetadata", (e) => {
@@ -312,14 +342,19 @@ export default class mfunsPlayer {
       this.template.bezel.classList.remove("hide");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
-      this.danmakuLoaded && this.template.footBar.classList.remove("loading");
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
-      if (this.timeBeforeReload) this.seek(this.timeBeforeReload);
+      if (this.timeBeforeReload) {
+        this.seek(this.timeBeforeReload);
+        setTimeout(() => {
+          this.notice(`已为你跳转至上次播放进度 ${utils.secondToTime(this.timeBeforeReload)}`);
+        }, 500);
+      }
     });
     this.on("progress", (e) => {
       const percentage = video.buffered.length ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
       this.bar.set("loaded", percentage, "width");
+      this.danmakuLoaded && this.videoLoaded && this.template.footBar.classList.remove("loading");
     });
     this.on("play", () => {
       clearTimeout(this.playTimer);
@@ -433,13 +468,15 @@ export default class mfunsPlayer {
   reload() {
     this.timeBeforeReload = this.video.currentTime;
     this.reloadFlag = true;
+    this.timer.enabledownloadChecker = false;
     this.template.currentTime.innerText = "00:00";
     this.template.totalTime.innerText = "00:00";
+    this.template.barTime.classList.add("hidden");
     this.bar.set("loaded", 0, "width");
     this.bar.set("played", 0, "width");
     const currentVideo = this.options.video[this.currentVideo];
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;
+    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
   }
   resize() {
     this.danmaku && this.danmaku.resize();
@@ -476,12 +513,25 @@ export default class mfunsPlayer {
       this.video.style.width = `${(wscale / hscale) * 100}%`;
     }
   }
-  notice(text, alive = false, time = 2000, opacity = 0.8) {
-    this.template.notice.innerHTML = text;
+  notice(text, alive = false, time = 2000, opacity = 0.8, showClose = false, todo) {
+    console.log(text);
+    this.template.noticeText.innerHTML = text;
     this.template.notice.style.opacity = opacity;
-    if (this.noticeTime) {
-      clearTimeout(this.noticeTime);
+    this.noticeTime && clearTimeout(this.noticeTime);
+    showClose && this.template.noticeClose.classList.add("show");
+    this.template.noticeClose.addEventListener("click", () => {
+      this.template.noticeClose.classList.remove("show");
+      this.template.notice.style.opacity = 0;
+    });
+    if (todo) {
+      this.template.noticeTodo.classList.add("show");
+      this.template.noticeTodo.innerHTML = todo.text;
+      this.template.noticeTodo.addEventListener("click", () => {
+        todo.callback();
+        this.template.noticeTodo.classList.remove("show");
+      });
     }
+
     this.events.trigger("notice_show", text);
     if (time > 0 && !alive) {
       this.noticeTime = setTimeout(() => {

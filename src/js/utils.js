@@ -247,7 +247,11 @@ const utils = {
         return 0;
     }
   },
-
+  randomFontsize: (range) => {
+    const allSize = [12, 14, 18, 26, 34, 42];
+    const random = Math.floor(Math.random() * range);
+    return allSize[random];
+  },
   // number2Type: (number) => {
   //   switch (number) {
   //     case 1:

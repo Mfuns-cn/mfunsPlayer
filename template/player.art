@@ -128,8 +128,9 @@
         </div>
     </div>
     <div class="mfunsPlayer-notice" >
-        <!-- <span class="mfunsPlayer-notice-text"></span>
-        <span class="mfunsPlayer-notice-todo"></span> -->
+        <span class="mfunsPlayer-notice-text"></span>
+        <span class="mfunsPlayer-notice-todo"></span>
+        <span class="mfunsPlayer-notice-close">X</span>
     </div>
     <div class="voice"></div>
     
