@@ -127,6 +127,7 @@ class Template {
     this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
     this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
     this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
+    this.danmaku_catch_switch = $(".mfunsPlayer-danmaku-catch-switch");
     this.infoPanel = $(".mfunsPlayer-info-panel");
     this.infoPanelClose = $(".mfunsPlayer-info-panel-close");
     this.infoVersion = $(".mfunsPlayer-info-panel-item-version .mfunsPlayer-info-panel-item-data");

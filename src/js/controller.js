@@ -35,11 +35,13 @@ class Controller {
       this.initPlayedBar();
       this.initTimeLabel();
     }
-    if (typeof player.options.uid === "number") {
+    if (player.options.danmaku) {
       this.initDanmakuButton();
       this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
       this.initDanmakuEmit();
+    }
+    if (typeof player.options.uid === "number") {
       !player.options.userIsLogined &&
         player.template.toLogin.addEventListener("click", () => {
           // player.options.toLogin && player.options.toLogin();
@@ -552,6 +554,14 @@ class Controller {
         },
       }
     );
+    this.components.danmakuCatchSwitch = new Switch(this.template.danmaku_catch_switch, this.player.options.danmaku.danmakuCatch, {
+      on() {
+        THIS.player.template.danmakuTipMask.style.display = ""  // 打开弹幕捕获模式，则取消tipMask的隐藏
+      },
+      off() {
+        THIS.player.template.danmakuTipMask.style.display = "none"  // 关闭弹幕捕获模式，则隐藏tipMask
+      }
+    })
   }
   initDanmakuStyleButton() {
     const THIS = this;

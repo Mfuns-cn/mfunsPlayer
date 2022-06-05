@@ -54,6 +54,7 @@ export default class mfunsPlayer {
         height: this.arrow ? 24 : 28,
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
+        danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
         unlimited: false,
         api: {
           link: this.options.video[this.options.currentVideo].danLink,

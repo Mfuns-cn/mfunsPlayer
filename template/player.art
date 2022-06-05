@@ -424,6 +424,12 @@
                     </div>
                     <div class="mfunsPlayer-danmaku-speed-value row-value">-</div>
                 </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-catch-switch">
+                        <div class="mfunsPlayer-switch-checkbox"></div>
+                        <div class="mfunsPlayer-switch-label">弹幕捕获模式</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

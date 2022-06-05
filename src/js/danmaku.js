@@ -42,8 +42,13 @@ class Danmaku {
     this.danmakuTipBox = this.player.template.danmakuTipBox;
     this.currentX = 0;
     this.currentY = 0;
+    this.danmakuCatch = this.options.danmakuCatch;  // 是否开启弹幕捕获
     this.load();
     this.initDanmakuTips();
+
+    if (!this.danmakuCatch) {
+      player.template.danmakuTipMask.style.display = "none"
+    }
 
     const danmakuTipMaskMove = (e) => {
       // utils.throttle(()=>{})
