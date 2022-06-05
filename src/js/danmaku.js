@@ -1,8 +1,10 @@
 import utils from "./utils";
 
 class Danmaku {
-  constructor(options) {
+  constructor(options, player) {
     this.options = options;
+    this.player = player;
+    this.createHash = utils.initHash();
     this.container = this.options.container;
     this.danTunnel = {
       right: {},
@@ -23,6 +25,7 @@ class Danmaku {
     this._fontScale = this.options.fontScale;
     this._speed = this.options.speed;
     this._limitArea = this.options.limitArea;
+
     this.events = this.options.events;
     this.topLimit = false;
     this.bottomLimit = false;
@@ -33,11 +36,116 @@ class Danmaku {
     this.unlimited = this.options.unlimited;
     this.loaded = false; // 弹幕是否加载完毕
     this.paused = true;
+    this.danmakuCheck = false;
     this._measure("");
-
+    this.danmakuTip = this.player.template.danmakuTip;
+    this.danmakuTipBox = this.player.template.danmakuTipBox;
+    this.currentX = 0;
+    this.currentY = 0;
     this.load();
-  }
+    this.initDanmakuTips();
 
+    const danmakuTipMaskMove = (e) => {
+      // utils.throttle(()=>{})
+      // console.log(e.pageX - this.currentX, e.pageY - this.currentY);
+      if (Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) > 3.5) {
+        this.currentX = e.pageX;
+        this.currentY = e.pageY;
+        return;
+      }
+      this.currentX = e.pageX;
+      this.currentY = e.pageY;
+      const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
+      for (let i = 0; i < items.length; i++) {
+        // if (this.currentLockDanmaku) break;
+        const item = items[i];
+        const boundingClientRect = item.getBoundingClientRect();
+        const danLeft = boundingClientRect.left;
+        const danRight = boundingClientRect.right;
+        const danTop = boundingClientRect.top;
+        const danBottom = boundingClientRect.bottom;
+
+        if (danLeft < e.pageX && e.pageX < danRight && danTop < e.pageY && e.pageY < danBottom) {
+          this.currentLockDanmaku = item;
+          this.lockDanmakuData = this.getDanmakuData(item.dataset.id);
+          if (player.options.uid === +this.lockDanmakuData.author) {
+            player.template.danmakuCancel.classList.add("show");
+            player.template.danmakuReport.classList.remove("show");
+          } else {
+            player.template.danmakuCancel.classList.remove("show");
+            player.template.danmakuReport.classList.add("show");
+          }
+          item.classList.add("lock");
+          this.danmakuTip.classList.add("show");
+          const itemTop = danTop - this.container.getBoundingClientRect().top;
+          this.danmakuTip.style.top = itemTop + 5 + "px";
+          this.danmakuTip.style.height = 45 + item.offsetHeight + "px";
+          if (e.pageX - this.container.getBoundingClientRect().left < 75) {
+            this.danmakuTip.style.left = 0;
+          } else if (this.container.clientWidth - (e.pageX - this.container.getBoundingClientRect().left) < 75) {
+            this.danmakuTip.style.left = "auto";
+            this.danmakuTip.style.right = 0;
+          } else {
+            this.danmakuTip.style.left = e.pageX - this.container.getBoundingClientRect().left - 75 + "px";
+          }
+          break;
+        } else {
+          item.classList.remove("lock");
+          // this.currentLockDanmaku = null;
+        }
+      }
+    };
+    // 进入tip，取消监听mask移动
+    this.danmakuTip.addEventListener("mouseover", () => {
+      player.template.danmakuTipMask.removeEventListener("mousemove", danmakuTipMaskMove);
+    });
+    // 离开tip，恢复监听mask移动
+    this.danmakuTip.addEventListener("mouseleave", () => {
+      this.danmakuTip.classList.remove("show");
+      this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
+      // this.currentLockDanmaku = null;
+      player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
+    });
+    player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
+  }
+  initDanmakuTips() {
+    this.player.template.danmakuTipBox.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    //点赞
+    this.player.template.danmakuPraise.addEventListener("click", (e) => {});
+    //复制
+    this.player.template.danmakuCopy.addEventListener("click", (e) => {
+      navigator &&
+        navigator.clipboard &&
+        navigator.clipboard
+          .writeText(this.lockDanmakuData.text)
+          .then((res) => {
+            this.player.notice("已复制");
+            this.danmakuTip.classList.remove("show");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    });
+    //撤销
+    this.player.template.danmakuCancel.addEventListener("click", (e) => {});
+    //举报
+    this.player.template.danmakuReport.addEventListener("click", (e) => {
+      setTimeout(() => {
+        this.currentLockDanmaku && this.currentLockDanmaku.classList.add("lock");
+      }, 50);
+
+      this.player.template.danmakuReportMask.classList.add("show");
+      this.player.template.danmakuReportContent.innerHTML = this.lockDanmakuData.text;
+      this.player.template.danmakuReportMask.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+      this.player.template.danmakuReportModelClose.addEventListener("click", (e) => {
+        this.player.template.danmakuReportMask.classList.remove("show");
+      });
+    });
+  }
   load() {
     let apiurl;
     console.log(this.unlimited);
@@ -53,6 +161,9 @@ class Danmaku {
 
     this._readAllEndpoints(endpoints, (results) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
+      this.dan.forEach((el, index) => {
+        el.id = this.createHash(8);
+      });
       window.requestAnimationFrame(() => {
         this.frame();
       });
@@ -105,9 +216,12 @@ class Danmaku {
   }
 
   send(dan) {
+    const newDanmakuId = this.createHash(8);
     const danmakuData = {
       time: this.options.time() + 0.52,
       size: dan.size || 18,
+      author: this.player.options.uid,
+      id: newDanmakuId,
       text: dan.text,
       color: dan.color || 16777215,
       type: dan.type || "right",
@@ -118,13 +232,13 @@ class Danmaku {
       color: danmakuData.color,
       size: danmakuData.size,
       type: danmakuData.type,
+      id: newDanmakuId,
       isSubtitle: /(\/n)|(\\n)/i.test(danmakuData.text),
       border: `2px solid ${this.options.borderColor}`,
     };
     console.log(danmakuData);
     this.dan.splice(this.danIndex, 0, danmakuData);
     this.danIndex++;
-
     this.draw(danmaku);
     this.options.sendDanmaku &&
       this.options.sendDanmaku(
@@ -146,6 +260,16 @@ class Danmaku {
     }
     return true;
   };
+  getDanmakuData(id) {
+    let dan;
+    for (let i = 0; i < this.dan.length; i++) {
+      if (this.dan[i].id === id) {
+        dan = this.dan[i];
+        break;
+      }
+    }
+    return dan;
+  }
   frame() {
     if (this.dan.length && !this.paused && this.showing) {
       let item = this.dan[this.danIndex];
@@ -154,6 +278,7 @@ class Danmaku {
         if (this.checkShield(item)) {
           dan.push(item);
         }
+
         item = this.dan[++this.danIndex];
       }
       if (this.colorLimit) {
@@ -174,10 +299,11 @@ class Danmaku {
     //"1/4", "半屏", "3/4", "不重叠", "不限"
     this._limitArea = Math.min(areaType / 4, 1);
     this.unlimited = areaType > 4;
-    this.shield("bottom", areaType < 4);
+    if (areaType < 4) this.shield("bottom", true);
   }
   shield(type, flag = false) {
     this[`${type}Limit`] = flag;
+    console.log(type);
     if (flag) {
       this.clear(type);
       const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
@@ -201,7 +327,7 @@ class Danmaku {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
       for (let i = 0; i < items.length; i++) {
         if (items[i].classList.contains("subtitle")) continue;
-        items[i].style.opacity = percentage;
+        items[i].children[0].style.opacity = percentage;
       }
       this._opacity = percentage;
 
@@ -312,9 +438,6 @@ class Danmaku {
                 //轨道弹幕组遍历完毕，组内所有弹幕均完全进入容器，可以向该轨道装填弹幕
                 this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
                 this.danTunnel[type][i + ""].push(ele);
-                // ele.addEventListener("animationstart", () => {
-                //   this.tunnelHeights[type][i] = parseInt(ele.style.fontSize) + 7;
-                // });
                 ele.addEventListener("animationend", () => {
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(0, 1);
                 });
@@ -364,14 +487,14 @@ class Danmaku {
         if (dan[i].border) {
           item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
         } else {
-          item.innerHTML = dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
+          item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
         }
         if (typeof dan[i].color !== "string") {
           item.style.color = utils.number2Color(dan[i].color);
         }
-        item.style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
+        item.children[0].style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
         item.style.fontSize = (+dan[i].size + 3) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
-        item.style.zIndex = dan[i].isSubtitle ? 100 : 1;
+        item.style.zIndex = dan[i].isSubtitle ? 100 : "auto";
         item.addEventListener("animationend", () => {
           this.container.removeChild(item);
         });
@@ -433,6 +556,8 @@ class Danmaku {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
             }
             break;
@@ -458,6 +583,8 @@ class Danmaku {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
               item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
             break;
@@ -468,6 +595,8 @@ class Danmaku {
         if (tunnel >= 0) {
           // move
           item.classList.add("mfunsPlayer-danmaku-move");
+          item.dataset.id = dan[i].id;
+
           if (!!this._speed && !dan[i].isSubtitle) {
             item.classList.add(this._speed);
           }
@@ -481,7 +610,13 @@ class Danmaku {
       return docFragment;
     }
   }
-
+  removeDanmakuCheck() {
+    this.lockDanmaku && this.lockDanmaku.classList.remove("lock");
+    this.player.template.danmakuTip.classList.remove("show");
+    this.lockDanmaku.dataset.moved = 0;
+    this.lockDanmaku.style.zIndex = "auto";
+    this.container.style.cursor = "none";
+  }
   play() {
     this.paused = false;
   }

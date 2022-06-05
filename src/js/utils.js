@@ -22,7 +22,25 @@ const utils = {
       return [hour * 60 + min, sec].map(add0).join(":");
     }
   },
-  //节流函数
+  //防抖
+  debounce: (fn = () => {}, delay = 200) => {
+    let timer;
+    return function (...args) {
+      const event = args[args.length - 1];
+      if (timer) {
+        clearTimeout(timer);
+      }
+      if (event && typeof event.persist === "function") {
+        event.persist();
+      }
+      let _this = this;
+      timer = setTimeout(() => {
+        fn.apply(_this, args);
+        clearTimeout(timer);
+      }, delay);
+    };
+  },
+  //节流
   throttle: (fn, wait) => {
     var timer = null;
     return function () {
@@ -31,7 +49,7 @@ const utils = {
       if (!timer) {
         timer = setTimeout(function () {
           fn.apply(context, args);
-          timer = null;
+          clearTimeout(timer);
         }, wait);
       }
     };
@@ -246,6 +264,61 @@ const utils = {
       default:
         return 0;
     }
+  },
+  initHash() {
+    let count = 100;
+
+    return function (hashLength) {
+      if (!hashLength || typeof Number(hashLength) != "number") {
+        return;
+      }
+      let ar = [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+      ];
+      let hs = [];
+      let hl = Number(hashLength);
+      let al = ar.length;
+      for (let i = 0; i < hl; i++) {
+        hs.push(ar[Math.floor(Math.random() * al)]);
+      }
+      count++;
+      return hs.join("") + `${count}`;
+    };
   },
   randomFontsize: (range) => {
     const allSize = [12, 14, 18, 26, 34, 42];

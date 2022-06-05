@@ -12,7 +12,9 @@
     box-sizing: border-box;
     .input_box {
         padding-right: 15px;
-    }/**
+    }
+    
+    /**
     .mfunsPlayer-video-danmaku-details-skeleton{
         background-image: linear-gradient(90deg, #e6e6e6 20%, #f0f0f0 47%, #f6f6f6 63%);
         width: 150px;
@@ -22,35 +24,15 @@
         animation: skeleton-loading 1.4s ease infinite;
         display: none;
     }**/
-    .mfunsPlayer-video-danmaku-root-skeleton{
-        @extend .mfunsPlayer-video-danmaku-details-skeleton;
+    // .mfunsPlayer-video-danmaku-root-skeleton{
+    //     @extend .mfunsPlayer-video-danmaku-details-skeleton;
 
-        display:none;
-        width: calc(100% - 150px);
-        margin-left: 20px;
-    }
-    &.loading{
-        .input_box {
-            background-image: linear-gradient(90deg, #e6e6e6 10%, #f0f0f0 24%, #f6f6f6 32%, #f6f6f6 68%, #f0f0f0 76%, #e6e6e6 90%);
-            background-size: 200% 100%;
-            background-position: 0% 0%;
-            animation: skeleton-loading 1.4s linear infinite;
-        }
-        .mfunsPlayer-video-danmaku-details-skeleton,.mfunsPlayer-video-danmaku-root-skeleton{
-            display: none;
-        }
-        .mfunsPlayer-danmaku-text {
-            display: none;
-        }
-        .mfunsPlayer-danmaku-status-loading {
-            display: block;
-        }
-        .mfunsPlayer-danmaku-emit {
-            background-color: #aaa;
-            pointer-events: none;
-            cursor: not-allowed;
-        }
-    }
+    //     display:none;
+    //     width: calc(100% - 150px);
+    //     margin-left: 20px;
+    // }
+
+   
     &.darkmode{
         background: #212121;
         color: #f6f6f6;
@@ -58,18 +40,32 @@
         .input_box{
         border-left: 1px solid #666;
         }
-        &.loading {
-            .input_box {
-                background-image: linear-gradient(90deg, #555 10%, #444 24%, #333 32%, #333 68%, #444 76%, #555 90%);
-                background-size: 200% 100%;
-                background-position: 0% 0%;
-                animation: skeleton-loading 1.4s linear infinite;
+
+        .mfunsPlayer-video-danmaku-root{
+            &.loading {
+                .input_box {
+                    background-image: linear-gradient(90deg, #555 10%, #444 24%, #333 32%, #333 68%, #444 76%, #555 90%);
+                    background-size: 200% 100%;
+                    background-position: 0% 0%;
+                    animation: skeleton-loading 1.4s linear infinite;
+                }
+                .mfunsPlayer-danmaku-emit {
+                    background-color: #888;
+                }
             }
-            .mfunsPlayer-danmaku-emit {
-                background-color: #888;
+
+            &.nologin{
+                .input_box{
+                    background: #323232;
+                }
+                .mfunsPlayer-danmaku-emit {
+                    background-color: #888;
+                }
             }
         }
+      
     }
+    
     .mfunsPlayer-video-danmaku-details{
         font-size: 13px;
         padding-right: 5px;
@@ -78,7 +74,61 @@
         }
     }
 }
-
+.mfunsPlayer-video-danmaku-root{
+    .mfunsPlayer-danmaku-status-not-logged-in{
+        display: none ;
+     }
+    &.nologin{
+    .input_box{
+      background: #f1f2f3; 
+      user-select: none;
+       .mfunsPlayer-danmaku-text,.mfunsPlayer-controller-danmaku-style{
+        display: none 
+       }
+    }
+   
+    .mfunsPlayer-danmaku-emit {
+        background-color: #aaa;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+    .mfunsPlayer-danmaku-status-not-logged-in{
+        width: 100%;
+        display: block;
+        color: $text-grey;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        .mfunsPlayer-toLogin{
+          margin: 0 5px;
+          color: #7b7ff7;
+          cursor: pointer;
+        }
+    }
+    }
+    &.loading{
+        .input_box {
+            background-image: linear-gradient(90deg, #e6e6e6 10%, #f0f0f0 24%, #f6f6f6 32%, #f6f6f6 68%, #f0f0f0 76%, #e6e6e6 90%);
+            background-size: 200% 100%;
+            background-position: 0% 0%;
+            animation: skeleton-loading 1.4s linear infinite;
+            cursor: not-allowed;
+        }
+        .mfunsPlayer-danmaku-text,.mfunsPlayer-controller-danmaku-style{
+            display: none;
+        }
+        .mfunsPlayer-danmaku-status-loading {
+            display: block;
+            padding-left: 10px;
+        }
+        .mfunsPlayer-danmaku-emit {
+            background-color: #aaa;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    }
+}
 @keyframes skeleton-loading {
  
     0% {    background-position:200% 0%;

@@ -44,10 +44,10 @@ export default class mfunsPlayer {
         callback: (length) => {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
+          this.videoLoaded && this.template.footBar.classList.remove("loading");
         },
         error: (msg) => {
           this.notice(msg, true);
-          this.netwrokError = true;
         },
         apiBackend: this.options.apiBackend,
         borderColor: "#FFFFFF",
@@ -63,14 +63,7 @@ export default class mfunsPlayer {
         },
         events: this.events,
       };
-      this.danmaku = new Danmaku(this.danmakuOptions);
-      this.on('danmaku_load_start', () => {
-        this.template.danmakuCount.innerHTML = '弹幕装填中...';
-        this.template.danmakuStatusLoading.innerHTML = '弹幕功能加载中...';
-      })
-      this.on('danmaku_load_end', () => {
-        this.template.danmakuStatusLoading.innerHTML = '正在解锁弹幕输入...';
-      })
+      this.danmaku = new Danmaku(this.danmakuOptions, this);
     }
     this.autoSwitch = this.options.autoSwitch;
     this.autoplay = this.options.autoplay;
@@ -299,6 +292,7 @@ export default class mfunsPlayer {
       }
 
       console.log("canplay");
+      this.template.loading.classList.remove("show");
       this.canplay = true;
     });
     this.on("loadstart", () => {
@@ -308,38 +302,41 @@ export default class mfunsPlayer {
       this.template.headBar.classList.add("disable");
       this.template.controllerMask.classList.add("disable");
       this.template.bezel.classList.add("hide");
-      this.template.footBar.classList.add("loading");
+      this.template.danmakuRoot.classList.add(this.options.userIsLogined ? "loading" : "nologin");
       this.videoLoaded = false;
       //一分钟后如果还处于loadstart阶段，则响应超时
       setTimeout(() => {
         if (!this.videoLoaded) {
           this.template.loading.classList.remove("show");
-          this.notice("视频响应超时，您可以", true, 2000, 0.8, false, {
-            callback: () => {
-              this.reload();
-            },
-            text: "重新加载",
-          });
+          !this.netwrokError &&
+            this.notice("视频响应超时，您可以", true, 2000, 0.8, false, {
+              callback: () => {
+                this.reload();
+              },
+              text: "重新加载",
+            });
         }
       }, 60000);
     });
     this.on("error", () => {
       //检查视频链接
+      this.notice(error, true);
       this.options.apiBackend.read({
         url: this.video.src,
         error: (err) => {
           console.error(err);
           this.notice("视频加载失败,请检查网络设置或视频链接是否可用", true);
+          this.netwrokError = true;
+          this.template.loading.remove("show");
         },
       });
-
       this.template.loading.classList.remove("show");
     });
     this.on("loadedmetadata", (e) => {
-      this.template.loading.classList.remove("show");
       this.template.headBar.classList.remove("disable");
       this.template.controllerMask.classList.remove("disable");
       this.template.bezel.classList.remove("hide");
+      this.danmakuLoaded && this.template.danmakuRoot.classList.remove("loading");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
       this.template.currentTime.innerText = "00:00";
@@ -354,7 +351,6 @@ export default class mfunsPlayer {
     this.on("progress", (e) => {
       const percentage = video.buffered.length ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
       this.bar.set("loaded", percentage, "width");
-      this.danmakuLoaded && this.videoLoaded && this.template.footBar.classList.remove("loading");
     });
     this.on("play", () => {
       clearTimeout(this.playTimer);
@@ -369,7 +365,7 @@ export default class mfunsPlayer {
       this.template.bezel.classList.add("bezel_play");
       this.playCallback && this.playCallback(this.video.currentTime);
       this.playTimer = setTimeout(() => {
-        this.template.bezel.style.display = "none";
+        this.template.bezel.classList.add("hide");
       }, 1500);
     });
     this.on("pause", () => {
@@ -378,7 +374,7 @@ export default class mfunsPlayer {
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
       this.template.play_btn.classList.add("button-paused");
-      this.template.bezel.style.display = "block";
+      this.template.bezel.classList.remove("hide");
       this.template.bezel.classList.remove("bezel_play");
       this.template.loading.classList.remove("show");
       this.pauseCallback && this.pauseCallback(this.video.currentTime);
@@ -416,6 +412,7 @@ export default class mfunsPlayer {
     this.isSwitched = true;
     this.danmakuLoaded = false;
     this.template.footBar.classList.add("loading");
+    this.template.danmakuCount.innerHTML = "弹幕装填中...";
     const currentVideo = this.options.video[index];
     this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
     this.video.src = currentVideo.url;

@@ -1,6 +1,54 @@
 {{set divide = {flag:true} }}
 <div class="mfunsPlayer-video-wrap">
     <div  class="mfunsPlayer-bezel" ></div>
+    <div class="mfunsPlayer-danmaku-report-mask">
+       <div class="mfunsPlayer-danmaku-report-model">
+        <div class="mfunsPlayer-danmaku-report-title">举报弹幕</div>
+        <div class="mfunsPlayer-danmaku-report-content"></div>
+        <div class="mfunsPlayer-danmaku-report-close"></div>
+        <div class="mfunsPlayer-danmaku-report-item-wrap">
+            <div class="mfunsPlayer-panel-row" >
+                <div class="mfunsPlayer-switch">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">违法违禁</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">人身攻击</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">色情低俗</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">政治敏感</div>
+                </div>
+                <div class="mfunsPlayer-switch">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">恶意刷屏</div>
+                </div>
+                <div class="mfunsPlayer-switch">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">引战</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">侵犯隐私</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">垃圾广告</div>
+                </div>
+                <div class="mfunsPlayer-switch ">
+                    <div class="mfunsPlayer-switch-checkbox"></div>
+                    <div class="mfunsPlayer-switch-label">其他</div>
+                </div>
+            </div>
+        </div>
+        <div class="mfunsPlayer-danmaku-report-button">提 交</div>
+      </div>
+    </div>
     
     <div class="mfunsPlayer-mask">
         <div class="mfunsPlayer-menu">
@@ -25,8 +73,21 @@
          <p>正在缓冲...</p>
         <p class="mfunsPlayer-loading-speed"></p>
     </div>
+    <div class="mfunsPlayer-danmaku-item-tip-mask">
+        <div class="mfunsPlayer-danmaku-item-tip">
+            <div class="mfunsPlayer-danmaku-item-tip-wrap">
+                <div class="mfunsPlayer-danmaku-item-tip-box">
+                    <i class="mfunsPlayer-danmaku-item-tip-praise"></i>
+                    <i class="mfunsPlayer-danmaku-item-tip-cancel"></i>
+                    <i class="mfunsPlayer-danmaku-item-tip-copy"></i>
+                    <i class="mfunsPlayer-danmaku-item-tip-report"></i>
+                </div>
+            </div>
+        </div>
+        
+    </div>
     <div class="mfunsPlayer-danmaku"{{ if danmaku && danmaku.bottom }} style="margin:{{ danmaku.bottom }}px 0"{{ /if }}>
-        <div class="mfunsPlayer-danmaku-item mfunsPlayer-danmaku-item--demo"></div>
+        <div class="mfunsPlayer-danmaku-item mfunsPlayer-danmaku-item--demo"><span></span></div>
     </div>
     <div class="mfunsPlayer-video-mask">
         {{ include './video.art' video[currentVideo] }}
@@ -74,7 +135,7 @@
     </div>
 
     <div class="mfunsPlayer-hotkey-panel mfunsPlayer-hotkey-panel-hide">
-        <div class="mfunsPlayer-hotkey-panel-close">[x]</div>
+        <div class="mfunsPlayer-hotkey-panel-close"></div>
         <div class="mfunsPlayer-hotkey-panel-title">快捷键说明</div>
         <div class="mfunsPlayer-hotkey-panel-wrap">
             <div class="mfunsPlayer-hotkey-panel-item ">
@@ -295,7 +356,7 @@
         <div class="mfunsPlayer-video-danmaku-count">弹幕装填中...</div>
         <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
-    <div class="mfunsPlayer-video-danmaku-details-skeleton"></div>
+    <!-- <div class="mfunsPlayer-video-danmaku-details-skeleton"></div> -->
     <div class="mfunsPlayer-video-danmaku-root">
         {{ if danmaku.showDanmaku }} 
         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-danmaku-trigger open">
@@ -407,11 +468,13 @@
         </div>
         <input type="text" autocompleted="new-password" placeholder="喵御宅Mfuns,发射(。゜ω゜)ノ!" class="mfunsPlayer-danmaku-text" />
         <div class="mfunsPlayer-danmaku-status-loading">弹幕功能加载中...</div>
-        <div class="mfunsPlayer-danmaku-status-not-logged-in" style="display: none">需要登录后才能发送弹幕哦~</div>
+        <div class="mfunsPlayer-danmaku-status-not-logged-in" >
+            需要<span class="mfunsPlayer-toLogin">登录</span>后才能发送弹幕哦~
+        </div>
         <div class="mfunsPlayer-danmaku-emit">发送</div>
     </div>
     </div>
-    <div class="mfunsPlayer-video-danmaku-root-skeleton"></div>
+    <!-- <div class="mfunsPlayer-video-danmaku-root-skeleton"></div> -->
 </div>
 {{ /if }}
 

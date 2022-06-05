@@ -11,6 +11,7 @@ export default (options) => {
     theme: "#7b7ff7",
     loop: false, // 洗脑循环
     hotkey: true, // 启用快捷键
+    userIsLogined: false,
     widescreen: false, // 宽屏模式
     widescreenSwitch: false, // 可切换宽屏模式
     preload: "metadata",

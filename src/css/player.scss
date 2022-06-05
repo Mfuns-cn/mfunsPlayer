@@ -35,6 +35,7 @@
         height: 100px;
         line-height: 50px;
         position: absolute;
+        pointer-events: none;
         top: 0;
         left: 0;
         color:#fff;
@@ -42,7 +43,7 @@
         padding: 0 20px;
         background: url("../icon/mask.png") repeat-x top;
         transition: all .3s ease-in-out;
-        z-index: 103;
+        z-index: 107;
         &.hide{
             opacity: 0;
         }

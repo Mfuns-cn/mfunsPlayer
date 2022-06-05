@@ -308,7 +308,7 @@ export class MultiPicker {
    * @param {Number} value 默认值(不填的情况下默认值为null)
    * @param {Object} callbacks 回调函数键值对，分created, pick, unpick, update四种状态，分别触发对应函数
    */
-  constructor(group, value, callbacks = {}) {
+  constructor(group, value = [], callbacks = {}) {
     const THIS = this;
     this.group = group; // 标签组
     this.items = group.querySelectorAll(".picker-item"); // 标签集合
@@ -319,6 +319,9 @@ export class MultiPicker {
     this.items.forEach((item) => {
       this.valueList.push(item.getAttribute("data-value"));
       this.domMap.set(item.getAttribute("data-value"), item);
+      if (value.includes(item.getAttribute("data-value"))) {
+        this.pick(item.getAttribute("data-value"));
+      }
       item.addEventListener("click", function () {
         let val = this.getAttribute("data-value");
         if (THIS.value.has(val)) {

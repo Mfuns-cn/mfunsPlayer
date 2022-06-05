@@ -101,6 +101,9 @@ export default class HotKey {
       this.template.hotkeyPanel.addEventListener("click", (e) => {
         e.stopPropagation();
       });
+      this.template.hotkeyPanel.addEventListener("wheel", (e) => {
+        e.stopPropagation();
+      });
       this.template.hotkeyPanelClose.addEventListener("click", (e) => {
         e.stopPropagation();
         this.hide();

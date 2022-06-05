@@ -66,6 +66,12 @@
                     height: 100%;
                     border-radius:0 $theme-border-radius $theme-border-radius 0;
                 }
+                .mfunsPlayer-danmaku-status-not-logged-in{
+                     color: #f5f5f5;
+                    .mfunsPlayer-toLogin{
+                     color: #0ff;
+                    }
+                }
             }
             .mfunsPlayer-controller{
                 height: 60px;
@@ -96,6 +102,13 @@
         }
         
         .mfunsPlayer-danmaku {
+            // .mfunsPlayer-danmaku-item {
+            //     &.lock{
+            //     animation: danmaku 8s linear;
+            //     animation-play-state: paused !important;
+            //     z-index:103!important;
+            //   }
+            // } 
                 .mfunsPlayer-danmaku-top,
                 .mfunsPlayer-danmaku-bottom {
                     &.mfunsPlayer-danmaku-move {
@@ -107,7 +120,7 @@
                 .mfunsPlayer-danmaku-right {
                     &.mfunsPlayer-danmaku-move {
                         animation: danmaku 8s linear;
-                        animation-play-state: inherit;
+                        // animation-play-state: inherit;
                         &.low{
                             animation: danmaku 10s linear;
                         }

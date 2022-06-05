@@ -35,11 +35,24 @@ class Controller {
       this.initPlayedBar();
       this.initTimeLabel();
     }
-    if (player.options.danmaku) {
+    if (typeof player.options.uid === "number") {
       this.initDanmakuButton();
       this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
       this.initDanmakuEmit();
+      !player.options.userIsLogined &&
+        player.template.toLogin.addEventListener("click", () => {
+          // player.options.toLogin && player.options.toLogin();
+          player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
+          player.fullScreen.isFullScreen("web") && player.fullScreen.cancel("web");
+          this.isControl = false;
+          const loginRes = player.options.toLogin ? player.options.toLogin() : confirm("这是登录表单，是否登录？");
+          if (loginRes) {
+            this.player.template.danmakuRoot.classList.remove("nologin");
+            player.options.userIsLogined = true;
+            !this.player.videoLoaded && this.player.template.danmakuRoot.classList.add("loading");
+          }
+        });
     }
     if (player.options.video.length > 1) {
       this.initPagelistButton();
@@ -50,7 +63,7 @@ class Controller {
     this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
-    this.initTroggle();
+    this.initPictureInPicture();
     this.initSpeedButton();
     this.initSettingsButton();
   }
@@ -69,6 +82,7 @@ class Controller {
     this.template.play_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
+    console.log("player click", this.isControl);
     if (!this.isControl && !this.player.isShowMenu && this.player.videoLoaded) {
       this.player.toggle();
     } else {
@@ -362,7 +376,6 @@ class Controller {
         },
         off() {
           // 关闭开关
-          console.log(document.body.childNodes);
           if ([...document.body.childNodes].includes(THIS.mask)) {
             THIS.player.template.footBar.classList.remove("darkmode");
             THIS.player.container.classList.remove("mfunsPlayer-darkmode");
@@ -408,11 +421,12 @@ class Controller {
   }
   initDanmakuSettingsButton() {
     const THIS = this;
+    const shields = this.player.options.danmaku.shields;
     const opacity = this.player.options.danmaku.opacity ?? 1;
     const showArea = this.player.options.danmaku.limitArea ?? 4;
     const danmakuSize = this.player.options.danmaku.fontScale ?? 1;
     const danmakuSpeed = this.player.options.danmaku.speed ?? 1;
-    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, null, {
+    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
       created(thisArg) {
         console.log(thisArg);
       },
@@ -577,7 +591,7 @@ class Controller {
       THIS.components.danmakuColorPicker.pick(THIS.danmakuColor);
     });
   }
-  initTroggle() {
+  initPictureInPicture() {
     if (this.player.template.pip_btn) {
       this.player.template.pip_btn.addEventListener("click", () => {
         if (!document.pictureInPictureElement) {
@@ -632,6 +646,7 @@ class Controller {
 
   hide() {
     this.player.container.classList.add("mfunsPlayer-hide-controller");
+    this.template.danmakuTip.classList.remove("show");
     this.template.controllerMask.style.cursor = "none";
     this.template.controllerMask.classList.add("hide");
     this.template.headBar.classList.add("hide");

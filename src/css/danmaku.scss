@@ -1,3 +1,4 @@
+@import "./theme";
 .mfunsPlayer-danmaku {
     position: absolute;
     left: 0;
@@ -7,6 +8,7 @@
     font-size: 22px;
     color: #fff;
     z-index: 102;
+   
 }
 @media screen and (max-width: 600px) {
     .mfunsPlayer-danmaku {
@@ -16,7 +18,8 @@
 .mfunsPlayer-danmaku-top,
     .mfunsPlayer-danmaku-bottom {
         position: absolute;
-        width: 100%;
+        // width: 100%;
+        left:50%;
         text-align: center;
         visibility: hidden;
         white-space: pre;
@@ -33,13 +36,95 @@
     }
 .mfunsPlayer-danmaku-item {
     display: inline-block;
-    pointer-events: none;
     user-select: none;
-    cursor: default;
+    cursor: default; 
     white-space: pre;
     font-weight: 600;
     font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
     text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+    &.lock{
+        animation-play-state: paused !important;
+        z-index:103!important;
+    }
+}
+.mfunsPlayer-danmaku-item-tip-mask{
+        position:absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: #e6e6e6;
+        font-size: 15px;
+        z-index: 105;
+        
+        // pointer-events: none;
+            .mfunsPlayer-danmaku-item-tip{
+                pointer-events: all;
+                width: 150px;
+                position: absolute;
+                // border: 1px solid #fff;
+                top: 0;
+                left: 0;
+                display: none;
+                // animation: danmakuTipWait .2s forwards;
+                &.show{
+                    display: block;
+                
+                   .mfunsPlayer-danmaku-item-tip-wrap{
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    
+                    	
+                    .mfunsPlayer-danmaku-item-tip-box{
+                        display: flex;
+                        position: absolute;
+                        background: rgba($color: #000, $alpha: 0.6);
+                        text-shadow: none;
+                        border:1px solid $text-grey;
+                        border-radius: 40px;
+                        justify-content: space-around;
+                        align-items: center;
+                        width: 150px;
+                        height: 40px;
+                        left: 0;
+                        bottom: 0;
+                        animation: danmakuTipShow .25s forwards;
+                        i{
+                             width: 20px;
+                             height: 20px;
+                             cursor: pointer;
+                        }
+                        .mfunsPlayer-danmaku-item-tip-cancel{
+                             background: url("../icon/cancel.svg");
+                             background-size: 100% 100%;
+                             display: none;
+                             &.show{
+                                 display: block;
+                             }
+                        }
+                        .mfunsPlayer-danmaku-item-tip-copy{
+                            background: url("../icon/copy.svg");
+                            background-size: 100% 100%;
+                       }
+                       .mfunsPlayer-danmaku-item-tip-praise{
+                            background: url("../icon/praise.svg");
+                            background-size: 100% 100%;
+                               
+                       }
+                       .mfunsPlayer-danmaku-item-tip-report{
+                                background: url("../icon/report.svg");
+                                background-size: 100% 100%;
+                                display: none;
+                                &.show{
+                                    display: block;
+                                }
+                       }
+
+                 }
+             }  
+         }
+    }
 }
 .mfunsPlayer-danmaku--demo {
     position: absolute;
@@ -116,5 +201,40 @@
     }
     to {
         visibility: visible;
+    }
+}
+// @keyframes danmakuTipWait{
+//     0% {
+//         opacity: 1;
+//     }
+   
+//     100% {
+//         opacity: 0;
+//     }
+// }
+@keyframes danmakuTipShow{
+    0% {
+        -webkit-transform:  scale(.2);
+        transform:  scale(.2);
+        opacity: 0;
+    }
+   
+    100% {
+        opacity: 1;
+        -webkit-transform:  scale(1);
+        transform:  scale(1);
+    }
+}
+@keyframes danmakuTipHide{
+    0% {
+        -webkit-transform:  scale(1);
+        transform:  scale(1);
+        opacity: 1;
+    }
+   
+    100% {
+        opacity: 0;
+        -webkit-transform:  scale(.2);
+        transform:  scale(.2);
     }
 }

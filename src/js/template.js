@@ -5,10 +5,8 @@ class Template {
     this.container = options.container;
     if (options.theme) {
       this.container.style.setProperty("--themeColor", options.theme);
-      this.container
-        .style.setProperty("--themeColorLight", utils.colorLuminance(options.theme, 0.3));
-      this.container
-        .style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
+      this.container.style.setProperty("--themeColorLight", utils.colorLuminance(options.theme, 0.3));
+      this.container.style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
       /*
       document.getElementsByTagName("body")[0].style.setProperty("--themeColor", options.theme);
       document
@@ -109,19 +107,20 @@ class Template {
     this.currentTime = $(".mfunsPlaye-video-currentTime");
     this.totalTime = $(".mfunsPlaye-video-totalTime");
     this.time_input = $(".mfunsPlayer-controller-time-input");
-    this.headOfList = $(".headOfList");
-    this.footOfList = $(".footOfList");
-    this.closeList = $(".closeList_btn");
-    // this.advancedDanmaku_btn = $(".advancedDanmaku_btn");
-    // this.advancePre = $(".advanceDanmaku_pre_box");
-    // this.ade_mask = $(".advanceDanmakuEditor_mask");
-    // this.editor_clear = $(".editor_clear");
-    // this.editor_preview = $(".editor_preview");
-    // this.editor_emit = $(".editor_emit");
-    // this.danmakuEditor = $(".danmakuEditor");
+    this.toLogin = $(".mfunsPlayer-toLogin");
+    this.danmakuTipMask = $(".mfunsPlayer-danmaku-item-tip-mask");
+    this.danmakuTipBox = $(".mfunsPlayer-danmaku-item-tip-box");
+    this.danmakuTip = $(".mfunsPlayer-danmaku-item-tip");
+    this.danmakuPraise = $(".mfunsPlayer-danmaku-item-tip-praise");
+    this.danmakuCancel = $(".mfunsPlayer-danmaku-item-tip-cancel");
+    this.danmakuCopy = $(".mfunsPlayer-danmaku-item-tip-copy");
+    this.danmakuReport = $(".mfunsPlayer-danmaku-item-tip-report");
+    this.danmakuReportMask = $(".mfunsPlayer-danmaku-report-mask");
+    this.danmakuReportContent = $(".mfunsPlayer-danmaku-report-content");
+    this.danmakuReportModelClose = $(".mfunsPlayer-danmaku-report-close");
     this.danmakuEmit = $(".mfunsPlayer-danmaku-emit");
     this.danmakuText = $(".mfunsPlayer-danmaku-text");
-    this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading")
+    this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading");
     this.danmakuStyle_btn = $(".mfunsPlayer-controller-danmaku-style"); // 弹幕样式按钮
     this.danmaku_fontsize_picker = $(".mfunsPlayer-danmaku-fontsize-picker");
     this.danmaku_type_picker = $(".mfunsPlayer-danmaku-type-picker");
