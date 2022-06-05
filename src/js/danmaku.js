@@ -48,7 +48,11 @@ class Danmaku {
     const danmakuTipMaskMove = (e) => {
       // utils.throttle(()=>{})
       // console.log(e.pageX - this.currentX, e.pageY - this.currentY);
-      if (Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) > 3.5) {
+      if (
+        Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) >
+          player.options.danmaku.sensitivity ??
+        3.5
+      ) {
         this.currentX = e.pageX;
         this.currentY = e.pageY;
         return;
