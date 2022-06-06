@@ -146,6 +146,7 @@ class Danmaku {
         e.stopPropagation();
       });
       this.player.template.danmakuReportModelClose.addEventListener("click", (e) => {
+        this.currentLockDanmaku && this.currentLockDanmaku.classList.add("lock");
         this.player.template.danmakuReportMask.classList.remove("show");
       });
     });
