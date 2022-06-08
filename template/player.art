@@ -451,8 +451,8 @@
                         </ul>
                     </div>
                     <div class="mfunsPlayer-panel-row">
-                        <div class="row-title">类型</div>
-                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-type-picker">
+                        <div class="row-title">模式</div>
+                        <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-mode-picker">
                             <li class="picker-item" data-value="top">顶部</li>
                             <li class="picker-item" data-value="right">滚动</li>
                             <li class="picker-item" data-value="bottom">底部</li>

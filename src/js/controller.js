@@ -18,7 +18,7 @@ class Controller {
     this.clickFlag = 0;
     this.controllTimer = null;
     this.danmakuFontsize = "18";
-    this.danmakuType = "right";
+    this.danmakuMode = "right";
     this.danmakuColor = "#FFFFFF";
     this.videoScale = false;
     this.mask = document.createElement("div");
@@ -42,7 +42,7 @@ class Controller {
       this.initDanmakuEmit();
     }
     if (typeof player.options.uid === "number") {
-      !player.options.userIsLogined &&
+      !player.options.userIsLogged &&
         player.template.toLogin.addEventListener("click", () => {
           // player.options.toLogin && player.options.toLogin();
           player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
@@ -51,7 +51,7 @@ class Controller {
           const loginRes = player.options.toLogin ? player.options.toLogin() : confirm("这是登录表单，是否登录？");
           if (loginRes) {
             this.player.template.danmakuRoot.classList.remove("nologin");
-            player.options.userIsLogined = true;
+            player.options.userIsLogged = true;
             !this.player.videoLoaded && this.player.template.danmakuRoot.classList.add("loading");
           }
         });
@@ -412,7 +412,7 @@ class Controller {
       if (danmakuText.trim()) {
         this.player.danmaku.send({
           size: this.danmakuFontsize,
-          type: this.danmakuType,
+          type: this.danmakuMode,
           color: this.danmakuColor,
           text: danmakuText,
         });
@@ -572,11 +572,11 @@ class Controller {
         console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
       },
     });
-    this.components.danmakuTypePicker = new Picker(this.template.danmaku_type_picker, this.danmakuType, {
+    this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuMode, {
       pick(value) {
         // 有关弹幕模式值的更改请写在此处
-        THIS.danmakuType = value;
-        console.log(`已选择弹幕模式：${THIS.danmakuType}`);
+        THIS.danmakuMode = value;
+        console.log(`已选择弹幕模式：${THIS.danmakuMode}`);
       },
     });
     this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {

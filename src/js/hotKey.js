@@ -23,7 +23,7 @@ export default class HotKey {
             if (danmakuText.trim()) {
               player.danmaku.send({
                 size: player.controller.danmakuFontsize,
-                type: player.controller.danmakuType,
+                type: player.controller.danmakuMode,
                 color: player.controller.danmakuColor,
                 text: danmakuText,
               });

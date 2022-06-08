@@ -123,7 +123,7 @@ class Template {
     this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading");
     this.danmakuStyle_btn = $(".mfunsPlayer-controller-danmaku-style"); // 弹幕样式按钮
     this.danmaku_fontsize_picker = $(".mfunsPlayer-danmaku-fontsize-picker");
-    this.danmaku_type_picker = $(".mfunsPlayer-danmaku-type-picker");
+    this.danmaku_mode_picker = $(".mfunsPlayer-danmaku-mode-picker");
     this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
     this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
     this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");

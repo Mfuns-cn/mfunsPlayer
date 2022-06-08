@@ -303,7 +303,7 @@ export default class mfunsPlayer {
       this.template.headBar.classList.add("disable");
       this.template.controllerMask.classList.add("disable");
       this.template.bezel.classList.add("hide");
-      this.template.danmakuRoot.classList.add(this.options.userIsLogined ? "loading" : "nologin");
+      this.template.danmakuRoot.classList.add(this.options.userIsLogged ? "loading" : "nologin");
       this.videoLoaded = false;
       //一分钟后如果还处于loadstart阶段，则响应超时
       setTimeout(() => {
