@@ -45,15 +45,25 @@ export default (options) => {
       link: "https://www.mfuns.cn/author/7376",
     },
     {
+      text: "开发者信息",
+      link: "https://www.mfuns.cn/author/7376",
+    },
+    {
       text: "视频统计信息",
       click: (player) => {
-        player.infoPanel.triggle();
+        player.infoPanel.toggle();
+      },
+    },
+    {
+      text: "视频色彩调节",
+      click: (player) => {
+        player.videoColor.toggle();
       },
     },
     {
       text: "快捷键说明",
       click: (player) => {
-        player.hotkey.triggle();
+        player.hotkey.toggle();
       },
     },
     {

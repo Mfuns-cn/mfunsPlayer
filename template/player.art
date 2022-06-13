@@ -2,54 +2,12 @@
 <div class="mfunsPlayer-video-wrap">
     <div  class="mfunsPlayer-bezel" ></div>
     <div class="mfunsPlayer-danmaku-report-mask">
-       <div class="mfunsPlayer-danmaku-report-model">
-        <div class="mfunsPlayer-danmaku-report-title">举报弹幕</div>
-        <div class="mfunsPlayer-danmaku-report-content"></div>
-        <div class="mfunsPlayer-danmaku-report-close"></div>
-        <div class="mfunsPlayer-danmaku-report-item-wrap">
-            <div class="mfunsPlayer-panel-row" >
-                <div class="mfunsPlayer-switch">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">违法违禁</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">人身攻击</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">色情低俗</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">政治敏感</div>
-                </div>
-                <div class="mfunsPlayer-switch">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">恶意刷屏</div>
-                </div>
-                <div class="mfunsPlayer-switch">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">引战</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">侵犯隐私</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">垃圾广告</div>
-                </div>
-                <div class="mfunsPlayer-switch ">
-                    <div class="mfunsPlayer-switch-checkbox"></div>
-                    <div class="mfunsPlayer-switch-label">其他</div>
-                </div>
-            </div>
-        </div>
-        <div class="mfunsPlayer-danmaku-report-button">提 交</div>
-      </div>
+        {{ include './danmakuReportModal.art'  }}
     </div>
-    
+    <div class="mfunsPlayer-video-color-mask">
+        {{ include './videoColorModal.art'  }}
+    </div>
+   
     <div class="mfunsPlayer-mask">
         <div class="mfunsPlayer-menu">
             {{ each contextmenu }}
@@ -200,8 +158,7 @@
 
     
 <div class="mfunsPlayer-controller-mask">
-    
-
+    <div class="mfunsPlayer-highEnergy-bar"></div>
     <div class="mfunsPlayer-controller">
         <div class="mfunsPlayer-bar-wrap" >
          <div class="mfunsPlayer-bar" >
@@ -296,6 +253,15 @@
                                 </ul>
                             </div>
                             <div class="mfunsPlayer-panel-row">
+                                <div class="row-title">视频滤镜</div>
+                                <ul class="mfunsPlayer-picker mfunsPlayer-video-filter-picker">
+                                    <li class="picker-item" data-value="none">无</li>
+                                    <li class="picker-item" data-value="grayscale(1)">黑白</li>
+                                    <li class="picker-item" data-value="sepia(0.5)">护眼</li>
+                                    <li class="picker-item" data-value="invert(1)">反色</li>
+                                </ul>
+                            </div>
+                            <div class="mfunsPlayer-panel-row">
                                 <div class="row-title">播放方式</div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-autoplay-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
@@ -303,12 +269,13 @@
                                 </div>
                                 <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
-                                    <div class="mfunsPlayer-switch-label">分P连播</div>
+                                    <div class="mfunsPlayer-switch-label">&nbsp;分P连播</div>
                                 </div>
                             </div>
                             <div class="mfunsPlayer-panel-row">
                                 <div class="row-title">其他设置</div>
-                                <div class="mfunsPlayer-switch mfunsPlayer-video-borderhidden-switch">
+                                <div style="display: flex;flex-wrap: wrap;flex:1">
+                                    <div class="mfunsPlayer-switch mfunsPlayer-video-borderhidden-switch">
                                     <div class="mfunsPlayer-switch-checkbox"></div>
                                     <div class="mfunsPlayer-switch-label">隐藏黑边</div>
                                 </div>
@@ -316,7 +283,14 @@
                                     <div class="mfunsPlayer-switch-checkbox"></div>
                                     <div class="mfunsPlayer-switch-label">关灯模式</div>
                                 </div>
+                                <div class="mfunsPlayer-switch mfunsPlayer-video-mirror-switch">
+                                    <div class="mfunsPlayer-switch-checkbox"></div>
+                                    <div class="mfunsPlayer-switch-label">镜像画面</div>
+                                </div>
+                                </div>
+                                
                             </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -423,6 +397,17 @@
                         </ul>
                     </div>
                     <div class="mfunsPlayer-danmaku-speed-value row-value">-</div>
+                </div>
+                <div class="mfunsPlayer-panel-row">
+                    <div class="row-title">高级设置</div>
+                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-catch-switch">
+                        <div class="mfunsPlayer-switch-checkbox"></div>
+                        <div class="mfunsPlayer-switch-label">弹幕捕获模式</div>
+                    </div>
+                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-highEnergy-switch" >
+                        <div class="mfunsPlayer-switch-checkbox"></div>
+                        <div class="mfunsPlayer-switch-label">高能进度条</div>
+                    </div>
                 </div>
             </div>
         </div>

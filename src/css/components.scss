@@ -1,9 +1,9 @@
-@import './theme';
+@import "./theme";
 
 .mfunsPlayer {
-    .mfunsPlayer-slider {     
-        position: relative;  // 滑动条形态样式
-        .slider-track{
+    .mfunsPlayer-slider {
+        position: relative; // 滑动条形态样式
+        .slider-track {
             width: 2px;
             height: 2px;
             border-radius: 1px;
@@ -15,41 +15,41 @@
             align-items: center;
             cursor: pointer;
             z-index: 2;
-            .slider-bar{
+            .slider-bar {
                 background: $theme-color;
                 border-radius: 2px;
                 cursor: pointer;
             }
-             .slider-thumb-track{
+            .slider-thumb-track {
                 position: relative;
                 width: calc(100% - 12px);
                 height: calc(100% - 12px);
-           
-                .slider-thumb{
-                   width: 12px;
-                   height: 12px;
-                   border-radius: 100%;
-                   background: $theme-color;
-                   z-index: 2;
+
+                .slider-thumb {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 100%;
+                    background: $theme-color;
+                    z-index: 2;
                 }
-                .mfunsPlayer-divider{
+                .mfunsPlayer-divider {
                     position: absolute;
                     top: -3px;
                     width: calc(100% + 12px);
                     display: flex;
                     margin-left: -6px;
                     justify-content: space-between;
-                    .mfunsPlayer-divider-dot{
-                       list-style: none;
-                       width: 1px;
-                       height: 6px;
-                       background: #e6e6e6;
+                    .mfunsPlayer-divider-dot {
+                        list-style: none;
+                        width: 1px;
+                        height: 6px;
+                        background: #e6e6e6;
                     }
                 }
-           }
+            }
         }
-        
-       .slider-tip{
+
+        .slider-tip {
             width: 140%;
             height: 12px;
             display: flex;
@@ -59,45 +59,43 @@
             margin-left: -57%;
             margin-top: 6px;
             left: 50%;
-           .slider-tip-item{
-               list-style: none;
-               flex:1;
-               font-size: 12px;
-               transform: scale(0.8);
-               color: #999;
-           }
-       }
-        
-       
+            .slider-tip-item {
+                list-style: none;
+                flex: 1;
+                font-size: 12px;
+                transform: scale(0.8);
+                color: #999;
+            }
+        }
     }
-    .mfunsPlayer-picker{
-        .picker-item{
+    .mfunsPlayer-picker {
+        padding-left: 5px;
+        .picker-item {
             display: inline-block;
             padding: 0 5px;
             height: 20px;
             line-height: 20px;
             border-radius: 2px;
             border: transparent solid 1px;
-            transition: color .2s;
+            transition: color 0.2s;
             cursor: pointer;
-            &.picked{
+            &.picked {
                 border: transparent solid 1px;
                 border-color: $theme-color;
                 color: $theme-color;
             }
-            &:hover{
+            &:hover {
                 color: $theme-color-light;
             }
-            &:active{
+            &:active {
                 color: $theme-color;
             }
         }
-    } 
-    .mfunsPlayer-switch{
+    }
+    .mfunsPlayer-switch {
         height: 22px;
-        min-width: 75px;
         cursor: pointer;
-        .mfunsPlayer-switch-checkbox{
+        .mfunsPlayer-switch-checkbox {
             position: relative;
             display: inline-block;
             vertical-align: middle;
@@ -109,43 +107,42 @@
             border-width: 1px;
             border-color: $translucent-light-white;
             box-sizing: border-box;
-            transition: all .2s;
+            transition: all 0.2s;
         }
-        .mfunsPlayer-switch-label{
+        .mfunsPlayer-switch-label {
             position: relative;
             display: inline-block;
             vertical-align: middle;
             line-height: 22px;
             margin: 0 2px;
-            transition: all .2s;
+            transition: all 0.2s;
         }
-        &:hover{
-            .mfunsPlayer-switch-checkbox{
+        &:hover {
+            .mfunsPlayer-switch-checkbox {
                 border-color: $theme-color-light;
             }
-            .mfunsPlayer-switch-label{
+            .mfunsPlayer-switch-label {
                 color: $theme-color-light;
             }
         }
-        &:active{
-            .mfunsPlayer-switch-checkbox{
+        &:active {
+            .mfunsPlayer-switch-checkbox {
                 border-color: $theme-color;
             }
-            .mfunsPlayer-switch-label{
+            .mfunsPlayer-switch-label {
                 color: $theme-color;
             }
         }
-        &.switch-on{
-            .mfunsPlayer-switch-checkbox{
+        &.switch-on {
+            .mfunsPlayer-switch-checkbox {
                 background-color: $theme-color;
                 border-color: $theme-color;
-                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+DQogICAgPHBvbHlnb24gcG9pbnRzPSI0MCA3LjkyOSAyMCAyNy45MjkgMTAgMTcuOTI5IDIuOTI5IDI1IDIwIDQyLjA3MSA0Ny4wNzEgMTUgNDAgNy45MjkiIGZpbGw9IiNGRkYiLz4NCjwvc3ZnPg==');
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+DQogICAgPHBvbHlnb24gcG9pbnRzPSI0MCA3LjkyOSAyMCAyNy45MjkgMTAgMTcuOTI5IDIuOTI5IDI1IDIwIDQyLjA3MSA0Ny4wNzEgMTUgNDAgNy45MjkiIGZpbGw9IiNGRkYiLz4NCjwvc3ZnPg==");
                 background-repeat: no-repeat;
                 background-size: contain;
             }
         }
     }
-    
 
     .mfunsPlayer-input {
         height: 20px;
@@ -158,8 +155,9 @@
         border-radius: $theme-border-radius;
         outline: none;
     }
-    
-    .mfunsPlayer-controller-panel, .mfunsPlayer-controller {
+
+    .mfunsPlayer-controller-panel,
+    .mfunsPlayer-controller {
         .mfunsPlayer-input {
             border-color: $translucent-light-white;
             color: $translucent-white;

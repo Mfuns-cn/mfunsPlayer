@@ -118,7 +118,7 @@ class FullScreen {
         this.player.template.videoWrap.classList.add("mfunsPlayer-web-fullscreen");
         document.body.classList.add("mfunsPlayer-web-fullscreen-fix");
         this.player.template.webfull_tip.innerText = "退出网页全屏";
-
+        this.player.highEnergy.isShow && this.player.highEnergy.resize();
         this.handleFullscrren();
         this.player.events.trigger("webfullscreen");
         break;
@@ -161,6 +161,7 @@ class FullScreen {
         this.handleExitFullscreen("web");
         this.player.template.videoWrap.classList.remove("mfunsPlayer-web-fullscreen");
         document.body.classList.remove("mfunsPlayer-web-fullscreen-fix");
+        this.player.highEnergy.isShow && this.player.highEnergy.resize();
         this.player.template.webfull_tip.innerText = "网页全屏";
         this.player.events.trigger("webfullscreen");
         break;

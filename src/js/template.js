@@ -20,7 +20,7 @@ class Template {
 
     options.isFireFox = utils.isFirefox;
     this.init(options);
-    this.buildVideo(options.blackBorder);
+    // this.buildVideo(options.blackBorder);
   }
 
   init(options) {
@@ -88,8 +88,20 @@ class Template {
     this.video_nextpage_switch = $(".mfunsPlayer-video-nextpage-switch"); // 自动换P开关
     this.video_borderhidden_switch = $(".mfunsPlayer-video-borderhidden-switch"); // 隐藏黑边开关
     this.video_darkmode_switch = $(".mfunsPlayer-video-darkmode-switch"); // 夜间模式开关
+    this.video_mirror_switch = $(".mfunsPlayer-video-mirror-switch"); // 镜像开关
+    this.video_color_mask = $(".mfunsPlayer-video-color-mask");
+    this.video_color_close = $(".mfunsPlayer-video-color-close");
+    this.video_brightness_slider = $(".mfunsPlayer-video-brightness-slider"); //亮度
+    this.video_brightness_value = $(".mfunsPlayer-video-brightness-value");
+    this.video_contrast_slider = $(".mfunsPlayer-video-contrast-slider"); //对比度
+    this.video_contrast_value = $(".mfunsPlayer-video-contrast-value");
+    this.video_saturate_slider = $(".mfunsPlayer-video-saturate-slider"); //饱和度
+    this.video_saturate_value = $(".mfunsPlayer-video-saturate-value");
+    this.video_color_reset = $(".mfunsPlayer-video-color-reset");
+    this.video_filter_picker = $(".mfunsPlayer-video-filter-picker");
     this.range = $(".range");
     this.play_btn = $(".mfunsPlayer-controller-play"); // 播放按钮
+    this.highEnergyBar = $(".mfunsPlayer-highEnergy-bar");
     this.controllerMask = $(".mfunsPlayer-controller-mask");
     this.controller = $(".mfunsPlayer-controller");
     this.controllerWrap = $(".mfunsPlayer-controller-wrap");
@@ -127,6 +139,8 @@ class Template {
     this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
     this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
     this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
+    this.danmaku_catch_switch = $(".mfunsPlayer-danmaku-catch-switch");
+    this.danmaku_highEnergy_switch = $(".mfunsPlayer-danmaku-highEnergy-switch");
     this.infoPanel = $(".mfunsPlayer-info-panel");
     this.infoPanelClose = $(".mfunsPlayer-info-panel-close");
     this.infoVersion = $(".mfunsPlayer-info-panel-item-version .mfunsPlayer-info-panel-item-data");

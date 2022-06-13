@@ -5,13 +5,15 @@ import handleOption from "./options";
 import Timer from "./timer";
 import Controller from "./controller";
 import HotKey from "./hotKey";
+import HighEnergy from "./highEnergy";
 import Events from "./events";
+import VideoColor from "./videoColor";
 import ContextMenu from "./contextmenu";
 import InfoPanel from "./info-panel";
 import Template from "./template";
 import utils from "./utils";
 import DanmakuAuxiliary from "./danmakuAuxiliary";
-
+import { Switch } from "./components";
 let index = 0;
 const instances = [];
 export default class mfunsPlayer {
@@ -19,6 +21,7 @@ export default class mfunsPlayer {
     this.options = handleOption(options);
     this.template = new Template(this.options);
     this.events = new Events();
+    this.videoColor = new VideoColor(this);
     this.container = options.container;
     this.container.classList.add("mfunsPlayer");
     this.unableTimeupdate = false;
@@ -44,6 +47,10 @@ export default class mfunsPlayer {
         callback: (length) => {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
+          if (length) {
+            this.loadHighEnergy();
+          }
+
           this.videoLoaded && this.template.footBar.classList.remove("loading");
         },
         error: (msg) => {
@@ -54,6 +61,7 @@ export default class mfunsPlayer {
         height: this.arrow ? 24 : 28,
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
+        danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
         unlimited: false,
         api: {
           link: this.options.video[this.options.currentVideo].danLink,
@@ -98,7 +106,28 @@ export default class mfunsPlayer {
     index++;
     instances.push(this);
   }
-
+  loadHighEnergy() {
+    if (this.videoLoaded && this.danmakuLoaded) {
+      if (!this.highEnergy) {
+        this.highEnergy = new HighEnergy(this);
+        this.highEnergy.resize();
+        this.danmakuHighEnergySwitch = new Switch(
+          this.template.danmaku_highEnergy_switch,
+          this.options.danmaku.showHighEnergy,
+          {
+            on: () => {
+              this.highEnergy && this.highEnergy.show(); // 显示高能进度条
+            },
+            off: () => {
+              this.highEnergy && this.highEnergy.hide(); // 隐藏高能进度条
+            },
+          }
+        );
+      } else {
+        this.highEnergy.reload();
+      }
+    }
+  }
   seek(time) {
     console.log("seek");
     this.canplay = false;
@@ -339,6 +368,7 @@ export default class mfunsPlayer {
       this.danmakuLoaded && this.template.danmakuRoot.classList.remove("loading");
       this.notice("视频加载完成", false);
       this.videoLoaded = true;
+      this.loadHighEnergy();
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
       if (this.timeBeforeReload) {
@@ -411,6 +441,7 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     this.isSwitched = true;
     this.danmakuLoaded = false;
+    this.videoLoaded = false;
     this.template.footBar.classList.add("loading");
     this.template.danmakuCount.innerHTML = "弹幕装填中...";
     const currentVideo = this.options.video[index];

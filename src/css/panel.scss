@@ -1,4 +1,4 @@
-@import './theme';
+@import "./theme";
 .mfunsPlayer-info-panel {
     position: absolute;
     top: 10px;
@@ -37,12 +37,12 @@
         text-align: right;
         margin-right: 10px;
     }
-    
+
     .mfunsPlayer-info-panel-item-data {
         width: 260px;
     }
 }
-.mfunsPlayer-hotkey-panel{
+.mfunsPlayer-hotkey-panel {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -67,11 +67,11 @@
         width: 15px;
         height: 15px;
         text-align: center;
-		line-height: 15px;
+        line-height: 15px;
         background: url("../icon/close.svg");
         background-size: 100% 100%;
     }
-    .mfunsPlayer-hotkey-panel-title{
+    .mfunsPlayer-hotkey-panel-title {
         width: 100%;
         height: 50px;
         text-align: center;
@@ -79,63 +79,62 @@
         font-size: 18px;
         color: $translucent-white;
     }
-    .mfunsPlayer-hotkey-panel-wrap{
+    .mfunsPlayer-hotkey-panel-wrap {
         width: 300px;
         height: 250px;
         overflow-y: auto;
-        scrollbar-color:rgba(162, 152, 152, 0.8);
-        scrollbar-width:5px;
-        &:hover{
-            &::-webkit-scrollbar{
-                 background: rgba(162, 152, 152, 0.8);
+        scrollbar-color: rgba(162, 152, 152, 0.8);
+        scrollbar-width: 5px;
+        &:hover {
+            &::-webkit-scrollbar {
+                background: rgba(162, 152, 152, 0.8);
             }
             &::-webkit-scrollbar-thumb {
                 border-radius: 10px;
                 background: rgba(0, 0, 0, 0.4);
-                &:hover{
+                &:hover {
                     background: rgba(37, 35, 35, 0.8);
                 }
             }
         }
-    &::-webkit-scrollbar {
-        width: 7px;
-        height: 7px;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background: rgba(255,255,255,0);
-       
-        border-radius: 10px;
-    }
-    &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: rgba(255,255,255,0);
-        &:hover{
-            background: rgba(255,255,255,0);
+        &::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0);
+
+            border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0);
+            &:hover {
+                background: rgba(255, 255, 255, 0);
+            }
+        }
+        // &::-webkit-scrollbar-track {
+        //     opacity: 0;
+        // }
+        .mfunsPlayer-hotkey-panel-item {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            &-title {
+                flex: 1;
+                text-align: center;
+                height: 30px;
+                line-height: 30px;
+                color: #999;
+            }
+            &-data {
+                flex: 1;
+                text-align: center;
+                height: 30px;
+                line-height: 30px;
+                color: #e6e6e6;
+            }
         }
     }
-    // &::-webkit-scrollbar-track {
-    //     opacity: 0;
-    // }
-        .mfunsPlayer-hotkey-panel-item{
-                display: flex;
-                width: 100%;
-                justify-content: space-around;
-                &-title{
-                    flex:1;
-                    text-align: center;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #999;
-                }
-                &-data{
-                    flex:1;
-                    text-align: center;
-                    height: 30px;
-                    line-height: 30px;
-                    color: #e6e6e6;
-                }
-            }
-    }
-   
 }

@@ -7,10 +7,17 @@
 	}
 	.mfunsPlayer-danmaku-list-panel {
 		height: 100%;
-		.mfunsPlayer-danmaku-list-head, .list-row {
+		
+		 .list-row {
 			line-height: 24px;
 			height: 24px;
 			white-space: nowrap;
+		}
+		.mfunsPlayer-danmaku-list-head{
+			@extend .list-row;
+			
+			box-shadow: 1px 0px 2px #ccc;
+
 		}
 		.list-column, .list-cell {
 			display: inline-block;
@@ -23,10 +30,10 @@
 			}
 			&.col-date {
 				padding-right: 8px;
-				width: 90px;
+				width: 100px;
 			}
 			&.col-text {
-				width: calc(100% - 162px);
+				width: calc(100% - 172px);
 				text-overflow: ellipsis;
 				white-space:overflow;
 			}

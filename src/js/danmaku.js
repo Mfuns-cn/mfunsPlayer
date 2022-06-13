@@ -42,12 +42,15 @@ class Danmaku {
     this.danmakuTipBox = this.player.template.danmakuTipBox;
     this.currentX = 0;
     this.currentY = 0;
+    this.danmakuCatch = this.options.danmakuCatch; // 是否开启弹幕捕获
     this.load();
     this.initDanmakuTips();
 
+    // if (!this.danmakuCatch) {
+    //   player.template.danmakuTipMask.style.display = "none"
+    // }
+
     const danmakuTipMaskMove = (e) => {
-      // utils.throttle(()=>{})
-      // console.log(e.pageX - this.currentX, e.pageY - this.currentY);
       if (
         Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) >
           player.options.danmaku.sensitivity ??
@@ -146,7 +149,7 @@ class Danmaku {
         e.stopPropagation();
       });
       this.player.template.danmakuReportModelClose.addEventListener("click", (e) => {
-        this.currentLockDanmaku && this.currentLockDanmaku.classList.add("lock");
+        this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
         this.player.template.danmakuReportMask.classList.remove("show");
       });
     });
@@ -519,7 +522,6 @@ class Danmaku {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
-              // console.log(this.tunnelHeights);
 
               item.style.width = itemWidth + 1 + "px";
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
@@ -607,6 +609,7 @@ class Danmaku {
           }
           // insert
           docFragment.appendChild(item);
+          // console.log(docFragment);
         }
       }
 
