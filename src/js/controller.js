@@ -17,7 +17,7 @@ class Controller {
     this.controlLeaved = false;
     this.clickFlag = 0;
     this.controllTimer = null;
-    this.danmakuFontsize = "18";
+    this.danmakuFontsize = "25";
     this.danmakuMode = "right";
     this.danmakuColor = "#FFFFFF";
     this.videoScale = false;

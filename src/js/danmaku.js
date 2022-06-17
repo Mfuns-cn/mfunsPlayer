@@ -228,7 +228,7 @@ class Danmaku {
     const newDanmakuId = this.createHash(8);
     const danmakuData = {
       time: this.options.time() + 0.52,
-      size: dan.size || 18,
+      size: dan.size || 25,
       author: this.player.options.uid,
       id: newDanmakuId,
       text: dan.text,
@@ -256,7 +256,7 @@ class Danmaku {
           utils.type2Number(dan.type ?? "right"),
           utils.color2Number(dan.color ?? "#FFFFFF"),
           dan.text,
-          +dan.size ?? 18,
+          +dan.size ?? 25,
         ],
         this.options.videoIndex()
       );
@@ -479,7 +479,7 @@ class Danmaku {
           dan[i].color = 16777215;
         }
         if (!dan[i].size) {
-          dan[i].size = 18;
+          dan[i].size = 25;
         }
         const item = document.createElement("div");
         if (!this.paused) {
@@ -502,13 +502,13 @@ class Danmaku {
           item.style.color = utils.number2Color(dan[i].color);
         }
         item.children[0].style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
-        item.style.fontSize = (+dan[i].size + 3) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
+        item.style.fontSize = (+dan[i].size) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
         item.style.zIndex = dan[i].isSubtitle ? 100 : "auto";
         item.addEventListener("animationend", () => {
           this.container.removeChild(item);
         });
 
-        const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 18);
+        const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
 
         let tunnel;
 

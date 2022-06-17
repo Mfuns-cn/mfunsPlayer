@@ -441,12 +441,12 @@
                     <div class="mfunsPlayer-panel-row">
                         <div class="row-title">字号</div>
                         <ul class="mfunsPlayer-picker mfunsPlayer-danmaku-fontsize-picker">
-                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="12">超小</li> {{ /if }}
-                            <li class="picker-item" data-value="14">小</li>
-                            <li class="picker-item picked" data-value="18">标准</li>
-                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="26">大</li>
-                            <li class="picker-item" data-value="34">超大</li>
-                            <li class="picker-item" data-value="42">特大</li>
+                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="16">超小</li> {{ /if }}
+                            <li class="picker-item" data-value="18">小</li>
+                            <li class="picker-item picked" data-value="25">标准</li>
+                            {{ if danmaku.editor == 1 }} <li class="picker-item" data-value="36">大</li>
+                            <li class="picker-item" data-value="45">超大</li>
+                            <li class="picker-item" data-value="64">特大</li>
                             {{ /if }}
                         </ul>
                     </div>

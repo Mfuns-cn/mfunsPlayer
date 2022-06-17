@@ -321,7 +321,7 @@ const utils = {
     };
   },
   randomFontsize: (range) => {
-    const allSize = [12, 14, 18, 26, 34, 42];
+    const allSize = [16, 18, 25, 36, 45, 64];
     const random = Math.floor(Math.random() * range);
     return allSize[random];
   },
