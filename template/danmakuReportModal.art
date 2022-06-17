@@ -1,0 +1,46 @@
+<div class="mfunsPlayer-danmaku-report-model">
+  <div class="mfunsPlayer-danmaku-report-title">举报弹幕</div>
+  <div class="mfunsPlayer-danmaku-report-content"></div>
+  <div class="mfunsPlayer-danmaku-report-close"></div>
+  <div class="mfunsPlayer-danmaku-report-item-wrap">
+    <div class="mfunsPlayer-panel-row">
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">违法违禁</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">人身攻击</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">色情低俗</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">政治敏感</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">恶意刷屏</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">引战</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">侵犯隐私</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">垃圾广告</div>
+      </div>
+      <div class="mfunsPlayer-switch">
+        <div class="mfunsPlayer-switch-checkbox"></div>
+        <div class="mfunsPlayer-switch-label">其他</div>
+      </div>
+    </div>
+  </div>
+  <div class="mfunsPlayer-danmaku-report-submit">提 交</div>
+</div>

@@ -1,23 +1,35 @@
-@import './theme';
+@import "./theme";
 
-.mfunsPlayer-controller-mask{
+.mfunsPlayer-controller-mask {
 	width: 100%;
 	height: 100px;
 	position: absolute;
 	pointer-events: none;
 	bottom: 0;
 	background: url("../icon/mask.png") repeat-x bottom;
-	transition: all .3s ease-in-out;
-	
+	transition: all 0.3s ease-in-out;
+
 	z-index: 107;
-	&.hide{
-	   opacity: 0;
-	   
+	&.hide {
+		opacity: 0;
 	}
-    &.disable{
+	&.disable {
 		display: none;
 	}
-	
+	.mfunsPlayer-highEnergy-bar {
+		opacity: 0;
+		height: 30px;
+		position: absolute;
+		pointer-events: all;
+		bottom: 42px;
+		left: 0;
+		right: 0;
+		padding: 0 15px;
+		z-index: 10;
+		&.show {
+			opacity: 1;
+		}
+	}
 	.mfunsPlayer-controller {
 		height: 45px;
 		position: absolute;
@@ -28,18 +40,18 @@
 		padding: 0 15px;
 		z-index: 11;
 		color: #fff;
-		&.hide{
+		&.hide {
 			display: none;
 		}
 
 		.mfunsPlayer-controller-button {
 			padding: 0 7px;
 			color: #e0e0e0;
-			&:hover{
+			&:hover {
 				color: #fff;
 			}
 		}
-        
+
 		.mfunsPlayer-controller-wrap {
 			height: calc(100% - 15px);
 			//line-height: calc(100% - 15px);
@@ -49,30 +61,30 @@
 			justify-content: space-between;
 			align-items: center;
 			z-index: 10;
-		    .mfunsPlayer-controller-tip{
+			.mfunsPlayer-controller-tip {
 				position: absolute;
 				bottom: 140%;
-				padding:2px 4px;
+				padding: 2px 4px;
 				max-width: 70px;
 				white-space: nowrap;
 				height: 20px;
 				line-height: 20px;
 				background: rgba(28, 28, 28, 0.9);
-				transition: all .2s ease-in-out;
+				transition: all 0.2s ease-in-out;
 				transform: scale(0);
 				border-radius: $theme-border-radius;
 				font-size: 10px;
 				opacity: 0;
 				z-index: 1001;
 			}
-			.mfunsPlayer-controller-button:hover{
-				.mfunsPlayer-controller-tip{
+			.mfunsPlayer-controller-button:hover {
+				.mfunsPlayer-controller-tip {
 					transform: scale(1);
 					opacity: 1;
 				}
 			}
 			.mfunsPlayer-controller-left {
-				max-width:200px ;
+				max-width: 200px;
 				display: flex;
 				align-items: center;
 				.mfunsPlayer-controller-play {
@@ -88,7 +100,7 @@
 						}
 					}
 				}
-				.mfunsPlayer-controller-next{
+				.mfunsPlayer-controller-next {
 					.icon-next {
 						font-size: 16px;
 					}
@@ -99,46 +111,45 @@
 					font-size: 13px;
 					margin: 0 5px;
 					cursor: pointer;
-					.mfunsPlayer-controller-time-input{
+					.mfunsPlayer-controller-time-input {
 						display: none;
 						width: 60px;
 						margin: auto;
 						font-size: 13px;
 						text-align: center;
 					}
-					.mfunsPlayer-controller-time-label{
+					.mfunsPlayer-controller-time-label {
 						width: 100%;
-						white-space:nowrap;
+						white-space: nowrap;
 						text-align: center;
 					}
 					&.inputting {
-						.mfunsPlayer-controller-time-input{
+						.mfunsPlayer-controller-time-input {
 							display: block;
 						}
-						.mfunsPlayer-controller-time-label{
+						.mfunsPlayer-controller-time-label {
 							display: none;
 						}
 					}
 				}
 			}
 			//洗脑循环
-			.mfunsPlayer-controller-repeat{
-				.icon-repeat{
+			.mfunsPlayer-controller-repeat {
+				.icon-repeat {
 					display: none;
 				}
 				&.button-repeat {
-					.icon-repeat-off{
+					.icon-repeat-off {
 						display: none;
 					}
-					.icon-repeat{
+					.icon-repeat {
 						display: block;
 					}
 				}
 			}
-          
 
-  //控制器右功能键
-			
+			//控制器右功能键
+
 			.mfunsPlayer-controller-right {
 				height: 100%;
 				min-width: 200px;
@@ -146,14 +157,14 @@
 				justify-content: flex-end;
 				align-items: center;
 				//选集
-                .mfunsPlayer-controller-pagelist{
+				.mfunsPlayer-controller-pagelist {
 					cursor: pointer;
-					&:hover  {
+					&:hover {
 						.mfunsPlayer-pagelist-mask {
 							display: block;
 						}
 					}
-                    .mfunsPlayer-pagelist-mask {
+					.mfunsPlayer-pagelist-mask {
 						.mfunsPlayer-pagelist-list {
 							max-height: 300px;
 							overflow-y: auto;
@@ -161,11 +172,11 @@
 							border-radius: $theme-border-radius;
 							background: rgba(28, 28, 28, 0.9);
 							padding: 5px 0;
-							transition: all .3s ease-in-out;
+							transition: all 0.3s ease-in-out;
 							color: #fff;
 							.mfunsPlayer-pagelist-item {
 								width: 320px;
-								
+
 								white-space: nowrap;
 								text-overflow: ellipsis;
 								overflow: hidden;
@@ -174,40 +185,40 @@
 								cursor: pointer;
 								line-height: 30px;
 								padding: 0 15px;
-								&:hover{
-								 background-color: rgba(255, 255, 255, .1);
+								&:hover {
+									background-color: rgba(255, 255, 255, 0.1);
 								}
-								&.focus{
+								&.focus {
 									color: $theme-color;
-									padding:0 15px 0 30px ;
+									padding: 0 15px 0 30px;
 									position: relative;
-									&::before{
-									 content: "";
-									 position: absolute;
-									 top: 10px;
-									 left: 15px;
-									 border-color: transparent transparent transparent $theme-color;
-									 border-style: solid;
-									 border-width: 5px 8px;	
+									&::before {
+										content: "";
+										position: absolute;
+										top: 10px;
+										left: 15px;
+										border-color: transparent transparent transparent $theme-color;
+										border-style: solid;
+										border-width: 5px 8px;
 									}
 								}
 							}
-					    }
+						}
 					}
 				}
 
 				//倍速
-                .mfunsPlayer-controller-speed {
+				.mfunsPlayer-controller-speed {
 					width: 40px;
-					&:hover{
-					  .mfunsPlayer-speed-mask  {
-						display: block;
-					 }
+					&:hover {
+						.mfunsPlayer-speed-mask {
+							display: block;
+						}
 					}
-                    .mfunsPlayer-speed-mask {
+					.mfunsPlayer-speed-mask {
 						// 浮动面板通用样式已移动
 						// .mfunsPlayer-controller-panel-mask
-                        .mfunsPlayer-speed-list {
+						.mfunsPlayer-speed-list {
 							font-weight: 400;
 							width: 80px;
 							.mfunsPlayer-speed-item {
@@ -216,24 +227,24 @@
 								text-align: center;
 								cursor: pointer;
 								line-height: 30px;
-								&.focus{
+								&.focus {
 									color: $theme-color;
 								}
 								&:hover {
-									background-color: rgba(255, 255, 255, .1);
+									background-color: rgba(255, 255, 255, 0.1);
 								}
 							}
 						}
 					}
 				}
 				//音量
-				.mfunsPlayer-controller-volume{
-					&:hover{
-						.mfunsPlayer-controller-volume-mask{
+				.mfunsPlayer-controller-volume {
+					&:hover {
+						.mfunsPlayer-controller-volume-mask {
 							display: block;
 						}
 					}
-					.mfunsPlayer-controller-volume-icon{
+					.mfunsPlayer-controller-volume-icon {
 						.icon-volume-off {
 							display: none;
 						}
@@ -246,13 +257,13 @@
 							}
 						}
 					}
-					.mfunsPlayer-controller-volume-mask{
+					.mfunsPlayer-controller-volume-mask {
 						// 浮动面板通用样式已移动
 						// .mfunsPlayer-controller-panel-mask
-						.mfunsPlayer-controller-volume-wrap{
+						.mfunsPlayer-controller-volume-wrap {
 							width: 32px;
 							height: 100px;
-							.mfunsPlayer-controller-volume-num{
+							.mfunsPlayer-controller-volume-num {
 								color: #e5e9ef;
 								width: 100%;
 								text-align: center;
@@ -261,7 +272,7 @@
 								line-height: 28px;
 								margin-bottom: 2px;
 							}
-							.mfunsPlayer-controller-volume-bar{
+							.mfunsPlayer-controller-volume-bar {
 								width: 100%;
 								height: 60px;
 								position: relative;
@@ -269,61 +280,61 @@
 								// .slider-track{
 								// 	background: #fff;
 								// }
-								.slider-bar{
+								.slider-bar {
 									background: $theme-color;
 								}
-								.slider-thumb{
+								.slider-thumb {
 									background: $theme-color;
 								}
 							}
 						}
 					}
 				}
-               
+
 				//设置
-				.mfunsPlayer-controller-settings{
+				.mfunsPlayer-controller-settings {
 					.mfunsPlayer-settings-mask {
-						.mfunsPlayer-controller-settings-wrap{
+						.mfunsPlayer-controller-settings-wrap {
 							font-size: 12px;
-							width: 230px;
+							width: 250px;
 							text-align: center;
 							padding-top: 4px;
 						}
-						.row-title{
+						.row-title {
 							width: 60px;
 						}
 						.mfunsPlayer-picker {
 							display: inline-block;
 							//line-height: 0;
 						}
-						.mfunsPlayer-switch{
+						.mfunsPlayer-switch {
 							width: 80px;
 						}
 					}
 				}
 
 				//画中画
-                .mfunsPlayer-controller-pip{
-					.icon-picture-in-picture-exit{
+				.mfunsPlayer-controller-pip {
+					.icon-picture-in-picture-exit {
 						display: none;
 					}
 					&.button-picture-in-picture {
-						.icon-picture-in-picture{
+						.icon-picture-in-picture {
 							display: none;
 						}
-						.icon-picture-in-picture-exit{
+						.icon-picture-in-picture-exit {
 							display: block;
 						}
 					}
 				}
-                //宽屏模式
-				.mfunsPlayer-controller-widescreen{
-					&.hide{
-                       display: none;
+				//宽屏模式
+				.mfunsPlayer-controller-widescreen {
+					&.hide {
+						display: none;
 					}
-                    .icon-widescreen-exit {
-                        display: none;
-                    }
+					.icon-widescreen-exit {
+						display: none;
+					}
 					&.exit {
 						.icon-widescreen {
 							display: none;
@@ -333,17 +344,17 @@
 						}
 					}
 				}
-                //网页全屏
-				.mfunsPlayer-controller-webfull{
-					&.hide{
-                       display: none;
+				//网页全屏
+				.mfunsPlayer-controller-webfull {
+					&.hide {
+						display: none;
 					}
-                    .icon-web-fullscreen-exit {
-                        display: none;
-                    }
+					.icon-web-fullscreen-exit {
+						display: none;
+					}
 				}
 				//全屏
-                .mfunsPlayer-controller-fullscreen{
+				.mfunsPlayer-controller-fullscreen {
 					.icon-fullscreen-exit {
 						display: none;
 					}
@@ -353,65 +364,71 @@
 	}
 }
 
-
 .mfunsPlayer-video-danmaku-root {
 	display: flex;
-	flex-grow:1;
+	flex-grow: 1;
 	justify-content: space-between;
 	align-items: center;
 	height: 100%;
 	.mfunsPlayer-controller-button {
 		padding: 0 5px;
 	}
-	.mfunsPlayer-controller-icon{
+	.mfunsPlayer-controller-icon {
 		color: #999;
-		&:hover{
+		&:hover {
 			color: $theme-color;
 		}
 	}
 	.mfunsPlayer-controller-danmaku-trigger {
-		.icon-danmaku{
+		.icon-danmaku {
 			color: $theme-color-light;
 		}
-		&.open{
-			.icon-danmaku-off{
+		&.open {
+			.icon-danmaku-off {
 				display: none;
 			}
 		}
-		&.close{
-			.icon-danmaku{
+		&.close {
+			.icon-danmaku {
 				display: none;
 			}
 		}
 	}
-	
-	
-	.mfunsPlayer-controller-danmaku-settings{
+	// 弹幕设置
+	.mfunsPlayer-controller-danmaku-settings {
 		.mfunsPlayer-danmaku-settings-mask {
-			.mfunsPlayer-controller-danmaku-settings-wrap{
+			.mfunsPlayer-controller-danmaku-settings-wrap {
 				font-size: 12px;
-				width: 280px;
+				width: 300px;
+				padding-top: 5px;
+				.mfunsPlayer-panel-row {
+					padding: 5px 0 5px 15px;
+					margin: 0;
+				}
 			}
-			.row-title{
-				width: 60px;
+			.row-title {
+				min-width: 60px;
 			}
-			.row-value{
+			.row-value {
 				min-width: 50px;
-				text-align: center;
+				margin-left: 10px;
 			}
 			.mfunsPlayer-picker {
 				display: inline-block;
 				//line-height: 0;
 			}
-			.mfunsPlayer-slider{
+			.mfunsPlayer-slider {
 				position: relative;
 				width: 160px;
 				cursor: pointer;
 			}
+			.mfunsPlayer-danmaku-highEnergy-switch {
+				margin-left: 10px;
+			}
 		}
 	}
-	
-    .input_box {
+
+	.input_box {
 		display: flex;
 		flex-grow: 1;
 		align-items: center;
@@ -419,84 +436,87 @@
 		height: 100%;
 		border-left: 1px solid #e6e6e6;
 		margin-left: 5px;
-		
+
 		.mfunsPlayer-controller-danmaku-style {
-			&:hover{
+			&:hover {
 				.mfunsPlayer-danmaku-style-mask {
 					display: block;
 				}
 			}
 			.icon-text {
-				&:hover{
+				&:hover {
 					color: $theme-color;
 				}
 			}
 			.mfunsPlayer-danmaku-style-mask {
-				.mfunsPlayer-controller-danmaku-style-fulloptions-wrap{
+				.mfunsPlayer-controller-danmaku-style-fulloptions-wrap {
 					font-size: 12px;
 					width: 280px;
+					padding-top: 5px;
 					.mfunsPlayer-danmaku-color-picker {
 						width: auto;
 					}
 				}
-				.mfunsPlayer-controller-danmaku-style-wrap{
+				.mfunsPlayer-controller-danmaku-style-wrap {
 					font-size: 12px;
 					width: 180px;
 					.mfunsPlayer-danmaku-color-picker {
 						width: 120px;
 					}
 				}
-				.row-title{
+				.row-title {
 					width: 40px;
+					text-align: center;
 				}
-				.mfunsPlayer-control-panel-danmaku-style{
+				.mfunsPlayer-control-panel-danmaku-style {
 					text-align: left;
 					height: 150px;
 					width: 180px;
 					padding-top: 5px;
 				}
-				.mfunsPlayer-danmaku-fontsize-picker, .mfunsPlayer-danmaku-mode-picker {
+				.mfunsPlayer-danmaku-fontsize-picker,
+				.mfunsPlayer-danmaku-mode-picker {
 					display: inline-block;
 					line-height: 0;
 				}
 				.mfunsPlayer-control-panel-danmaku-style .row-title {
 					width: 40px;
 				}
-				
-				.mfunsPlayer-danmaku-color-input{
+
+				.mfunsPlayer-danmaku-color-input {
 					display: inline-block;
 					width: 60px;
+					margin-left: 10px;
 				}
-				.mfunsPlayer-danmaku-color-preview{
+				.mfunsPlayer-danmaku-color-preview {
 					display: inline-block;
 					width: 36px;
 					height: 18px;
 					line-height: 20px;
 					margin-left: 5px;
 					border-radius: $theme-border-radius;
-					border: 2px solid #FFFFFFA0;
+					border: 2px solid #ffffffa0;
 				}
-				.mfunsPlayer-danmaku-color-picker{
-					margin: 10px auto 5px;
+				.mfunsPlayer-danmaku-color-picker {
+					margin: 10px 0 5px 35px;
 					text-align: center;
 					line-height: 0;
 					.picker-item {
 						display: inline-block;
 						margin-bottom: 4px;
-						width: 14px;
-						height: 14px;
+						width: 12px;
+						height: 12px;
 						border-radius: $theme-border-radius;
 						border: 2px solid #00000040;
 						cursor: pointer;
 						&.picked {
-							border-color: #FFF;
+							border-color: #fff;
 						}
 					}
 				}
-				
 			}
 		}
-		
+
 		.mfunsPlayer-danmaku-text {
 			font-size: 13px;
 			flex: 5;
@@ -507,7 +527,7 @@
 			color: #999;
 			background-color: transparent;
 			box-sizing: border-box;
-			&::-webkit-input-placeholder{
+			&::-webkit-input-placeholder {
 				color: #999;
 			}
 		}
@@ -533,12 +553,13 @@
 			border-radius: $theme-border-radius;
 			cursor: pointer;
 		}
-    }
-    
+	}
 }
 
-.mfunsPlayer, .mfunsPlayer-danmaku-auxiliary {
-	.mfunsPlayer-controller-button {			// 按钮
+.mfunsPlayer,
+.mfunsPlayer-danmaku-auxiliary {
+	.mfunsPlayer-controller-button {
+		// 按钮
 		position: relative;
 		height: 30px;
 		font-size: 12px;
@@ -554,42 +575,44 @@
 			line-height: 30px;
 			font-weight: 600;
 		}
-		&:hover{
+		&:hover {
 			.mfunsPlayer-controller-panel-mask {
 				display: block;
 			}
 		}
 	}
-	.mfunsPlayer-controller-panel-mask {		// 浮动面板遮罩
+	.mfunsPlayer-controller-panel-mask {
+		// 浮动面板遮罩
 		position: absolute;
 		padding-bottom: 15px;
 		bottom: 100%;
-		left:50%;
+		left: 50%;
 		transform: translateX(-50%);
 		z-index: 200;
 		display: none;
-		&.show{
+		&.show {
 			display: block;
 		}
-		&:hover{
+		&:hover {
 			display: block;
 		}
-		.mfunsPlayer-controller-panel {			// 浮动面板
+		.mfunsPlayer-controller-panel {
+			// 浮动面板
 			cursor: default;
 			overflow: hidden;
-			background: rgba(21,21,21,.9);
-			color: #FFFFFF;
+			background: rgba(21, 21, 21, 0.9);
+			color: #ffffff;
 			border-radius: $theme-border-radius;
 			font-size: 13px;
-			.mfunsPlayer-panel-row{
+			.mfunsPlayer-panel-row {
 				display: flex;
 				margin: 5px 10px 10px;
-				.row-title{
+				.row-title {
 					color: $translucent-light-white;
 					height: 22px;
 					line-height: 22px;
 				}
-				.row-value{
+				.row-value {
 					height: 22px;
 					line-height: 22px;
 					color: $translucent-white;

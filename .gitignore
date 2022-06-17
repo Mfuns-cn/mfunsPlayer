@@ -1,5 +1,6 @@
 node_modules/
 
-src/static
+src/static/video
+src/static/danmaku
 src/index.html
 src/demo.html

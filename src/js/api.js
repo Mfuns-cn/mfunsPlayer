@@ -33,7 +33,8 @@ export default {
         options.success &&
           options.success(
             data.data.map((item) => ({
-              time: (item[0] + Math.random()).toFixed(3),
+              // time: (item[0] + Math.random()).toFixed(3),
+              time: item[0],
               type: item[1],
               color: item[2],
               author: item[3],

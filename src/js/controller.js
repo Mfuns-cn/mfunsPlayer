@@ -317,7 +317,7 @@ class Controller {
             }
           });
         }
-        console.log(`视频比例已调整为：${value}`);
+        THIS.player.videoLoaded && THIS.player.notice(`视频比例已调整为：${value}`);
         THIS.player.resize();
       },
     });
@@ -326,24 +326,24 @@ class Controller {
       on() {
         // 打开开关
         THIS.player.autoSwitch = true;
-        console.log("已开启自动切集");
+        THIS.player.videoLoaded && THIS.player.notice("已开启自动切集");
       },
       off() {
         // 关闭开关
         THIS.player.autoSwitch = false;
-        console.log("已关闭自动切集");
+        THIS.player.videoLoaded && THIS.player.notice("已关闭自动切集");
       },
     });
     this.components.videoAutoplaySwitch = new Switch(this.template.video_autoplay_switch, THIS.player.autoplay, {
       on() {
         // 打开开关
         THIS.player.autoplay = true;
-        console.log("已开启自动开播");
+        THIS.player.videoLoaded && THIS.player.notice("已开启自动开播");
       },
       off() {
         // 关闭开关
         THIS.player.autoplay = false;
-        console.log("已关闭自动开播");
+        THIS.player.videoLoaded && THIS.player.notice("已关闭自动开播");
       },
     });
     this.components.videoBorderhiddenSwitch = new Switch(
@@ -354,40 +354,48 @@ class Controller {
           // 打开开关
           THIS.player.template.buildVideo(false);
           // THIS.player.danmaku.seek();
-          console.log("已隐藏黑边");
+          THIS.player.videoLoaded && THIS.player.notice("已隐藏黑边");
         },
         off() {
           // 关闭开关
           THIS.player.template.buildVideo(true);
           // THIS.player.danmaku.seek();
-          console.log("已显示黑边");
+          THIS.player.videoLoaded && THIS.player.notice("已显示黑边");
         },
       }
     );
-    this.components.videoDarkmodeSwitch = new Switch(
-      this.template.video_darkmode_switch,
-      !this.player.options.blackBorder,
-      {
-        on() {
-          // 打开开关
-          document.body.classList.add("player-mode-blackmask");
-          THIS.player.template.footBar.classList.add("darkmode");
-          THIS.player.container.classList.add("mfunsPlayer-darkmode");
-          document.body.appendChild(THIS.mask);
-          console.log("已开启关灯模式");
-        },
-        off() {
-          // 关闭开关
-          if ([...document.body.childNodes].includes(THIS.mask)) {
-            THIS.player.template.footBar.classList.remove("darkmode");
-            THIS.player.container.classList.remove("mfunsPlayer-darkmode");
-            document.body.classList.remove("player-mode-blackmask");
-            document.body.removeChild(THIS.mask);
-          }
-          console.log("已关闭关灯模式");
-        },
-      }
-    );
+    this.components.videoDarkmodeSwitch = new Switch(this.template.video_darkmode_switch, false, {
+      on() {
+        // 打开开关
+        document.body.classList.add("player-mode-blackmask");
+        THIS.player.template.footBar.classList.add("darkmode");
+        THIS.player.container.classList.add("mfunsPlayer-darkmode");
+        document.body.appendChild(THIS.mask);
+        THIS.player.videoLoaded && THIS.player.notice("已开启关灯模式");
+      },
+      off() {
+        // 关闭开关
+        if ([...document.body.childNodes].includes(THIS.mask)) {
+          THIS.player.template.footBar.classList.remove("darkmode");
+          THIS.player.container.classList.remove("mfunsPlayer-darkmode");
+          document.body.classList.remove("player-mode-blackmask");
+          document.body.removeChild(THIS.mask);
+        }
+        THIS.player.videoLoaded && THIS.player.notice("已关闭关灯模式");
+      },
+    });
+    this.components.videoMirrorSwitch = new Switch(this.template.video_mirror_switch, false, {
+      on: () => {
+        // 打开开关
+        this.player.video.style.transform = "rotateY(180deg)";
+        this.player.videoLoaded && this.player.notice("已开启镜像画面");
+      },
+      off: () => {
+        // 关闭开关
+        this.player.video.style.transform = "none";
+        this.player.videoLoaded && this.player.notice("已关闭镜像画面");
+      },
+    });
   }
   initDanmakuButton() {
     this.player.template.danmaku_btn.addEventListener("click", () => {
@@ -423,27 +431,27 @@ class Controller {
   }
   initDanmakuSettingsButton() {
     const THIS = this;
-    const shields = this.player.options.danmaku.shields;
+    const shields = this.player.options.danmaku.shields ?? [];
     const opacity = this.player.options.danmaku.opacity ?? 1;
     const showArea = this.player.options.danmaku.limitArea ?? 4;
     const danmakuSize = this.player.options.danmaku.fontScale ?? 1;
     const danmakuSpeed = this.player.options.danmaku.speed ?? 1;
-    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-      created(thisArg) {
-        console.log(thisArg);
-      },
-      pick(value) {
-        console.log(`屏蔽弹幕类型：${value}`);
-        THIS.player.danmaku.shield(value, true);
-      },
-      unpick(value) {
-        console.log(`取消屏蔽弹幕类型：${value}`);
-        THIS.player.danmaku.shield(value, false);
-      },
-      update(value) {
-        console.log(`已屏蔽的弹幕类型有：${[...value]}`);
-      },
-    });
+    // this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
+    //   created(thisArg) {
+    //     console.log(thisArg);
+    //   },
+    //   pick(value) {
+    //     console.log(`屏蔽弹幕类型：${value}`);
+    //     THIS.player.danmaku.shield(value, true);
+    //   },
+    //   unpick(value) {
+    //     console.log(`取消屏蔽弹幕类型：${value}`);
+    //     THIS.player.danmaku.shield(value, false);
+    //   },
+    //   update(value) {
+    //     console.log(`已屏蔽的弹幕类型有：${[...value]}`);
+    //   },
+    // });
     // 弹幕透明度调节
     this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, opacity * 100, {
       start() {
@@ -554,14 +562,20 @@ class Controller {
         },
       }
     );
-    this.components.danmakuCatchSwitch = new Switch(this.template.danmaku_catch_switch, this.player.options.danmaku.danmakuCatch, {
-      on() {
-        THIS.player.template.danmakuTipMask.style.display = ""  // 打开弹幕捕获模式，则取消tipMask的隐藏
-      },
-      off() {
-        THIS.player.template.danmakuTipMask.style.display = "none"  // 关闭弹幕捕获模式，则隐藏tipMask
+    this.components.danmakuCatchSwitch = new Switch(
+      this.template.danmaku_catch_switch,
+      this.player.options.danmaku.danmakuCatch,
+      {
+        on() {
+          THIS.player.template.danmakuTipMask.style.display = ""; // 打开弹幕捕获模式，则取消tipMask的隐藏
+          THIS.player.notice("已开启弹幕捕获模式");
+        },
+        off() {
+          THIS.player.template.danmakuTipMask.style.display = "none"; // 关闭弹幕捕获模式，则隐藏tipMask
+          THIS.player.notice("已关闭弹幕捕获模式");
+        },
       }
-    })
+    );
   }
   initDanmakuStyleButton() {
     const THIS = this;

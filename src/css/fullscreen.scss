@@ -1,4 +1,4 @@
-@import './theme';
+@import "./theme";
 
 .mfunsPlayer-video-wrap {
     &.browser-fullscreen {
@@ -12,82 +12,85 @@
         margin: 0;
         padding: 0;
         transform: translate(0, 0);
-        .mfunsPlayer-bezel{
+        .mfunsPlayer-bezel {
             bottom: 70px !important;
         }
-        .mfunsPlayer-notice{
+        .mfunsPlayer-notice {
             bottom: 80px;
         }
-        .mfunsPlayer-video-mask{
+        .mfunsPlayer-video-mask {
             height: 100%;
         }
-        .mfunsPlayer-controller-mask{
-           .mfunsPlayer-bezel{
-               margin-top: -30px;
+        .mfunsPlayer-controller-mask {
+            .mfunsPlayer-bezel {
+                margin-top: -30px;
             }
-            .mfunsPlayer-video-danmaku-root{
+            .mfunsPlayer-highEnergy-bar {
+                bottom: 57px;
+            }
+            .mfunsPlayer-video-danmaku-root {
                 width: 40%;
                 height: 30px;
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                .input_box{
-                    border :none;
+                .input_box {
+                    border: none;
                     border-radius: $theme-border-radius;
-                    background: hsla(0,0%,100%,.35);
+                    background: hsla(0, 0%, 100%, 0.35);
                 }
                 .mfunsPlayer-controller-button {
                     padding: 0 5px;
                 }
-                .mfunsPlayer-controller-danmaku-style{
+                .mfunsPlayer-controller-danmaku-style {
                     .icon-text {
                         color: #f5f5f5;
-                        &:hover{
+                        &:hover {
                             color: $theme-color-light;
                         }
                     }
                 }
-                .mfunsPlayer-controller-danmaku-settings{
+                .mfunsPlayer-controller-danmaku-settings {
                     .icon-danmaku-settings {
                         color: #e0e0e0;
-                        &:hover{
+                        &:hover {
                             color: #fff;
                         }
                     }
                 }
-                .mfunsPlayer-danmaku-text{
+                .mfunsPlayer-danmaku-text {
                     border: none;
-	                color: #f5f5f5;
-                    &::-webkit-input-placeholder{
+                    color: #f5f5f5;
+                    &::-webkit-input-placeholder {
                         color: #fff;
                     }
                 }
-                .mfunsPlayer-danmaku-emit{
+                .mfunsPlayer-danmaku-emit {
                     height: 100%;
-                    border-radius:0 $theme-border-radius $theme-border-radius 0;
+                    border-radius: 0 $theme-border-radius $theme-border-radius 0;
                 }
-                .mfunsPlayer-danmaku-status-not-logged-in{
-                     color: #f5f5f5;
-                    .mfunsPlayer-toLogin{
-                     color: #0ff;
+                .mfunsPlayer-danmaku-status-not-logged-in {
+                    color: #f5f5f5;
+                    .mfunsPlayer-toLogin {
+                        color: #0ff;
                     }
                 }
             }
-            .mfunsPlayer-controller{
+            .mfunsPlayer-controller {
                 height: 60px;
-                .mfunsPlayer-controller-wrap{
-                    .mfunsPlayer-video-danmaku-root{
-                            display: flex;
+                .mfunsPlayer-controller-wrap {
+                    .mfunsPlayer-video-danmaku-root {
+                        display: flex;
                     }
-                    .mfunsPlayer-controller-tip{
+                    .mfunsPlayer-controller-tip {
                         bottom: 160%;
                     }
-                    .mfunsPlayer-controller-left{
+                    .mfunsPlayer-controller-left {
                         width: auto;
                         padding-right: 16px;
                     }
                     .mfunsPlayer-controller-right {
-                        .mfunsPlayer-controller-fullscreen{
+                        .mfunsPlayer-controller-fullscreen {
                             .icon-fullscreen {
                                 display: none;
                             }
@@ -98,9 +101,8 @@
                     }
                 }
             }
-            
         }
-        
+
         .mfunsPlayer-danmaku {
             // .mfunsPlayer-danmaku-item {
             //     &.lock{
@@ -108,69 +110,70 @@
             //     animation-play-state: paused !important;
             //     z-index:103!important;
             //   }
-            // } 
-                .mfunsPlayer-danmaku-top,
-                .mfunsPlayer-danmaku-bottom {
-                    &.mfunsPlayer-danmaku-move {
-                        animation: danmaku-center 5s linear;
-                        animation-play-state: inherit;
-                    }
+            // }
+            .mfunsPlayer-danmaku-top,
+            .mfunsPlayer-danmaku-bottom {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku-center 5s linear;
+                    animation-play-state: inherit;
                 }
-                                
-                .mfunsPlayer-danmaku-right {
-                    &.mfunsPlayer-danmaku-move {
-                        animation: danmaku 8s linear;
-                        // animation-play-state: inherit;
-                        &.low{
-                            animation: danmaku 10s linear;
-                        }
-                        &.lowest{
-                            animation: danmaku 12s linear;
-                        }
-                        &.fast{
-                            animation: danmaku 6s linear;
-                        }
-                        &.fastest{
-                            animation: danmaku 4s linear;
-                        }
+            }
+
+            .mfunsPlayer-danmaku-right {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku 8s linear;
+                    // animation-play-state: inherit;
+                    &.low {
+                        animation: danmaku 10s linear;
                     }
-                }
-                .mfunsPlayer-danmaku-left{
-                    &.mfunsPlayer-danmaku-move {
-                        animation: danmaku-reverse 8s linear;
-                        animation-play-state: inherit;
-                        &.low{
-                            animation: danmaku-reverse 10s linear;
-                        }
-                        &.lowest{
-                            animation: danmaku-reverse 12s linear;
-                        }
-                        &.fast{
-                            animation: danmaku-reverse 6s linear;
-                        }
-                        &.fastest{
-                            animation: danmaku-reverse 4s linear;
-                        }
+                    &.lowest {
+                        animation: danmaku 12s linear;
+                    }
+                    &.fast {
+                        animation: danmaku 6s linear;
+                    }
+                    &.fastest {
+                        animation: danmaku 4s linear;
                     }
                 }
             }
-            .mfunsPlayer-controller-button {			// 按钮
-                padding: 0 10px;
+            .mfunsPlayer-danmaku-left {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku-reverse 8s linear;
+                    animation-play-state: inherit;
+                    &.low {
+                        animation: danmaku-reverse 10s linear;
+                    }
+                    &.lowest {
+                        animation: danmaku-reverse 12s linear;
+                    }
+                    &.fast {
+                        animation: danmaku-reverse 6s linear;
+                    }
+                    &.fastest {
+                        animation: danmaku-reverse 4s linear;
+                    }
+                }
             }
+        }
+        .mfunsPlayer-controller-button {
+            // 按钮
+            padding: 0 10px;
+        }
     }
-    &.mfunsPlayer-web-fullscreen{
+    &.mfunsPlayer-web-fullscreen {
         @extend .browser-fullscreen;
         position: fixed;
         z-index: 100000;
         left: 0;
-        top:0;
+        top: 0;
         width: 100% !important;
         height: 100% !important;
-        .mfunsPlayer-controller-mask{ 
-            .mfunsPlayer-controller{
+        .mfunsPlayer-controller-mask {
+            .mfunsPlayer-controller {
                 height: 60px;
-                .mfunsPlayer-controller-right{
-                    .mfunsPlayer-controller-webfull{
+                .mfunsPlayer-controller-right {
+                    .mfunsPlayer-controller-webfull {
                         .icon-web-fullscreen {
                             display: none;
                         }
@@ -179,7 +182,7 @@
                         }
                     }
                 }
-                .mfunsPlayer-controller-fullscreen{
+                .mfunsPlayer-controller-fullscreen {
                     .icon-fullscreen {
                         display: block !important;
                     }

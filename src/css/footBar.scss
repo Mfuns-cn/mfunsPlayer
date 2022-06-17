@@ -1,4 +1,4 @@
-.mfunsPlayer-footBar{
+.mfunsPlayer-footBar {
     height: 40px;
     width: 100%;
     display: flex;
@@ -8,12 +8,12 @@
     padding-left: 15px;
     background-color: #fff;
     border: 1px solid #e6e6e6;
-    border-top: none ;
+    border-top: none;
     box-sizing: border-box;
     .input_box {
         padding-right: 15px;
     }
-    
+
     /**
     .mfunsPlayer-video-danmaku-details-skeleton{
         background-image: linear-gradient(90deg, #e6e6e6 20%, #f0f0f0 47%, #f6f6f6 63%);
@@ -32,19 +32,26 @@
     //     margin-left: 20px;
     // }
 
-   
-    &.darkmode{
+    &.darkmode {
         background: #212121;
         color: #f6f6f6;
         border: 1px solid #212121;
-        .input_box{
-        border-left: 1px solid #666;
+        .input_box {
+            border-left: 1px solid #666;
         }
 
-        .mfunsPlayer-video-danmaku-root{
+        .mfunsPlayer-video-danmaku-root {
             &.loading {
                 .input_box {
-                    background-image: linear-gradient(90deg, #555 10%, #444 24%, #333 32%, #333 68%, #444 76%, #555 90%);
+                    background-image: linear-gradient(
+                        90deg,
+                        #555 10%,
+                        #444 24%,
+                        #333 32%,
+                        #333 68%,
+                        #444 76%,
+                        #555 90%
+                    );
                     background-size: 200% 100%;
                     background-position: 0% 0%;
                     animation: skeleton-loading 1.4s linear infinite;
@@ -54,8 +61,8 @@
                 }
             }
 
-            &.nologin{
-                .input_box{
+            &.nologin {
+                .input_box {
                     background: #323232;
                 }
                 .mfunsPlayer-danmaku-emit {
@@ -63,59 +70,71 @@
                 }
             }
         }
-      
     }
-    
-    .mfunsPlayer-video-danmaku-details{
+
+    .mfunsPlayer-video-danmaku-details {
+        min-width: 100px;
+        height: 40px;
+        line-height: 40px;
         font-size: 13px;
-        padding-right: 5px;
-        .mfunsPlayer-video-danmaku-count{
-            color: #999
+
+        .mfunsPlayer-video-danmaku-count {
+            color: #999;
         }
     }
 }
-.mfunsPlayer-video-danmaku-root{
-    .mfunsPlayer-danmaku-status-not-logged-in{
-        display: none ;
-     }
-    &.nologin{
-    .input_box{
-      background: #f1f2f3; 
-      user-select: none;
-       .mfunsPlayer-danmaku-text,.mfunsPlayer-controller-danmaku-style{
-        display: none 
-       }
+.mfunsPlayer-video-danmaku-root {
+    .mfunsPlayer-danmaku-status-not-logged-in {
+        display: none;
     }
-   
-    .mfunsPlayer-danmaku-emit {
-        background-color: #aaa;
-        pointer-events: none;
-        cursor: not-allowed;
-    }
-    .mfunsPlayer-danmaku-status-not-logged-in{
-        width: 100%;
-        display: block;
-        color: $text-grey;
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-        .mfunsPlayer-toLogin{
-          margin: 0 5px;
-          color: #7b7ff7;
-          cursor: pointer;
+    &.nologin {
+        .input_box {
+            background: #f1f2f3;
+            user-select: none;
+            .mfunsPlayer-danmaku-text,
+            .mfunsPlayer-controller-danmaku-style {
+                display: none;
+            }
+        }
+
+        .mfunsPlayer-danmaku-emit {
+            background-color: #aaa;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        .mfunsPlayer-danmaku-status-not-logged-in {
+            width: 100%;
+            display: block;
+            color: $text-grey;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            .mfunsPlayer-toLogin {
+                margin: 0 5px;
+                color: #7b7ff7;
+                cursor: pointer;
+            }
         }
     }
-    }
-    &.loading{
+    &.loading {
         .input_box {
-            background-image: linear-gradient(90deg, #e6e6e6 10%, #f0f0f0 24%, #f6f6f6 32%, #f6f6f6 68%, #f0f0f0 76%, #e6e6e6 90%);
+            background-image: linear-gradient(
+                90deg,
+                #e6e6e6 10%,
+                #f0f0f0 24%,
+                #f6f6f6 32%,
+                #f6f6f6 68%,
+                #f0f0f0 76%,
+                #e6e6e6 90%
+            );
             background-size: 200% 100%;
             background-position: 0% 0%;
             animation: skeleton-loading 1.4s linear infinite;
             cursor: not-allowed;
         }
-        .mfunsPlayer-danmaku-text,.mfunsPlayer-controller-danmaku-style{
+        .mfunsPlayer-danmaku-text,
+        .mfunsPlayer-controller-danmaku-style {
             display: none;
         }
         .mfunsPlayer-danmaku-status-loading {
@@ -130,12 +149,11 @@
     }
 }
 @keyframes skeleton-loading {
- 
-    0% {    background-position:200% 0%;
-   
+    0% {
+        background-position: 200% 0%;
     }
-   
-    100% {    background-position: 0% 100%;
-   
+
+    100% {
+        background-position: 0% 100%;
     }
 }

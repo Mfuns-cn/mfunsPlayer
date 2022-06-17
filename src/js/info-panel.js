@@ -1,5 +1,3 @@
-/* global DPLAYER_VERSION GIT_HASH */
-
 class InfoPanel {
   constructor(player) {
     this.container = player.template.infoPanel;
@@ -30,7 +28,7 @@ class InfoPanel {
     this.container.classList.add("mfunsPlayer-info-panel-hide");
   }
 
-  triggle() {
+  toggle() {
     if (this.container.classList.contains("mfunsPlayer-info-panel-hide")) {
       this.show();
     } else {
