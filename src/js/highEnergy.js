@@ -107,6 +107,7 @@ export default class HighEnergy {
   }
   show() {
     this.container.classList.add("show");
+    this.resize();
     this.isShow = true;
   }
   hide() {
@@ -114,12 +115,12 @@ export default class HighEnergy {
     this.isShow = false;
   }
   update(rate) {
-    // if (isNaN(rate)) return;
-    // const percent = Math.floor(rate * this.slice);
-    // this.option.visualMap.pieces[0].lt = Math.min(percent, this.slice - 1);
-    // this.option.visualMap.pieces[1].gt = Math.min(percent, this.slice - 1);
-    // this.highEnergyBar.setOption(this.option);
-    // this.resize();
+    if (isNaN(rate)) return;
+    const percent = Math.floor(rate * this.slice);
+    this.option.visualMap.pieces[0].lt = Math.min(percent, this.slice - 1);
+    this.option.visualMap.pieces[1].gt = Math.min(percent, this.slice - 1);
+    this.highEnergyBar.setOption(this.option);
+    this.resize();
   }
   reload() {
     this.Ydata = utils.createArray(this.slice).map(() => {
