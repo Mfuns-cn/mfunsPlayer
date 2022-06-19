@@ -25,7 +25,6 @@ class Danmaku {
     this._fontScale = this.options.fontScale;
     this._speed = this.options.speed;
     this._limitArea = this.options.limitArea;
-
     this.events = this.options.events;
     this.topLimit = false;
     this.bottomLimit = false;
@@ -156,7 +155,6 @@ class Danmaku {
   }
   load() {
     let apiurl;
-    console.log(this.unlimited);
     if (this.options.api.link) {
       apiurl = `${this.options.api.link}`;
     } else {
@@ -167,7 +165,7 @@ class Danmaku {
     this.events && this.events.trigger("danmaku_load_start", endpoints);
     this.loaded = false;
 
-    this._readAllEndpoints(endpoints, (results) => {
+    this._readAllEndpoints(endpoints, (results, loadStatus) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
       this.dan.forEach((el, index) => {
         el.id = this.createHash(8);
@@ -176,7 +174,7 @@ class Danmaku {
         this.frame();
       });
 
-      this.options.callback(this.dan.length);
+      loadStatus && this.options.callback(this.dan.length);
 
       this.events && this.events.trigger("danmaku_load_end", this.dan);
       this.loaded = true;
@@ -184,6 +182,7 @@ class Danmaku {
   }
 
   reload(newId, newLink = "") {
+    this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     this.options.api.id = newId;
     this.options.api.link = newLink;
     this.dan = [];
@@ -201,12 +200,13 @@ class Danmaku {
     for (let i = 0; i < endpoints.length; ++i) {
       this.options.apiBackend.read({
         url: endpoints[i],
+        type: "danmaku",
         success: (data) => {
           results[i] = data;
 
           ++readCount;
           if (readCount === endpoints.length) {
-            callback(results);
+            callback(results, 1);
           }
         },
         error: (msg) => {
@@ -216,7 +216,7 @@ class Danmaku {
           console.log(msg);
           ++readCount;
           if (readCount === endpoints.length) {
-            callback(results);
+            callback(results, 0);
           }
         },
       });
@@ -282,7 +282,7 @@ class Danmaku {
     if (this.dan.length && !this.paused && this.showing) {
       let item = this.dan[this.danIndex];
       const dan = [];
-      while (item && this.options.time() > item.time) {
+      while (item && this.options.time() > parseFloat(item.time)) {
         if (this.checkShield(item)) {
           dan.push(item);
         }
@@ -311,7 +311,6 @@ class Danmaku {
   }
   shield(type, flag = false) {
     this[`${type}Limit`] = flag;
-    console.log(type);
     if (flag) {
       this.clear(type);
       const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);

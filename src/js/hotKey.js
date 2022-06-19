@@ -3,7 +3,7 @@ export default class HotKey {
     this.template = player.template;
     this.container = player.template.hotkeyPanel;
     window.onresize = () => {
-      player.highEnergy.isShow && player.highEnergy.resize();
+      player.highEnergy?.isShow && player.highEnergy.resize();
       if (!player.fullScreen.isFullScreen("browser") && !player.fullScreen.isFullScreen("web")) {
         player.fullScreen.cancel("browser");
         const danmakuRoot = player.template.danmakuRoot;

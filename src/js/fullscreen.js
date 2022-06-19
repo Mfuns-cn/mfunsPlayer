@@ -18,11 +18,11 @@ class FullScreen {
       utils.throttle(() => {
         let percentage;
         if (e.deltaY < 0) {
-          percentage = this.player.volume() + 0.05;
-          this.player.volume(percentage);
+          percentage = this.player.video.volume + 0.05;
+          this.player.volume(percentage, false);
         } else {
-          percentage = this.player.volume() - 0.05;
-          this.player.volume(percentage);
+          percentage = this.player.video.volume - 0.05;
+          this.player.volume(percentage, false);
         }
       }, 200)();
     };
@@ -78,7 +78,7 @@ class FullScreen {
       this.player.template.footBar.removeChild(danmakuRoot);
       this.player.template.controllerWrap.appendChild(danmakuRoot);
     }
-    this.player.template.videoWrap.addEventListener("wheel", this.scrollToVolume);
+    this.player.videoLoaded && this.player.template.videoWrap.addEventListener("wheel", this.scrollToVolume);
   }
 
   request(type = "browser") {

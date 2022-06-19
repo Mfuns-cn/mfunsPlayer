@@ -13,13 +13,16 @@ class ContextMenu {
     });
 
     this.player.template.videoWrap.addEventListener("contextmenu", (e) => {
+      const event = e || window.event;
+      event.preventDefault();
+      if (!this.player.videoLoaded) {
+        return;
+      }
       if (this.shown) {
         this.hide();
         return;
       }
       this.player.isShowMenu = true;
-      const event = e || window.event;
-      event.preventDefault();
 
       const clientRect = this.player.template.videoWrap.getBoundingClientRect();
       this.show(event.clientX - clientRect.left, event.clientY - clientRect.top);

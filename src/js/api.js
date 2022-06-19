@@ -18,30 +18,30 @@ export default {
         options.error && options.error(e);
       });
   },
-
   read: (options) => {
     axios
       .get(options.url)
       .then((response) => {
         const data = response.data;
-        console.log(data);
-        if (!data || data.code !== 0) {
+        if (!data) {
           options.error && options.error(data && data.msg);
           return;
         }
-
-        options.success &&
-          options.success(
-            data.data.map((item) => ({
-              // time: (item[0] + Math.random()).toFixed(3),
-              time: item[0],
-              type: item[1],
-              color: item[2],
-              author: item[3],
-              text: item[4],
-              size: utils.randomFontsize(100),
-            }))
-          );
+        if (options.type === "danmaku") {
+          options.success &&
+            options.success(
+              data.data.map((item) => ({
+                time: item[0],
+                type: item[1],
+                color: item[2],
+                author: item[3],
+                text: item[4] + "喵~",
+                // size: utils.randomFontsize(100),
+              }))
+            );
+        } else {
+          options.success && options.success(data);
+        }
       })
       .catch((e) => {
         console.error(e);

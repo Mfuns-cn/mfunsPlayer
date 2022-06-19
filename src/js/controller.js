@@ -31,6 +31,7 @@ class Controller {
     });
     this.isControllerfocus();
     this.initPlayButton();
+    this.initActivity();
     if (player.options.draggable) {
       this.initPlayedBar();
       this.initTimeLabel();
@@ -79,12 +80,32 @@ class Controller {
       this.controlLeaved = true;
     };
   }
+  initActivity() {
+    this.switchActivity();
+    this.template.activity.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const { activity } = this.player.options;
+      window.open(activity[this.currentActivity].link);
+    });
+    this.template.activityClose.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.template.activityMask.classList.remove("show");
+      this.noActivity = true;
+    });
+  }
+  switchActivity() {
+    const { activity } = this.player.options;
+    if (activity.length) {
+      this.currentActivity = Math.round(Math.random() * (activity.length - 1));
+      console.log(this.currentActivity);
+      this.template.activity.style.backgroundImage = `url(${activity[this.currentActivity].pic})`;
+    }
+  }
   initPlayButton() {
     this.template.videoWrap.addEventListener("click", () => this.handleClick());
     this.template.play_btn.addEventListener("click", () => this.player.toggle());
   }
   handleClick() {
-    console.log("player click", this.isControl);
     if (!this.isControl && !this.player.isShowMenu && this.player.videoLoaded) {
       this.player.toggle();
     } else {
@@ -92,6 +113,25 @@ class Controller {
     }
   }
   initPlayedBar() {
+    const allPanel = document.querySelectorAll(".mfunsPlayer-controller-panel-mask");
+    const allTip = document.querySelectorAll(".mfunsPlayer-controller-tip");
+    const showTip = (e) => {
+      const px = this.player.template.barWrap.getBoundingClientRect().left;
+      const tx = (e.clientX || e.changedTouches[0].clientX) - px;
+      if (tx < 0 || tx > this.player.template.barWrap.offsetWidth) {
+        return;
+      }
+      const time = this.player.video.duration * (tx / this.player.template.barWrap.offsetWidth);
+      this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
+      this.player.template.barTime.style.display = "block";
+      this.player.template.barTime.innerText = utils.secondToTime(time);
+      this.player.template.barTime.classList.remove("hidden");
+      this.player.template.thumb.classList.remove("hidden");
+    };
+    const hideTip = () => {
+      this.player.template.barTime.classList.add("hidden");
+      this.player.template.thumb.classList.add("hidden");
+    };
     const thumbMove = (e) => {
       this.isControl = true;
       let percentage =
@@ -100,7 +140,12 @@ class Controller {
         this.player.template.barWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
+      [...allPanel, ...allTip].forEach((el) => {
+        el.classList.add("hide");
+      });
+      this.barLeave && showTip(e);
       this.player.bar.set("played", percentage, "width");
+      this.player.highEnergy.update(percentage);
       this.player.template.barTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
       this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
     };
@@ -115,6 +160,10 @@ class Controller {
         this.player.template.barWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
+      [...allPanel, ...allTip].forEach((el) => {
+        el.classList.remove("hide");
+      });
+      this.barLeave && hideTip();
       this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
       this.player.bar.set("played", percentage, "width");
       this.player.seek(this.player.bar.get("played") * this.player.video.duration);
@@ -131,25 +180,17 @@ class Controller {
 
     this.player.template.barWrap.addEventListener(utils.nameMap.dragMove, (e) => {
       if (this.player.video.duration) {
-        const px = this.player.template.barWrap.getBoundingClientRect().left;
-        const tx = (e.clientX || e.changedTouches[0].clientX) - px;
-        if (tx < 0 || tx > this.player.template.barWrap.offsetWidth) {
-          return;
-        }
-        const time = this.player.video.duration * (tx / this.player.template.barWrap.offsetWidth);
-        // if (utils.isMobile) {
-        //   this.thumbnails && this.thumbnails.show();
-        // }
-        // this.thumbnails && this.thumbnails.move(tx);
-        this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
-        this.player.template.barTime.style.display = "block";
-        this.player.template.barTime.innerText = utils.secondToTime(time);
-        this.player.template.barTime.classList.remove("hidden");
+        showTip(e);
         // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，bar也会移动，修复bug
         window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
       }
     });
-
+    this.player.template.barWrap.addEventListener("mouseleave", (e) => {
+      this.barLeave = true;
+    });
+    this.player.template.barWrap.addEventListener("mouseenter", (e) => {
+      this.barLeave = false;
+    });
     this.player.template.barWrap.addEventListener(utils.nameMap.dragEnd, () => {
       this.player.unableTimeupdate = false;
     });
@@ -274,7 +315,7 @@ class Controller {
         update(value, controlFlag) {
           // 更改进度条值，修改绑定数据
           THIS.isControl = controlFlag;
-          THIS.video.volume = value * 0.01;
+          THIS.player.volume(value * 0.01, true);
           if (value === 0) {
             THIS.player.template.volumeIcon.classList.add("button-volume-off");
           } else {
@@ -307,7 +348,7 @@ class Controller {
   initSettingsButton() {
     const THIS = this;
     this.components.videoScalePicker = new Picker(this.template.video_scale_picker, "auto", {
-      pick(value) {
+      pick(value, nonotice) {
         if (value == "auto") {
           THIS.videoScale = false;
         } else {
@@ -317,63 +358,72 @@ class Controller {
             }
           });
         }
-        THIS.player.videoLoaded && THIS.player.notice(`视频比例已调整为：${value}`);
         THIS.player.resize();
       },
     });
 
     this.components.videoNextpageSwitch = new Switch(this.template.video_nextpage_switch, THIS.player.autoSwitch, {
-      on() {
+      on(nonotice) {
         // 打开开关
         THIS.player.autoSwitch = true;
-        THIS.player.videoLoaded && THIS.player.notice("已开启自动切集");
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启分P连播");
       },
-      off() {
+      off(nonotice) {
         // 关闭开关
         THIS.player.autoSwitch = false;
-        THIS.player.videoLoaded && THIS.player.notice("已关闭自动切集");
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已关闭分P连播");
       },
     });
-    this.components.videoAutoplaySwitch = new Switch(this.template.video_autoplay_switch, THIS.player.autoplay, {
-      on() {
+    this.components.videoAutoplaySwitch = new Switch(this.template.video_autoplay_switch, THIS.player.autoPlay, {
+      on(nonotice) {
         // 打开开关
-        THIS.player.autoplay = true;
-        THIS.player.videoLoaded && THIS.player.notice("已开启自动开播");
+        THIS.player.autoPlay = true;
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启自动播放");
       },
-      off() {
+      off(nonotice) {
         // 关闭开关
-        THIS.player.autoplay = false;
-        THIS.player.videoLoaded && THIS.player.notice("已关闭自动开播");
+        THIS.player.autoPlay = false;
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已关闭自动播放");
+      },
+    });
+    this.components.videoAutoplaySwitch = new Switch(this.template.video_autoSkip_switch, THIS.player.autoSkip, {
+      on(nonotice) {
+        // 打开开关
+        THIS.player.autoSkip = true;
+      },
+      off(nonotice) {
+        // 关闭开关
+        THIS.player.autoSkip = false;
       },
     });
     this.components.videoBorderhiddenSwitch = new Switch(
       this.template.video_borderhidden_switch,
       !this.player.options.blackBorder,
       {
-        on() {
+        on(nonotice) {
           // 打开开关
           THIS.player.template.buildVideo(false);
           // THIS.player.danmaku.seek();
-          THIS.player.videoLoaded && THIS.player.notice("已隐藏黑边");
+          THIS.player.videoLoaded && !nonotice && THIS.player.notice("已隐藏黑边");
         },
-        off() {
+        off(nonotice) {
           // 关闭开关
           THIS.player.template.buildVideo(true);
           // THIS.player.danmaku.seek();
-          THIS.player.videoLoaded && THIS.player.notice("已显示黑边");
+          THIS.player.videoLoaded && !nonotice && THIS.player.notice("已显示黑边");
         },
       }
     );
     this.components.videoDarkmodeSwitch = new Switch(this.template.video_darkmode_switch, false, {
-      on() {
+      on(nonotice) {
         // 打开开关
         document.body.classList.add("player-mode-blackmask");
         THIS.player.template.footBar.classList.add("darkmode");
         THIS.player.container.classList.add("mfunsPlayer-darkmode");
         document.body.appendChild(THIS.mask);
-        THIS.player.videoLoaded && THIS.player.notice("已开启关灯模式");
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启关灯模式");
       },
-      off() {
+      off(nonotice) {
         // 关闭开关
         if ([...document.body.childNodes].includes(THIS.mask)) {
           THIS.player.template.footBar.classList.remove("darkmode");
@@ -381,19 +431,19 @@ class Controller {
           document.body.classList.remove("player-mode-blackmask");
           document.body.removeChild(THIS.mask);
         }
-        THIS.player.videoLoaded && THIS.player.notice("已关闭关灯模式");
+        THIS.player.videoLoaded && !nonotice && THIS.player.notice("已关闭关灯模式");
       },
     });
     this.components.videoMirrorSwitch = new Switch(this.template.video_mirror_switch, false, {
-      on: () => {
+      on: (nonotice) => {
         // 打开开关
         this.player.video.style.transform = "rotateY(180deg)";
-        this.player.videoLoaded && this.player.notice("已开启镜像画面");
+        this.player.videoLoaded && !nonotice && this.player.notice("已开启镜像画面");
       },
-      off: () => {
+      off: (nonotice) => {
         // 关闭开关
         this.player.video.style.transform = "none";
-        this.player.videoLoaded && this.player.notice("已关闭镜像画面");
+        this.player.videoLoaded && !nonotice && this.player.notice("已关闭镜像画面");
       },
     });
   }
@@ -436,22 +486,20 @@ class Controller {
     const showArea = this.player.options.danmaku.limitArea ?? 4;
     const danmakuSize = this.player.options.danmaku.fontScale ?? 1;
     const danmakuSpeed = this.player.options.danmaku.speed ?? 1;
-    // this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-    //   created(thisArg) {
-    //     console.log(thisArg);
-    //   },
-    //   pick(value) {
-    //     console.log(`屏蔽弹幕类型：${value}`);
-    //     THIS.player.danmaku.shield(value, true);
-    //   },
-    //   unpick(value) {
-    //     console.log(`取消屏蔽弹幕类型：${value}`);
-    //     THIS.player.danmaku.shield(value, false);
-    //   },
-    //   update(value) {
-    //     console.log(`已屏蔽的弹幕类型有：${[...value]}`);
-    //   },
-    // });
+    this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
+      created(thisArg) {},
+      pick(value, nonotice) {
+        // console.log(`屏蔽弹幕类型：${value}`);
+        THIS.player.danmaku.shield(value, true);
+      },
+      unpick(value) {
+        // console.log(`取消屏蔽弹幕类型：${value}`);
+        THIS.player.danmaku.shield(value, false);
+      },
+      update(value) {
+        // console.log(`已屏蔽的弹幕类型有：${[...value]}`);
+      },
+    });
     // 弹幕透明度调节
     this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, opacity * 100, {
       start() {
@@ -494,7 +542,7 @@ class Controller {
         update(value, flag) {
           // 有关弹幕显示区域的更改请写在此处
           THIS.isControl = flag;
-          console.log(`已更改显示区域：${["1/4", "半屏", "3/4", "不重叠", "不限"][value / 20 - 1]}`);
+          // console.log(`已更改显示区域：${["1/4", "半屏", "3/4", "不重叠", "不限"][value / 20 - 1]}`);
         },
         change(value) {
           THIS.template.danmaku_showarea_value.innerText = ["1/4", "半屏", "3/4", "不重叠", "不限"][value / 20 - 1];
@@ -566,13 +614,13 @@ class Controller {
       this.template.danmaku_catch_switch,
       this.player.options.danmaku.danmakuCatch,
       {
-        on() {
+        on(nonotice) {
           THIS.player.template.danmakuTipMask.style.display = ""; // 打开弹幕捕获模式，则取消tipMask的隐藏
-          THIS.player.notice("已开启弹幕捕获模式");
+          !nonotice && THIS.player.notice("已开启弹幕捕获模式");
         },
-        off() {
+        off(nonotice) {
           THIS.player.template.danmakuTipMask.style.display = "none"; // 关闭弹幕捕获模式，则隐藏tipMask
-          THIS.player.notice("已关闭弹幕捕获模式");
+          !nonotice && THIS.player.notice("已关闭弹幕捕获模式");
         },
       }
     );
@@ -583,14 +631,14 @@ class Controller {
       pick(value) {
         // 有关字体大小值的更改请写在此处
         THIS.danmakuFontsize = value;
-        console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
+        // console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
       },
     });
     this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuMode, {
       pick(value) {
         // 有关弹幕模式值的更改请写在此处
-        THIS.danmakuMode = value;
-        console.log(`已选择弹幕模式：${THIS.danmakuMode}`);
+        THIS.danmakuType = value;
+        // console.log(`已选择弹幕模式：${THIS.danmakuType}`);
       },
     });
     this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
@@ -598,7 +646,7 @@ class Controller {
         if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
           // 有关弹幕颜色值的更改请写在此处
           THIS.danmakuColor = utils.color2Number(value);
-          console.log(`已选择弹幕颜色：${THIS.danmakuColor}`);
+          // console.log(`已选择弹幕颜色：${THIS.danmakuColor}`);
           THIS.template.danmaku_color_input.value = value;
           THIS.template.danmaku_color_preview.style["background-color"] = value;
           if (value != value.toUpperCase()) {
