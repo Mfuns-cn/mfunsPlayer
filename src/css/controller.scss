@@ -61,6 +61,9 @@
 			justify-content: space-between;
 			align-items: center;
 			z-index: 10;
+			.unable {
+				pointer-events: none;
+			}
 			.mfunsPlayer-controller-tip {
 				position: absolute;
 				bottom: 140%;
@@ -81,6 +84,9 @@
 				.mfunsPlayer-controller-tip {
 					transform: scale(1);
 					opacity: 1;
+					&.hide {
+						display: none;
+					}
 				}
 			}
 			.mfunsPlayer-controller-left {
@@ -307,9 +313,6 @@
 							display: inline-block;
 							//line-height: 0;
 						}
-						.mfunsPlayer-switch {
-							width: 80px;
-						}
 					}
 				}
 
@@ -420,6 +423,7 @@
 			.mfunsPlayer-slider {
 				position: relative;
 				width: 160px;
+				margin-left: 5px;
 				cursor: pointer;
 			}
 			.mfunsPlayer-danmaku-highEnergy-switch {
@@ -593,6 +597,9 @@
 		&.show {
 			display: block;
 		}
+		&.hide {
+			display: none !important;
+		}
 		&:hover {
 			display: block;
 		}
@@ -606,6 +613,7 @@
 			font-size: 13px;
 			.mfunsPlayer-panel-row {
 				display: flex;
+				flex-wrap: wrap;
 				margin: 5px 10px 10px;
 				.row-title {
 					color: $translucent-light-white;

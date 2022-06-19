@@ -4,7 +4,7 @@ export default (options) => {
   // default options
   const defaultOption = {
     container: options.element || document.getElementsByClassName("mfunsPlayer")[0],
-    autoplay: false, // 自动播放
+    autoPlay: false, // 自动播放
     autoSwitch: false, // 自动切P
     draggable: true,
     blackBorder: true, // 开启黑边
@@ -17,9 +17,11 @@ export default (options) => {
     preload: "metadata",
     volume: 0.7,
     apiBackend: defaultApiBackend,
-    video: {},
+    video: [],
     contextmenu: [],
     mutex: true,
+    activity: [],
+    callback: {},
     pluginOptions: { hls: {}, flv: {}, dash: {}, webtorrent: {} },
     pickerColors: [
       "#FE0302",
@@ -35,9 +37,6 @@ export default (options) => {
     ],
   };
   options = Object.assign(defaultOption, options);
-  if (options.video) {
-    !options.video.type && (options.video.type = "auto");
-  }
 
   options.contextmenu = options.contextmenu.concat([
     {
@@ -45,8 +44,8 @@ export default (options) => {
       link: "https://www.mfuns.cn/author/7376",
     },
     {
-      text: "开发者信息",
-      link: "https://www.mfuns.cn/author/7376",
+      text: "参与开发者信息",
+      link: "https://www.mfuns.cn/author/6068",
     },
     {
       text: "视频统计信息",

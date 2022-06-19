@@ -14,7 +14,8 @@ export default class HighEnergy {
       return 0;
     });
     this.isShow = player.options.danmaku.showHighEnergy;
-    window.echarts && this.init();
+    if (window.echarts) this.init();
+    else player.notice("Error: Can't find Echarts");
   }
   getData() {
     this.danmaku = this.player.danmaku.dan;
@@ -23,14 +24,21 @@ export default class HighEnergy {
       this.danmaku.forEach((dan) => {
         if (index * danSlice < +dan.time && +dan.time < (index + 1) * danSlice) {
           this.Ydata[index]++;
-          // console.log("111111");
         }
       });
     });
+    const max = Math.max(...this.Ydata);
+    const min = Math.min(...this.Ydata);
+    const thorn = (max - min) / 3;
+    // console.log(max, min);
+
     this.Ydata.forEach((el, index) => {
-      this.Ydata[index] = Math.min(el + 15, 100);
+      this.Ydata[index] = Math.min(el + 20, 50);
+      if (Math.abs(this.Ydata[index + 1] - el) <= thorn && index !== this.Ydata.length - 1) {
+        this.Ydata[index + 1] = parseInt((el + this.Ydata[index + 1]) / 2);
+      }
     });
-    console.log(this.Ydata);
+    // console.log(this.Ydata);
   }
   init() {
     this.getData();
@@ -43,6 +51,25 @@ export default class HighEnergy {
         right: 0,
         bottom: 0,
       },
+      visualMap: {
+        type: "piecewise",
+        show: false,
+        dimension: 0,
+        seriesIndex: 0,
+        pieces: [
+          {
+            gt: 0,
+            lt: 0,
+            color: "rgba(147,158,251, 0.4)",
+          },
+          {
+            gt: 0,
+            lt: this.slice - 1,
+            color: "rgba(245, 245, 245, 0.4)",
+          },
+        ],
+      },
+
       xAxis: [
         {
           type: "category",
@@ -60,14 +87,14 @@ export default class HighEnergy {
       series: [
         {
           type: "line",
-          smooth: true,
+          smooth: 0.4,
           lineStyle: {
             width: 0,
           },
           showSymbol: false,
           areaStyle: {
-            opacity: 0.3,
-            color: "#f5f5f5",
+            // opacity: 0.3,
+            // color: "#f5f5f5",
           },
           emphasis: {
             focus: "series",
@@ -86,16 +113,22 @@ export default class HighEnergy {
     this.container.classList.remove("show");
     this.isShow = false;
   }
+  update(rate) {
+    // if (isNaN(rate)) return;
+    // const percent = Math.floor(rate * this.slice);
+    // this.option.visualMap.pieces[0].lt = Math.min(percent, this.slice - 1);
+    // this.option.visualMap.pieces[1].gt = Math.min(percent, this.slice - 1);
+    // this.highEnergyBar.setOption(this.option);
+    // this.resize();
+  }
   reload() {
     this.Ydata = utils.createArray(this.slice).map(() => {
       return 0;
     });
-    this.getData();
-    this.option.series[0].data = this.Ydata;
-    console.log(this.option);
-    this.highEnergyBar.setOption(this.option);
+    this.init();
     this.resize();
   }
+
   resize() {
     this.highEnergyBar.resize();
   }

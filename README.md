@@ -48,8 +48,10 @@ function pause(time) {
 //初始化播放器
 new mfunsPlayer({
   container, //容器dom
+  uid:2333,//用户id
   theme: "#666", //主题
-  autoplay: false, //自动播放
+  autoPlay: false, //自动播放
+  autoSkip:true,//自动跳转
   autoSwitch: true,//自动切集
   blackBorder: false, // 播放器黑边
   draggable: false, //进度条是否可拖拽
@@ -66,6 +68,7 @@ new mfunsPlayer({
       title: "", //视频标题（必传）
       danId: 100, //弹幕id(选传)
       danLink: "", //外部弹幕文件链接(选传)
+      lastPosition:56, //上次播放位置
     },
   ],
   //以下为选传配置
@@ -80,14 +83,26 @@ new mfunsPlayer({
     sensitivity:3.5, //弹幕tip灵敏度(建议 1~10之间 数值越大越灵敏)
     editor: 0, //弹幕样式面板类型，0为普通面板，1为全功能面板(不传默认为普通面板)
     danmakuCatch: false, //开启弹幕捕获模式，鼠标移至弹幕上可暂停该条弹幕移动并显示操作tip
+    showHighEnergy: true,//是否显示高能进度条
   },
+  //高级弹幕
   advanceDanmaku: {
     api: "", //高级弹幕接口地址
     editor: true, //是否启用编辑器
   },
-  asyncCallback: {
-    checkLogin: checkLogin, //检查用户登录状态回调函数
-    emitDanmaku: emitDanmaku, //发送弹幕回调函数（函数默认接收2个参数：弹幕对象，弹幕类型）如： (danmaku,type)=>{}
+  //活动&广告
+  activity:[
+    {
+    pic:"",//预览图
+    link:""//链接
+  },
+  ]
+  callback: {
+    toLogin:()=>{},
+    sendDanmaku:(danamku)=>{},
+    danmakuReport:(danmaku,reasonId)=>{},
+    userSet:()=>{},
+    updateVideoPosition:(video)=>{}
   },
   playCallback: play, //播放器播放回调函数（函数默认接收1个参数：播放器当前播放时间）如： (currentTime)=>{}
   pauseCallback: pause, // //播放器播放回调函数（函数默认接收1个参数：播放器当前播放时间）如： (currentTime)=>{}

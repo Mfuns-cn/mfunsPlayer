@@ -4,6 +4,7 @@ class InfoPanel {
     this.template = player.template;
     this.video = player.video;
     this.player = player;
+    this.template.playerLoad.innerHTML = "播放器初始化... [完成]";
     this.template.infoPanel.addEventListener("click", (e) => {
       e.stopPropagation();
     });

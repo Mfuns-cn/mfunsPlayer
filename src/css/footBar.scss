@@ -10,10 +10,16 @@
     border: 1px solid #e6e6e6;
     border-top: none;
     box-sizing: border-box;
+    z-index: 200;
     .input_box {
         padding-right: 15px;
     }
-
+    &.loading {
+        .mfunsPlayer-controller-danmaku-trigger,
+        .mfunsPlayer-controller-danmaku-settings {
+            pointer-events: none;
+        }
+    }
     /**
     .mfunsPlayer-video-danmaku-details-skeleton{
         background-image: linear-gradient(90deg, #e6e6e6 20%, #f0f0f0 47%, #f6f6f6 63%);

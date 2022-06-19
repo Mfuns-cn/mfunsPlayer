@@ -6,7 +6,6 @@
     playsinline
     {{ if pic }}poster="{{ pic }}"{{ /if }}
     {{ if screenshot || enableSubtitle }}crossorigin="anonymous"{{ /if }}
-    preload
     {{ if url }}src="{{ url }}"{{ /if }}
     >
 </video>

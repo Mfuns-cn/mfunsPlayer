@@ -276,7 +276,7 @@ export class Picker {
       this.callbacks.created(this);
     }
     setTimeout(() => {
-      this.pick(this.value);
+      this.pick(this.value, "nonotice");
     }, 0);
   }
   change(value, ...args) {
@@ -320,7 +320,7 @@ export class MultiPicker {
       this.valueList.push(item.getAttribute("data-value"));
       this.domMap.set(item.getAttribute("data-value"), item);
       if (value.includes(item.getAttribute("data-value"))) {
-        this.pick(item.getAttribute("data-value"));
+        this.pick(item.getAttribute("data-value"), "nonotice");
       }
       item.addEventListener("click", function () {
         let val = this.getAttribute("data-value");
@@ -336,7 +336,7 @@ export class MultiPicker {
       this.callbacks.created(this);
     }
     setTimeout(() => {
-      this.pick(this.value);
+      this.pick(this.value, "nonotice");
     }, 0);
   }
   pick(val, ...args) {
@@ -402,7 +402,7 @@ export class Switch {
       this.callbacks.created(this);
     }
     setTimeout(() => {
-      this.update(this.value);
+      this.update(this.value, "nonotice");
     }, 0);
   }
   on(...args) {

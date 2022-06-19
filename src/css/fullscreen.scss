@@ -15,11 +15,14 @@
         .mfunsPlayer-bezel {
             bottom: 70px !important;
         }
-        .mfunsPlayer-notice {
-            bottom: 80px;
+        .mfunsPlayer-tip-container {
+            bottom: 90px;
         }
         .mfunsPlayer-video-mask {
             height: 100%;
+        }
+        .mfunsPlayer-activity {
+            transform: scale(1.2);
         }
         .mfunsPlayer-controller-mask {
             .mfunsPlayer-bezel {
