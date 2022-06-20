@@ -1,3 +1,4 @@
+import {MFADE} from "mf-ade"
 import utils from "./utils";
 
 class Danmaku {
@@ -20,6 +21,13 @@ class Danmaku {
       top: [],
       bottom: [],
     };
+    this.jsonDanmaku = [];      // json弹幕列表
+    this.advancedDanmakuEngine = new MFADE({
+      containers: this.player.template.advancedDanmaku,
+      codeDanmaku: (send) => {
+        send(this.jsonDanmaku);
+      },
+    });
     this.showing = this.options.isShow;
     this._opacity = this.options.opacity;
     this._fontScale = this.options.fontScale;
@@ -154,38 +162,44 @@ class Danmaku {
     });
   }
   load() {
-    let apiurl;
-    if (this.options.api.link) {
-      apiurl = `${this.options.api.link}`;
-    } else {
+    let apiurl = "";
+    if (this.options.api.id) {
       apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
     }
     const endpoints = (this.options.api.addition || []).slice(0);
-    endpoints.push(apiurl);
+    apiurl && endpoints.push({url: apiurl, type: "dplayerDanmaku"});
+
     this.events && this.events.trigger("danmaku_load_start", endpoints);
     this.loaded = false;
 
     this._readAllEndpoints(endpoints, (results, loadStatus) => {
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
-      this.dan.forEach((el, index) => {
-        el.id = this.createHash(8);
+      this.dan.forEach((d, index) => {
+        d.id = this.createHash(8);
+        if (d.type == 8) {
+          this.jsonDanmaku.push(d.text)
+        }
       });
       window.requestAnimationFrame(() => {
         this.frame();
+        this.advancedDanmakuEngine.reset();
+        this.advancedDanmakuEngine.resize();
       });
 
       loadStatus && this.options.callback(this.dan.length);
+
 
       this.events && this.events.trigger("danmaku_load_end", this.dan);
       this.loaded = true;
     });
   }
 
-  reload(newId, newLink = "") {
+  reload(newId, newAddition = []) {
     this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     this.options.api.id = newId;
-    this.options.api.link = newLink;
+    this.options.api.addition = newAddition;
     this.dan = [];
+    this.jsonDanmaku = [];
     this.clear();
     this.load();
   }
@@ -196,17 +210,22 @@ class Danmaku {
   _readAllEndpoints(endpoints, callback) {
     const results = [];
     let readCount = 0;
-
+    if (readCount === endpoints.length) {
+      callback(results, 1);
+      console.log("lolololol")
+    }
     for (let i = 0; i < endpoints.length; ++i) {
+      console.log(endpoints[i])
       this.options.apiBackend.read({
-        url: endpoints[i],
-        type: "danmaku",
+        url: typeof(endpoints[i]) == "string" ? endpoints[i] : endpoints[i].url,
+        type: typeof(endpoints[i]) == "string" ? "dplayerDanmaku" : (endpoints[i].type || "dplayerDanmaku"),  // api处理类型
         success: (data) => {
           results[i] = data;
 
           ++readCount;
           if (readCount === endpoints.length) {
             callback(results, 1);
+            console.log(results)
           }
         },
         error: (msg) => {
@@ -661,6 +680,7 @@ class Danmaku {
       }
       this.danIndex = this.dan.length;
     }
+    this.advancedDanmakuEngine.skip(this.options.time() * 1000)
   }
 
   clear(type) {

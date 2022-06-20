@@ -65,10 +65,10 @@ export default class mfunsPlayer {
         danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
         unlimited: false,
         api: {
-          link: this.options.video[this.options.currentVideo].danLink,
           id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
           token: this.options.danmaku.token,
+          addition: this.options.video[this.options.currentVideo].danmakuAddition || [],  // 附加弹幕文件
         },
         events: this.events,
       };
@@ -438,7 +438,8 @@ export default class mfunsPlayer {
     this.on("play", () => {
       clearTimeout(this.playTimer);
       this.playEnd && this.danmaku.seek();
-      this.danmaku.play();
+      this.danmaku && this.danmaku.play();
+      this.danmaku && this.danmaku.advancedDanmakuEngine.start && this.danmaku.advancedDanmakuEngine.start();
       if (this.videoLoaded) this.timer.enableloadingChecker = true;
       this.playEnd = false;
       this.controller.setAutoHide();
@@ -457,6 +458,7 @@ export default class mfunsPlayer {
     this.on("pause", () => {
       clearTimeout(this.playTimer);
       clearTimeout(this.timeUpdateTimer);
+      this.danmaku && this.danmaku.advancedDanmakuEngine.pause && this.danmaku.advancedDanmakuEngine.pause();
       this.controller.setAutoHide();
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
@@ -510,7 +512,7 @@ export default class mfunsPlayer {
     this.template.footBar.classList.add("loading");
     this.template.danmakuCount.innerHTML = "弹幕装填中...";
     const currentVideo = this.options.video[index];
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danmakuAddition);
     this.video.poster = currentVideo.pic ?? "";
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
@@ -585,10 +587,11 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     const currentVideo = this.options.video[this.currentVideo];
     this.video.src = currentVideo.url;
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danmakuAddition);
   }
   resize() {
     this.danmaku && this.danmaku.resize();
+    this.danmaku && this.danmaku.advancedDanmakuEngine.resize && this.danmaku.advancedDanmakuEngine.resize();
     if (this.controller.thumbnails) {
       this.controller.thumbnails.resize(
         160,
