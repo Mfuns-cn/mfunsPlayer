@@ -14,7 +14,7 @@ module.exports = {
   devtool: "source-map",
   resolve: {
     modules: ["node_modules"],
-    extensions: [".js", ".scss"],
+    extensions: [".js", ".scss", ".ts"],
   },
   module: {
     rules: [
@@ -36,7 +36,14 @@ module.exports = {
           },
         ],
       },
-
+      {
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: "ts-loader"
+          }
+        ],
+      },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         use: [

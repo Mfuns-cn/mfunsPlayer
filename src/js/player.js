@@ -65,7 +65,8 @@ export default class mfunsPlayer {
         danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
         unlimited: false,
         api: {
-          link: this.options.video[this.options.currentVideo].danLink,
+          url: this.options.video[this.options.currentVideo].danUrl,
+          advDanUrl: this.options.video[this.options.currentVideo].advancedDanmakuUrl,
           id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
           token: this.options.danmaku.token,
@@ -510,7 +511,7 @@ export default class mfunsPlayer {
     this.template.footBar.classList.add("loading");
     this.template.danmakuCount.innerHTML = "弹幕装填中...";
     const currentVideo = this.options.video[index];
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danUrl);
     this.video.poster = currentVideo.pic ?? "";
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
@@ -585,7 +586,7 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     const currentVideo = this.options.video[this.currentVideo];
     this.video.src = currentVideo.url;
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(currentVideo.danId, currentVideo.danUrl);
   }
   resize() {
     this.danmaku && this.danmaku.resize();

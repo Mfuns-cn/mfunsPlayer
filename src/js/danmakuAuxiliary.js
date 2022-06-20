@@ -48,13 +48,20 @@ class DanmakuAuxiliary {
       this.danmakuListStatus("empty");
     } else {
       dan.forEach((danmaku) => {
+        let tipText = danmaku.text
+        if (danmaku.type == 8) {
+          tipText = tipText.replaceAll('\r', '')
+          tipText = danmaku.text.length < 400 ? tipText : tipText.slice(0, 400) + "..."
+        } else {
+          tipText = tipText.replaceAll('\\', '\\\\')
+        }
         let row = `
-        <div class="list-row" title="${danmaku.text}\n1970-01-01 00:00 @ ${utils.secondToTime(danmaku.time, false)}">
+        <div class="list-row" title='${tipText}\n1970-01-01 00:00 @ ${utils.secondToTime(danmaku.time, false)}'>
           <span class="list-cell col-time">${utils.secondToTime(
             danmaku.time,
             false
-          )}</span><span class="list-cell col-text">${
-          danmaku.text
+          )}</span><span class="list-cell col-text" ${danmaku.type > 6?'style="font-weight:600"':''}>${
+            tipText
         }</span><span class="list-cell col-date">${"1970-01-01 00:00"}</span>
         </div>
         `;

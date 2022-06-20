@@ -35,9 +35,25 @@ export default {
                 type: item[1],
                 color: item[2],
                 author: item[3],
-                text: item[4] + "喵~",
+                text: item[4],
                 // size: utils.randomFontsize(100),
+                // date: 0
               }))
+            );
+        } else if (options.type === "oldAPI_advancedDanmaku") {
+          // 此处为高级弹幕包裹信息
+          options.success &&
+            options.success(
+              data.data.map((item) => {
+                let a = JSON.parse(item)
+                return {
+                  time: a[0].start / 1000 || 0,
+                  type: 8,
+                  author: "0",
+                  text: item,
+                  date: 0
+                }
+              })
             );
         } else {
           options.success && options.success(data);
