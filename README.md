@@ -67,7 +67,12 @@ new mfunsPlayer({
       type: "mp4", //视频类型
       title: "", //视频标题（必传）
       danId: 100, //弹幕id(选传)
-      danUrl: "", //外部弹幕文件链接(选传)
+      danmakuAddition: [  // 附加弹幕文件
+        {
+          url:"",
+          type:""   // 弹幕数据的api处理类型 (不传默认为dplayerDanmaku)
+        }
+      ],
       lastPosition:56, //上次播放位置
     },
   ],

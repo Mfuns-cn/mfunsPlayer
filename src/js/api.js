@@ -27,7 +27,7 @@ export default {
           options.error && options.error(data && data.msg);
           return;
         }
-        if (options.type === "danmaku") {
+        if (options.type === "dplayerDanmaku") {
           options.success &&
             options.success(
               data.data.map((item) => ({
@@ -36,8 +36,8 @@ export default {
                 color: item[2],
                 author: item[3],
                 text: item[4],
-                // size: utils.randomFontsize(100),
-                // date: 0
+                size: utils.randomFontsize(100),  // 25
+                date: 0
               }))
             );
         } else if (options.type === "oldAPI_advancedDanmaku") {
