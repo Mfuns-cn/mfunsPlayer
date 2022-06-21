@@ -32,7 +32,7 @@ export default {
             options.success(
               data.data.map((item) => ({
                 time: item[0],
-                type: item[1],
+                mode: [1, 5, 4, 6][item[1]],
                 color: item[2],
                 author: item[3],
                 text: item[4],
@@ -48,7 +48,7 @@ export default {
                 let a = JSON.parse(item)
                 return {
                   time: a[0].start / 1000 || 0,
-                  type: 8,
+                  mode: 8,
                   author: "0",
                   text: item,
                   date: 0

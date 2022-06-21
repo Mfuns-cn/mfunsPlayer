@@ -237,40 +237,40 @@ const utils = {
         return "适中";
     }
   },
-  number2Type: (number) => {
+  number2Mode: (number) => {
     switch (number) {
-      case 0:
-        return "right";
       case 1:
-        return "top";
-      case 2:
+        return "right";
+      case 4:
         return "bottom";
-      case 3:
+      case 5:
+        return "top";
+      case 6:
         return "left";
-      case 7: 
+      case 7:
         return "mode7";
-      case 8: 
+      case 8:
         return "json";
       default:
         return "right";
     }
   },
-  type2Number: (type) => {
-    switch (type) {
+  mode2Number: (mode) => {
+    switch (mode) {
       case "right":
-        return 0;
-      case "top":
         return 1;
       case "bottom":
-        return 2;
+        return 4;
+      case "top":
+        return 5;
       case "left":
-        return 3;
+        return 6;
       case "mode7":
         return 7;
       case "json":
         return 8;
       default:
-        return 0;
+        return 1;
     }
   },
   initHash() {
@@ -333,42 +333,7 @@ const utils = {
     const random = Math.floor(Math.random() * range);
     return allSize[random];
   },
-  // number2Type: (number) => {
-  //   switch (number) {
-  //     case 1:
-  //       return "right";
-  //     case 4:
-  //       return "bottom";
-  //     case 5:
-  //       return "top";
-  //     case 6:
-  //       return "left";
-  //     case "mode7":
-  //       return 7;
-  //     case "json":
-  //       return 8;
-  //     default:
-  //       return "right";
-  //   }
-  // },
-  // type2number: (type) => {
-  //   switch (type) {
-  //     case "right":
-  //       return 1;
-  //     case "bottom":
-  //       return 4;
-  //     case "top":
-  //       return 5;
-  //     case "left":
-  //       return 6;
-  //     case "mode7":
-  //       return 7;
-  //     case "json":
-  //       return 8;
-  //     default:
-  //       return 1;
-  //   }
-  // },
+
 };
 
 export default utils;

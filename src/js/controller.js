@@ -637,8 +637,8 @@ class Controller {
     this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuMode, {
       pick(value) {
         // 有关弹幕模式值的更改请写在此处
-        THIS.danmakuType = value;
-        // console.log(`已选择弹幕模式：${THIS.danmakuType}`);
+        THIS.danmakuMode = value;
+        // console.log(`已选择弹幕模式：${THIS.danmakuMode}`);
       },
     });
     this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {

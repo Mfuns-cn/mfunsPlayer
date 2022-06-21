@@ -49,7 +49,7 @@ class DanmakuAuxiliary {
     } else {
       dan.forEach((danmaku) => {
         let tipText = danmaku.text
-        if (danmaku.type == 8) {
+        if (danmaku.mode == 8) {
           tipText = tipText.replaceAll('\r', '')
           tipText = danmaku.text.length < 400 ? tipText : tipText.slice(0, 400) + "..."
         } else {
@@ -60,7 +60,7 @@ class DanmakuAuxiliary {
           <span class="list-cell col-time">${utils.secondToTime(
             danmaku.time,
             false
-          )}</span><span class="list-cell col-text" ${danmaku.type > 6?'style="font-weight:600"':''}>${
+          )}</span><span class="list-cell col-text" ${danmaku.mode > 6?'style="font-weight:600"':''}>${
             tipText
         }</span><span class="list-cell col-date">${"1970-01-01 00:00"}</span>
         </div>
