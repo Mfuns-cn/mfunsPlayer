@@ -178,10 +178,12 @@
                                         <div class="mfunsPlayer-switch-checkbox"></div>
                                         <div class="mfunsPlayer-switch-label">镜像画面</div>
                                     </div>
+                                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-highEnergy-switch" >
+                                        <div class="mfunsPlayer-switch-checkbox"></div>
+                                        <div class="mfunsPlayer-switch-label">高能进度条</div>
                                     </div>
-                                    
+                                    </div>
                                 </div>
-                               
                             </div>
                         </div>
                     </div>
@@ -444,14 +446,15 @@
                 </div>
                 <div class="mfunsPlayer-panel-row">
                     <div class="row-title">高级设置</div>
+                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-keep-out-subtitle">
+                        <div class="mfunsPlayer-switch-checkbox"></div>
+                        <div class="mfunsPlayer-switch-label">防挡字幕</div>
+                    </div>
                     <div class="mfunsPlayer-switch mfunsPlayer-danmaku-catch-switch">
                         <div class="mfunsPlayer-switch-checkbox"></div>
                         <div class="mfunsPlayer-switch-label">弹幕捕获模式</div>
                     </div>
-                    <div class="mfunsPlayer-switch mfunsPlayer-danmaku-highEnergy-switch" >
-                        <div class="mfunsPlayer-switch-checkbox"></div>
-                        <div class="mfunsPlayer-switch-label">高能进度条</div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

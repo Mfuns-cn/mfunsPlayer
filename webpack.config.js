@@ -54,6 +54,10 @@ module.exports = {
         loader: "babel-loader",
       },
       {
+        test: /\.ts$/,
+        loader: "ts-loader",
+      },
+      {
         test: /\.art$/,
         loader: "art-template-loader",
       },

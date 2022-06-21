@@ -5,6 +5,7 @@ class Danmaku {
     this.options = options;
     this.player = player;
     this.createHash = utils.initHash();
+    this.tunnelPadding = 6;
     this.container = this.options.container;
     this.danTunnel = {
       right: {},
@@ -154,37 +155,39 @@ class Danmaku {
     });
   }
   load() {
-    let apiurl;
-    if (this.options.api.link) {
-      apiurl = `${this.options.api.link}`;
-    } else {
-      apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
-    }
-    const endpoints = (this.options.api.addition || []).slice(0);
+    const { address, addition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
+    const apiurl = `${address}/v1/danmaku?id=${id}`;
+    const endpoints = addition || [];
     endpoints.push(apiurl);
+    advDanApi && endpoints.push(`${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`);
     this.events && this.events.trigger("danmaku_load_start", endpoints);
     this.loaded = false;
-
     this._readAllEndpoints(endpoints, (results, loadStatus) => {
+      let advDanData;
+      if (advDanApi) {
+        advDanData = results.pop();
+      }
       this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
-      this.dan.forEach((el, index) => {
+      this.dan.forEach((el) => {
         el.id = this.createHash(8);
       });
-      window.requestAnimationFrame(() => {
-        this.frame();
-      });
 
-      loadStatus && this.options.callback(this.dan.length);
+      if (loadStatus) this.options.callback(this.dan.length, advDanData ? [...advDanData] : null);
+      else this.options.error(results);
 
       this.events && this.events.trigger("danmaku_load_end", this.dan);
       this.loaded = true;
+      window.requestAnimationFrame(() => {
+        this.frame();
+      });
     });
   }
 
-  reload(newId, newLink = "") {
+  reload(newId, newAdvDanApi, newAddition) {
     this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     this.options.api.id = newId;
-    this.options.api.link = newLink;
+    this.options.api.addition = newAddition;
+    this.options.api.advDanApi = newAdvDanApi;
     this.dan = [];
     this.clear();
     this.load();
@@ -194,40 +197,60 @@ class Danmaku {
    * Asynchronously read danmaku from all API endpoints
    */
   _readAllEndpoints(endpoints, callback) {
-    const results = [];
-    let readCount = 0;
-
-    for (let i = 0; i < endpoints.length; ++i) {
-      this.options.apiBackend.read({
-        url: endpoints[i],
-        type: "danmaku",
-        success: (data) => {
-          results[i] = data;
-
-          ++readCount;
-          if (readCount === endpoints.length) {
-            callback(results, 1);
-          }
-        },
-        error: (msg) => {
-          this.events && this.events.trigger("danmaku_load_failed");
-          this.options.error(msg || "弹幕加载失败");
-          results[i] = [];
-          console.log(msg);
-          ++readCount;
-          if (readCount === endpoints.length) {
-            callback(results, 0);
-          }
-        },
+    const allRequests = endpoints.map((link) => {
+      return new Promise((resolve, reject) => {
+        this.options.apiBackend.read({
+          url: link,
+          type: link.indexOf("advdanmaku") === -1 ? "danmaku" : "advDanmaku",
+          success: (data) => {
+            resolve(data);
+          },
+          error: (error) => {
+            reject(error);
+          },
+        });
       });
-    }
+    });
+    Promise.all([...allRequests])
+      .then((res) => {
+        console.log(res);
+        callback(res, 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        callback(err, 0);
+      });
+    // for (let i = 0; i < endpoints.length; ++i) {
+    //   this.options.apiBackend.read({
+    //     url: endpoints[i],
+    //     type: "danmaku",
+    //     success: (data) => {
+    //       results[i] = data;
+
+    //       ++readCount;
+    //       if (readCount === endpoints.length) {
+    //         callback(results, 1);
+    //       }
+    //     },
+    //     error: (msg) => {
+    //       this.events && this.events.trigger("danmaku_load_failed");
+    //       this.options.error(msg || "弹幕加载失败");
+    //       results[i] = [];
+    //       console.log(msg);
+    //       ++readCount;
+    //       if (readCount === endpoints.length) {
+    //         callback(results, 0);
+    //       }
+    //     },
+    //   });
+    // }
   }
 
   send(dan) {
     const newDanmakuId = this.createHash(8);
     const danmakuData = {
       time: this.options.time() + 0.52,
-      size: dan.size || 25,
+      size: dan.size || 18,
       author: this.player.options.uid,
       id: newDanmakuId,
       text: dan.text,
@@ -255,7 +278,7 @@ class Danmaku {
           utils.type2Number(dan.type ?? "right"),
           utils.color2Number(dan.color ?? "#FFFFFF"),
           dan.text,
-          +dan.size ?? 25,
+          +dan.size ?? 18,
         ],
         this.options.videoIndex()
       );
@@ -304,10 +327,17 @@ class Danmaku {
     });
   }
   limitArea(areaType) {
+    if (areaType === "keepOutSubtitle") {
+      this.shield("bottom", true);
+      if (this._limitArea === 1) {
+        this._limitArea === 0.8;
+      }
+      return;
+    } else {
+    }
     //"1/4", "半屏", "3/4", "不重叠", "不限"
     this._limitArea = Math.min(areaType / 4, 1);
     this.unlimited = areaType > 4;
-    if (areaType < 4) this.shield("bottom", true);
   }
   shield(type, flag = false) {
     this[`${type}Limit`] = flag;
@@ -406,7 +436,7 @@ class Danmaku {
         const eleLeft = ele.getBoundingClientRect().left || this.container.getBoundingClientRect().left + eleWidth;
         return this.container.getBoundingClientRect().left - eleLeft;
       };
-      const danSpeed = (width) => (danWidth + width) / 5; //弹幕速度
+      const danSpeed = (width) => ((danWidth + width) / this.player.fullScreen.isFullScreen() ? 8 : 5) * this._speed; //弹幕速度
 
       //获取弹幕可进入的轨道
       const getTunnel = (ele, type, width) => {
@@ -415,10 +445,10 @@ class Danmaku {
           const item = this.danTunnel[type][i + ""]; //轨道弹幕组(单轨道内的所有弹幕)
           if (item && item.length) {
             //当前轨道高度
-            // this.tunnelHeights[type][i] = Math.max(...item.map((el) => parseInt(el.style.fontSize))) + 7;
+            // this.tunnelHeights[type][i] = Math.max(...item.map((el) => parseInt(el.style.fontSize))) + this.tunnelPadding;
 
             if (type !== "right" && type !== "left") {
-              // this.tunnelHeights[type][i] = parseInt(ele.style.fontSize) + 7;
+              // this.tunnelHeights[type][i] = parseInt(ele.style.fontSize) + this.tunnelPadding;
               continue;
             }
 
@@ -427,7 +457,7 @@ class Danmaku {
               if (type === "right") {
                 const danRight = danItemRight(item[j]) - 10;
                 if (danRight <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danRight <= 0) {
-                  this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
+                  this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + this.tunnelPadding;
 
                   //该情况表示当前轨道有滚动弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
                   break;
@@ -435,7 +465,7 @@ class Danmaku {
               }
               if (type === "left") {
                 const danLeft = danItemLeft(item[j]) - 10;
-                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
+                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + this.tunnelPadding;
                 if (danLeft <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danLeft <= 0) {
                   //该情况表示当前轨道有逆向弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
                   break;
@@ -443,7 +473,7 @@ class Danmaku {
               }
               if (j === item.length - 1) {
                 //轨道弹幕组遍历完毕，组内所有弹幕均完全进入容器，可以向该轨道装填弹幕
-                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + 7;
+                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + this.tunnelPadding;
                 this.danTunnel[type][i + ""].push(ele);
                 ele.addEventListener("animationend", () => {
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(0, 1);
@@ -477,7 +507,7 @@ class Danmaku {
           dan[i].color = 16777215;
         }
         if (!dan[i].size) {
-          dan[i].size = 25;
+          dan[i].size = 18;
         }
         const item = document.createElement("div");
         if (!this.paused) {
@@ -500,7 +530,7 @@ class Danmaku {
           item.style.color = utils.number2Color(dan[i].color);
         }
         item.children[0].style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
-        item.style.fontSize = (+dan[i].size) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
+        item.style.fontSize = (+dan[i].size + 4) * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
         item.style.zIndex = dan[i].isSubtitle ? 100 : "auto";
         item.addEventListener("animationend", () => {
           this.container.removeChild(item);
@@ -517,7 +547,7 @@ class Danmaku {
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
-              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
@@ -532,7 +562,7 @@ class Danmaku {
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
-              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
@@ -544,8 +574,6 @@ class Danmaku {
           case "top":
             tunnel = getTunnel(item, dan[i].type);
             if (tunnel >= 0 || dan[i].isSubtitle) {
-              // const maxTop = this.tunnelHeights.top.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-              // const top = this.tunnelHeights.top.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
               let topArr = [];
               const topDan = this.danTunnel.top;
               for (let key in topDan) {
@@ -553,12 +581,12 @@ class Danmaku {
               }
               const top = topArr
                 .map((el) => {
-                  return parseInt(el.style.fontSize) + 7;
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
                 })
                 .slice(0, tunnel)
                 .reduce((prev, cur) => prev + cur, 0);
 
-              if (top + parseInt(item.style.fontSize) + 7 > danHeight) {
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
@@ -570,9 +598,6 @@ class Danmaku {
           case "bottom":
             tunnel = getTunnel(item, dan[i].type);
             if (tunnel >= 0 || dan[i].isSubtitle) {
-              // const maxBottom = this.tunnelHeights.bottom.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-              // const bottom =
-              //   this.tunnelHeights.bottom.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxBottom;
               let bottomArr = [];
               const bottomDan = this.danTunnel.bottom;
               for (let key in bottomDan) {
@@ -580,12 +605,12 @@ class Danmaku {
               }
               const bottom = bottomArr
                 .map((el) => {
-                  return parseInt(el.style.fontSize) + 7;
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
                 })
                 .slice(0, tunnel)
                 .reduce((prev, cur) => prev + cur, 0);
 
-              if (bottom + parseInt(item.style.fontSize) + 7 > danHeight) {
+              if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
@@ -597,7 +622,6 @@ class Danmaku {
           default:
             console.error(`Can't handled danmaku type: ${dan[i].type}`);
         }
-        // console.log(tunnel);
         if (tunnel >= 0) {
           // move
           item.classList.add("mfunsPlayer-danmaku-move");
@@ -607,12 +631,12 @@ class Danmaku {
             item.classList.add(this._speed);
           }
           // insert
-          docFragment.appendChild(item);
-          // console.log(docFragment);
+          this.container.appendChild(item);
+          // docFragment.appendChild(item);
         }
       }
 
-      this.container.appendChild(docFragment);
+      // this.container.appendChild(docFragment);
 
       return docFragment;
     }
@@ -646,9 +670,6 @@ class Danmaku {
     const fontWeight = measureStyle.getPropertyValue("font-weight");
     const fontFamily = measureStyle.getPropertyValue("font-family");
     this.context.font = `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
-    // if (text == `喵御宅Mfuns,发射(。゜ω゜)ノ"!M站`) {
-    //   console.log(this.context.measureText(text).width, measureStyle);
-    // }
     return this.context.measureText(text).width;
   }
 

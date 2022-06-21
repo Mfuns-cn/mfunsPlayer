@@ -39,6 +39,8 @@ export default {
                 // size: utils.randomFontsize(100),
               }))
             );
+        } else if (options.type === "advDanmaku") {
+          options.success && options.success(data.data);
         } else {
           options.success && options.success(data);
         }

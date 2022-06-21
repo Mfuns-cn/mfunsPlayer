@@ -1,6 +1,7 @@
 import Bar from "./bar";
 import FullScreen from "./fullscreen";
 import Danmaku from "./danmaku";
+import AdvanceDanmaku from "./advanceDanmaku";
 import handleOption from "./options";
 import Timer from "./timer";
 import Controller from "./controller";
@@ -21,9 +22,11 @@ export default class mfunsPlayer {
     this.options = handleOption(options);
     this.template = new Template(this.options);
     this.events = new Events();
-    this.videoColor = new VideoColor(this);
     this.container = options.container;
     this.container.classList.add("mfunsPlayer");
+    this.autoSwitch = this.options.autoSwitch;
+    this.autoSkip = this.options.autoSkip;
+    this.autoPlay = this.options.autoPlay;
     this.unableTimeupdate = false;
     this.isPlayEnd = false;
     this.isSwitched = false;
@@ -34,9 +37,20 @@ export default class mfunsPlayer {
     this.loadTimer = null;
     this.video = this.template.video;
     this.currentVideo = this.options.currentVideo;
-    this.bar = new Bar(this.template);
     this.danmakuAuxiliary = null;
+    this.arrow = this.container.offsetWidth <= 500;
     this.widescreen = options.widescreen;
+
+    this.videoColor = new VideoColor(this);
+    this.bar = new Bar(this.template);
+    this.controller = new Controller(this);
+    this.timer = new Timer(this);
+    this.fullScreen = new FullScreen(this);
+    this.contextMenu = new ContextMenu(this);
+    this.hotkey = new HotKey(this);
+    this.infoPanel = new InfoPanel(this);
+    this.initVideo(this.video, this.options.video[this.currentVideo].type);
+    this.initPlayerTip();
     if (this.options.danmaku) {
       this.showDanmaku = options.danmaku.showDanmaku;
       this.danmakuOptions = {
@@ -45,10 +59,13 @@ export default class mfunsPlayer {
         fontScale: this.options.danmaku.fontScale ?? 1,
         speed: this.options.danmaku.speed ?? 1,
         limitArea: this.options.danmaku.limitArea ?? 4,
-        callback: (length) => {
+        callback: (length, advDanData) => {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
+          if (advDanData) {
+            this.advDanmaku = new AdvanceDanmaku(this, advDanData);
+          }
           length && this.loadHighEnergy();
           this.removeMask();
           this.videoLoaded && this.template.footBar.classList.remove("loading");
@@ -59,33 +76,28 @@ export default class mfunsPlayer {
         },
         apiBackend: this.options.apiBackend,
         borderColor: "#FFFFFF",
-        height: this.arrow ? 24 : 28,
+        height: 28,
         time: () => this.video.currentTime,
         isShow: this.showDanmaku,
         danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
         unlimited: false,
         api: {
-          link: this.options.video[this.options.currentVideo].danLink,
-          id: this.options.video[this.options.currentVideo].danId,
           address: this.options.danmaku.api,
+          id: this.options.video[this.options.currentVideo].danId,
+          addition: this.options.video[this.options.currentVideo].addition,
           token: this.options.danmaku.token,
         },
         events: this.events,
       };
+      if (this.options.video[this.options.currentVideo].advDanId) {
+        this.danmakuOptions.api.advDanApi = {
+          id: this.options.video[this.options.currentVideo].advDanId,
+          address: this.options.advanceDanmaku.api,
+          token: this.options.advanceDanmaku.token,
+        };
+      }
       this.danmaku = new Danmaku(this.danmakuOptions, this);
     }
-    this.autoSwitch = this.options.autoSwitch;
-    this.autoSkip = this.options.autoSkip;
-    this.autoPlay = this.options.autoPlay;
-    this.controller = new Controller(this);
-    this.timer = new Timer(this);
-    this.fullScreen = new FullScreen(this);
-    this.contextMenu = new ContextMenu(this);
-    this.hotkey = new HotKey(this);
-    this.infoPanel = new InfoPanel(this);
-    this.initVideo(this.video, this.options.video[this.currentVideo].type);
-    this.initPlayerTip();
-    this.arrow = this.container.offsetWidth <= 500;
 
     if (this.options.playCallback) this.playCallback = options.playCallback;
     if (this.options.pauseCallback) this.pauseCallback = options.pauseCallback;
@@ -510,7 +522,17 @@ export default class mfunsPlayer {
     this.template.footBar.classList.add("loading");
     this.template.danmakuCount.innerHTML = "弹幕装填中...";
     const currentVideo = this.options.video[index];
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(
+      currentVideo.danId,
+      currentVideo.advDanId
+        ? {
+            id: currentVideo.advDanId,
+            address: this.options.advanceDanmaku.api,
+            token: this.options.advanceDanmaku.token,
+          }
+        : null,
+      currentVideo.addition
+    );
     this.video.poster = currentVideo.pic ?? "";
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
@@ -585,7 +607,17 @@ export default class mfunsPlayer {
     this.bar.set("played", 0, "width");
     const currentVideo = this.options.video[this.currentVideo];
     this.video.src = currentVideo.url;
-    this.danmaku.reload(currentVideo.danId, currentVideo.danLink);
+    this.danmaku.reload(
+      currentVideo.danId,
+      currentVideo.advDanId
+        ? {
+            id: currentVideo.advDanId,
+            address: this.options.advanceDanmaku.api,
+            token: this.options.advanceDanmaku.token,
+          }
+        : null,
+      currentVideo.addition
+    );
   }
   resize() {
     this.danmaku && this.danmaku.resize();

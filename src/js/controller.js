@@ -624,6 +624,20 @@ class Controller {
         },
       }
     );
+    this.components.danmakuKeepOutSubtitleSwitch = new Switch(
+      this.template.danmaku_keep_out_subtitle_switch,
+      this.player.options.danmaku.keepOutSubtitle,
+      {
+        on(nonotice) {
+          THIS.player.danmaku.limitArea("keepOutSubtitle"); // 打开弹幕捕获模式，则取消tipMask的隐藏
+          !nonotice && THIS.player.notice("已开启防挡字幕");
+        },
+        off(nonotice) {
+          THIS.player.danmaku.limitArea(4);
+          !nonotice && THIS.player.notice("已关闭防挡字幕");
+        },
+      }
+    );
   }
   initDanmakuStyleButton() {
     const THIS = this;
