@@ -60,6 +60,7 @@ export default class mfunsPlayer {
         speed: this.options.danmaku.speed ?? 1,
         limitArea: this.options.danmaku.limitArea ?? 4,
         callback: (length, advDanData) => {
+          console.log(length);
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
@@ -72,7 +73,6 @@ export default class mfunsPlayer {
         },
         error: (msg) => {
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [失败]";
-          this.notice(msg);
         },
         apiBackend: this.options.apiBackend,
         borderColor: "#FFFFFF",
@@ -436,7 +436,7 @@ export default class mfunsPlayer {
       this.videoLoaded = true;
       this.removeMask();
       this.loadHighEnergy();
-      this.hideTip();
+      // this.hideTip();
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
       if (this.timeBeforeReload) {
@@ -450,7 +450,7 @@ export default class mfunsPlayer {
     this.on("play", () => {
       clearTimeout(this.playTimer);
       this.playEnd && this.danmaku.seek();
-      this.danmaku.play();
+      this.danmaku && this.danmaku.play();
       if (this.videoLoaded) this.timer.enableloadingChecker = true;
       this.playEnd = false;
       this.controller.setAutoHide();
@@ -687,6 +687,7 @@ export default class mfunsPlayer {
     }
   }
   notice(text, alive = false, todo) {
+    console.log(text);
     this.template.noticeText.innerHTML = text;
     this.noticeTime && clearTimeout(this.noticeTime);
     this.template.notice.classList.add("show");

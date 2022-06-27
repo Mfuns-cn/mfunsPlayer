@@ -3,4 +3,4 @@ node_modules/
 src/static/video
 src/static/danmaku
 src/index.html
-src/demo.html
+src/thumbnail.html

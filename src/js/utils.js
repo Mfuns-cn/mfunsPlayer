@@ -265,6 +265,7 @@ const utils = {
         return 0;
     }
   },
+
   initHash() {
     let count = 100;
 

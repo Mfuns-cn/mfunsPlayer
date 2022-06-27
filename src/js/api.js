@@ -27,22 +27,30 @@ export default {
           options.error && options.error(data && data.msg);
           return;
         }
-        if (options.type === "danmaku") {
-          options.success &&
-            options.success(
-              data.data.map((item) => ({
-                time: item[0],
-                type: item[1],
-                color: item[2],
-                author: item[3],
-                text: item[4] + "喵~",
-                // size: utils.randomFontsize(100),
-              }))
-            );
-        } else if (options.type === "advDanmaku") {
-          options.success && options.success(data.data);
-        } else {
-          options.success && options.success(data);
+        switch (options.type) {
+          case "mfuns-danmaku":
+            options.success &&
+              options.success(
+                data.data.map((item) => ({
+                  time: item[0],
+                  type: item[1],
+                  color: item[2],
+                  author: item[3],
+                  text: item[4],
+                  // size: utils.randomFontsize(100), // 25
+                  // date: 0,
+                }))
+              );
+            break;
+          case "mfuns-advDanmaku":
+            options.success && options.success(data.data);
+            break;
+          case "bili-danmaku":
+            break;
+          case "acfun-danmaku":
+            break;
+          default:
+            options.success && options.success(data);
         }
       })
       .catch((e) => {

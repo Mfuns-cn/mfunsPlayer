@@ -47,6 +47,7 @@ class Template {
     this.danmaku_size_value = $(".mfunsPlayer-danmaku-size-value"); // 弹幕大小显示
     this.danmaku_speed_slider = $(".mfunsPlayer-danmaku-speed-slider"); // 弹幕速度滑动条
     this.danmaku_speed_value = $(".mfunsPlayer-danmaku-speed-value"); // 弹幕速度显示
+    this.advancedDanmaku = $(".mfunsPlayer-advanced-danmaku");
 
     this.headBar = $(".mfunsPlayer-headBar");
     this.headTitle = $(".mfunsPlayer-headBar-title");

@@ -37,23 +37,20 @@ class Danmaku {
     this.loaded = false; // 弹幕是否加载完毕
     this.paused = true;
     this.danmakuCheck = false;
-    this._measure("");
     this.danmakuTip = this.player.template.danmakuTip;
     this.danmakuTipBox = this.player.template.danmakuTipBox;
     this.currentX = 0;
     this.currentY = 0;
     this.danmakuCatch = this.options.danmakuCatch; // 是否开启弹幕捕获
+    this._measure("");
     this.load();
     this.initDanmakuTips();
-
-    // if (!this.danmakuCatch) {
-    //   player.template.danmakuTipMask.style.display = "none"
-    // }
-
+  }
+  initDanmakuTips() {
     const danmakuTipMaskMove = (e) => {
       if (
         Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) >
-          player.options.danmaku.sensitivity ??
+          this.player.options.danmaku.sensitivity ??
         3.5
       ) {
         this.currentX = e.pageX;
@@ -75,12 +72,12 @@ class Danmaku {
         if (danLeft < e.pageX && e.pageX < danRight && danTop < e.pageY && e.pageY < danBottom) {
           this.currentLockDanmaku = item;
           this.lockDanmakuData = this.getDanmakuData(item.dataset.id);
-          if (player.options.uid === +this.lockDanmakuData.author) {
-            player.template.danmakuCancel.classList.add("show");
-            player.template.danmakuReport.classList.remove("show");
+          if (this.player.options.uid === +this.lockDanmakuData.author) {
+            this.player.template.danmakuCancel.classList.add("show");
+            this.player.template.danmakuReport.classList.remove("show");
           } else {
-            player.template.danmakuCancel.classList.remove("show");
-            player.template.danmakuReport.classList.add("show");
+            this.player.template.danmakuCancel.classList.remove("show");
+            this.player.template.danmakuReport.classList.add("show");
           }
           item.classList.add("lock");
           this.danmakuTip.classList.add("show");
@@ -104,18 +101,16 @@ class Danmaku {
     };
     // 进入tip，取消监听mask移动
     this.danmakuTip.addEventListener("mouseover", () => {
-      player.template.danmakuTipMask.removeEventListener("mousemove", danmakuTipMaskMove);
+      this.player.template.danmakuTipMask.removeEventListener("mousemove", danmakuTipMaskMove);
     });
     // 离开tip，恢复监听mask移动
     this.danmakuTip.addEventListener("mouseleave", () => {
       this.danmakuTip.classList.remove("show");
       this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
       // this.currentLockDanmaku = null;
-      player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
+      this.player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
     });
-    player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
-  }
-  initDanmakuTips() {
+    this.player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
     this.player.template.danmakuTipBox.addEventListener("click", (e) => {
       e.stopPropagation();
     });
@@ -158,28 +153,30 @@ class Danmaku {
     const { address, addition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
     const apiurl = `${address}/v1/danmaku?id=${id}`;
     const endpoints = addition || [];
-    endpoints.push(apiurl);
-    advDanApi && endpoints.push(`${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`);
+    endpoints.push({ url: apiurl, type: "mfuns-danmaku" });
+    advDanApi &&
+      endpoints.push({ url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`, type: "mfuns-advDanmaku" });
     this.events && this.events.trigger("danmaku_load_start", endpoints);
     this.loaded = false;
     this._readAllEndpoints(endpoints, (results, loadStatus) => {
-      let advDanData;
-      if (advDanApi) {
-        advDanData = results.pop();
+      if (!loadStatus) {
+        return this.options.error(results);
+      } else {
+        let advDanData;
+        if (advDanApi) {
+          advDanData = results.pop();
+        }
+        this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
+        this.dan.forEach((el) => {
+          el.id = this.createHash(8);
+        });
+        this.events && this.events.trigger("danmaku_load_end", this.dan);
+        this.loaded = true;
+        window.requestAnimationFrame(() => {
+          this.frame();
+        });
+        this.options.callback(this.dan.length, advDanData ? [...advDanData] : null);
       }
-      this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
-      this.dan.forEach((el) => {
-        el.id = this.createHash(8);
-      });
-
-      if (loadStatus) this.options.callback(this.dan.length, advDanData ? [...advDanData] : null);
-      else this.options.error(results);
-
-      this.events && this.events.trigger("danmaku_load_end", this.dan);
-      this.loaded = true;
-      window.requestAnimationFrame(() => {
-        this.frame();
-      });
     });
   }
 
@@ -200,50 +197,24 @@ class Danmaku {
     const allRequests = endpoints.map((link) => {
       return new Promise((resolve, reject) => {
         this.options.apiBackend.read({
-          url: link,
-          type: link.indexOf("advdanmaku") === -1 ? "danmaku" : "advDanmaku",
+          url: link.url,
+          type: link.type,
           success: (data) => {
             resolve(data);
           },
           error: (error) => {
-            reject(error);
+            resolve([]);
           },
         });
       });
     });
     Promise.all([...allRequests])
       .then((res) => {
-        console.log(res);
         callback(res, 1);
       })
       .catch((err) => {
-        console.log(err);
         callback(err, 0);
       });
-    // for (let i = 0; i < endpoints.length; ++i) {
-    //   this.options.apiBackend.read({
-    //     url: endpoints[i],
-    //     type: "danmaku",
-    //     success: (data) => {
-    //       results[i] = data;
-
-    //       ++readCount;
-    //       if (readCount === endpoints.length) {
-    //         callback(results, 1);
-    //       }
-    //     },
-    //     error: (msg) => {
-    //       this.events && this.events.trigger("danmaku_load_failed");
-    //       this.options.error(msg || "弹幕加载失败");
-    //       results[i] = [];
-    //       console.log(msg);
-    //       ++readCount;
-    //       if (readCount === endpoints.length) {
-    //         callback(results, 0);
-    //       }
-    //     },
-    //   });
-    // }
   }
 
   send(dan) {
@@ -620,7 +591,7 @@ class Danmaku {
             }
             break;
           default:
-            console.error(`Can't handled danmaku type: ${dan[i].type}`);
+            console.error(`无法处理的弹幕模式: ${dan[i].type}`);
         }
         if (tunnel >= 0) {
           // move
