@@ -242,7 +242,6 @@ export default class mfunsPlayer {
       this.isReloaded = false;
     }
     const lastPosition = this.options.video[this.currentVideo].lastPosition ?? 0;
-    console.log(this.currentVideo, this.options.video, "+--------");
     if (this.video.duration > 60 && lastPosition > 10 && this.video.duration - lastPosition > 10) {
       if (this.autoSkip) {
         this.skip("已为你自动跳转至", lastPosition, !!this.autoSkip);
@@ -544,7 +543,6 @@ export default class mfunsPlayer {
     this.template.headTitle.innerText = `${currentVideo.title}`;
   }
   updateVideoPosition(time) {
-    console.log(this.currentVideo, time);
     this.options.video[this.currentVideo].lastPosition = time;
     this.events && this.events.trigger("update_video_position");
   }
