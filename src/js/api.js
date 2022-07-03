@@ -28,7 +28,7 @@ export default {
           return;
         }
         switch (options.type) {
-          case "mfuns-danmaku":
+          case "dplayer-danmaku":
             options.success &&
               options.success(
                 data.data.map((item) => ({
@@ -37,13 +37,26 @@ export default {
                   color: item[2],
                   author: item[3],
                   text: item[4],
-                  // size: utils.randomFontsize(100), // 25
-                  // date: 0,
+                  size: 25,
                 }))
               );
             break;
-          case "mfuns-advDanmaku":
-            options.success && options.success(data.data);
+          case "mfuns-advDanmaku-oldApi":
+            // 此处为高级弹幕包裹信息
+            options.success &&
+              options.success(
+                data.data.map((item) => {
+                  let a = JSON.parse(item)
+                  return {
+                    time: a[0].start / 1000 || 0,
+                    type: 8,
+                    mode: 8,
+                    author: "0",
+                    text: item,
+                    date: 0
+                  }
+                })
+              );  
             break;
           case "bili-danmaku":
             break;

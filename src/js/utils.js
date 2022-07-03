@@ -247,6 +247,8 @@ const utils = {
         return "bottom";
       case 3:
         return "left";
+      case 8:
+        return "json";
       default:
         return "right";
     }
@@ -261,6 +263,8 @@ const utils = {
         return 2;
       case "left":
         return 3;
+      case "json":
+        return 8;
       default:
         return 0;
     }

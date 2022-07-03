@@ -1,7 +1,7 @@
 import Bar from "./bar";
 import FullScreen from "./fullscreen";
 import Danmaku from "./danmaku";
-import AdvanceDanmaku from "./advanceDanmaku";
+import AdvancedDanmaku from "./advancedDanmaku";
 import handleOption from "./options";
 import Timer from "./timer";
 import Controller from "./controller";
@@ -65,7 +65,7 @@ export default class mfunsPlayer {
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
           if (advDanData) {
-            this.advDanmaku = new AdvanceDanmaku(this, advDanData);
+            this.advDanmaku = new AdvancedDanmaku(this, advDanData);
           }
           length && this.loadHighEnergy();
           this.removeMask();
@@ -84,7 +84,7 @@ export default class mfunsPlayer {
         api: {
           address: this.options.danmaku.api,
           id: this.options.video[this.options.currentVideo].danId,
-          addition: this.options.video[this.options.currentVideo].addition,
+          addition: this.options.video[this.options.currentVideo].danmakuAddition,
           token: this.options.danmaku.token,
         },
         events: this.events,
@@ -92,8 +92,8 @@ export default class mfunsPlayer {
       if (this.options.video[this.options.currentVideo].advDanId) {
         this.danmakuOptions.api.advDanApi = {
           id: this.options.video[this.options.currentVideo].advDanId,
-          address: this.options.advanceDanmaku.api,
-          token: this.options.advanceDanmaku.token,
+          address: this.options.advancedDanmaku.api,
+          token: this.options.advancedDanmaku.token,
         };
       }
       this.danmaku = new Danmaku(this.danmakuOptions, this);
@@ -531,8 +531,8 @@ export default class mfunsPlayer {
       currentVideo.advDanId
         ? {
             id: currentVideo.advDanId,
-            address: this.options.advanceDanmaku.api,
-            token: this.options.advanceDanmaku.token,
+            address: this.options.advancedDanmaku.api,
+            token: this.options.advancedDanmaku.token,
           }
         : null,
       currentVideo.addition
@@ -613,8 +613,8 @@ export default class mfunsPlayer {
       currentVideo.advDanId
         ? {
             id: currentVideo.advDanId,
-            address: this.options.advanceDanmaku.api,
-            token: this.options.advanceDanmaku.token,
+            address: this.options.advancedDanmaku.api,
+            token: this.options.advancedDanmaku.token,
           }
         : null,
       currentVideo.addition
