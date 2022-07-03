@@ -50,7 +50,7 @@
 	}
 	.mfunsPlayer-video-mask {
 		width: 100%;
-		height: calc(100% - 100px);
+		height: calc(100% - 90px);
 		position: relative;
 		display: flex;
 		justify-content: center;
@@ -256,7 +256,7 @@
 		width: 65px;
 		height: 55px;
 		position: absolute;
-		bottom: 60px;
+		bottom: 70px;
 		right: 15px;
 		background: url(../icon/pause.png);
 		background-size: 100% 100%;

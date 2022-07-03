@@ -153,13 +153,14 @@ class Danmaku {
     const { address, addition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
     const apiurl = `${address}/v1/danmaku?id=${id}`;
     const endpoints = addition || [];
-    endpoints.push({ url: apiurl, type: "mfuns-danmaku" });
+    id && endpoints.push({ url: apiurl, type: "mfuns-danmaku" });
     advDanApi &&
       endpoints.push({ url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`, type: "mfuns-advDanmaku" });
     this.events && this.events.trigger("danmaku_load_start", endpoints);
     this.loaded = false;
     this._readAllEndpoints(endpoints, (results, loadStatus) => {
       if (!loadStatus) {
+        console.log(loadStatus, results);
         return this.options.error(results);
       } else {
         let advDanData;
@@ -300,17 +301,23 @@ class Danmaku {
   limitArea(areaType) {
     if (areaType === "keepOutSubtitle") {
       this.shield("bottom", true);
-      if (this._limitArea === 1) {
-        this._limitArea === 0.8;
-      }
+      this.keepOutSubtitle = true;
+      this.container.style.bottom = "20%";
       return;
-    } else {
+    } else if (areaType === "notKeepOutSubtitle") {
+      this.keepOutSubtitle = false;
+      this.shield("bottom", false);
+      this.container.style.bottom = "0";
+      return;
     }
     //"1/4", "半屏", "3/4", "不重叠", "不限"
     this._limitArea = Math.min(areaType / 4, 1);
     this.unlimited = areaType > 4;
   }
   shield(type, flag = false) {
+    if (type === "bottom" && this.keepOutSubtitle) {
+      return;
+    }
     this[`${type}Limit`] = flag;
     if (flag) {
       this.clear(type);
@@ -631,7 +638,7 @@ class Danmaku {
     if (!this.demoDanmaku) {
       this.demoDanmaku = this.container.getElementsByClassName("mfunsPlayer-danmaku-item")[0];
     }
-    this.demoDanmaku.style.fontSize = (size + 3) * this._fontScale + "px";
+    this.demoDanmaku.style.fontSize = (size + 4) * this._fontScale + "px";
 
     let measureStyle = getComputedStyle(this.demoDanmaku, false);
     if (!this.context) {
@@ -640,7 +647,8 @@ class Danmaku {
     const fontSize = measureStyle.getPropertyValue("font-size");
     const fontWeight = measureStyle.getPropertyValue("font-weight");
     const fontFamily = measureStyle.getPropertyValue("font-family");
-    this.context.font = `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
+    this.context.font =
+      measureStyle.getPropertyValue("font") ?? `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
     return this.context.measureText(text).width;
   }
 

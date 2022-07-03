@@ -3,6 +3,7 @@ export default class HotKey {
     this.template = player.template;
     this.container = player.template.hotkeyPanel;
     window.onresize = () => {
+      player.resize();
       player.highEnergy?.isShow && player.highEnergy.resize();
       if (!player.fullScreen.isFullScreen("browser") && !player.fullScreen.isFullScreen("web")) {
         player.fullScreen.cancel("browser");
@@ -82,9 +83,12 @@ export default class HotKey {
                 event.preventDefault();
                 const videoVolume = player.volume();
                 if (player.video.muted) {
+                  player.video.muted = false;
+                  player.notice("已取消静音");
                   player.volume(videoVolume);
                 } else {
                   player.video.muted = true;
+                  player.notice("已静音");
                   player.template.volumeIcon.classList.add("button-volume-off");
                   player.controller.components.volumeSlider.change(0);
                 }

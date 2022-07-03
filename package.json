@@ -2,14 +2,14 @@
   "name": "mfuns-player",
   "version": "2.1.0",
   "description": "基于H5的弹幕播放器",
-  "main": "src/ts/index.js",
+  "main": "src/js/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production && tsc",
     "watch": "webpack --watch --mode=development",
     "lint:fix": "tslint -c tslint.json 'src/**/*.ts' --fix"
   },
-  "author": "",
+  "author": "rudiusu",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.14.2",

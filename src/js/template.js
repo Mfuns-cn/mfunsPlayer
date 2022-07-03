@@ -10,7 +10,7 @@ class Template {
     }
 
     options.isFireFox = utils.isFirefox;
-
+    options.hasEcharts = !!window.echarts;
     this.init(options);
     this.initHitokoto(options);
   }
@@ -56,7 +56,9 @@ class Template {
     this.playedBar = $(".mfunsPlayer-playedBar");
     this.bufferedBar = $(".mfunsPlayer-bufferedBar");
     this.thumb = $(".mfunsPlayer-thumb");
+    this.barMark = $(".mfunsPlayer-bar-mark");
     this.barTime = $(".mfunsPlayer-barTime");
+    this.barPreview = $(".mfunsPlayer-bar-preview");
     this.bezel = $(".mfunsPlayer-bezel");
     this.tipItem = $all(".mfunsPlayer-controller-tip");
     this.speedInfo = $(".mfunsPlayer-speed-info");
@@ -189,8 +191,7 @@ class Template {
       this.videoMask.classList.remove("noborder");
       this.bezel.classList.remove("noborder");
     }
-    this.videoWrap.style.height =
-      ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 100 : 0)).toFixed(2) + "px";
+    this.videoWrap.style.height = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + "px";
   }
 }
 export default Template;

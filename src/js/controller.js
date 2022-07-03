@@ -1,8 +1,6 @@
 import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components";
 import utils from "./utils";
-// import Thumbnails from './thumbnails';
-// import Icons from './icons';
-
+import Thumbnails from "./thumbnails";
 class Controller {
   constructor(player) {
     const THIS = this;
@@ -30,8 +28,10 @@ class Controller {
       window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
     });
     this.isControllerfocus();
+
     this.initPlayButton();
     this.initActivity();
+    this.initThumbnails();
     if (player.options.draggable) {
       this.initPlayedBar();
       this.initTimeLabel();
@@ -97,7 +97,6 @@ class Controller {
     const { activity } = this.player.options;
     if (activity.length) {
       this.currentActivity = Math.round(Math.random() * (activity.length - 1));
-      console.log(this.currentActivity);
       this.template.activity.style.backgroundImage = `url(${activity[this.currentActivity].pic})`;
     }
   }
@@ -112,24 +111,62 @@ class Controller {
       this.player.isShowMenu = false;
     }
   }
+  initThumbnails() {
+    if (this.player.options.video[this.player.currentVideo].thumbnails) {
+      this.thumbnails = new Thumbnails({
+        container: this.player.template.barPreview,
+        barWidth: this.player.template.barWrap.offsetWidth,
+        url: this.player.options.video[this.player.currentVideo].thumbnails,
+        events: this.player.events,
+      });
+
+      this.player.on("loadedmetadata", () => {
+        this.thumbnails.resize(
+          160,
+          (this.player.video.videoHeight / this.player.video.videoWidth) * 160,
+          this.player.template.barWrap.offsetWidth
+        );
+      });
+    }
+  }
   initPlayedBar() {
     const allPanel = document.querySelectorAll(".mfunsPlayer-controller-panel-mask");
     const allTip = document.querySelectorAll(".mfunsPlayer-controller-tip");
     const showTip = (e) => {
       const px = this.player.template.barWrap.getBoundingClientRect().left;
       const tx = (e.clientX || e.changedTouches[0].clientX) - px;
+      const tw = this.player.template.barTime.offsetWidth;
+      // const pw = this.player.template.barWrap
+      const time = this.player.video.duration * (tx / this.player.template.barWrap.offsetWidth);
       if (tx < 0 || tx > this.player.template.barWrap.offsetWidth) {
         return;
       }
-      const time = this.player.video.duration * (tx / this.player.template.barWrap.offsetWidth);
-      this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
-      this.player.template.barTime.style.display = "block";
+      if (this.thumbnails) {
+        if (tx >= 80 && tx <= this.player.template.barWrap.offsetWidth - 80) {
+          this.player.template.barTime.classList.remove("thumbLimit");
+          this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
+        } else if (tx < 80) {
+          this.player.template.barTime.classList.add("thumbLimit");
+          this.player.template.barTime.style.left = `${80 - tw / 2}px`;
+        } else if (tx > this.player.template.barWrap.offsetWidth - 80) {
+          this.player.template.barTime.classList.add("thumbLimit");
+          this.player.template.barTime.style.left = `${this.player.template.barWrap.offsetWidth - 80 - tw / 2}px`;
+        }
+      } else {
+        this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
+      }
+      this.player.template.barMark.style.left = `${tx}px`;
       this.player.template.barTime.innerText = utils.secondToTime(time);
+      this.player.template.barMark.classList.remove("hidden");
       this.player.template.barTime.classList.remove("hidden");
       this.player.template.thumb.classList.remove("hidden");
+      this.thumbnails && this.thumbnails.show();
+      this.thumbnails && this.thumbnails.move(tx);
     };
     const hideTip = () => {
+      this.thumbnails && this.thumbnails.hide();
       this.player.template.barTime.classList.add("hidden");
+      this.player.template.barMark.classList.add("hidden");
       this.player.template.thumb.classList.add("hidden");
     };
     const thumbMove = (e) => {
@@ -145,7 +182,7 @@ class Controller {
       });
       this.barLeave && showTip(e);
       this.player.bar.set("played", percentage, "width");
-      this.player.highEnergy.update(percentage);
+      this.player?.highEnergy?.update(percentage);
       this.player.template.barTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
       this.player.template.currentTime.innerHTML = utils.secondToTime(percentage * this.player.video.duration);
     };
@@ -185,27 +222,27 @@ class Controller {
         window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
       }
     });
-    this.player.template.barWrap.addEventListener("mouseleave", (e) => {
-      this.barLeave = true;
-    });
-    this.player.template.barWrap.addEventListener("mouseenter", (e) => {
-      this.barLeave = false;
-    });
     this.player.template.barWrap.addEventListener(utils.nameMap.dragEnd, () => {
       this.player.unableTimeupdate = false;
+      this.thumbnails && this.thumbnails.hide();
     });
 
     this.player.template.barWrap.addEventListener("mouseenter", () => {
+      this.barLeave = false;
       if (this.player.video.duration) {
-        // this.thumbnails && this.thumbnails.show();
+        this.thumbnails && this.thumbnails.show();
         this.player.template.barTime.classList.remove("hidden");
+        this.player.template.barMark.classList.remove("hidden");
         this.player.template.thumb.classList.remove("hidden");
       }
     });
     this.player.template.barWrap.addEventListener("mouseleave", () => {
+      this.barLeave = true;
       if (this.player.video.duration) {
-        // this.thumbnails && this.thumbnails.hide();
+        this.thumbnails && this.thumbnails.hide();
+        this.thumbnails && this.player.template.barTime.classList.remove("thumbLimit");
         this.player.template.barTime.classList.add("hidden");
+        this.player.template.barMark.classList.add("hidden");
         this.player.template.thumb.classList.add("hidden");
       }
     });
@@ -241,6 +278,7 @@ class Controller {
       }
     });
   }
+
   initFullButton() {
     this.player.template.fullscreen_btn.addEventListener("click", () => {
       // window.removeEventListener("resize");
@@ -633,7 +671,7 @@ class Controller {
           !nonotice && THIS.player.notice("已开启防挡字幕");
         },
         off(nonotice) {
-          THIS.player.danmaku.limitArea(4);
+          THIS.player.danmaku.limitArea("notKeepOutSubtitle");
           !nonotice && THIS.player.notice("已关闭防挡字幕");
         },
       }

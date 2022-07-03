@@ -21,7 +21,7 @@
 		height: 30px;
 		position: absolute;
 		pointer-events: all;
-		bottom: 42px;
+		bottom: 45px;
 		left: 0;
 		right: 0;
 		padding: 0 15px;
@@ -31,7 +31,7 @@
 		}
 	}
 	.mfunsPlayer-controller {
-		height: 45px;
+		height: 50px;
 		position: absolute;
 		pointer-events: all;
 		bottom: 0;
@@ -53,10 +53,10 @@
 		}
 
 		.mfunsPlayer-controller-wrap {
-			height: calc(100% - 15px);
+			height: calc(100% - 20px);
 			//line-height: calc(100% - 15px);
 			position: relative;
-			margin: 10px 0 5px;
+			margin: 15px 0 5px;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;

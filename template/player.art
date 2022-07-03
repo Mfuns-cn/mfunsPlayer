@@ -47,7 +47,8 @@
             <div class="mfunsPlayer-bar-wrap" >
              <div class="mfunsPlayer-bar" >
                 <div class="mfunsPlayer-barTime hidden"></div>
-                <div class="mfunsPlayer-preview"></div>
+                <div class="mfunsPlayer-bar-mark hidden"></div>
+                <div class="mfunsPlayer-bar-preview"></div>
                 <div class="mfunsPlayer-bufferedBar" ></div>
                 <div class="mfunsPlayer-playedBar" >
                     <div class="mfunsPlayer-thumb hidden" ></div>
@@ -178,11 +179,14 @@
                                         <div class="mfunsPlayer-switch-checkbox"></div>
                                         <div class="mfunsPlayer-switch-label">镜像画面</div>
                                     </div>
+                                    {{if hasEcharts}}
                                     <div class="mfunsPlayer-switch mfunsPlayer-danmaku-highEnergy-switch" >
                                         <div class="mfunsPlayer-switch-checkbox"></div>
                                         <div class="mfunsPlayer-switch-label">高能进度条</div>
                                     </div>
+                                    {{ /if }}
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -375,7 +379,6 @@
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
         <div class="mfunsPlayer-video-danmaku-count">弹幕装填中...</div>
-        <!-- <div> <a href="">高级弹幕></a></div> -->
     </div>
     <!-- <div class="mfunsPlayer-video-danmaku-details-skeleton"></div> -->
     <div class="mfunsPlayer-video-danmaku-root">
