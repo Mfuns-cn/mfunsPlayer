@@ -5,7 +5,9 @@ class Thumbnails {
     this.container.style.backgroundImage = `url('${options.url}')`;
     this.events = options.events;
   }
-
+  reload(url) {
+    this.container.style.backgroundImage = `url('${url}')`;
+  }
   resize(width, height, barWrapWidth) {
     console.log(barWrapWidth);
     this.container.style.width = `${width}px`;

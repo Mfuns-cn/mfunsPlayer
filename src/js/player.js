@@ -182,6 +182,7 @@ export default class mfunsPlayer {
     this.bar.set("played", time / this.video.duration, "width");
     this.highEnergy && this.highEnergy.update(time / this.video.duration);
     this.template.currentTime.innerText = utils.secondToTime(time);
+    !this.template.mask.classList.contains("mfunsPlayer-mask-show") && this.updateVideoPosition(this.video.currentTime);
     // this.isPlayEnd = false;
     this.video.currentTime = time;
   }
@@ -240,10 +241,12 @@ export default class mfunsPlayer {
       this.isSwitched = false;
       this.isReloaded = false;
     }
-    const lastPosition = this.options.video[this.currentVideo].lastPosition;
-    if (lastPosition) {
-      if (this.autoSkip) this.skip("已为你自动跳转至", lastPosition, !!this.autoSkip);
-      else this.skip("是否跳转至上次观看位置", lastPosition, !!this.autoSkip);
+    const lastPosition = this.options.video[this.currentVideo].lastPosition ?? 0;
+    console.log(this.currentVideo, this.options.video, "+--------");
+    if (this.video.duration > 60 && lastPosition > 10 && this.video.duration - lastPosition > 10) {
+      if (this.autoSkip) {
+        this.skip("已为你自动跳转至", lastPosition, !!this.autoSkip);
+      } else this.skip("是否跳转至上次观看位置", lastPosition, !!this.autoSkip);
     }
   }
   toggle() {
@@ -399,6 +402,8 @@ export default class mfunsPlayer {
             },
             text: "重新加载",
           });
+        } else {
+          clearTimeout(this.loadTimer);
         }
       }, 30000);
     });
@@ -459,13 +464,14 @@ export default class mfunsPlayer {
       this.playTimer = setTimeout(() => {
         this.template.bezel.classList.add("hide");
       }, 1500);
-      this.timeUpdateTimer = setInterval(() => {
+      !this.template.mask.classList.contains("mfunsPlayer-mask-show") &&
         this.updateVideoPosition(this.video.currentTime);
-      }, 3000);
     });
     this.on("pause", () => {
       clearTimeout(this.playTimer);
       clearTimeout(this.timeUpdateTimer);
+      !this.template.mask.classList.contains("mfunsPlayer-mask-show") &&
+        this.updateVideoPosition(this.video.currentTime);
       this.controller.setAutoHide();
       this.container.classList.add("mfunsPlayer-paused");
       this.container.classList.remove("mfunsPlayer-playing");
@@ -480,6 +486,8 @@ export default class mfunsPlayer {
         this.highEnergy && this.highEnergy.update(this.video.currentTime / this.video.duration);
         const ct = parseInt(this.video.currentTime);
         this.template.currentTime.innerText = utils.secondToTime(ct);
+        !this.template.mask.classList.contains("mfunsPlayer-mask-show") &&
+          this.updateVideoPosition(this.video.currentTime);
       }
     });
     this.on("ended", () => {
@@ -502,6 +510,7 @@ export default class mfunsPlayer {
   switchVideo(index) {
     const total = this.options.video.length - 1;
     if (index > total || index < 0 || index === this.currentVideo) return;
+    !this.template.mask.classList.contains("mfunsPlayer-mask-show") && this.updateVideoPosition(this.video.currentTime);
     this.currentVideo = index;
     this.isSwitched = true;
     this.danmakuLoaded = false;
@@ -512,6 +521,7 @@ export default class mfunsPlayer {
     this.bar.set("loaded", 0, "width");
     this.bar.set("played", 0, "width");
     this.handleSwitchVideo(index, total);
+
     this.showMask();
     clearTimeout(this.timeUpdateTimer);
     this.template.footBar.classList.add("loading");
@@ -528,18 +538,15 @@ export default class mfunsPlayer {
         : null,
       currentVideo.addition
     );
+    this.controller.thumbnails && this.controller.thumbnails.reload(currentVideo.thumbnails);
     this.video.poster = currentVideo.pic ?? "";
     this.video.src = currentVideo.url;
     this.template.headTitle.innerText = `${currentVideo.title}`;
   }
   updateVideoPosition(time) {
-    this.options.video[this.currentVideo].lastPosition = time >= this.video.duration - 3 ? 0 : time;
-    if (this.options?.callback?.updateVideoPosition) {
-      const {
-        callback: { updateVideoPosition },
-      } = this.options;
-      updateVideoPosition(this.options.video);
-    }
+    console.log(this.currentVideo, time);
+    this.options.video[this.currentVideo].lastPosition = time;
+    this.events && this.events.trigger("update_video_position");
   }
   handleSwitchVideo(index, total) {
     this.template.loadingSpeed.innerHTML = "";

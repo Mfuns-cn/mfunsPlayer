@@ -42,7 +42,9 @@ export default class HighEnergy {
   }
   init() {
     this.getData();
-    this.highEnergyBar = window.echarts.init(this.container);
+    if (!this.highEnergyBar) {
+      this.highEnergyBar = window.echarts.init(this.container);
+    }
 
     this.option = {
       grid: {
