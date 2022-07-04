@@ -72,7 +72,7 @@ new mfunsPlayer({
       danmakuAddition: [  // 附加弹幕文件
         {
           url:"",
-          type:""   // 弹幕数据的api处理类型 (不传默认为dplayerDanmaku)
+          type:""   // 弹幕数据的api处理类型 (不传默认为dplayer-danmaku)
         }
       ],
       lastPosition:56, //上次播放位置
@@ -93,7 +93,7 @@ new mfunsPlayer({
     showHighEnergy: true,//是否显示高能进度条
   },
   //高级弹幕
-  advanceDanmaku: {
+  advancedDanmaku: {
     api: "", //高级弹幕接口地址
     editor: true, //是否启用编辑器
   },
