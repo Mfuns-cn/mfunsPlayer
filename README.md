@@ -67,6 +67,8 @@ new mfunsPlayer({
       type: "mp4", //视频类型
       title: "", //视频标题（必传）
       danId: 100, //弹幕id(选传)
+      advDanId:12,//高级弹幕id(选传)
+      thumbnails:""//缩略图(选传)
       danmakuAddition: [  // 附加弹幕文件
         {
           url:"",
@@ -102,15 +104,6 @@ new mfunsPlayer({
     link:""//链接
   },
   ]
-  callback: {
-    toLogin:()=>{},
-    sendDanmaku:(danamku)=>{},
-    danmakuReport:(danmaku,reasonId)=>{},
-    userSet:()=>{},
-    updateVideoPosition:(video)=>{}
-  },
-  playCallback: play, //播放器播放回调函数（函数默认接收1个参数：播放器当前播放时间）如： (currentTime)=>{}
-  pauseCallback: pause, // //播放器播放回调函数（函数默认接收1个参数：播放器当前播放时间）如： (currentTime)=>{}
   mutex: true, //互斥，阻止多个播放器同时播放，当前播放器播放时暂停其他播放器
 });
 ```
