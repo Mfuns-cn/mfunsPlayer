@@ -480,6 +480,9 @@ class Danmaku {
         if (typeof dan[i].type !== "string") {
           dan[i].type = utils.number2Type(dan[i].type);
         }
+        if(dan[i].type == "json") {
+          continue
+        }
         if (!dan[i].color) {
           dan[i].color = 16777215;
         }
@@ -598,8 +601,6 @@ class Danmaku {
               item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
               item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
-            break;
-          case "json":
             break;
           default:
             console.error(`无法处理的弹幕模式: ${dan[i].type}`);
