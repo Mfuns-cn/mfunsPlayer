@@ -153,8 +153,8 @@ class Danmaku {
     const { address, addition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
     const apiurl = `${address}/v1/danmaku?id=${id}`;
     const endpoints = addition || [];
-    const advDanData = []
-    id && endpoints.push({ url: apiurl, type: "dplayer-danmaku" });
+    const advDanData = [];
+    id && endpoints.push({ url: apiurl, type: "mfuns-danmaku" });
     advDanApi &&
       endpoints.push({ url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`, type: "mfuns-advDanmaku-oldApi" });
     this.events && this.events.trigger("danmaku_load_start", endpoints);
@@ -168,7 +168,7 @@ class Danmaku {
         this.dan.forEach((d) => {
           d.id = this.createHash(8);
           if (d.type == 8) {
-            advDanData.push(d.text);   // 筛选高级弹幕
+            advDanData.push(d.text); // 筛选高级弹幕
           }
         });
         this.events && this.events.trigger("danmaku_load_end", this.dan);
@@ -500,7 +500,10 @@ class Danmaku {
 
           // console.log(dan[i].isSubtitle);
           if (dan[i].border) {
-            item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
+            item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(
+              /(\/n)|(\\n)/g,
+              "\n"
+            )}</span>`;
           } else {
             item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
           }
@@ -613,7 +616,6 @@ class Danmaku {
             // docFragment.appendChild(item);
           }
         }
-
       }
 
       // this.container.appendChild(docFragment);

@@ -84,7 +84,7 @@ export default class mfunsPlayer {
         api: {
           address: this.options.danmaku.api,
           id: this.options.video[this.options.currentVideo].danId,
-          addition: this.options.video[this.options.currentVideo].danmakuAddition,
+          addition: this.options.video[this.options.currentVideo].addition,
           token: this.options.danmaku.token,
         },
         events: this.events,
