@@ -535,7 +535,7 @@ export default class mfunsPlayer {
             token: this.options.advancedDanmaku.token,
           }
         : null,
-      currentVideo.addition
+      currentVideo.danmakuAddition
     );
     this.controller.thumbnails && this.controller.thumbnails.reload(currentVideo.thumbnails);
     this.video.poster = currentVideo.pic ?? "";
@@ -617,7 +617,7 @@ export default class mfunsPlayer {
             token: this.options.advancedDanmaku.token,
           }
         : null,
-      currentVideo.addition
+      currentVideo.danmakuAddition
     );
   }
   resize() {
