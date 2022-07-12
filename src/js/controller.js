@@ -28,7 +28,7 @@ class Controller {
       window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
     });
     this.isControllerfocus();
-
+    this.checkLogin(player);
     this.initPlayButton();
     this.initActivity();
     this.initThumbnails();
@@ -42,21 +42,7 @@ class Controller {
       this.initDanmakuStyleButton();
       this.initDanmakuEmit();
     }
-    if (typeof player.options.uid === "number") {
-      !player.options.userIsLogged &&
-        player.template.toLogin.addEventListener("click", () => {
-          // player.options.toLogin && player.options.toLogin();
-          player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
-          player.fullScreen.isFullScreen("web") && player.fullScreen.cancel("web");
-          this.isControl = false;
-          const loginRes = player.options.toLogin ? player.options.toLogin() : confirm("这是登录表单，是否登录？");
-          if (loginRes) {
-            this.player.template.danmakuRoot.classList.remove("nologin");
-            player.options.userIsLogged = true;
-            !this.player.videoLoaded && this.player.template.danmakuRoot.classList.add("loading");
-          }
-        });
-    }
+
     if (player.options.video.length > 1) {
       this.initPagelistButton();
     }
@@ -79,6 +65,22 @@ class Controller {
       this.isControl = false;
       this.controlLeaved = true;
     };
+  }
+  checkLogin(player) {
+    if (player.options.uid === 0) {
+      player.template.toLogin.addEventListener("click", () => {
+        // player.options.toLogin && player.options.toLogin();
+        player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
+        player.fullScreen.isFullScreen("web") && player.fullScreen.cancel("web");
+        this.isControl = false;
+        const loginRes = player.options.toLogin ? player.options.toLogin() : confirm("这是登录表单，是否登录？");
+        if (loginRes) {
+          this.player.template.danmakuRoot.classList.remove("nologin");
+          player.options.userIsLogged = true;
+          !this.player.videoLoaded && this.player.template.danmakuRoot.classList.add("loading");
+        }
+      });
+    }
   }
   initActivity() {
     this.switchActivity();
@@ -548,7 +550,7 @@ class Controller {
       update(value, flag) {
         // 有关弹幕透明度更改请写在此处
         THIS.isControl = flag;
-        THIS.player.danmaku.opacity(value / 100);
+        THIS.player.danmaku && THIS.player.danmaku.opacity(value / 100);
       },
       change(value) {
         THIS.template.danmaku_opacity_value.innerText = `${value}%`;
@@ -584,7 +586,7 @@ class Controller {
         },
         change(value) {
           THIS.template.danmaku_showarea_value.innerText = ["1/4", "半屏", "3/4", "不重叠", "不限"][value / 20 - 1];
-          THIS.player.danmaku.limitArea(value / 20);
+          THIS.player.danmaku && THIS.player.danmaku.limitArea(value / 20);
         },
         end() {
           // 结束滑动条调节（松手）
@@ -607,7 +609,7 @@ class Controller {
       },
       change(value) {
         THIS.template.danmaku_size_value.innerText = value + "%";
-        THIS.player.danmaku.size(value / 100);
+        THIS.player.danmaku && THIS.player.danmaku.size(value / 100);
       },
       end() {
         // 结束滑动条调节（松手）
@@ -637,7 +639,7 @@ class Controller {
         },
         change(value) {
           THIS.template.danmaku_speed_value.innerText = utils.number2danmakuSpeed(value / 100);
-          THIS.player.danmaku.speed(value / 100);
+          THIS.player.danmaku && THIS.player.danmaku.speed(value / 100);
         },
         end() {
           // 结束滑动条调节（松手）
@@ -671,7 +673,7 @@ class Controller {
           !nonotice && THIS.player.notice("已开启防挡字幕");
         },
         off(nonotice) {
-          THIS.player.danmaku.limitArea("notKeepOutSubtitle");
+          THIS.player.danmaku && THIS.player.danmaku.limitArea("notKeepOutSubtitle");
           !nonotice && THIS.player.notice("已关闭防挡字幕");
         },
       }

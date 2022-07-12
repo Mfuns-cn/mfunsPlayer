@@ -375,7 +375,7 @@
 <div class="mfunsPlayer-video-load-status hide"></div>
 </div>
 
- {{ if danmaku.api }}   
+ {{ if danmaku }}   
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
         <div class="mfunsPlayer-video-danmaku-count">弹幕装填中...</div>

@@ -37,7 +37,8 @@ export default {
                   color: item[2],
                   author: item[3],
                   text: item[4],
-                  size: 25,
+                  size: item[5] ?? 25,
+                  date: item[6] ?? 0,
                 }))
               );
             break;
@@ -46,17 +47,17 @@ export default {
             options.success &&
               options.success(
                 data.data.map((item) => {
-                  let a = JSON.parse(item)
+                  let a = JSON.parse(item);
                   return {
                     time: a[0].start / 1000 || 0,
                     type: 8,
                     mode: 8,
                     author: "0",
                     text: item,
-                    date: 0
-                  }
+                    date: 0,
+                  };
                 })
-              );  
+              );
             break;
           case "bili-danmaku":
             break;

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>播放器测试</title>
+</head>
+<!-- <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script> -->
+<script src="./src/static/echarts.js"></script>
+<script src="./dist/mfunsPlayer.js"></script>
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .player {
+    width: 1000px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .content {
+    min-width: 700px;
+  }
+
+  .extra {
+    width: 400px;
+    border: 1px solid #e6e6e6;
+    border-left: none;
+    text-align: center;
+  }
+</style>
+
+<body>
+  <div class="player">
+    <div class="content"></div>
+
+    <div class="extra"">
+         <!-- <h1>本周任务</h3>
+        <ol>
+          <li>自动播放逻辑调整 [完成]</li>
+          <li>自动跳转至上次播放位置 [完成]</li>
+          <li>滚轮音量提示设计 [完成]</li>
+          <li>活动广告轮播设计 [进行中]</li>
+          <li>增值服务设计 [未开始]</li>
+        </ol> -->
+      </div>
+    </div>
+   
+  </div>
+  </body>
+      <script>
+      //     url: "https://api.moegirl.love/v1/bilibiliav/av810872",
+      //    url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+      //    url: "https://api.moegirl.love/v1/bilibiliav/av12",
+      //     title: "【炮姐/AMV】我永远都会守护在你的身边！",
+      //     danId: 70385,
+      //     addition: [
+      //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
+      //      ],
+      // shields: ["top", "bottom"],
+
+        const container = document.querySelector(".content");
+        const playerExtra = document.querySelector(".extra");
+        let mp = new mfunsPlayer({
+          container,
+          // uid: 2333,
+          // autoPlay: true,
+          // autoSwitch: true,
+          // autoSkip: true,
+          // blackBorder: true,
+          // dragable: true,
+          // hotkey: true,
+          // volume: 0.7,
+          // currentVideo: 0,
+          // widescreen: true, // 宽屏模式
+          //widescreenSwitch: true, // 可切换宽屏模式
+          // mutex: true,
+         
+          video: [
+            {
+             
+              // url: "https://api.moegirl.love/v1/bilibiliav/av39444",
+              url:"https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+              // url:"./static/video/bad apple.mp4",
+              pic: "http://www.dmoe.cc/random.php?165529917318",
+              title: "光るなら-TV动画《四月是你的谎言》OP",
+              thumbnails:"./static/thumbnails/3.png",
+              // lastPosition: 56,
+              danId: 70385,
+              // advDanId: 31255,
+              danmakuAddition: [{
+                url:"https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json",
+                type:"dplayer-danmaku"
+              }]
+              
+            },
+            {
+              url: "https://api.moegirl.love/v1/bilibiliav/av39444",
+              url:"./static/video/bad apple.mp4",
+              type: "mp4",
+              pic: "http://www.dmoe.cc/random.php?165529917318",
+              // title: "绯色月下，狂咲の絶",
+              title:"bad apple!!",
+              thumbnails:"./static/thumbnails/ba.png",
+              danId: 24254,
+              lastPosition: 15,
+            },
+          ],
+          danmaku: {
+            api: "https://www.mfuns.fun/wp-json/mfuns",
+            bottom: 5,
+            opacity: 0.9,
+            limitArea: 4,
+            fontScale: 1,
+            speed: 1,
+            editor: 1,
+            sensitivity: 3,
+            danmakuCatch: true,
+            showHighEnergy: true,
+            showDanmaku: true,
+          },
+          // advancedDanmaku:{
+          //   api: "https://www.mfuns.fun/wp-json/mfuns",
+          //   editor: 1,
+          // },
+         
+          activity: [
+            {
+              pic: "https://uploadstatic.mihoyo.com/puzzle/upload/puzzle/2022/05/25/ae1b27c1994be8bc7503c1dc2a98bf14_5644210846563075870.png?x-oss-process=image/format,webp",
+              link: "https://ys.mihoyo.com/?utm_source=adbdsem016&from_channel=adbdsem#/"
+            },
+            {
+              pic: "https://imgs.aixifan.com/fsjvI363GQ-VNZJF3-yY77ni-FrAbiu-FJjE7j.png?x-oss-process=image/resize,m_fill,w_964,h_494",
+              link: "https://activity.acfun.cn/mega/anniversary-2022"
+            },
+            {
+              pic: "http://www.dmoe.cc/random.php?165517318",
+              link: "https://www.mfuns.fun"
+            }
+          ]
+
+
+        });
+       mp.mountDanmakuAuxiliary(playerExtra);
+       mp.on("danmaku_send",(dan)=>{
+        console.log(dan)
+       })
+      </script>
+
+</html>

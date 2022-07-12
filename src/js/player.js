@@ -20,6 +20,7 @@ const instances = [];
 export default class mfunsPlayer {
   constructor(options) {
     this.options = handleOption(options);
+    console.log(this.options);
     this.template = new Template(this.options);
     this.events = new Events();
     this.container = options.container;
@@ -51,8 +52,8 @@ export default class mfunsPlayer {
     this.infoPanel = new InfoPanel(this);
     this.initVideo(this.video, this.options.video[this.currentVideo].type);
     this.initPlayerTip();
-    if (this.options.danmaku) {
-      this.showDanmaku = options.danmaku.showDanmaku;
+    if (this.options.danmaku.api) {
+      this.showDanmaku = this.options.danmaku.showDanmaku;
       this.danmakuOptions = {
         container: this.template.danmaku,
         opacity: this.options.danmaku.opacity ?? 1,
@@ -61,6 +62,7 @@ export default class mfunsPlayer {
         limitArea: this.options.danmaku.limitArea ?? 4,
         callback: (length, advDanData) => {
           console.log(length);
+          this.danLength = length;
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
@@ -84,12 +86,12 @@ export default class mfunsPlayer {
         api: {
           address: this.options.danmaku.api,
           id: this.options.video[this.options.currentVideo].danId,
-          addition: this.options.video[this.options.currentVideo].danmakuAddition,
+          danmakuAddition: this.options.video[this.options.currentVideo].danmakuAddition,
           token: this.options.danmaku.token,
         },
         events: this.events,
       };
-      if (this.options.video[this.options.currentVideo].advDanId) {
+      if (this.options.advancedDanmaku) {
         this.danmakuOptions.api.advDanApi = {
           id: this.options.video[this.options.currentVideo].advDanId,
           address: this.options.advancedDanmaku.api,
@@ -97,6 +99,9 @@ export default class mfunsPlayer {
         };
       }
       this.danmaku = new Danmaku(this.danmakuOptions, this);
+    } else {
+      console.log("1111");
+      this.template.footBar.classList.add("hide");
     }
 
     if (this.options.endedCallback) this.endedCallback = options.endedCallback;
@@ -136,6 +141,7 @@ export default class mfunsPlayer {
     if ((this.videoLoaded && this.danmakuLoaded) || type === "error") {
       setTimeout(() => {
         this.template.videoWrap.classList.remove("load");
+        this.template.loading.classList.remove("show");
         this.template.danmakuLoad.classList.add("hide");
         this.template.videoLoad.classList.add("hide");
         this.template.playerLoad.classList.add("hide");
@@ -260,7 +266,7 @@ export default class mfunsPlayer {
     this.template.volumeIcon.classList.add("button-volume-off");
     this.controller.components.volumeSlider.change(0);
   }
-  initMSE(video, type) {
+  initMSE(video, type = "mp4") {
     this.type = type;
     switch (this.type) {
       // https://github.com/video-dev/hls.js
@@ -368,14 +374,14 @@ export default class mfunsPlayer {
   }
 
   initVideo(video, type) {
-    // this.initMSE(video, type);
+    this.initMSE(video, type);
     if (this.options.video.length > 1 && this.options.currentVideo <= this.template.pagelistItem.length) {
       this.template.pagelistItem[this.options.currentVideo].classList.add("focus");
     }
 
     this.on("canplay", () => {
       console.log("canplay");
-      this.template.loading.classList.remove("show");
+      this.videoLoaded && this.danmakuLoaded && this.template.loading.classList.remove("show");
       this.canplay = true;
     });
     this.on("loadstart", () => {
@@ -437,7 +443,7 @@ export default class mfunsPlayer {
       this.template.videoLoad.innerHTML = "请求视频数据中... [完成]";
       this.videoLoaded = true;
       this.removeMask();
-      this.loadHighEnergy();
+      this.danLength && this.loadHighEnergy();
       // this.hideTip();
       this.template.currentTime.innerText = "00:00";
       this.template.totalTime.innerText = utils.secondToTime(this.video.duration);

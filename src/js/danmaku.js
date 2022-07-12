@@ -150,11 +150,11 @@ class Danmaku {
     });
   }
   load() {
-    const { address, addition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
+    const { address, danmakuAddition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
     const apiurl = `${address}/v1/danmaku?id=${id}`;
-    const endpoints = addition || [];
-    const advDanData = []
-    id && endpoints.push({ url: apiurl, type: "dplayer-danmaku" });
+    const endpoints = danmakuAddition || [];
+    const advDanData = [];
+    id && address && endpoints.push({ url: apiurl, type: "dplayer-danmaku" });
     advDanApi &&
       endpoints.push({ url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`, type: "mfuns-advDanmaku-oldApi" });
     this.events && this.events.trigger("danmaku_load_start", endpoints);
@@ -168,7 +168,7 @@ class Danmaku {
         this.dan.forEach((d) => {
           d.id = this.createHash(8);
           if (d.type == 8) {
-            advDanData.push(d.text);   // 筛选高级弹幕
+            advDanData.push(d.text); // 筛选高级弹幕
           }
         });
         this.events && this.events.trigger("danmaku_load_end", this.dan);
@@ -184,7 +184,7 @@ class Danmaku {
   reload(newId, newAdvDanApi, newAddition) {
     this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     this.options.api.id = newId;
-    this.options.api.addition = newAddition;
+    this.options.api.danmakuAddition = newAddition;
     this.options.api.advDanApi = newAdvDanApi;
     this.dan = [];
     this.clear();
@@ -477,143 +477,143 @@ class Danmaku {
       const docFragment = document.createDocumentFragment();
 
       for (let i = 0; i < dan.length; i++) {
-        if (dan[i].type < 7) {
-          if (typeof dan[i].type !== "string") {
-            dan[i].type = utils.number2Type(dan[i].type);
-          }
-          if (!dan[i].color) {
-            dan[i].color = 16777215;
-          }
-          if (!dan[i].size) {
-            dan[i].size = 25;
-          }
-          const item = document.createElement("div");
-          if (!this.paused) {
-            item.classList.add("mfunsPlayer-danmaku-run");
-          } else {
-            item.classList.remove("mfunsPlayer-danmaku-run");
-          }
-          item.classList.add("mfunsPlayer-danmaku-item");
-          item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
-          dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
-          dan[i].isSubtitle && item.classList.add("subtitle");
-
-          // console.log(dan[i].isSubtitle);
-          if (dan[i].border) {
-            item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
-          } else {
-            item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
-          }
-          if (typeof dan[i].color !== "string") {
-            item.style.color = utils.number2Color(dan[i].color);
-          }
-          item.children[0].style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
-          item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
-          item.style.zIndex = dan[i].isSubtitle ? 100 : "auto";
-          item.addEventListener("animationend", () => {
-            this.container.removeChild(item);
-          });
-
-          const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
-
-          let tunnel;
-
-          // adjust
-          switch (dan[i].type) {
-            case "right":
-              tunnel = getTunnel(item, dan[i].type, itemWidth);
-              if (tunnel >= 0 || dan[i].isSubtitle) {
-                const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-                const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
-                if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                  this.danTunnel[dan[i].type][i + ""]?.pop();
-                  return;
-                }
-
-                item.style.width = itemWidth + 1 + "px";
-                item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
-                item.style.transform = `translateX(-${danWidth}px)`;
-              }
-              break;
-            case "left":
-              tunnel = getTunnel(item, dan[i].type, itemWidth);
-              if (tunnel >= 0 || dan[i].isSubtitle) {
-                const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
-                const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
-                if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                  this.danTunnel[dan[i].type][i + ""]?.pop();
-                  return;
-                }
-                item.style.width = itemWidth + 1 + "px";
-                item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
-                item.style.transform = `translateX(${danWidth}px)`;
-              }
-              break;
-            case "top":
-              tunnel = getTunnel(item, dan[i].type);
-              if (tunnel >= 0 || dan[i].isSubtitle) {
-                let topArr = [];
-                const topDan = this.danTunnel.top;
-                for (let key in topDan) {
-                  topArr.push(...topDan[key]);
-                }
-                const top = topArr
-                  .map((el) => {
-                    return parseInt(el.style.fontSize) + this.tunnelPadding;
-                  })
-                  .slice(0, tunnel)
-                  .reduce((prev, cur) => prev + cur, 0);
-
-                if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                  this.danTunnel[dan[i].type][i + ""]?.pop();
-                  return;
-                }
-                item.style.width = itemWidth + 1 + "px";
-                item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
-                item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
-              }
-              break;
-            case "bottom":
-              tunnel = getTunnel(item, dan[i].type);
-              if (tunnel >= 0 || dan[i].isSubtitle) {
-                let bottomArr = [];
-                const bottomDan = this.danTunnel.bottom;
-                for (let key in bottomDan) {
-                  bottomArr.push(...bottomDan[key]);
-                }
-                const bottom = bottomArr
-                  .map((el) => {
-                    return parseInt(el.style.fontSize) + this.tunnelPadding;
-                  })
-                  .slice(0, tunnel)
-                  .reduce((prev, cur) => prev + cur, 0);
-
-                if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                  this.danTunnel[dan[i].type][i + ""]?.pop();
-                  return;
-                }
-                item.style.width = itemWidth + 1 + "px";
-                item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
-                item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
-              }
-              break;
-            default:
-              console.error(`无法处理的弹幕模式: ${dan[i].type}`);
-          }
-          if (tunnel >= 0) {
-            // move
-            item.classList.add("mfunsPlayer-danmaku-move");
-            item.dataset.id = dan[i].id;
-
-            if (!!this._speed && !dan[i].isSubtitle) {
-              item.classList.add(this._speed);
-            }
-            // insert
-            this.container.appendChild(item);
-            // docFragment.appendChild(item);
-          }
+        if (dan[i].type >= 7) {
+          continue;
         }
+        if (typeof dan[i].type !== "string") {
+          dan[i].type = utils.number2Type(dan[i].type);
+        }
+        if (!dan[i].color) {
+          dan[i].color = 16777215;
+        }
+        if (!dan[i].size) {
+          dan[i].size = 25;
+        }
+        const item = document.createElement("div");
+        if (!this.paused) {
+          item.classList.add("mfunsPlayer-danmaku-run");
+        } else {
+          item.classList.remove("mfunsPlayer-danmaku-run");
+        }
+        item.classList.add("mfunsPlayer-danmaku-item");
+        item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
+        dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
+        dan[i].isSubtitle && item.classList.add("subtitle");
 
+        // console.log(dan[i].isSubtitle);
+        if (dan[i].border) {
+          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
+        } else {
+          item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
+        }
+        if (typeof dan[i].color !== "string") {
+          item.style.color = utils.number2Color(dan[i].color);
+        }
+        item.children[0].style.opacity = dan[i].isSubtitle ? 1 : this._opacity;
+        item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
+        item.style.zIndex = dan[i].isSubtitle ? 100 : "auto";
+        item.addEventListener("animationend", () => {
+          this.container.removeChild(item);
+        });
+
+        const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
+
+        let tunnel;
+
+        // adjust
+        switch (dan[i].type) {
+          case "right":
+            tunnel = getTunnel(item, dan[i].type, itemWidth);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+
+              item.style.width = itemWidth + 1 + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
+              item.style.transform = `translateX(-${danWidth}px)`;
+            }
+            break;
+          case "left":
+            tunnel = getTunnel(item, dan[i].type, itemWidth);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
+              item.style.transform = `translateX(${danWidth}px)`;
+            }
+            break;
+          case "top":
+            tunnel = getTunnel(item, dan[i].type);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              let topArr = [];
+              const topDan = this.danTunnel.top;
+              for (let key in topDan) {
+                topArr.push(...topDan[key]);
+              }
+              const top = topArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
+            }
+            break;
+          case "bottom":
+            tunnel = getTunnel(item, dan[i].type);
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              let bottomArr = [];
+              const bottomDan = this.danTunnel.bottom;
+              for (let key in bottomDan) {
+                bottomArr.push(...bottomDan[key]);
+              }
+              const bottom = bottomArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
+            }
+            break;
+          default:
+            console.error(`无法处理的弹幕模式: ${dan[i].type}`);
+        }
+        if (tunnel >= 0) {
+          // move
+          item.classList.add("mfunsPlayer-danmaku-move");
+          item.dataset.id = dan[i].id;
+
+          if (!!this._speed && !dan[i].isSubtitle) {
+            item.classList.add(this._speed);
+          }
+          // insert
+          this.container.appendChild(item);
+          // docFragment.appendChild(item);
+        }
       }
 
       // this.container.appendChild(docFragment);

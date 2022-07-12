@@ -214,13 +214,16 @@
           video.pause();
           count = 0;
           barValue.innerHTML = "执行完毕~";
-          oCanvas.toDataURL("image/png");
+          let base64 = oCanvas.toDataURL("image/png");
+          if (base64.length / 1024 > 1000) {
+            base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
+          }
           videoBox.removeChild(loadBar);
           console.log("结束");
           resetBtn.classList.remove("disable");
           downloadBtn.classList.remove("disable");
           video.currentTime = 0;
-          downloadURL = oCanvas.toDataURL("image/png");
+          downloadURL = base64;
           return;
         }
         loadBar.style.display = "block";

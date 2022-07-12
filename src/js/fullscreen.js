@@ -74,7 +74,7 @@ class FullScreen {
   }
   handleFullscrren(type) {
     const danmakuRoot = this.player.template.danmakuRoot;
-    if (danmakuRoot && !this.isFullScreen(type)) {
+    if (!danmakuRoot.classList.contains("hide") && !this.isFullScreen(type)) {
       this.player.template.footBar.removeChild(danmakuRoot);
       this.player.template.controllerWrap.appendChild(danmakuRoot);
     }
@@ -126,7 +126,7 @@ class FullScreen {
   }
   handleExitFullscreen(type) {
     const danmakuRoot = this.player.template.danmakuRoot;
-    if (danmakuRoot && this.isFullScreen(type)) {
+    if (!danmakuRoot.classList.contains("hide") && this.isFullScreen(type)) {
       this.player.template.controllerWrap.removeChild(danmakuRoot);
       this.player.template.footBar.appendChild(danmakuRoot);
     }
