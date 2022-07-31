@@ -3,24 +3,32 @@ import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
+    options.theme && this.setTheme(options.theme);
+    options.smallWindow && this.buildSmallWindow();
     options.isFireFox = utils.isFirefox;
+    options.hasEcharts = !!window.echarts;
     this.init(options);
-    if (!options.blackBorder) {
-      this.videoMask.style.height = "100%";
-      this.bezel.style.bottom = "50px";
-    }
-    this.videoWrap.style.height =
-      ((this.videoWrap.clientWidth * 9) / 16 + (options.blackBorder ? 100 : 0)).toFixed(2) + "px";
+    this.initHitokoto(options);
+  }
+  setTheme(color) {
+    this.container.style.setProperty("--themeColor", color);
+    this.container.style.setProperty("--themeColorLight", utils.colorLuminance(color, 0.3));
+    this.container.style.setProperty("--themeColorDark", utils.colorLuminance(color, -0.3));
   }
   init(options) {
-    this.container.innerHTML = Player(options);
+    this.container.innerHTML = Player(options); // 注入播放器DOM
     const $ = this.container.querySelector.bind(this.container);
     const $all = this.container.querySelectorAll.bind(this.container);
     this.mask = $(".mfunsPlayer-mask");
+    this.miniPlayer = $(".mfunsPlayer-miniPlayer");
+    this.previewMask = $(".mfunsPlayer-preview-mask");
     this.canvas = $(".mfuns_canvas");
     this.video = $(".mfunsPlayer-video");
     this.videoMask = $(".mfunsPlayer-video-mask");
     this.videoWrap = $(".mfunsPlayer-video-wrap");
+    this.activityMask = $(".mfunsPlayer-activity-mask");
+    this.activity = $(".mfunsPlayer-activity");
+    this.activityClose = $(".mfunsPlayer-activity-close");
     this.emit = $(".emit");
     this.fullButton = $(".mfunsPlayer-controller-fullButton");
     this.danmakuRoot = $(".mfunsPlayer-video-danmaku-root");
@@ -28,10 +36,20 @@ class Template {
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
     this.danmakuCount = $(".mfunsPlayer-video-danmaku-count");
-    this.danmakuButton = $(".mfunsPlayer-video-danmaku-button");
-    this.danmakuSet = $(".mfunsPlayer-video-danmaku-set");
-    this.text = $(".mfunsPlayer-danmaku-text");
-    this.color = $(".color");
+    this.danmaku_btn = $(".mfunsPlayer-controller-danmaku-trigger"); // 弹幕开关
+    this.danmakuSettings_btn = $(".mfunsPlayer-controller-danmaku-settings"); // 弹幕设置
+    this.danmakuSettings_panel = $(".mfunsPlayer-danmaku-settings-mask");
+    this.danmaku_filter_picker = $(".mfunsPlayer-danmaku-filter-picker"); // 类型屏蔽选择器
+    this.danmaku_opacity_slider = $(".mfunsPlayer-danmaku-opacity-slider"); // 不透明度滑动条
+    this.danmaku_opacity_value = $(".mfunsPlayer-danmaku-opacity-value"); // 不透明度显示
+    this.danmaku_showarea_slider = $(".mfunsPlayer-danmaku-showarea-slider"); // 显示区域滑动条
+    this.danmaku_showarea_value = $(".mfunsPlayer-danmaku-showarea-value"); // 显示区域显示
+    this.danmaku_size_slider = $(".mfunsPlayer-danmaku-size-slider"); // 弹幕大小滑动条
+    this.danmaku_size_value = $(".mfunsPlayer-danmaku-size-value"); // 弹幕大小显示
+    this.danmaku_speed_slider = $(".mfunsPlayer-danmaku-speed-slider"); // 弹幕速度滑动条
+    this.danmaku_speed_value = $(".mfunsPlayer-danmaku-speed-value"); // 弹幕速度显示
+    this.advancedDanmaku = $(".mfunsPlayer-advanced-danmaku");
+
     this.headBar = $(".mfunsPlayer-headBar");
     this.headTitle = $(".mfunsPlayer-headBar-title");
     this.barWrap = $(".mfunsPlayer-bar-wrap");
@@ -39,57 +57,147 @@ class Template {
     this.playedBar = $(".mfunsPlayer-playedBar");
     this.bufferedBar = $(".mfunsPlayer-bufferedBar");
     this.thumb = $(".mfunsPlayer-thumb");
+    this.barMark = $(".mfunsPlayer-bar-mark");
     this.barTime = $(".mfunsPlayer-barTime");
+    this.barPreview = $(".mfunsPlayer-bar-preview");
     this.bezel = $(".mfunsPlayer-bezel");
     this.tipItem = $all(".mfunsPlayer-controller-tip");
     this.speedInfo = $(".mfunsPlayer-speed-info");
     this.speedItem = $all(".mfunsPlayer-speed-item");
-    this.skip = $(".mfunsPlayer-controller-skip");
-    this.squirtleItem = $all(".mfunsPlayer-squirtle-item");
-    this.volume = $(".mfunsPlayer-controller-volume");
+    this.next_btn = $(".mfunsPlayer-controller-next"); // 下一个按钮
+    this.repeat_btn = $(".mfunsPlayer-controller-repeat"); // 洗脑循环按钮
+    this.repeat_tip = $(".mfunsPlayer-controller-repeat .mfunsPlayer-controller-tip"); // 洗脑循环提示
+    this.pagelistItem = $all(".mfunsPlayer-pagelist-item");
+    this.volume_btn = $(".mfunsPlayer-controller-volume"); // 音量按钮
     this.volumeMask = $(".mfunsPlayer-controller-volume-mask");
     this.volumeBarWrap = $(".mfunsPlayer-controller-volume-wrap");
     this.volumeBar = $(".mfunsPlayer-controller-volume-bar");
     this.volumeNum = $(".mfunsPlayer-controller-volume-num");
     this.volumePercentage = $(".mfunsPlayer-controller-volume-percentage");
     this.volumeIcon = $(".mfunsPlayer-controller-volume-icon");
-    this.webFullButton = $(".mfunsPlayer-controller-web-full");
-    this.browserFullButton = $(".mfunsPlayer-controller-full");
+    this.widescreen_btn = $(".mfunsPlayer-controller-widescreen"); // 宽屏模式按钮
+    this.widescreen_tip = $(".mfunsPlayer-controller-widescreen .mfunsPlayer-controller-tip"); // 宽屏模式提示
+    this.webfull_btn = $(".mfunsPlayer-controller-webfull"); // 网页全屏按钮
+    this.webfull_tip = $(".mfunsPlayer-controller-webfull .mfunsPlayer-controller-tip"); // 网页全屏提示
+    this.fullscreen_btn = $(".mfunsPlayer-controller-fullscreen"); // 全屏按钮
+    this.fullscreen_tip = $(".mfunsPlayer-controller-fullscreen .mfunsPlayer-controller-tip"); // 全屏提示
     this.browserFullButtonIcon = $(".mfunsPlayer-controller-full-icon");
-    this.switch_btn = $(".switch");
+    this.settings_btn = $(".mfunsPlayer-controller-settings");
+    this.video_scale_picker = $(".mfunsPlayer-video-scale-picker"); // 视频比例选择器
+    this.video_autoplay_switch = $(".mfunsPlayer-video-autoPlay-switch"); // 自动开播开关
+    this.video_nextpage_switch = $(".mfunsPlayer-video-nextpage-switch"); // 自动换P开关
+    this.video_autoSkip_switch = $(".mfunsPlayer-video-autoSkip-switch"); // 自动开播开关
+    this.video_smallWindow_switch = $(".mfunsPlayer-video-smallWindow-switch"); // 小窗播放开关
+    this.video_borderhidden_switch = $(".mfunsPlayer-video-borderhidden-switch"); // 隐藏黑边开关
+    this.video_darkmode_switch = $(".mfunsPlayer-video-darkmode-switch"); // 夜间模式开关
+    this.video_mirror_switch = $(".mfunsPlayer-video-mirror-switch"); // 镜像开关
+    this.video_color_mask = $(".mfunsPlayer-video-color-mask");
+    this.video_color_close = $(".mfunsPlayer-video-color-close");
+    this.video_brightness_slider = $(".mfunsPlayer-video-brightness-slider"); //亮度
+    this.video_brightness_value = $(".mfunsPlayer-video-brightness-value");
+    this.video_contrast_slider = $(".mfunsPlayer-video-contrast-slider"); //对比度
+    this.video_contrast_value = $(".mfunsPlayer-video-contrast-value");
+    this.video_saturate_slider = $(".mfunsPlayer-video-saturate-slider"); //饱和度
+    this.video_saturate_value = $(".mfunsPlayer-video-saturate-value");
+    this.video_color_reset = $(".mfunsPlayer-video-color-reset");
+    this.video_filter_picker = $(".mfunsPlayer-video-filter-picker");
     this.range = $(".range");
-    this.player_btn = $(".player_btn");
+    this.play_btn = $(".mfunsPlayer-controller-play"); // 播放按钮
+    this.highEnergyBar = $(".mfunsPlayer-highEnergy-bar");
     this.controllerMask = $(".mfunsPlayer-controller-mask");
     this.controller = $(".mfunsPlayer-controller");
     this.controllerWrap = $(".mfunsPlayer-controller-wrap");
     this.footBar = $(".mfunsPlayer-footBar");
-    this.loading = $(".mfunsPlayer-loading");
-    this.load = $(".loader_box");
-    this.troggle = $(".mfunsPlayer-controller-troggle");
-    this.play_btn = $(".play_button");
+    this.loading = $(".mfunsPlayer-loading-tip");
+    this.loadingSpeed = $(".mfunsPlayer-loading-speed");
+    this.hitokoto = $(".mfunsPlayer-loading-hitokoto");
+    this.hitokotoText = $(".mfunsPlayer-loading-hitokoto-text");
+    this.hitokotoFrom = $(".mfunsPlayer-loading-hitokoto-from");
+    this.pip_btn = $(".mfunsPlayer-controller-pip"); // 画中画按钮
+    this.playerTip = $(".mfunsPlayer-tip-container");
     this.notice = $(".mfunsPlayer-notice");
-    this.currentTime = $(".currentTime");
-    this.total = $(".total");
-    this.danmakuList = $(".danmakuList");
-    this.danmakuListContent = $(".danmakuList_content");
-    this.headOfList = $(".headOfList");
-    this.footOfList = $(".footOfList");
-    this.closeList = $(".closeList_btn");
-    this.advancedDanmaku_btn = $(".advancedDanmaku_btn");
-    this.advancePre = $(".advanceDanmaku_pre_box");
-    this.ade_mask = $(".advanceDanmakuEditor_mask");
-    this.ade = $(".advanceDanmakuEditor");
-    this.ade_footer = $(".editor_footer");
-    this.ade_close = $(".exit_edit");
-    this.ade_code = $("#danmaku_code");
-    this.editor_clear = $(".editor_clear");
-    this.editor_preview = $(".editor_preview");
-    this.editor_emit = $(".editor_emit");
-    this.danmakuEditor = $(".danmakuEditor");
-    this.danmaku_style = $(".danmaku_style");
-    this.danmaku_type = $(".danmaku_type");
-    this.danmaku_color = $(".danmaku_color");
-    this.voice = $(".voice");
+    this.noticeText = $(".mfunsPlayer-notice-text");
+    this.noticeTodo = $(".mfunsPlayer-notice-todo");
+    this.noticeClose = $(".mfunsPlayer-notice-close");
+    this.skip = $(".mfunsPlayer-skip");
+    this.skipText = $(".mfunsPlayer-skip-text");
+    this.skipLink = $(".mfunsPlayer-skip-link");
+    this.skipClose = $(".mfunsPlayer-skip-close");
+    this.playerLoad = $(".mfunsPlayer-player-load-status");
+    this.videoLoad = $(".mfunsPlayer-video-load-status");
+    this.danmakuLoad = $(".mfunsPlayer-danmaku-load-status");
+    this.loadMask = $(".mfunsPlayer-load-mask");
+    this.controllerTime = $(".mfunsPlayer-controller-time");
+    this.time_label = $(".mfunsPlayer-controller-time-label");
+    this.currentTime = $(".mfunsPlaye-video-currentTime");
+    this.totalTime = $(".mfunsPlaye-video-totalTime");
+    this.time_input = $(".mfunsPlayer-controller-time-input");
+    this.toLogin = $(".mfunsPlayer-toLogin");
+    this.danmakuTipMask = $(".mfunsPlayer-danmaku-item-tip-mask");
+    this.danmakuTipBox = $(".mfunsPlayer-danmaku-item-tip-box");
+    this.danmakuTip = $(".mfunsPlayer-danmaku-item-tip");
+    this.danmakuPraise = $(".mfunsPlayer-danmaku-item-tip-praise");
+    this.danmakuCancel = $(".mfunsPlayer-danmaku-item-tip-cancel");
+    this.danmakuCopy = $(".mfunsPlayer-danmaku-item-tip-copy");
+    this.danmakuReport = $(".mfunsPlayer-danmaku-item-tip-report");
+    this.danmakuReportMask = $(".mfunsPlayer-danmaku-report-mask");
+    this.danmakuReportContent = $(".mfunsPlayer-danmaku-report-content");
+    this.danmakuReportModelClose = $(".mfunsPlayer-danmaku-report-close");
+    this.danmakuReportDetail = $(".mfunsPlayer-danmaku-report-detail");
+    this.danmakuReportSubmit = $(".mfunsPlayer-danmaku-report-submit");
+    this.danmakuEmit = $(".mfunsPlayer-danmaku-emit");
+    this.danmakuText = $(".mfunsPlayer-danmaku-text");
+    this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading");
+    this.danmakuStyle_btn = $(".mfunsPlayer-controller-danmaku-style"); // 弹幕样式按钮
+    this.danmaku_fontsize_picker = $(".mfunsPlayer-danmaku-fontsize-picker");
+    this.danmaku_mode_picker = $(".mfunsPlayer-danmaku-mode-picker");
+    this.danmaku_color_input = $(".mfunsPlayer-danmaku-color-input");
+    this.danmaku_color_preview = $(".mfunsPlayer-danmaku-color-preview");
+    this.danmaku_color_picker = $(".mfunsPlayer-danmaku-color-picker");
+    this.danmaku_catch_switch = $(".mfunsPlayer-danmaku-catch-switch");
+    this.danmaku_highEnergy_switch = $(".mfunsPlayer-danmaku-highEnergy-switch");
+    this.danmaku_keep_out_subtitle_switch = $(".mfunsPlayer-danmaku-keep-out-subtitle");
+    this.infoPanel = $(".mfunsPlayer-info-panel");
+    this.infoPanelClose = $(".mfunsPlayer-info-panel-close");
+    this.infoVersion = $(".mfunsPlayer-info-panel-item-version .mfunsPlayer-info-panel-item-data");
+    this.infoFPS = $(".mfunsPlayer-info-panel-item-fps .mfunsPlayer-info-panel-item-data");
+    this.infoType = $(".mfunsPlayer-info-panel-item-type .mfunsPlayer-info-panel-item-data");
+    this.infoUrl = $(".mfunsPlayer-info-panel-item-url .mfunsPlayer-info-panel-item-data");
+    this.infoResolution = $(".mfunsPlayer-info-panel-item-resolution .mfunsPlayer-info-panel-item-data");
+    this.infoDuration = $(".mfunsPlayer-info-panel-item-duration .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuId = $(".mfunsPlayer-info-panel-item-danmaku-id .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuApi = $(".mfunsPlayer-info-panel-item-danmaku-api .mfunsPlayer-info-panel-item-data");
+    this.infoDanmakuAmount = $(".mfunsPlayer-info-panel-item-danmaku-amount .mfunsPlayer-info-panel-item-data");
+    this.hotkeyPanel = $(".mfunsPlayer-hotkey-panel");
+    this.hotkeyPanelClose = $(".mfunsPlayer-hotkey-panel-close");
+    this.voice = $(".mfunsPlayer-voice");
+    this.voiceValue = $(".mfunsPlayer-voice-value");
+  }
+  initHitokoto(options) {
+    this.hitokotoText.innerHTML = "loading...";
+    this.hitokotoFrom.innerHTML = "";
+    options.apiBackend.read({
+      url: "http://v1.hitokoto.cn?c=a&c=b&c=c",
+      success: (res) => {
+        this.hitokotoText.innerHTML = res.hitokoto;
+        this.hitokotoFrom.innerHTML = `———— 「${res.from}」${res.from_who ?? ""}`;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  buildSmallWindow() {}
+
+  buildVideo(hasBlackborder) {
+    if (!hasBlackborder) {
+      this.videoMask.classList.add("noborder");
+      this.bezel.classList.add("noborder");
+    } else {
+      this.videoMask.classList.remove("noborder");
+      this.bezel.classList.remove("noborder");
+    }
+    this.videoWrap.style.height = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + "px";
   }
 }
 export default Template;

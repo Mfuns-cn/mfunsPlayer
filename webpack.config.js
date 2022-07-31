@@ -1,10 +1,11 @@
 const path = require("path");
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: {
     mfunsPlayer: "./src/js/index.js",
   },
+  performance: { hints: false },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
@@ -13,7 +14,7 @@ module.exports = {
   devtool: "source-map",
   resolve: {
     modules: ["node_modules"],
-    extensions: [".js", ".scss"],
+    extensions: [".js", ".scss", ".ts"],
   },
   module: {
     rules: [
@@ -35,7 +36,14 @@ module.exports = {
           },
         ],
       },
-
+      {
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: "ts-loader"
+          }
+        ],
+      },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         use: [
@@ -53,8 +61,16 @@ module.exports = {
         loader: "babel-loader",
       },
       {
+        test: /\.ts$/,
+        loader: "ts-loader",
+      },
+      {
         test: /\.art$/,
         loader: "art-template-loader",
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)$/i,
+        loader: "url-loader",
       },
     ],
   },

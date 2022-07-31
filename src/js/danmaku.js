@@ -1,45 +1,249 @@
 import utils from "./utils";
-
+import { Switch } from "./components";
 class Danmaku {
-  constructor(options) {
+  constructor(options, player) {
     this.options = options;
+    this.player = player;
+    this.createHash = utils.initHash();
+    this.tunnelPadding = 6;
     this.container = this.options.container;
     this.danTunnel = {
       right: {},
+      left: {},
       top: {},
       bottom: {},
     };
     this.danIndex = 0;
     this.dan = [];
+    this.tunnelHeights = {
+      right: [],
+      left: [],
+      top: [],
+      bottom: [],
+    };
     this.showing = this.options.isShow;
     this._opacity = this.options.opacity;
+    this._fontScale = this.options.fontScale;
+    this._speed = this.options.speed;
+    // this._speedVal = speed
+    this._limitArea = this.options.limitArea;
     this.events = this.options.events;
+    this.topLimit = false;
+    this.bottomLimit = false;
+    this.leftLimit = false;
+    this.rightLimit = false;
+    this.colorLimit = false;
+    this.advanceLimit = false;
     this.unlimited = this.options.unlimited;
+    this.loaded = false; // 弹幕是否加载完毕
+    this.paused = true;
+    this.danmakuCheck = false;
+    this.danmakuTip = this.player.template.danmakuTip;
+    this.danmakuTipBox = this.player.template.danmakuTipBox;
+    this.currentX = 0;
+    this.currentY = 0;
+    this.danmakuCatch = this.options.danmakuCatch; // 是否开启弹幕捕获
     this._measure("");
-
     this.load();
+    this.initDanmakuTips();
   }
+  initDanmakuTips() {
+    const danmakuTipMaskMove = (e) => {
+      if (
+        Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) >
+          this.player.options.danmaku.sensitivity ??
+        3.5
+      ) {
+        this.currentX = e.pageX;
+        this.currentY = e.pageY;
+        return;
+      }
+      this.currentX = e.pageX;
+      this.currentY = e.pageY;
+      const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
+      for (let i = 0; i < items.length; i++) {
+        // if (this.currentLockDanmaku) break;
+        const item = items[i];
+        const boundingClientRect = item.getBoundingClientRect();
+        const danLeft = boundingClientRect.left;
+        const danRight = boundingClientRect.right;
+        const danTop = boundingClientRect.top;
+        const danBottom = boundingClientRect.bottom;
 
-  load() {
-    let apiurl = `${this.options.api.address}/v1/danmaku?id=${this.options.api.id}`;
-    const endpoints = (this.options.api.addition || []).slice(0);
-    endpoints.push(apiurl);
-    this.events && this.events.trigger("danmaku_load_start", endpoints);
-
-    this._readAllEndpoints(endpoints, (results) => {
-      this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
-      window.requestAnimationFrame(() => {
-        this.frame();
+        if (danLeft < e.pageX && e.pageX < danRight && danTop < e.pageY && e.pageY < danBottom) {
+          this.currentLockDanmaku = item;
+          this.lockDanmakuData = this.getDanmakuData(item.dataset.id);
+          if (this.player.options.uid === +this.lockDanmakuData.author) {
+            this.player.template.danmakuCancel.classList.add("show");
+            this.player.template.danmakuReport.classList.remove("show");
+          } else {
+            this.player.template.danmakuCancel.classList.remove("show");
+            this.player.template.danmakuReport.classList.add("show");
+          }
+          item.classList.add("lock");
+          this.danmakuTip.classList.add("show");
+          const itemTop = danTop - this.container.getBoundingClientRect().top;
+          this.danmakuTip.style.top = itemTop + 5 + "px";
+          this.danmakuTip.style.height = 45 + item.offsetHeight + "px";
+          if (e.pageX - this.container.getBoundingClientRect().left < 75) {
+            this.danmakuTip.style.left = 0;
+          } else if (this.container.clientWidth - (e.pageX - this.container.getBoundingClientRect().left) < 75) {
+            this.danmakuTip.style.left = "auto";
+            this.danmakuTip.style.right = 0;
+          } else {
+            this.danmakuTip.style.left = e.pageX - this.container.getBoundingClientRect().left - 75 + "px";
+          }
+          break;
+        } else {
+          item.classList.remove("lock");
+          // this.currentLockDanmaku = null;
+        }
+      }
+    };
+    // 进入tip，取消监听mask移动
+    this.danmakuTip.addEventListener("mouseover", () => {
+      this.player.template.danmakuTipMask.removeEventListener("mousemove", danmakuTipMaskMove);
+    });
+    // 离开tip，恢复监听mask移动
+    this.danmakuTip.addEventListener("mouseleave", () => {
+      this.danmakuTip.classList.remove("show");
+      this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
+      // this.currentLockDanmaku = null;
+      this.player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
+    });
+    this.player.template.danmakuTipMask.addEventListener("mousemove", danmakuTipMaskMove);
+    this.player.template.danmakuTipBox.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    //点赞
+    this.player.template.danmakuPraise.addEventListener("click", (e) => {});
+    //复制
+    this.player.template.danmakuCopy.addEventListener("click", (e) => {
+      navigator &&
+        navigator.clipboard &&
+        navigator.clipboard
+          .writeText(this.lockDanmakuData.text)
+          .then((res) => {
+            this.player.notice("已复制");
+            this.danmakuTip.classList.remove("show");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    });
+    //撤销
+    this.player.template.danmakuCancel.addEventListener("click", (e) => {});
+    //举报
+    let reportIReason;
+    this.player.template.danmakuReport.addEventListener("click", (e) => {
+      setTimeout(() => {
+        this.currentLockDanmaku && this.currentLockDanmaku.classList.add("lock");
+      }, 50);
+      //显示弹框
+      this.player.template.danmakuReportMask.classList.add("show");
+      this.player.template.danmakuReportContent.innerHTML = this.lockDanmakuData.text;
+      this.player.template.danmakuReportMask.addEventListener("click", (e) => {
+        e.stopPropagation();
       });
+      //隐藏弹框
+      this.player.template.danmakuReportModelClose.addEventListener("click", (e) => {
+        this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
+        this.player.template.danmakuReportMask.classList.remove("show");
+        this.player.template.danmakuReportDetail.classList.remove("show");
+      });
+      //举报选项
+      const allReports = this.player.template.danmakuReportMask.querySelectorAll(".mfunsPlayer-switch");
+      allReports.forEach((el, index) => {
+        if (!this[`reportOption${index}`]) {
+          this[`reportOption${index}`] = new Switch(el, false, {
+            on: () => {
+              for (let i = 0; i < allReports.length; i++) {
+                i !== index && this[`reportOption${i}`].off(1);
+              }
+              if (el.children[1].innerHTML !== "其他") {
+                reportIReason = el.children[1].innerHTML;
+                this.player.template.danmakuReportDetail.classList.remove("show");
+                this.player.template.danmakuReportSubmit.classList.remove("disable");
+              } else {
+                reportIReason = "";
+                this.player.template.danmakuReportDetail.classList.add("show");
+                this.player.template.danmakuReportDetail.value = "";
+              }
+              // 打开开关
+            },
+            off: (optionTrigger) => {
+              // 关闭开关
+              if (this.player.template.danmakuReportDetail.classList.contains("show"))
+                this.player.template.danmakuReportDetail.classList.remove("show");
+              if (!this.player.template.danmakuReportSubmit.classList.contains("disable") && !optionTrigger)
+                this.player.template.danmakuReportSubmit.classList.add("disable");
+            },
+          });
+        } else {
+          this[`reportOption${index}`].off();
+        }
+      });
+      this.player.template.danmakuReportDetail.addEventListener("input", (e) => {
+        this.player.template.danmakuReportSubmit.classList[e.target.value.trim() ? "remove" : "add"]("disable");
+      });
+    });
+    //举报提交
+    this.player.template.danmakuReportSubmit.addEventListener("click", () => {
+      if (this.player.template.danmakuReportSubmit.classList.contains("disable")) return;
+      const { author, text } = this.lockDanmakuData;
+      const { id } = this.options.api;
+      const reportData = {
+        danId: id ?? null,
+        author: author ?? null,
+        text,
+        reason: reportIReason || this.player.template.danmakuReportDetail.value,
+      };
 
-      this.options.callback(this.dan.length);
-
-      this.events && this.events.trigger("danmaku_load_end");
+      this.player.events.trigger("danmaku_report", reportData);
+      this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
+      this.player.template.danmakuReportMask.classList.remove("show");
+      this.player.template.danmakuReportDetail.classList.remove("show");
+    });
+  }
+  load() {
+    const { address, danmakuAddition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
+    const apiurl = `${address}/v1/danmaku?id=${id}`;
+    const endpoints = danmakuAddition || [];
+    const advDanData = [];
+    id && address && endpoints.push({ url: apiurl, type: "dplayer-danmaku", origin: "mfuns" });
+    advDanApi &&
+      endpoints.push({ url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`, type: "mfuns-advDanmaku-oldApi" });
+    this.events && this.events.trigger("danmaku_load_start", endpoints);
+    this.loaded = false;
+    this._readAllEndpoints(endpoints, (results, loadStatus) => {
+      if (!loadStatus) {
+        console.log(loadStatus, results);
+        this.events && this.events.trigger("danmaku_load_end", []);
+        return this.options.error(results);
+      } else {
+        console.log(results);
+        this.dan = [].concat.apply([], results).sort((a, b) => a.time - b.time);
+        this.dan.forEach((d) => {
+          d.id = this.createHash(8);
+          if (d.type == 8) {
+            advDanData.push(d.text); // 筛选高级弹幕
+          }
+        });
+        this.events && this.events.trigger("danmaku_load_end", this.dan);
+        this.loaded = true;
+        window.requestAnimationFrame(() => {
+          this.frame();
+        });
+        this.options.callback(this.dan.length, advDanData);
+      }
     });
   }
 
-  reload(newId) {
+  reload(newId, newAdvDanApi, newAddition) {
+    this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     this.options.api.id = newId;
+    this.options.api.danmakuAddition = newAddition;
+    this.options.api.advDanApi = newAdvDanApi;
     this.dan = [];
     this.clear();
     this.load();
@@ -49,114 +253,330 @@ class Danmaku {
    * Asynchronously read danmaku from all API endpoints
    */
   _readAllEndpoints(endpoints, callback) {
-    const results = [];
-    let readCount = 0;
-
-    for (let i = 0; i < endpoints.length; ++i) {
-      this.options.apiBackend.read({
-        url: endpoints[i],
-        success: (data) => {
-          results[i] = data;
-
-          ++readCount;
-          if (readCount === endpoints.length) {
-            callback(results);
-          }
-        },
-        error: (msg) => {
-          this.options.error(msg || "弹幕加载失败");
-          results[i] = [];
-
-          ++readCount;
-          if (readCount === endpoints.length) {
-            callback(results);
-          }
-        },
+    const allRequests = endpoints.map((link) => {
+      return new Promise((resolve, reject) => {
+        this.options.apiBackend.read({
+          url: link.url,
+          type: link.type,
+          success: (data) => {
+            resolve(data);
+          },
+          error: (error) => {
+            resolve([]);
+          },
+        });
       });
-    }
+    });
+    Promise.all([...allRequests])
+      .then((res) => {
+        callback(res, 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        callback(err, 0);
+      });
   }
 
-  send(dan, callback) {}
+  send(dan) {
+    const newDanmakuId = this.createHash(8);
+    const danmakuData = {
+      time: this.options.time() + 0.52,
+      size: dan.size || 25,
+      author: this.player.options.uid,
+      id: newDanmakuId,
+      text: dan.text,
+      color: dan.color || 16777215,
+      type: dan.type || "right",
+    };
 
+    const danmaku = {
+      text: this.htmlEncode(danmakuData.text),
+      color: danmakuData.color,
+      size: danmakuData.size,
+      type: danmakuData.type,
+      id: newDanmakuId,
+      isSubtitle: /(\/n)|(\\n)/i.test(danmakuData.text),
+      border: `2px solid ${this.options.borderColor}`,
+    };
+    console.log(danmakuData);
+    this.dan.splice(this.danIndex, 0, danmakuData);
+    this.danIndex++;
+    this.draw(danmaku);
+    this.options.sendDanmaku &&
+      this.options.sendDanmaku(
+        [
+          +this.options.time().toFixed(2),
+          utils.type2Number(dan.type ?? "right"),
+          utils.color2Number(dan.color ?? "#FFFFFF"),
+          dan.text,
+          +dan.size ?? 25,
+        ],
+        this.options.videoIndex()
+      );
+    this.events && this.events.trigger("danmaku_send", danmakuData);
+  }
+  checkShield = (dan) => {
+    let type = typeof dan.type !== "string" ? utils.number2Type(dan.type) : dan.type;
+    if (this[`${type}Limit`] && !/(\/n)|(\\n)/i.test(dan.text)) {
+      return false;
+    }
+    return true;
+  };
+  getDanmakuData(id) {
+    let dan;
+    for (let i = 0; i < this.dan.length; i++) {
+      if (this.dan[i].id === id) {
+        dan = this.dan[i];
+        break;
+      }
+    }
+    return dan;
+  }
   frame() {
     if (this.dan.length && !this.paused && this.showing) {
       let item = this.dan[this.danIndex];
       const dan = [];
       while (item && this.options.time() > parseFloat(item.time)) {
-        dan.push(item);
+        if (this.checkShield(item)) {
+          dan.push(item);
+        }
+
         item = this.dan[++this.danIndex];
       }
-      this.draw(dan);
+
+      if (this.colorLimit) {
+        this.draw(
+          dan.filter((el) => {
+            return el.color === 16777215;
+          })
+        );
+      } else {
+        this.draw(dan);
+      }
     }
     window.requestAnimationFrame(() => {
       this.frame();
     });
   }
-
+  limitArea(areaType) {
+    if (areaType === "keepOutSubtitle") {
+      this.keepOutSubtitle = true;
+      this.container.style.bottom = "20%";
+      return;
+    } else if (areaType === "notKeepOutSubtitle") {
+      this.keepOutSubtitle = false;
+      this.container.style.bottom = "0";
+      return;
+    }
+    //"1/4", "半屏", "3/4", "不重叠", "不限"
+    this._limitArea = Math.min(areaType / 4, 1);
+    this.unlimited = areaType > 4;
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "limitArea",
+        value: areaType,
+      });
+  }
+  shield(type, flag = false) {
+    console.log(type, flag);
+    this[`${type}Limit`] = flag;
+    if (flag) {
+      this.clear(type);
+      const forbidDanmaku = this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`);
+      forbidDanmaku.forEach((el) => {
+        if (!el.classList.contains("subtitle")) {
+          el.innerHTML = "";
+        }
+      });
+    }
+    if (type === "color") {
+      const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
+      items.forEach((el) => {
+        if (el.style.color !== "rgb(255, 255, 255)" && !el.classList.contains("subtitle")) {
+          el.innerHTML = "";
+        }
+      });
+    }
+    if (type === "advance") {
+    }
+    let filterArr = [];
+    const allType = ["top", "bottom", "left", "right", "color", "advance"];
+    allType.forEach((el) => {
+      if (this[`${el}Limit`]) {
+        filterArr.push(el);
+      }
+    });
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "shields",
+        value: filterArr,
+      });
+  }
   opacity(percentage) {
     if (percentage !== undefined) {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
       for (let i = 0; i < items.length; i++) {
-        items[i].style.opacity = percentage;
+        if (items[i].classList.contains("subtitle")) continue;
+        items[i].children[0].style.opacity = percentage;
       }
       this._opacity = percentage;
 
-      this.events && this.events.trigger("danmaku_opacity", this._opacity);
+      this.events &&
+        this.events.trigger("setDanmaku", {
+          key: "opacity",
+          value: percentage,
+        });
     }
     return this._opacity;
   }
-
-  /**
-   * Push a danmaku into DPlayer
-   *
-   * @param {Object Array} dan - {text, color, type}
-   * text - danmaku content
-   * color - danmaku color, default: `#fff`
-   * type - danmaku type, `right` `top` `bottom`, default: `right`
-   */
+  size(scale) {
+    this._fontScale = scale;
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "fontScale",
+        value: Number(scale.toFixed(2)),
+      });
+    return this._fontScale;
+  }
+  speed(speed) {
+    let speedName;
+    if (speed !== undefined) {
+      switch (speed) {
+        case 0.5:
+          speedName = "lowest";
+          break;
+        case 0.75:
+          speedName = "low";
+          break;
+        case 1:
+          speedName = "";
+          break;
+        case 1.25:
+          speedName = "fast";
+          break;
+        case 1.5:
+          speedName = "fastest";
+          break;
+        default:
+          break;
+      }
+      const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-move");
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("subtitle")) continue;
+        if (!!speedName) {
+          items[i].classList.add(speedName);
+        }
+        if (!!this._speed) {
+          items[i].classList.remove(this._speed);
+        }
+      }
+    }
+    this._speed = speedName;
+    this._speedVal = speed;
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "speed",
+        value: speed,
+      });
+  }
+  //弹幕绘制
   draw(dan) {
     if (this.showing) {
-      const itemHeight = this.options.height;
-      const danWidth = this.container.offsetWidth;
-      const danHeight = this.container.offsetHeight;
-      const itemY = parseInt(danHeight / itemHeight);
-
-      const danItemRight = (ele) => {
+      const itemHeight = this.options.height * this._fontScale; // 弹幕轨道高度
+      const danWidth = this.container.offsetWidth; //弹幕容器宽度
+      const danHeight = this.container.offsetHeight; //弹幕容器高度
+      const itemY = Math.floor(danHeight / itemHeight); //轨道数量
+      // console.log(itemY);
+      if (this.tunnelHeights.right !== itemY) this.tunnelHeights.right = utils.createArray(itemY, itemHeight);
+      if (this.tunnelHeights.left !== itemY) this.tunnelHeights.left = utils.createArray(itemY, itemHeight);
+      if (this.tunnelHeights.top !== itemY) this.tunnelHeights.top = utils.createArray(itemY, itemHeight);
+      if (this.tunnelHeights.bottom !== itemY) this.tunnelHeights.bottom = utils.createArray(itemY, itemHeight);
+      //弹幕与弹幕容器右侧的距离(滚动弹幕)
+      const danItemRight = (ele, istest) => {
         const eleWidth = ele.offsetWidth || parseInt(ele.style.width);
         const eleRight = ele.getBoundingClientRect().right || this.container.getBoundingClientRect().right + eleWidth;
+        if (istest) {
+          console.dir(ele.offsetWidth);
+        }
         return this.container.getBoundingClientRect().right - eleRight;
       };
+      //弹幕与弹幕容器左侧的距离(逆向弹幕)
+      const danItemLeft = (ele) => {
+        const eleWidth = ele.clientWidth || parseInt(ele.style.width);
+        const eleLeft = ele.getBoundingClientRect().left || this.container.getBoundingClientRect().left + eleWidth;
+        return this.container.getBoundingClientRect().left - eleLeft;
+      };
+      //弹幕速度
+      const danSpeed = (width) =>
+        ((danWidth + width) / this.player.fullScreen.isFullScreen() ? 8 : 5) * (this._speedVal ?? 1);
 
-      const danSpeed = (width) => (danWidth + width) / 5;
-
+      //获取弹幕可进入的轨道
       const getTunnel = (ele, type, width) => {
-        const tmp = danWidth / danSpeed(width);
-
+        const tmp = danWidth / danSpeed(width); //弹幕自身完全进入弹幕容器所需要的时间
         for (let i = 0; this.unlimited || i < itemY; i++) {
-          const item = this.danTunnel[type][i + ""];
+          const item = this.danTunnel[type][i + ""]; //轨道弹幕组(单轨道内的所有弹幕)
+          // i === 0 && console.log(this.danTunnel[type]["0"], item);
           if (item && item.length) {
-            if (type !== "right") {
+            if (type !== "right" && type !== "left") {
               continue;
             }
+            // --------轨道弹幕组弹幕防碰撞检测--------//
             for (let j = 0; j < item.length; j++) {
-              const danRight = danItemRight(item[j]) - 10;
-              if (danRight <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danRight <= 0) {
-                break;
+              if (type === "right") {
+                const danRight = danItemRight(item[j]) - 15;
+                if (danRight <= 0) {
+                  this.tunnelHeights[type][i] =
+                    parseInt(this.miniMode ? 16 : item[j].style.fontSize) + this.tunnelPadding;
+                  // i === 0 && console.log(item[j].children[0].innerHTML + "----未完全进入轨道0");
+                  //该情况表示当前轨道有滚动弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
+                  break;
+                }
+              }
+              if (type === "left") {
+                const danLeft = danItemLeft(item[j]) - 15;
+                this.tunnelHeights[type][i] = parseInt(item[j].style.fontSize) + this.tunnelPadding;
+                if (danLeft <= danWidth - tmp * danSpeed(parseInt(item[j].style.width)) || danLeft <= 0) {
+                  //该情况表示当前轨道有逆向弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
+                  break;
+                }
               }
               if (j === item.length - 1) {
+                //轨道弹幕组遍历完毕，组内所有弹幕均完全进入容器，可以向该轨道装填弹幕
+                this.tunnelHeights[type][i] =
+                  parseInt(this.miniMode ? 16 : item[j].style.fontSize) + this.tunnelPadding;
+                // if (i === 0 && type === "right") {
+                const items = [...this.container.querySelectorAll(".mfunsPlayer-danmaku-right")].filter(
+                  (el) => el.dataset.tunnel === `${i}`
+                );
+                // console.log(this.danTunnel["right"][`${i}`]?.length, items.length);
+                if (this.danTunnel["right"][`${i}`]?.length !== items.length) {
+                  this.danTunnel["right"][`${i}`] = items;
+                }
+                // }
                 this.danTunnel[type][i + ""].push(ele);
                 ele.addEventListener("animationend", () => {
-                  this.danTunnel[type][i + ""].splice(0, 1);
+                  const index = this.danTunnel[type][i + ""]?.indexOf(ele);
+                  this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
                 });
-                return i % itemY;
+                return i % Math.floor(itemY * this._limitArea);
               }
             }
           } else {
-            this.danTunnel[type][i + ""] = [ele];
+            // i === 0 && type === "right" && console.log("-------", this.danTunnel["right"]["0"]?.length);
+            // console.log(this.danTunnel[type][i + ""]);
+            // this.danTunnel[type][i + ""] = [ele];
+
+            if (Array.isArray(this.danTunnel[type][i + ""])) {
+              this.danTunnel[type][i + ""].push(ele);
+            } else {
+              this.danTunnel[type][i + ""] = [ele];
+            }
             ele.addEventListener("animationend", () => {
-              this.danTunnel[type][i + ""].splice(0, 1);
+              const index = this.danTunnel[type][i + ""]?.indexOf(ele);
+              this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
             });
-            return i % itemY;
+            // console.log(item, i);
+            return i % Math.floor(itemY * this._limitArea);
           }
         }
         return -1;
@@ -169,86 +589,164 @@ class Danmaku {
       const docFragment = document.createDocumentFragment();
 
       for (let i = 0; i < dan.length; i++) {
+        if (dan[i].type >= 7) {
+          continue;
+        }
         if (typeof dan[i].type !== "string") {
           dan[i].type = utils.number2Type(dan[i].type);
         }
-
         if (!dan[i].color) {
           dan[i].color = 16777215;
         }
+        if (!dan[i].size) {
+          dan[i].size = 25;
+        }
         const item = document.createElement("div");
-        // if (!this.paused) {
-        //   item.classList.add("mfunsPlayer-danmaku-run");
-        // } else {
-        //   item.classList.remove("mfunsPlayer-danmaku-run");
-        // }
+        if (!this.paused) {
+          item.classList.add("mfunsPlayer-danmaku-run");
+        } else {
+          item.classList.remove("mfunsPlayer-danmaku-run");
+        }
         item.classList.add("mfunsPlayer-danmaku-item");
         item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
+        dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
+        dan[i].isSubtitle && item.classList.add("subtitle");
         if (dan[i].border) {
-          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text}</span>`;
+          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
         } else {
-          item.innerHTML = dan[i].text.replace(/(\/n)|(\\n)/g, "\n");
+          item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
         }
-        item.style.opacity = this._opacity;
         if (typeof dan[i].color !== "string") {
           item.style.color = utils.number2Color(dan[i].color);
         }
-
+        item.children[0].style.opacity = this._opacity;
+        item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
         item.addEventListener("animationend", () => {
-          this.container.removeChild(item);
+          if ([...this.container.children].indexOf(item) > -1) this.container.removeChild(item);
         });
 
-        const itemWidth = this._measure(dan[i].text);
-        const isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
+        const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
+
         let tunnel;
 
         // adjust
         switch (dan[i].type) {
           case "right":
             tunnel = getTunnel(item, dan[i].type, itemWidth);
-            if (tunnel >= 0 || isSubtitle) {
+            // if (tunnel === 0) {
+            //   console.log(tunnel, dan[i].text);
+            // const firstTunnel = this.danTunnel["right"]["0"];
+            // const l = firstTunnel[firstTunnel.length - 1];
+            // firstTunnel.length && console.log(danItemRight(l, true));
+            // }
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              // console.log(top, tunnel);
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.dataset.tunnel = tunnel;
+              item.classList[this.miniMode ? "add" : "remove"]("fast");
               item.style.width = itemWidth + 1 + "px";
-              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(-${danWidth}px)`;
             }
             break;
           case "left":
+            if (this.miniMode) return;
             tunnel = getTunnel(item, dan[i].type, itemWidth);
-            if (tunnel >= 0 || isSubtitle) {
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
+              const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
               item.style.width = itemWidth + 1 + "px";
-              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
               item.style.transform = `translateX(${danWidth}px)`;
             }
             break;
           case "top":
+            if (this.miniMode) return;
             tunnel = getTunnel(item, dan[i].type);
-            if (tunnel >= 0 || isSubtitle) {
-              item.style.top = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              let topArr = [];
+              const topDan = this.danTunnel.top;
+              for (let key in topDan) {
+                topArr.push(...topDan[key]);
+              }
+              const top = topArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
             }
             break;
           case "bottom":
+            if (this.miniMode) return;
             tunnel = getTunnel(item, dan[i].type);
-            if (tunnel >= 0 || isSubtitle) {
-              item.style.bottom = (isSubtitle ? 0 : itemHeight * tunnel) + "px";
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              let bottomArr = [];
+              const bottomDan = this.danTunnel.bottom;
+              for (let key in bottomDan) {
+                bottomArr.push(...bottomDan[key]);
+              }
+              const bottom = bottomArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
+
+              if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
             break;
           default:
-            console.error(`Can't handled danmaku type: ${dan[i].type}`);
+            console.error(`无法处理的弹幕模式: ${dan[i].type}`);
         }
-
         if (tunnel >= 0) {
           // move
           item.classList.add("mfunsPlayer-danmaku-move");
+          item.dataset.id = dan[i].id;
 
+          if (!!this._speed && !dan[i].isSubtitle) {
+            item.classList.add(this._speed);
+          }
           // insert
-          docFragment.appendChild(item);
+          this.container.appendChild(item);
+          // docFragment.appendChild(item);
         }
       }
 
-      this.container.appendChild(docFragment);
+      // this.container.appendChild(docFragment);
 
       return docFragment;
     }
+  }
+  removeDanmakuCheck() {
+    this.lockDanmaku && this.lockDanmaku.classList.remove("lock");
+    this.player.template.danmakuTip.classList.remove("show");
+    this.lockDanmaku.dataset.moved = 0;
+    this.lockDanmaku.style.zIndex = "auto";
+    this.container.style.cursor = "none";
   }
 
   play() {
@@ -259,12 +757,21 @@ class Danmaku {
     this.paused = true;
   }
 
-  _measure(text) {
-    if (!this.context) {
-      const measureStyle = getComputedStyle(this.container.getElementsByClassName("mfunsPlayer-danmaku-item")[0], null);
-      this.context = document.createElement("canvas").getContext("2d");
-      this.context.font = measureStyle.getPropertyValue("font");
+  _measure(text, size) {
+    if (!this.demoDanmaku) {
+      this.demoDanmaku = this.container.getElementsByClassName("mfunsPlayer-danmaku-item")[0];
     }
+    this.demoDanmaku.style.fontSize = (this.miniMode ? 16 : size) * this._fontScale + "px";
+
+    let measureStyle = getComputedStyle(this.demoDanmaku, false);
+    if (!this.context) {
+      this.context = document.createElement("canvas").getContext("2d");
+    }
+    const fontSize = measureStyle.getPropertyValue("font-size");
+    const fontWeight = measureStyle.getPropertyValue("font-weight");
+    const fontFamily = measureStyle.getPropertyValue("font-family");
+    this.context.font =
+      measureStyle.getPropertyValue("font") ?? `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
     return this.context.measureText(text).width;
   }
 
@@ -279,15 +786,20 @@ class Danmaku {
     }
   }
 
-  clear() {
+  clear(type) {
+    if (type) {
+      this.danTunnel[type] = {};
+      return;
+    }
     this.danTunnel = {
+      left: {},
       right: {},
       top: {},
       bottom: {},
     };
     this.danIndex = 0;
     this.options.container.innerHTML = "";
-
+    this.options.container.appendChild(this.demoDanmaku);
     this.events && this.events.trigger("danmaku_clear");
   }
 
@@ -297,8 +809,7 @@ class Danmaku {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#x27;")
-      .replace(/\//g, "<br/>");
+      .replace(/'/g, "&#x27;");
   }
 
   resize() {
@@ -314,7 +825,11 @@ class Danmaku {
     this.pause();
     this.clear();
 
-    this.events && this.events.trigger("danmaku_hide");
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "show",
+        value: false,
+      });
   }
 
   show() {
@@ -322,11 +837,25 @@ class Danmaku {
     this.showing = true;
     this.play();
 
-    this.events && this.events.trigger("danmaku_show");
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "show",
+        value: true,
+      });
   }
-
+  toggle() {
+    if (this.showing) {
+      this.hide();
+    } else {
+      this.show();
+    }
+  }
   unlimit(boolean) {
     this.unlimited = boolean;
+  }
+  mini(flag) {
+    this.miniMode = flag;
+    this.options.height = flag ? 22 : 28;
   }
 }
 

@@ -1,70 +1,26 @@
-@import './controller';
-@import './player';
-@import './video';
-@import './danmaku';
-@import './editor';
-@import './loader';
-@import './menu';
+@import "./controller";
+@import "./player";
+@import "./video";
+@import "./danmaku";
+@import "./loader";
+@import "./menu";
+@import "./modal.scss";
+@import "./panel.scss";
 @import "./footBar";
-@import './fullscreen';
-
-@keyframes close {
-	from {
-		margin-left: 12px;
-	}
-
-	to {
-		margin-left: 2px;
-	}
+@import "./fullscreen";
+@import "./components";
+@import "./danmakuAuxiliary";
+@import "./font-icon";
+body.player-mode-blackmask .heimu {
+	z-index: 1002;
 }
-
-@keyframes open {
-	from {
-		margin-left: 2px;
-	}
-
-	to {
-		margin-left: 12px;
-	}
-}
-
-@keyframes expand{
-	from {
-		right: -40%;
-	}
-
-	to {
-		right: 0;
-	}
-}
-@keyframes retract{
-	from {
-		right: 0;
-	}
-
-	to {
-		right: -40%;
-	}
-}
-
-@keyframes down{
-	from{
-		margin-top: -5%;
-		opacity: 0;
-	}
-	to{
-		margin-top: 3%;
-		opacity: 1;
-	}
-}
-
-@keyframes up{
-	from{
-		margin-top: 3%;
-		opacity: 1;
-	}
-	to{
-		margin-top: -5%;
-		opacity: 0;
-	}
+.heimu {
+	background: #000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0.9;
+	z-index: 10015;
 }

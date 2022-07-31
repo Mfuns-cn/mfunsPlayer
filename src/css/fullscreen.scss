@@ -1,5 +1,7 @@
+@import "./theme";
+
 .mfunsPlayer-video-wrap {
-    &:-webkit-full-screen {
+    &.browser-fullscreen {
         width: 100%;
         height: 100%;
         background: #000;
@@ -10,151 +12,200 @@
         margin: 0;
         padding: 0;
         transform: translate(0, 0);
-        .mfunsPlayer-notice{
-            bottom:80px
+        .mfunsPlayer-bezel {
+            bottom: 80px !important;
         }
-        .mfunsPlayer-video-mask{
+        .mfunsPlayer-tip-container {
+            bottom: 90px;
+        }
+        .mfunsPlayer-video-mask {
             height: 100%;
         }
-        .mfunsPlayer-controller-mask{
-           .mfunsPlayer-bezel{
-               margin-top: -30px;
+        .mfunsPlayer-activity {
+            transform: scale(1.2);
+        }
+        .mfunsPlayer-controller-mask {
+            .mfunsPlayer-bezel {
+                margin-top: -35px;
             }
-            .mfunsPlayer-video-danmaku-root{
-                width: 40%;
-                height: 75%;
+            .mfunsPlayer-highEnergy-bar {
+                bottom: 55px;
+            }
+            .mfunsPlayer-controller-label {
+                font-size: 17px;
+            }
+            .mfunsPlayer-controller-icon {
+                font-size: 24px;
+            }
+            .mfunsPlayer-video-danmaku-root {
+                width: 35%;
+                height: 30px;
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                .mfunsPlayer-video-danmaku-button{
-                    width: 23px;
-		            height: 23px;
-                    &.close{
-                        background: url("../icon/barrage-full.svg");
-                        background-size: 100% 100%;
-                    }
-                }
-                .mfunsPlayer-video-danmaku-set{
-                    width: 23px;
-		            height: 23px;
-                    background: url("../icon/barrage-set-full.svg");
-			        background-size: 100% 100%;
-                }
-                .danmaku_style{
-                    color: #f5f5f5;
-                    border-bottom: 2px solid #f5f5f5;
-                    &:hover{
-                        color: #7b7ff7;
-                        border-color: #7b7ff7;	
-                    }
-                }
-                .mfunsPlayer-danmaku-text{
+                .input_box {
                     border: none;
-	                color: #f5f5f5;
-                    &::-webkit-input-placeholder{
+                    border-radius: $theme-border-radius;
+                    background: hsla(0, 0%, 100%, 0.35);
+                }
+                .mfunsPlayer-controller-button {
+                    padding: 0 5px;
+                }
+
+                .mfunsPlayer-controller-danmaku-style {
+                    .icon-text {
+                        color: #f5f5f5;
+                        &:hover {
+                            color: $theme-color-light;
+                        }
+                    }
+                }
+                .mfunsPlayer-controller-danmaku-settings {
+                    .icon-danmaku-settings {
+                        color: #e0e0e0;
+                        &:hover {
+                            color: #fff;
+                        }
+                    }
+                }
+                .mfunsPlayer-danmaku-text {
+                    border: none;
+                    color: #f5f5f5;
+                    &::-webkit-input-placeholder {
                         color: #fff;
                     }
                 }
-            }
-            .mfunsPlayer-controller{
-                height: 65%;
-                .mfunsPlayer-controller-wrap{
-                    .mfunsPlayer-video-danmaku-root{
-                            display: flex;
+                .mfunsPlayer-danmaku-emit {
+                    height: 100%;
+                    border-radius: 0 $theme-border-radius $theme-border-radius 0;
+                }
+                .mfunsPlayer-danmaku-status-not-logged-in {
+                    color: #f5f5f5;
+                    .mfunsPlayer-toLogin {
+                        color: #0ff;
                     }
-                    .mfunsPlayer-controller-left{
+                }
+            }
+            .mfunsPlayer-controller {
+                height: 60px;
+                .mfunsPlayer-controller-wrap {
+                    .mfunsPlayer-video-danmaku-root {
+                        display: flex;
+                        .mfunsPlayer-controller-button {
+                            // 按钮
+                            padding: 0 5px;
+                        }
+                    }
+                    .mfunsPlayer-controller-tip {
+                        bottom: 160%;
+                    }
+                    .mfunsPlayer-controller-button {
+                        // 按钮
+                        padding: 0 12px;
+                    }
+                    .mfunsPlayer-controller-left {
                         width: auto;
                         padding-right: 16px;
-                        .player_btn {
-                            margin-right: 7px;
-                            .icon_pause,.icon_play{
-                                width: 34px;
-                                height: 34px;
-                            }
-                        }
-                         
-                        .mfunsPlayer-controller-skip{
-                            margin: 0 10px;
-                            width: 24px;
-					        height: 24px;
-                        }
                     }
+
                     .mfunsPlayer-controller-right {
-                        display: flex;
-                        .mfunsPlayer-speed{
-                           .mfunsPlayer-speed-info{
-                              font-size: 16px;
-                           }
-                        }
-                        
-                        .mfunsPlayer-squirtle{
-                            display: flex;
-                            .mfunsPlayer-squirtle-info{
-                              font-size: 16px;
+                        .mfunsPlayer-controller-fullscreen {
+                            .icon-fullscreen {
+                                display: none;
                             }
-                        }
-                        
-                        .mfunsPlayer-controller-volume-icon{
-                            width: 27px !important;
-                            height: 27px !important;
-                        }
-                        .mfunsPlayer-controller-web-full-icon{
-                            width: 22px !important;
-                            height: 22px !important;
-                        }
-                        .mfunsPlayer-controller-set-icon,
-                        .mfunsPlayer-controller-troggle-icon,
-                        .mfunsPlayer-controller-full-icon{
-                            width: 24px !important;
-                            height: 24px !important;
-                        } 
-                        
-                        .mfunsPlayer-controller-full{
-                            i{
-                              background-image: url(../icon/fullscreen-exit.svg);
+                            .icon-fullscreen-exit {
+                                display: block;
                             }
                         }
                     }
                 }
             }
-            
         }
-        
+
         .mfunsPlayer-danmaku {
-                .mfunsPlayer-danmaku-top,
-                .mfunsPlayer-danmaku-bottom {
-                    &.mfunsPlayer-danmaku-move {
-                        animation: danmaku-center 5s linear;
-                        animation-play-state: inherit;
-                    }
+            // .mfunsPlayer-danmaku-item {
+            //     &.lock{
+            //     animation: danmaku 8s linear;
+            //     animation-play-state: paused !important;
+            //     z-index:103!important;
+            //   }
+            // }
+            .mfunsPlayer-danmaku-top,
+            .mfunsPlayer-danmaku-bottom {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku-center 5s linear;
+                    animation-play-state: inherit;
                 }
-                .mfunsPlayer-danmaku-right {
-                    &.mfunsPlayer-danmaku-move {
-                        animation: danmaku 8s linear;
-                        animation-play-state: inherit;
+            }
+
+            .mfunsPlayer-danmaku-right {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku 8s linear;
+                    // animation-play-state: inherit;
+                    &.low {
+                        animation: danmaku 10s linear;
+                    }
+                    &.lowest {
+                        animation: danmaku 12s linear;
+                    }
+                    &.fast {
+                        animation: danmaku 6s linear;
+                    }
+                    &.fastest {
+                        animation: danmaku 4s linear;
                     }
                 }
             }
+            .mfunsPlayer-danmaku-left {
+                &.mfunsPlayer-danmaku-move {
+                    animation: danmaku-reverse 8s linear;
+                    animation-play-state: inherit;
+                    &.low {
+                        animation: danmaku-reverse 10s linear;
+                    }
+                    &.lowest {
+                        animation: danmaku-reverse 12s linear;
+                    }
+                    &.fast {
+                        animation: danmaku-reverse 6s linear;
+                    }
+                    &.fastest {
+                        animation: danmaku-reverse 4s linear;
+                    }
+                }
+            }
+        }
     }
-    &.mfunsPlayer-web-fullscreen{
-        @extend :-webkit-full-screen;
+    &.mfunsPlayer-web-fullscreen {
+        @extend .browser-fullscreen;
         position: fixed;
         z-index: 100000;
         left: 0;
-        top:0;
+        top: 0;
         width: 100% !important;
         height: 100% !important;
-        .mfunsPlayer-controller-mask{ 
-            .mfunsPlayer-controller{
-            .mfunsPlayer-controller-right{
-                .mfunsPlayer-controller-full{
-                    i{
-                    background-image: url(../icon/fullscreen-fill.svg) !important;
+        .mfunsPlayer-controller-mask {
+            .mfunsPlayer-controller {
+                height: 60px;
+                .mfunsPlayer-controller-right {
+                    .mfunsPlayer-controller-webfull {
+                        .icon-web-fullscreen {
+                            display: none;
+                        }
+                        .icon-web-fullscreen-exit {
+                            display: block;
+                        }
+                    }
+                }
+                .mfunsPlayer-controller-fullscreen {
+                    .icon-fullscreen {
+                        display: block !important;
+                    }
+                    .icon-fullscreen-exit {
+                        display: none !important;
                     }
                 }
             }
-            }
         }
     }
-
 }

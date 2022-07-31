@@ -1,7 +1,9 @@
+@import "./theme.scss";
+
 .mfunsPlayer-menu {
     position: absolute;
     width: 170px;
-    border-radius: 2px;
+    border-radius: $theme-border-radius;
     background: rgba(28, 28, 28, 0.85);
     padding: 5px 0;
     overflow: hidden;
@@ -17,14 +19,12 @@
     height: 30px;
     box-sizing: border-box;
     cursor: pointer;
-   
-    
 }
 .mfunsPlayer-menu-item :hover {
-    background-color: rgba(255, 255, 255, .1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.mfunsPlayer-menu-item >a {
+.mfunsPlayer-menu-item > a {
     text-decoration: none;
     display: inline-block;
     padding: 0 10px;
@@ -39,5 +39,4 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-   
 }
