@@ -9,7 +9,6 @@ class Thumbnails {
     this.container.style.backgroundImage = `url('${url}')`;
   }
   resize(width, height, barWrapWidth) {
-    console.log(barWrapWidth);
     this.container.style.width = `${width}px`;
     this.container.style.height = `${height}px`;
     this.container.style.top = `${-height - 10}px`;

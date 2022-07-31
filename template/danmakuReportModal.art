@@ -42,5 +42,6 @@
       </div>
     </div>
   </div>
-  <div class="mfunsPlayer-danmaku-report-submit">提 交</div>
+  <textarea class="mfunsPlayer-danmaku-report-detail" maxlength="100"></textarea>
+  <div class="mfunsPlayer-danmaku-report-submit disable">提 交</div>
 </div>

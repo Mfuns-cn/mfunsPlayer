@@ -194,6 +194,47 @@ const utils = {
     return rgb;
   },
 
+  hex2Rgb(str, opacity) {
+    //16进制转rgb
+    var reg = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+    if (!reg.test(str)) {
+      return;
+    }
+    let newStr = str.toLowerCase().replace(/\#/g, "");
+    let len = newStr.length;
+    if (len == 3) {
+      let t = "";
+      for (var i = 0; i < len; i++) {
+        t += newStr.slice(i, i + 1).concat(newStr.slice(i, i + 1));
+      }
+      newStr = t;
+    }
+    let arr = []; //将字符串分隔，两个两个的分隔
+    for (var i = 0; i < 6; i = i + 2) {
+      let s = newStr.slice(i, i + 2);
+      arr.push(parseInt("0x" + s));
+    }
+    if (opacity) return "rgba(" + arr.join(",") + "," + opacity + ")";
+    return "rgb(" + arr.join(",") + ")";
+  },
+  rgb2Hex(str) {
+    //rgb转16进制
+    let reg = /^(rgb|RGB)/;
+    if (!reg.test(str)) {
+      return;
+    }
+    var arr = str.slice(4, str.length - 1).split(",");
+    let color = "#";
+    for (var i = 0; i < arr.length; i++) {
+      var t = Number(arr[i]).toString(16);
+      if (t == "0") {
+        //如果为“0”的话，需要补0操作,否则只有5位数
+        t = t + "0";
+      }
+      color += t;
+    }
+    return color;
+  },
   color2Number: (color) => {
     if (color[0] === "#") {
       color = color.substr(1);
@@ -237,39 +278,49 @@ const utils = {
         return "适中";
     }
   },
-  number2Type: (number) => {
-    switch (number) {
-      case 0:
-        return "right";
-      case 1:
-        return "top";
-      case 2:
-        return "bottom";
-      case 3:
-        return "left";
-      case 8:
-        return "json";
-      default:
-        return "right";
-    }
-  },
-  type2Number: (type) => {
-    switch (type) {
-      case "right":
-        return 0;
-      case "top":
-        return 1;
-      case "bottom":
-        return 2;
-      case "left":
-        return 3;
-      case "json":
-        return 8;
-      default:
-        return 0;
-    }
-  },
-
+  // number2Type: (number) => {
+  //   switch (number) {
+  //     case 0:
+  //       return "right";
+  //     case 1:
+  //       return "top";
+  //     case 2:
+  //       return "bottom";
+  //     case 3:
+  //       return "left";
+  //     case 8:
+  //       return "json";
+  //     default:
+  //       return "right";
+  //   }
+  // },
+  // type2Number: (type) => {
+  //   switch (type) {
+  //     case "right":
+  //       return 0;
+  //     case "top":
+  //       return 1;
+  //     case "bottom":
+  //       return 2;
+  //     case "left":
+  //       return 3;
+  //     case "json":
+  //       return 8;
+  //     default:
+  //       return 0;
+  //   }
+  // },
+  report2Num: new Map([
+    ["违法违禁", 0],
+    ["人身攻击", 1],
+    ["色情低俗", 2],
+    ["政治敏感", 3],
+    ["恶意刷屏", 4],
+    ["引战", 5],
+    ["侵犯隐私", 6],
+    ["垃圾广告", 7],
+    ["其他", 8],
+  ]),
   initHash() {
     let count = 100;
 
@@ -330,34 +381,34 @@ const utils = {
     const random = Math.floor(Math.random() * range);
     return allSize[random];
   },
-  // number2Type: (number) => {
-  //   switch (number) {
-  //     case 1:
-  //       return "right";
-  //     case 5:
-  //       return "top";
-  //     case 4:
-  //       return "bottom";
-  //     case 6:
-  //       return "left";
-  //     default:
-  //       return "right";
-  //   }
-  // },
-  // type2number: (type) => {
-  //   switch (type) {
-  //     case "right":
-  //       return 1;
-  //     case "top":
-  //       return 5;
-  //     case "bottom":
-  //       return 4;
-  //     case "left":
-  //       return 6;
-  //     default:
-  //       return 1;
-  //   }
-  // },
+  number2Type: (number) => {
+    switch (number) {
+      case 1:
+        return "right";
+      case 5:
+        return "top";
+      case 4:
+        return "bottom";
+      case 6:
+        return "left";
+      default:
+        return "right";
+    }
+  },
+  type2number: (type) => {
+    switch (type) {
+      case "right":
+        return 1;
+      case "top":
+        return 5;
+      case "bottom":
+        return 4;
+      case "left":
+        return 6;
+      default:
+        return 1;
+    }
+  },
 };
 
 export default utils;

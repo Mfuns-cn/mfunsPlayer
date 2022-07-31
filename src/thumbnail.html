@@ -35,7 +35,7 @@
                 <option value="flv">flv</option>
                 <option value="hls">hls</option>
               </select>
-              <button class="link-confirm" onclick="confirmLink(this)">确认</button>
+              <button class="link-confirm" onclick="confirmLink(this)">确 定</button>
             </div>
           </div>
           <div class="tip">1.请使用谷歌内核的浏览器，支持拖拽上传</div>
@@ -214,13 +214,16 @@
           video.pause();
           count = 0;
           barValue.innerHTML = "执行完毕~";
-          oCanvas.toDataURL("image/png");
+          let base64 = oCanvas.toDataURL("image/png");
+          if (base64.length / 1024 > 1000) {
+            base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
+          }
           videoBox.removeChild(loadBar);
           console.log("结束");
           resetBtn.classList.remove("disable");
           downloadBtn.classList.remove("disable");
           video.currentTime = 0;
-          downloadURL = oCanvas.toDataURL("image/png");
+          downloadURL = base64;
           return;
         }
         loadBar.style.display = "block";
@@ -279,6 +282,8 @@
         };
       } else {
         loading.innerHTML = "视频加载错误，请检查视频链接或格式是否正确！";
+        trigger.classList.remove("hide");
+        resetBtn.classList.remove("disable");
       }
     };
   </script>

@@ -80,7 +80,64 @@
         }
     }
 }
+.mfunsPlayer-miniPlayer {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    width: 400px;
+    height: 225px;
+    background-color: #000;
+    z-index: 99999;
+    &.hide {
+        display: none;
+    }
+    > .content {
+        position: relative;
+        width: 400px;
+        height: 225px;
+        overflow: hidden;
+        .mfunsPlayer-video-mask {
+            width: 400px;
+            height: 225px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9;
+            background: #000;
 
+            &.mirror {
+                > video {
+                    transform: rotateX(1deg) rotateY(180deg);
+                }
+            }
+            video {
+                display: block;
+                width: 100%;
+                max-height: 100%;
+            }
+        }
+        .mfunsPlayer-danmaku {
+            width: 400px;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0 !important;
+            margin: 0 !important;
+            .mfunsPlayer-danmaku-item {
+                font-size: 16px !important;
+            }
+            // .mfunsPlayer-danmaku-right {
+            //     &.mfunsPlayer-danmaku-move {
+            //         animation: danmaku 3s linear;
+            //         animation-play-state: paused;
+            //     }
+            // }
+        }
+    }
+}
 .advancedDanmaku_box {
     position: absolute;
     top: 0;
