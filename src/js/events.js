@@ -34,11 +34,11 @@ class Events {
       "danmaku_loaded",
       "danmaku_send", // 发送弹幕
       "danmaku_report", // 举报弹幕
-      "danmaku_opacity",
       "contextmenu_show", // 显示右键菜单
       "contextmenu_hide", // 隐藏右键菜单
       "notice_show",
       "notice_hide",
+      "toLogin",
       "destroy",
       "resize",
       "fullscreen", // 进入全屏模式
@@ -56,6 +56,10 @@ class Events {
       "darkmode_off", // 关闭关灯模式
       // "fixcontroller_on",     // 开启底栏固定(未启用)
       // "fixcontroller_off",    // 取消底栏固定(未启用)
+
+      "setPlayer",
+      "setDanmaku",
+      "update_video_position",
     ];
   }
 

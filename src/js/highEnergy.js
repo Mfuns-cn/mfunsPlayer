@@ -42,6 +42,8 @@ export default class HighEnergy {
   }
   init() {
     this.getData();
+    const themeColor = this.player.template?.container.style.getPropertyValue("--themeColor");
+    console.log(utils.hex2Rgb(themeColor, 0.4));
     if (!this.highEnergyBar) {
       this.highEnergyBar = window.echarts.init(this.container);
     }
@@ -62,7 +64,7 @@ export default class HighEnergy {
           {
             gt: 0,
             lt: 0,
-            color: "rgba(147,158,251, 0.4)",
+            color: utils.hex2Rgb(themeColor, 0.4),
           },
           {
             gt: 0,
@@ -124,11 +126,12 @@ export default class HighEnergy {
     this.highEnergyBar.setOption(this.option);
     this.resize();
   }
-  reload() {
+  reload(rate) {
     this.Ydata = utils.createArray(this.slice).map(() => {
       return 0;
     });
     this.init();
+    rate && this.update(rate);
     this.resize();
   }
 

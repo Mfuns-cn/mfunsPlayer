@@ -1,5 +1,14 @@
 @import "./theme";
-
+@media screen and (max-width: 1200px) {
+	.mfunsPlayer-controller-wrap {
+		> .mfunsPlayer-video-danmaku-root {
+			justify-content: flex-start;
+			.input_box {
+				display: none !important;
+			}
+		}
+	}
+}
 .mfunsPlayer-controller-mask {
 	width: 100%;
 	height: 100px;

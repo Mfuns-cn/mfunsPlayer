@@ -39,14 +39,14 @@ class Timer {
           this.enabledownloadChecker = utils.isChrome;
           this.player.template.loading.classList.add("show");
           this.player.container.classList.add("mfunsPlayer-loading");
-          this.player.danmaku.pause();
+          this.player.danmaku && this.player.danmaku.pause();
           bufferingDetected = true;
         }
         if (bufferingDetected && currentPlayPos > lastPlayPos) {
           this.enabledownloadChecker = false;
           this.player.template.loading.classList.remove("show");
           this.player.container.classList.remove("mfunsPlayer-loading");
-          this.player.danmaku.play();
+          this.player.danmaku && this.player.danmaku.play();
           bufferingDetected = false;
         }
         lastPlayPos = currentPlayPos;

@@ -16,7 +16,7 @@ class Controller {
     this.clickFlag = 0;
     this.controllTimer = null;
     this.danmakuFontsize = "25";
-    this.danmakuMode = "right";
+    this.danmakuType = "right";
     this.danmakuColor = "#FFFFFF";
     this.videoScale = false;
     this.mask = document.createElement("div");
@@ -38,7 +38,7 @@ class Controller {
     }
     if (player.options.danmaku) {
       this.initDanmakuButton();
-      this.initDanmakuSettingsButton();
+      // this.initDanmakuSettingsButton();
       this.initDanmakuStyleButton();
       this.initDanmakuEmit();
     }
@@ -49,6 +49,36 @@ class Controller {
     if (player.options.widescreenSwitch) {
       this.initWidescreenButton();
     }
+    this.watchPlayerScroll = (e) => {
+      if (this.template.container.getBoundingClientRect().top + this.template.container.offsetHeight <= 0) {
+        if (this.template.miniPlayer.classList.contains("hide")) {
+          this.template.miniPlayer.classList.remove("hide");
+          const content = this.template.miniPlayer.querySelector(".content");
+          this.template.previewMask.removeChild(this.template.videoMask);
+          this.template.previewMask.removeChild(this.template.danmaku);
+          content.appendChild(this.template.videoMask);
+          content.appendChild(this.template.danmaku);
+          content.onclick = () => {
+            this.player.toggle();
+          };
+          this.player.danmaku.mini(true);
+          this.player.danmaku.resize();
+          this.player.danmaku.seek();
+        }
+      } else {
+        if (!this.template.miniPlayer.classList.contains("hide")) {
+          this.template.miniPlayer.classList.add("hide");
+          const content = this.template.miniPlayer.querySelector(".content");
+          content.removeChild(this.template.videoMask);
+          content.removeChild(this.template.danmaku);
+          this.template.previewMask.appendChild(this.template.videoMask);
+          this.template.previewMask.appendChild(this.template.danmaku);
+          this.player.danmaku.mini(false);
+          this.player.danmaku.resize();
+          this.player.danmaku.seek();
+        }
+      }
+    };
     this.initRepeatButton();
     this.initVolumeButton();
     this.initFullButton();
@@ -67,18 +97,13 @@ class Controller {
     };
   }
   checkLogin(player) {
-    if (player.options.uid === 0) {
+    if (player.options.uid === undefined) {
       player.template.toLogin.addEventListener("click", () => {
         // player.options.toLogin && player.options.toLogin();
         player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
         player.fullScreen.isFullScreen("web") && player.fullScreen.cancel("web");
         this.isControl = false;
-        const loginRes = player.options.toLogin ? player.options.toLogin() : confirm("这是登录表单，是否登录？");
-        if (loginRes) {
-          this.player.template.danmakuRoot.classList.remove("nologin");
-          player.options.userIsLogged = true;
-          !this.player.videoLoaded && this.player.template.danmakuRoot.classList.add("loading");
-        }
+        this.player.events && this.player.events.trigger("toLogin");
       });
     }
   }
@@ -355,6 +380,7 @@ class Controller {
         update(value, controlFlag) {
           // 更改进度条值，修改绑定数据
           THIS.isControl = controlFlag;
+          console.log(value);
           THIS.player.volume(value * 0.01, true);
           if (value === 0) {
             THIS.player.template.volumeIcon.classList.add("button-volume-off");
@@ -378,10 +404,20 @@ class Controller {
         this.player.video.muted = false;
         if (this.video.volume) this.player.template.volumeIcon.classList.remove("button-volume-off");
         this.components.volumeSlider.change(this.video.volume * 100);
+        this.player.events &&
+          this.player.events.trigger("setPlayer", {
+            key: "volume",
+            value: Number(this.video.volume.toFixed(1)),
+          });
       } else {
         this.player.video.muted = true;
         this.player.template.volumeIcon.classList.add("button-volume-off");
         this.components.volumeSlider.change(0);
+        this.player.events &&
+          this.player.events.trigger("setPlayer", {
+            key: "volume",
+            value: 0,
+          });
       }
     });
   }
@@ -401,41 +437,99 @@ class Controller {
         THIS.player.resize();
       },
     });
-
+    //分P连播
     this.components.videoNextpageSwitch = new Switch(this.template.video_nextpage_switch, THIS.player.autoSwitch, {
       on(nonotice) {
         // 打开开关
         THIS.player.autoSwitch = true;
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启分P连播");
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoSwitch",
+            value: true,
+          });
       },
       off(nonotice) {
         // 关闭开关
         THIS.player.autoSwitch = false;
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已关闭分P连播");
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoSwitch",
+            value: false,
+          });
       },
     });
+    //自动播放
     this.components.videoAutoplaySwitch = new Switch(this.template.video_autoplay_switch, THIS.player.autoPlay, {
       on(nonotice) {
         // 打开开关
         THIS.player.autoPlay = true;
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启自动播放");
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoPlay",
+            value: true,
+          });
       },
       off(nonotice) {
         // 关闭开关
         THIS.player.autoPlay = false;
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已关闭自动播放");
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoPlay",
+            value: false,
+          });
       },
     });
-    this.components.videoAutoplaySwitch = new Switch(this.template.video_autoSkip_switch, THIS.player.autoSkip, {
+    //断点续播
+    this.components.videoAutoSkipSwitch = new Switch(this.template.video_autoSkip_switch, THIS.player.autoSkip, {
       on(nonotice) {
         // 打开开关
         THIS.player.autoSkip = true;
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoSkip",
+            value: true,
+          });
       },
       off(nonotice) {
         // 关闭开关
         THIS.player.autoSkip = false;
+        THIS.player.events &&
+          THIS.player.events.trigger("setPlayer", {
+            key: "autoSkip",
+            value: false,
+          });
       },
     });
+    //小窗播放
+    this.components.videoSmallWindowSwitch = new Switch(
+      this.template.video_smallWindow_switch,
+      THIS.player.options.smallWindow,
+      {
+        on: (nonotice) => {
+          // 打开开关
+          console.log("11111");
+          window.addEventListener("scroll", this.watchPlayerScroll);
+          THIS.player.events &&
+            THIS.player.events.trigger("setPlayer", {
+              key: "smallWindow",
+              value: true,
+            });
+        },
+        off: (nonotice) => {
+          // 关闭开关
+          window.removeEventListener("scroll", this.watchPlayerScroll);
+          THIS.player.events &&
+            THIS.player.events.trigger("setPlayer", {
+              key: "smallWindow",
+              value: false,
+            });
+        },
+      }
+    );
     this.components.videoBorderhiddenSwitch = new Switch(
       this.template.video_borderhidden_switch,
       !this.player.options.blackBorder,
@@ -443,14 +537,23 @@ class Controller {
         on(nonotice) {
           // 打开开关
           THIS.player.template.buildVideo(false);
-          // THIS.player.danmaku.seek();
           THIS.player.videoLoaded && !nonotice && THIS.player.notice("已隐藏黑边");
+          THIS.player.events &&
+            THIS.player.events.trigger("setPlayer", {
+              key: "blackBorder",
+              value: false,
+            });
         },
         off(nonotice) {
           // 关闭开关
           THIS.player.template.buildVideo(true);
           // THIS.player.danmaku.seek();
           THIS.player.videoLoaded && !nonotice && THIS.player.notice("已显示黑边");
+          THIS.player.events &&
+            THIS.player.events.trigger("setPlayer", {
+              key: "blackBorder",
+              value: true,
+            });
         },
       }
     );
@@ -477,12 +580,12 @@ class Controller {
     this.components.videoMirrorSwitch = new Switch(this.template.video_mirror_switch, false, {
       on: (nonotice) => {
         // 打开开关
-        this.player.video.style.transform = "rotateY(180deg)";
+        this.player.template.videoMask.classList.add("mirror");
         this.player.videoLoaded && !nonotice && this.player.notice("已开启镜像画面");
       },
       off: (nonotice) => {
         // 关闭开关
-        this.player.video.style.transform = "none";
+        this.player.template.videoMask.classList.remove("mirror");
         this.player.videoLoaded && !nonotice && this.player.notice("已关闭镜像画面");
       },
     });
@@ -510,7 +613,7 @@ class Controller {
       if (danmakuText.trim()) {
         this.player.danmaku.send({
           size: this.danmakuFontsize,
-          type: this.danmakuMode,
+          type: this.danmakuType,
           color: this.danmakuColor,
           text: danmakuText,
         });
@@ -521,20 +624,20 @@ class Controller {
   }
   initDanmakuSettingsButton() {
     const THIS = this;
-    const shields = this.player.options.danmaku.shields ?? [];
-    const opacity = this.player.options.danmaku.opacity ?? 1;
-    const showArea = this.player.options.danmaku.limitArea ?? 4;
-    const danmakuSize = this.player.options.danmaku.fontScale ?? 1;
-    const danmakuSpeed = this.player.options.danmaku.speed ?? 1;
+    const shields = this.player.options.danmaku.shields;
+    const opacity = this.player.options.danmaku.opacity;
+    const showArea = this.player.options.danmaku.limitArea;
+    const danmakuSize = this.player.options.danmaku.fontScale;
+    const danmakuSpeed = this.player.options.danmaku.speed;
     this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
       created(thisArg) {},
       pick(value, nonotice) {
-        // console.log(`屏蔽弹幕类型：${value}`);
-        THIS.player.danmaku.shield(value, true);
+        console.log(`屏蔽弹幕类型：${value}`);
+        THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
       },
       unpick(value) {
-        // console.log(`取消屏蔽弹幕类型：${value}`);
-        THIS.player.danmaku.shield(value, false);
+        console.log(`取消屏蔽弹幕类型：${value}`);
+        THIS.player.danmaku && THIS.player.danmaku.shield(value, false);
       },
       update(value) {
         // console.log(`已屏蔽的弹幕类型有：${[...value]}`);
@@ -657,10 +760,20 @@ class Controller {
         on(nonotice) {
           THIS.player.template.danmakuTipMask.style.display = ""; // 打开弹幕捕获模式，则取消tipMask的隐藏
           !nonotice && THIS.player.notice("已开启弹幕捕获模式");
+          THIS.player.events &&
+            THIS.player.events.trigger("setDanmaku", {
+              key: "danmakuCatch",
+              value: true,
+            });
         },
         off(nonotice) {
           THIS.player.template.danmakuTipMask.style.display = "none"; // 关闭弹幕捕获模式，则隐藏tipMask
           !nonotice && THIS.player.notice("已关闭弹幕捕获模式");
+          THIS.player.events &&
+            THIS.player.events.trigger("setDanmaku", {
+              key: "danmakuCatch",
+              value: false,
+            });
         },
       }
     );
@@ -671,10 +784,20 @@ class Controller {
         on(nonotice) {
           THIS.player.danmaku.limitArea("keepOutSubtitle"); // 打开弹幕捕获模式，则取消tipMask的隐藏
           !nonotice && THIS.player.notice("已开启防挡字幕");
+          THIS.player.events &&
+            THIS.player.events.trigger("setDanmaku", {
+              key: "keepOutSubtitle",
+              value: true,
+            });
         },
         off(nonotice) {
           THIS.player.danmaku && THIS.player.danmaku.limitArea("notKeepOutSubtitle");
           !nonotice && THIS.player.notice("已关闭防挡字幕");
+          THIS.player.events &&
+            THIS.player.events.trigger("setDanmaku", {
+              key: "keepOutSubtitle",
+              value: false,
+            });
         },
       }
     );
@@ -688,11 +811,11 @@ class Controller {
         // console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
       },
     });
-    this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuMode, {
+    this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuType, {
       pick(value) {
         // 有关弹幕模式值的更改请写在此处
-        THIS.danmakuMode = value;
-        // console.log(`已选择弹幕模式：${THIS.danmakuMode}`);
+        THIS.danmakuType = value;
+        // console.log(`已选择弹幕模式：${THIS.danmakuType}`);
       },
     });
     this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
