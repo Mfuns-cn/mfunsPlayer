@@ -60,6 +60,11 @@
 		&.noborder {
 			height: 100%;
 		}
+		&.mirror {
+			> video {
+				transform: rotateX(1deg) rotateY(180deg);
+			}
+		}
 		video {
 			display: block;
 			width: 100%;

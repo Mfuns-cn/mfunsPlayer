@@ -1,3 +1,4 @@
+@import "./theme";
 .mfunsPlayer-footBar {
     height: 40px;
     width: 100%;
@@ -13,6 +14,12 @@
     z-index: 200;
     .input_box {
         padding-right: 15px;
+    }
+    &.hide {
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
     }
     &.loading {
         .mfunsPlayer-controller-danmaku-trigger,
@@ -45,7 +52,14 @@
         .input_box {
             border-left: 1px solid #666;
         }
+        .mfunsPlayer-video-danmaku-source {
+            background: #212121 !important;
+            border: 1px solid #666 !important;
 
+            .mfunsPlayer-video-danmaku-source-loading-mask {
+                background: #212121 !important;
+            }
+        }
         .mfunsPlayer-video-danmaku-root {
             &.loading {
                 .input_box {
@@ -79,13 +93,238 @@
     }
 
     .mfunsPlayer-video-danmaku-details {
-        min-width: 100px;
+        position: relative;
+        min-width: 110px;
         height: 40px;
         line-height: 40px;
         font-size: 13px;
-
+        &:hover {
+            .mfunsPlayer-video-danmaku-source {
+                display: block;
+            }
+        }
         .mfunsPlayer-video-danmaku-count {
             color: #999;
+            cursor: pointer;
+        }
+        .mfunsPlayer-video-danmaku-source {
+            position: absolute;
+            left: -15px;
+            top: 40px;
+            width: 160px;
+            border: 1px solid #e6e6e6;
+            text-align: center;
+            display: none;
+            &.loading {
+                .mfunsPlayer-video-danmaku-source-content {
+                    .mfunsPlayer-video-danmaku-source-loading-mask {
+                        display: flex;
+                    }
+                }
+            }
+            &-content {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                .mfunsPlayer-video-danmaku-source-loading-mask {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    justify-content: center;
+                    align-items: center;
+                    background: #fff;
+                    color: #999;
+                    z-index: 10;
+                }
+                .mfunsPlayer-video-danmaku-source-column {
+                    display: flex;
+                    height: 30px;
+                    line-height: 30px;
+                    list-style: none;
+                    padding-left: 6px;
+                    font-size: 12px;
+                    color: $text-grey;
+                    li {
+                        &:nth-child(2n) {
+                            margin: 0 32px 0 16px;
+                        }
+                    }
+                }
+                .mfunsPlayer-video-danmaku-source-wrap {
+                    width: 100%;
+                    .mfunsPlayer-video-danmaku-source-item {
+                        height: 30px;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        font-size: 12px;
+                        color: $text-grey;
+                        &.mfuns {
+                            .mfunsPlayer-video-danmaku-source-item-icon {
+                                background: url("../icon/thumb.png");
+                                background-size: 100% 100%;
+                            }
+                        }
+                        &.bili {
+                            .mfunsPlayer-video-danmaku-source-item-icon {
+                                background: url("../icon/bili.png");
+                                background-size: 100% 100%;
+                            }
+                        }
+                        &.acfun {
+                            .mfunsPlayer-video-danmaku-source-item-icon {
+                                background: url("../icon/acfun.png");
+                                background-size: 100% 100%;
+                            }
+                        }
+                        &.unknown {
+                            .mfunsPlayer-video-danmaku-source-item-icon {
+                                background: url("../icon/unknown.svg");
+                                background-size: 100% 100%;
+                            }
+                        }
+                        &.success {
+                            .mfunsPlayer-video-danmaku-source-item-status {
+                                color: #87b38a;
+                                &::before {
+                                    background: #87b38a;
+                                }
+                                &::after {
+                                    content: "加载成功";
+                                    color: #87b38a;
+                                }
+                            }
+                            .mfunsPlayer-video-danmaku-source-item-operate {
+                                &::after {
+                                    content: "屏蔽";
+                                }
+                            }
+                        }
+                        &.error {
+                            .mfunsPlayer-video-danmaku-source-item-status {
+                                color: #f54747;
+                                &::before {
+                                    background: #f54747;
+                                }
+                                &::after {
+                                    content: "加载失败";
+                                    color: #f54747;
+                                }
+                            }
+                            .mfunsPlayer-video-danmaku-source-item-operate {
+                                &::after {
+                                    content: "重载";
+                                }
+                            }
+                        }
+                        &.nodata {
+                            .mfunsPlayer-video-danmaku-source-item-status {
+                                &::before {
+                                    width: 0;
+                                    height: 0;
+                                }
+                                &::after {
+                                    content: "暂无数据";
+                                }
+                            }
+                        }
+                        &.forbidden {
+                            .mfunsPlayer-video-danmaku-source-item-status {
+                                &::before {
+                                    width: 0;
+                                    height: 0;
+                                }
+                                &::after {
+                                    content: "已屏蔽";
+                                    color: inherit;
+                                }
+                            }
+                            .mfunsPlayer-video-danmaku-source-item-operate {
+                                &::after {
+                                    content: "解除屏蔽";
+                                }
+                            }
+                        }
+                        &:hover {
+                            position: relative;
+                            > .mfunsPlayer-video-danmaku-source-item-mask {
+                                display: flex;
+                            }
+                        }
+                        &-mask {
+                            display: none;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            background-color: rgba(0, 0, 0, 0.5);
+                            justify-content: space-between;
+                            align-items: center;
+                            color: #fff;
+                            backdrop-filter: blur(5px);
+                            z-index: 10;
+                            .mfunsPlayer-video-danmaku-source-item-origin {
+                                flex: 1;
+                                text-align: left;
+                                padding-left: 10px;
+                            }
+                            .mfunsPlayer-video-danmaku-source-item-operate {
+                                position: relative;
+                                width: 65px;
+                                text-align: center;
+                                pointer-events: none;
+                                cursor: pointer;
+
+                                &::after {
+                                    content: "";
+                                    width: 60px;
+                                    color: $theme-color-light;
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 0px;
+                                    transform: translate(0, -50%);
+                                    pointer-events: auto;
+                                }
+                            }
+                        }
+                        &-icon {
+                            width: 15px;
+                            height: 15px;
+                        }
+                        &-count {
+                            width: 50px;
+                            text-align: center;
+                        }
+                        &-status {
+                            width: 50px;
+                            position: relative;
+                            text-align: center;
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                width: 4px;
+                                height: 4px;
+                                top: 50%;
+                                left: -5px;
+                                border-radius: 4px;
+                                transform: translate(0, -50%);
+                            }
+                            &::after {
+                                content: "";
+                                width: 60px;
+                                position: absolute;
+                                top: 50%;
+                                left: -5px;
+                                transform: translate(0, -50%);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

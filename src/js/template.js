@@ -3,24 +3,25 @@ import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
-    if (options.theme) {
-      this.container.style.setProperty("--themeColor", options.theme);
-      this.container.style.setProperty("--themeColorLight", utils.colorLuminance(options.theme, 0.3));
-      this.container.style.setProperty("--themeColorDark", utils.colorLuminance(options.theme, -0.3));
-    }
-
+    options.theme && this.setTheme(options.theme);
+    options.smallWindow && this.buildSmallWindow();
     options.isFireFox = utils.isFirefox;
     options.hasEcharts = !!window.echarts;
     options.hasAceEditor = !!window.ace;
     this.init(options);
     this.initHitokoto(options);
   }
-
+  setTheme(color) {
+    this.container.style.setProperty("--themeColor", color);
+    this.container.style.setProperty("--themeColorLight", utils.colorLuminance(color, 0.3));
+    this.container.style.setProperty("--themeColorDark", utils.colorLuminance(color, -0.3));
+  }
   init(options) {
     this.container.innerHTML = Player(options); // 注入播放器DOM
     const $ = this.container.querySelector.bind(this.container);
     const $all = this.container.querySelectorAll.bind(this.container);
     this.mask = $(".mfunsPlayer-mask");
+    this.miniPlayer = $(".mfunsPlayer-miniPlayer");
     this.previewMask = $(".mfunsPlayer-preview-mask");
     this.canvas = $(".mfuns_canvas");
     this.video = $(".mfunsPlayer-video");
@@ -36,6 +37,11 @@ class Template {
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
     this.danmakuCount = $(".mfunsPlayer-video-danmaku-count");
+    this.danmakuSource = $(".mfunsPlayer-video-danmaku-source");
+    this.danmakuSource_mfuns = $(".mfunsPlayer-video-danmaku-source-item.mfuns");
+    this.danmakuSource_bili = $(".mfunsPlayer-video-danmaku-source-item.bili");
+    this.danmakuSource_acfun = $(".mfunsPlayer-video-danmaku-source-item.acfun");
+    this.danmakuSource_unknown = $(".mfunsPlayer-video-danmaku-source-item.unknown");
     this.danmaku_btn = $(".mfunsPlayer-controller-danmaku-trigger"); // 弹幕开关
     this.danmakuSettings_btn = $(".mfunsPlayer-controller-danmaku-settings"); // 弹幕设置
     this.danmakuSettings_panel = $(".mfunsPlayer-danmaku-settings-mask");
@@ -87,6 +93,7 @@ class Template {
     this.video_autoplay_switch = $(".mfunsPlayer-video-autoPlay-switch"); // 自动开播开关
     this.video_nextpage_switch = $(".mfunsPlayer-video-nextpage-switch"); // 自动换P开关
     this.video_autoSkip_switch = $(".mfunsPlayer-video-autoSkip-switch"); // 自动开播开关
+    this.video_smallWindow_switch = $(".mfunsPlayer-video-smallWindow-switch"); // 小窗播放开关
     this.video_borderhidden_switch = $(".mfunsPlayer-video-borderhidden-switch"); // 隐藏黑边开关
     this.video_darkmode_switch = $(".mfunsPlayer-video-darkmode-switch"); // 夜间模式开关
     this.video_mirror_switch = $(".mfunsPlayer-video-mirror-switch"); // 镜像开关
@@ -142,6 +149,8 @@ class Template {
     this.danmakuReportMask = $(".mfunsPlayer-danmaku-report-mask");
     this.danmakuReportContent = $(".mfunsPlayer-danmaku-report-content");
     this.danmakuReportModelClose = $(".mfunsPlayer-danmaku-report-close");
+    this.danmakuReportDetail = $(".mfunsPlayer-danmaku-report-detail");
+    this.danmakuReportSubmit = $(".mfunsPlayer-danmaku-report-submit");
     this.danmakuEmit = $(".mfunsPlayer-danmaku-emit");
     this.danmakuText = $(".mfunsPlayer-danmaku-text");
     this.danmakuStatusLoading = $(".mfunsPlayer-danmaku-status-loading");
@@ -174,7 +183,7 @@ class Template {
     this.hitokotoText.innerHTML = "loading...";
     this.hitokotoFrom.innerHTML = "";
     options.apiBackend.read({
-      url: "http://v1.hitokoto.cn?c=a&c=b&c=c",
+      url: "https://v1.hitokoto.cn?c=a&c=b&c=c",
       success: (res) => {
         this.hitokotoText.innerHTML = res.hitokoto;
         this.hitokotoFrom.innerHTML = `———— 「${res.from}」${res.from_who ?? ""}`;
@@ -184,6 +193,8 @@ class Template {
       },
     });
   }
+  buildSmallWindow() {}
+
   buildVideo(hasBlackborder) {
     if (!hasBlackborder) {
       this.videoMask.classList.add("noborder");

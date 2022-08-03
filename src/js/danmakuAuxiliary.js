@@ -1,4 +1,5 @@
 import utils from "./utils";
+// import moment from "moment";
 import DanmakuAuxiliaryTemplate from "../../template/danmakuAuxiliary.art";
 import DanmakuList from "./danmakuList";
 import AdvancedDanmakuEditor from "./advancedDanmakuEditor/advancedDanmakuEditor";
@@ -18,7 +19,6 @@ class DanmakuAuxiliary {
     // 挂载
     this.el.classList.add("mfunsPlayer-danmaku-auxiliary");
     this.el.innerHTML = DanmakuAuxiliaryTemplate(); // 注入弹幕功能区DOM
-
     const $ = this.el.querySelector.bind(this.el);
     this.template.danmaku_list_panel = $(".mfunsPlayer-danmaku-list-panel"); // 弹幕列表面板
     this.template.ade_panel = $(".mfunsPlayer-ade-panel"); // 高级弹幕编辑器面板(Advanced Danmaku Editor)
