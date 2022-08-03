@@ -36,6 +36,11 @@ class Template {
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
     this.danmakuCount = $(".mfunsPlayer-video-danmaku-count");
+    this.danmakuSource = $(".mfunsPlayer-video-danmaku-source");
+    this.danmakuSource_mfuns = $(".mfunsPlayer-video-danmaku-source-item.mfuns");
+    this.danmakuSource_bili = $(".mfunsPlayer-video-danmaku-source-item.bili");
+    this.danmakuSource_acfun = $(".mfunsPlayer-video-danmaku-source-item.acfun");
+    this.danmakuSource_unknown = $(".mfunsPlayer-video-danmaku-source-item.unknown");
     this.danmaku_btn = $(".mfunsPlayer-controller-danmaku-trigger"); // 弹幕开关
     this.danmakuSettings_btn = $(".mfunsPlayer-controller-danmaku-settings"); // 弹幕设置
     this.danmakuSettings_panel = $(".mfunsPlayer-danmaku-settings-mask");
@@ -177,7 +182,7 @@ class Template {
     this.hitokotoText.innerHTML = "loading...";
     this.hitokotoFrom.innerHTML = "";
     options.apiBackend.read({
-      url: "http://v1.hitokoto.cn?c=a&c=b&c=c",
+      url: "https://v1.hitokoto.cn?c=a&c=b&c=c",
       success: (res) => {
         this.hitokotoText.innerHTML = res.hitokoto;
         this.hitokotoFrom.innerHTML = `———— 「${res.from}」${res.from_who ?? ""}`;

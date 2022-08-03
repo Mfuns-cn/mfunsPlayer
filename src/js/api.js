@@ -34,7 +34,7 @@ export default {
               options.success(
                 data.data.map((item) => ({
                   time: item[0],
-                  type: item[1],
+                  type: utils.number2Type(item[1]),
                   color: item[2],
                   author: item[3],
                   text: item[4],
@@ -63,16 +63,8 @@ export default {
             break;
           case "bili-danmaku":
             const convertToDp = (xmlData) => {
-              // let xmlhttp, xmlDoc;
               let dan = [];
-              // if (window.XMLHttpRequest) {
-              //   xmlhttp = new XMLHttpRequest();
-              // }
-              // xmlhttp.open("GET", xmlFilePath, false);
-              // xmlhttp.send();
-              let xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml");
-              // xmlDoc.loadXML(xmlData);
-              // console.log(xmlDoc);
+              const xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml");
               //获取xml文档的所有子节点
               const nodeList = xmlDoc.childNodes;
               const generate = (nodeList) => {
@@ -96,13 +88,13 @@ export default {
               options.success(
                 convertToDp(data).map((item) => ({
                   time: item[0],
-                  type: item[1],
+                  type: utils.number2Type(item[1], true),
                   color: item[2],
                   author: item[3],
                   text: item[4],
                   size: item[5] ?? 25,
                   date: item[6] ?? 0,
-                  origin: options.origin ?? "unknown",
+                  origin: "bili",
                 }))
               );
             break;

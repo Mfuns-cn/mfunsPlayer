@@ -511,7 +511,6 @@ class Controller {
       {
         on: (nonotice) => {
           // 打开开关
-          console.log("11111");
           window.addEventListener("scroll", this.watchPlayerScroll);
           THIS.player.events &&
             THIS.player.events.trigger("setPlayer", {

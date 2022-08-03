@@ -385,6 +385,63 @@
 <div class="mfunsPlayer-footBar">
     <div class="mfunsPlayer-video-danmaku-details">
         <div class="mfunsPlayer-video-danmaku-count">弹幕装填中...</div>
+        <div class="mfunsPlayer-video-danmaku-source">
+            <div class="mfunsPlayer-video-danmaku-source-content">
+                <div class="mfunsPlayer-video-danmaku-source-loading-mask">
+                    <span>loading...</span>
+                </div>
+                <ul class="mfunsPlayer-video-danmaku-source-column">
+                    <li>
+                        来源
+                    </li>
+                    <li>
+                        弹幕数
+                    </li>
+                    <li>
+                        状态
+                    </li>
+                </ul>
+                <ul class="mfunsPlayer-video-danmaku-source-wrap">
+                    <li class="mfunsPlayer-video-danmaku-source-item mfuns nodata">
+                        <div class="mfunsPlayer-video-danmaku-source-item-mask">
+                            <div class="mfunsPlayer-video-danmaku-source-item-origin">来源：mfuns</div>
+                            <div class="mfunsPlayer-video-danmaku-source-item-operate"></div>
+                        </div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-icon"></div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-count">-</div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-status"></div>
+                    </li>
+                    <li class="mfunsPlayer-video-danmaku-source-item bili nodata">
+                        <div class="mfunsPlayer-video-danmaku-source-item-mask">
+                            <div class="mfunsPlayer-video-danmaku-source-item-origin">来源：bilibili</div>
+                            <div class="mfunsPlayer-video-danmaku-source-item-operate"></div>
+                        </div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-icon"></div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-count">-</div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-status"></div>
+                    </li>
+                    <li class="mfunsPlayer-video-danmaku-source-item acfun nodata">
+                        <div class="mfunsPlayer-video-danmaku-source-item-mask">
+                            <div class="mfunsPlayer-video-danmaku-source-item-origin">来源：acfun</div>
+                            <div class="mfunsPlayer-video-danmaku-source-item-operate"></div>
+                        </div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-icon"></div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-count">-</div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-status"></div>
+                    </li>
+                    <li class="mfunsPlayer-video-danmaku-source-item unknown nodata">
+                        <div class="mfunsPlayer-video-danmaku-source-item-mask">
+                            <div class="mfunsPlayer-video-danmaku-source-item-origin">未知来源</div>
+                            <div class="mfunsPlayer-video-danmaku-source-item-operate"></div>
+                        </div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-icon"></div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-count">-</div>
+                        <div class="mfunsPlayer-video-danmaku-source-item-status"></div>
+                    </li>
+                </ul>
+            </div>
+            <!-- <button class="mfunsPlayer-video-danmaku-reload">重载弹幕</button> -->
+        </div>
     </div>
     <!-- <div class="mfunsPlayer-video-danmaku-details-skeleton"></div> -->
     <div class="mfunsPlayer-video-danmaku-root">

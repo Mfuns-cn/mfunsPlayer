@@ -66,7 +66,7 @@ export default class mfunsPlayer {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
-          if (advDanData.length) {
+          if (advDanData?.length) {
             this.advDanmaku = new AdvancedDanmaku(this, advDanData);
           }
           length && this.loadHighEnergy();

@@ -278,38 +278,44 @@ const utils = {
         return "适中";
     }
   },
-  // number2Type: (number) => {
-  //   switch (number) {
-  //     case 0:
-  //       return "right";
-  //     case 1:
-  //       return "top";
-  //     case 2:
-  //       return "bottom";
-  //     case 3:
-  //       return "left";
-  //     case 8:
-  //       return "json";
-  //     default:
-  //       return "right";
-  //   }
-  // },
-  // type2Number: (type) => {
-  //   switch (type) {
-  //     case "right":
-  //       return 0;
-  //     case "top":
-  //       return 1;
-  //     case "bottom":
-  //       return 2;
-  //     case "left":
-  //       return 3;
-  //     case "json":
-  //       return 8;
-  //     default:
-  //       return 0;
-  //   }
-  // },
+  number2Type: (number, biliMode) => {
+    switch (number) {
+      case 0:
+        return "right";
+      case 1:
+        return biliMode ? "right" : "top";
+      case 2:
+        return "bottom";
+      case 3:
+        return "left";
+      case 4:
+        return "bottom";
+      case 5:
+        return "top";
+      case 6:
+        return "left";
+      case 8:
+        return "json";
+      default:
+        return "right";
+    }
+  },
+  type2Number: (type) => {
+    switch (type) {
+      case "right":
+        return 0;
+      case "top":
+        return 1;
+      case "bottom":
+        return 2;
+      case "left":
+        return 3;
+      case "json":
+        return 8;
+      default:
+        return 0;
+    }
+  },
   report2Num: new Map([
     ["违法违禁", 0],
     ["人身攻击", 1],
@@ -381,33 +387,36 @@ const utils = {
     const random = Math.floor(Math.random() * range);
     return allSize[random];
   },
-  number2Type: (number) => {
-    switch (number) {
-      case 1:
-        return "right";
-      case 5:
-        return "top";
-      case 4:
-        return "bottom";
-      case 6:
-        return "left";
-      default:
-        return "right";
+
+  // date: 时间对象, pattern: 日期格式
+  formatterDate(date, pattern) {
+    Date.prototype.format = function (fmt) {
+      // debugger;
+      let o = {
+        "M+": this.getMonth() + 1, // 月份
+        "D+": this.getDate(), // 日
+        "H+": this.getHours(), // 小时
+        "m+": this.getMinutes(), // 分
+        "s+": this.getSeconds(), // 秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+        S: this.getMilliseconds(), // 毫秒
+      };
+      if (/(Y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+      }
+      for (let k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+          fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+      }
+      return fmt;
+    };
+    let ts = date.getTime();
+    let d = new Date(ts).format("YYYY-MM-DD HH:mm:ss"); // 默认日期时间格式 YYYY-MM-DD HH:mm:ss
+    if (pattern) {
+      d = new Date(ts).format(pattern);
     }
-  },
-  type2number: (type) => {
-    switch (type) {
-      case "right":
-        return 1;
-      case "top":
-        return 5;
-      case "bottom":
-        return 4;
-      case "left":
-        return 6;
-      default:
-        return 1;
-    }
+    return d.toLocaleString();
   },
 };
 
