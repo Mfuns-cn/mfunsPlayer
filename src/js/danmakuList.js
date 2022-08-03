@@ -42,15 +42,24 @@ class DanmakuList {
     } else {
       dan.forEach((danmaku) => {
         let tipText = danmaku.text;
-        if (danmaku.type == 9 || danmaku.type == "json") {
+        if (danmaku.mode == 8) {
           tipText = tipText.replaceAll("\r", "");
           tipText = danmaku.text.length < 400 ? tipText : tipText.slice(0, 400) + "...";
         } else {
           tipText = tipText.replaceAll("\\", "\\\\");
         }
         let row = `
-        <div class="list-row" title='${tipText}\n1970-01-01 00:00 @ ${utils.secondToTime(danmaku.time, false)}'>
-          <span class="list-cell col-time">${utils.secondToTime(danmaku.time, false)}</span><span class="list-cell col-text" ${(danmaku.type == 9 || danmaku.type == "json") ? 'style="font-weight:600"' : ""}>${tipText}</span><span class="list-cell col-date">${"1970-01-01 00:00"}</span>
+        <div class="list-row" title='${tipText}\n${
+          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
+        } @ ${utils.secondToTime(danmaku.time, false)}'>
+          <span class="list-cell col-time">${utils.secondToTime(
+            danmaku.time,
+            false
+          )}</span><span class="list-cell col-text" ${
+          danmaku.mode > 6 ? 'style="font-weight:600"' : ""
+        }>${tipText}</span><span class="list-cell col-date">${
+          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
+        }</span>
         </div>
         `;
         danList += row;
