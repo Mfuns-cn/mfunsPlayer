@@ -247,7 +247,11 @@ const utils = {
         return "bottom";
       case 3:
         return "left";
+      case 7:
+        return "special";
       case 8:
+        return "script";
+      case 9:
         return "json";
       default:
         return "right";
@@ -263,8 +267,12 @@ const utils = {
         return 2;
       case "left":
         return 3;
-      case "json":
+      case "special":
+        return 7;
+      case "script":
         return 8;
+      case "json":
+        return 9;
       default:
         return 0;
     }
@@ -334,12 +342,18 @@ const utils = {
   //   switch (number) {
   //     case 1:
   //       return "right";
-  //     case 5:
-  //       return "top";
   //     case 4:
   //       return "bottom";
+  //     case 5:
+  //       return "top";
   //     case 6:
   //       return "left";
+  //     case 7:
+  //       return "special";
+  //     case 8:
+  //       return "script";
+  //     case 9:
+  //       return "json";
   //     default:
   //       return "right";
   //   }
@@ -348,12 +362,18 @@ const utils = {
   //   switch (type) {
   //     case "right":
   //       return 1;
-  //     case "top":
-  //       return 5;
   //     case "bottom":
   //       return 4;
+  //     case "top":
+  //       return 5;
   //     case "left":
   //       return 6;
+  //     case "special":
+  //       return 7;
+  //     case "script":
+  //       return 8;
+  //     case "json":
+  //       return 9;
   //     default:
   //       return 1;
   //   }

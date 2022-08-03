@@ -1,0 +1,127 @@
+<div class="mfunsPlayer-ade-wrap mfunsPlayer-ade-pos">
+    <div class="mfunsPlayer-ade-head">高级弹幕编辑器</div>
+    <div class="mfunsPlayer-ade-body">
+        <div class="mfunsPlayer-ade-pos-editor PosEditor">
+            <div class="PosEditor-title">弹幕内容</div>
+            <div class="PosEditor-area-content">
+                <textarea class="PosEditor-input-content"></textarea>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">颜色</span>
+                    <input class="PosEditor-input-color" type="color" value="#ffffff"/>
+                </div>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">字号</span>
+                    <input class="PosEditor-input-size" type="number" value=25 max=100 min=9 step=1 defaultValue=25/>px
+                </div>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">字体</span>
+                    <select class="PosEditor-input-font">
+                        <option value="SimHei">黑体</option>
+                        <option value="SimSun">宋体</option>
+                        <option value="FangSong">仿宋</option>
+                        <option value="NSimSun">新宋体</option>
+                        <option value="Microsoft YaHei">微软雅黑</option>
+                    </select>
+                    <label><input class="PosEditor-input-bold" type="checkbox"/>加粗</label>
+                </div>
+                <div class="PosEditor-row PosEditor-row-shadow">
+                    <label>阴影 <input class="PosEditor-switch-shadow" type="checkbox"/></label>
+                </div>
+                <div class="PosEditor-row PosEditor-row-shadow-1">
+                    <span class="PosEditor-sub-label">颜色</span><input class="PosEditor-input-shadow-color" type="color" value="#000000"/>
+                    <span class="PosEditor-sub-label">模糊</span><input class="PosEditor-input-shadow-blur" type="number" value=0 max=10 min=0 step=1 defaultValue=0/> px
+                </div>
+                <div class="PosEditor-row PosEditor-row-shadow-2">
+                    <span class="PosEditor-sub-label">x</span><input class="PosEditor-input-shadow-x" type="number" value=0 max=10 min=0 step=1 defaultValue=0/> px
+                    <span class="PosEditor-sub-label">y</span><input class="PosEditor-input-shadow-y" type="number" value=0 max=10 min=0 step=1 defaultValue=0/> px
+                </div>
+                <div class="PosEditor-row PosEditor-row-stroke">
+                    <label>描边 <input class="PosEditor-switch-stroke" type="checkbox"/></label>
+                </div>
+                <div class="PosEditor-row PosEditor-row-stroke-1">
+                    <span class="PosEditor-sub-label">颜色</span><input class="PosEditor-input-stroke-color" type="color" value="#000000"/>
+                    <span class="PosEditor-sub-label">粗细</span><input class="PosEditor-input-stroke-width" type="number" value=0 max=10 min=0 step=1 defaultValue=0/> px
+                </div>
+            </div>
+            <div class="PosEditor-division"></div>
+            <div class="PosEditor-title">基础属性</div>
+            <div class="PosEditor-area-arribute">
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">发送时间</span>
+                    <input class="PosEditor-input-start" type="number" value=50 min=0 step=100 defaultValue=0/> ms
+                    <span class="PosEditor-action-getCurrentTime">[拾取]</span>
+                    <label><input type="checkbox" class="PosEditor-switch-current"/>当前时间</label>
+                </div>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-zIndex">层级</span>
+                    <input class="PosEditor-input-zIndex" type="number" value=50 max=100 min=1 step=1 defaultValue=50/>
+                </div>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">锚点</span>
+                    <span class="PosEditor-sub-label">X</span><input class="PosEditor-input-anchor-x" type="number" value=0 max=1 min=0 step=0.1 defaultValue=0/>
+                    <span class="PosEditor-sub-label">Y</span><input class="PosEditor-input-anchor-y" type="number" value=0 max=1 min=0 step=0.1 defaultValue=0/>
+                </div>
+                <div class="PosEditor-row">
+                    <span class="PosEditor-label">停留时间</span>
+                    <input class="PosEditor-input-duration" type="number" value=2000 min=0 step=100 defaultValue=0/> ms
+                </div>
+            </div>
+            <div class="PosEditor-division"></div>
+            <div class="PosEditor-title">动画属性</div>
+            <div class="PosEditor-area-animation">
+                <div class="PosEditor-keyframe-bar">
+                    <span class="PosEditor-keyframes">
+                    </span>
+                    <span class="PosEditor-action-delKeyFrame" title="删除关键帧">[-]</span>
+                    <span class="PosEditor-action-addKeyFrame" title="添加关键帧">[+]</span>
+                </div>
+                <div class="PosEditor-animation-settings">
+                    <div class="PosEditor-row PosEditor-row-duration">
+                        <span class="PosEditor-label">运动时间</span>
+                        <input class="PosEditor-input-a-duration" type="number" value=2000 min=0 step=100 defaultValue=0/> ms
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-position">
+                        <label>位置 <input class="PosEditor-switch-position" type="checkbox"/></label>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-position-1">
+                        <span class="PosEditor-sub-label">X</span><input class="PosEditor-input-x" type="number" max=1.5 min=-0.5 value=0 step=0.01 defaultValue=0/> /1.000
+                        <span class="PosEditor-sub-label">Y</span><input class="PosEditor-input-y" type="number" max=1.5 min=-0.5 value=0 step=0.01 defaultValue=0/> /1.000
+                        <span class="PosEditor-sub-label" title="弹幕位置与视频宽高的比值">[i]</span>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-rotation">
+                        <label>旋转 <input class="PosEditor-switch-rotation" type="checkbox"/></label>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-rotation-1">
+                        <span class="PosEditor-sub-label">X</span><input class="PosEditor-input-rx" type="number" value=0 step=10 defaultValue=0/> °
+                        <span class="PosEditor-sub-label">Y</span><input class="PosEditor-input-ry" type="number" value=0 step=10 defaultValue=0/> °
+                        <span class="PosEditor-sub-label">Z</span><input class="PosEditor-input-rz" type="number" value=0 step=10 defaultValue=0/> °
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-scale">
+                        <label>缩放 <input class="PosEditor-switch-scale" type="checkbox"/></label>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-scale-1">
+                        <span class="PosEditor-sub-label">X</span><input class="PosEditor-input-scale-x" type="number" value=1 step=0.1 defaultValue=1/>
+                        <span class="PosEditor-sub-label">Y</span><input class="PosEditor-input-scale-y" type="number" value=1 step=0.1 defaultValue=1/>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-opacity">
+                        <label>不透明度 <input class="PosEditor-switch-opacity" type="checkbox"/></label>
+                        <input class="PosEditor-input-opacity" type="number" value=1 min=0 max=1 step=0.1 defaultValue=1/>
+                    </div>
+                    <div class="PosEditor-row PosEditor-row-ease">
+                        <span class="PosEditor-label">速度曲线</span>
+                        <select class="PosEditor-input-ease">
+                            <option value=0>线性</option>
+                            <option value=1>加速</option>
+                            <option value=2>减速</option>
+                            <option value=3>缓动</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mfunsPlayer-ade-foot">
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
+    </div>
+</div>

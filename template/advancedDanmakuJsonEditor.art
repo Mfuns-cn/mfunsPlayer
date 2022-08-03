@@ -1,0 +1,13 @@
+<div class="mfunsPlayer-ade-wrap mfunsPlayer-ade-json">
+    <div class="mfunsPlayer-ade-head">代码弹幕编辑器(JSON)</div>
+    <div class="mfunsPlayer-ade-prebox-container">
+        <div class="mfunsPlayer-ade-prebox"></div>
+    </div>
+    <div class="mfunsPlayer-ade-foot">
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-clear">清空</span>
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
+        <span>　</span>
+        <span><a href="https://moegirl.love/2021/06/11/danmaku/Mfuns%E5%BC%B9%E5%B9%95%E6%89%8B%E5%86%8C/">Mfuns高级弹幕手册</a></span>
+    </div>
+</div>

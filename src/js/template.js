@@ -11,6 +11,7 @@ class Template {
 
     options.isFireFox = utils.isFirefox;
     options.hasEcharts = !!window.echarts;
+    options.hasAceEditor = !!window.ace;
     this.init(options);
     this.initHitokoto(options);
   }

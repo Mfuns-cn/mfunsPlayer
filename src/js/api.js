@@ -49,8 +49,8 @@ export default {
                   let a = JSON.parse(item);
                   return {
                     time: a[0].start / 1000 || 0,
-                    type: 8,
-                    mode: 8,
+                    type: 9,
+                    mode: 9,
                     author: "0",
                     text: item,
                     date: 0,

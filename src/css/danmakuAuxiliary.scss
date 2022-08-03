@@ -2,13 +2,14 @@
 
 .mfunsPlayer-danmaku-auxiliary {
 	font-size: 12px;
+    user-select: none;
 	* {
 		box-sizing: content-box;
 	}
 	.mfunsPlayer-danmaku-list-panel {
 		height: 100%;
 		
-		 .list-row {
+		.list-row {
 			line-height: 24px;
 			height: 24px;
 			white-space: nowrap;
@@ -92,16 +93,69 @@
 		.mfunsPlayer-ade-wrap {
 			height: calc(100% - 40px);
 			padding: 0 8px;
+			display: none;
+			&.mfunsPlayer-ade-pos {
+				padding-right: 0;
+			}
+		}
+		.mfunsPlayer-ade-mode-selector span {
+			cursor: pointer;
+		}
+		&.mode-pos {
+			.mfunsPlayer-ade-pos {
+				display: block;
+			}
+			.label-pos {
+				color: $text-black;
+				font-weight: bold;
+			}
+		}
+		&.mode-script {
+			.mfunsPlayer-ade-script {
+				display: block;
+			}
+			.label-script {
+				color: $text-black;
+				font-weight: bold;
+			}
+		}
+		&.mode-json {
+			.mfunsPlayer-ade-json {
+				display: block;
+			}
+			.label-json {
+				color: $text-black;
+				font-weight: bold;
+			}
 		}
 		.mfunsPlayer-ade-head {
 			height: 30px;
 			line-height: 30px;
 			font-weight: bold;
 		}
-		.mfunsPlayer-ade-prebox {
+		.mfunsPlayer-ade-prebox-container {
+			position: relative;
 			height: calc(100% - 70px);
 			border: 1px solid $light-grey;
 			border-radius: $theme-border-radius;
+			.mfunsPlayer-ade-prebox{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				.cm-editor {
+					height: 100%;
+				}
+			}
+		}
+		.mfunsPlayer-ade-body {
+			position: relative;
+			height: calc(100% - 68px);
+			.mfunsPlayer-ade-pos-editor{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				overflow-y: scroll;
+			}
 		}
 		.mfunsPlayer-ade-foot {
 			margin-top: 6px;

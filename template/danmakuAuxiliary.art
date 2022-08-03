@@ -21,18 +21,17 @@
         </div>
     </div>
 </div>
-<div class="mfunsPlayer-ade-panel" style="display: none">
-    <div class="mfunsPlayer-ade-wrap">
-        <div class="mfunsPlayer-ade-head">高级弹幕编辑器</div>
-        <div class="mfunsPlayer-ade-prebox"></div>
-        <div class="mfunsPlayer-ade-foot">
-            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-clear">清空</span>
-            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
-            <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
-        </div>
-    </div>
+<div class="mfunsPlayer-ade-panel mode-pos" style="display: none">
+    {{include './advancedDanmakuPosEditor.art'}}
+    {{include './advancedDanmakuJsonEditor.art'}}
     <div class="mfunsPlayer-danmaku-auxiliary-foot">
-        <div class="flex-left">高级弹幕手册</div>
+        <div class="flex-left">
+            <span>切换弹幕模式:</span>
+            <span class="mfunsPlayer-ade-mode-selector">
+                <span class="label-pos">定位弹幕</span>
+                <span class="label-json">JSON弹幕</span>
+            </span>
+        </div>
         <div class="flex-right">
             <div class="mfunsPlayer-controller-button mfunsPlayer-ade-exit-button" title="返回">
                 <i class="mfunsPlayer-controller-icon icon-left-arrow"></i>
