@@ -480,6 +480,7 @@ class Danmaku {
     });
   }
   limitArea(areaType) {
+    this.seek();
     if (areaType === "keepOutSubtitle") {
       this.keepOutSubtitle = true;
       this.container.style.bottom = "20%";
@@ -491,6 +492,7 @@ class Danmaku {
     }
     //"1/4", "半屏", "3/4", "不重叠", "不限"
     this._limitArea = Math.min(areaType / 4, 1);
+    this.shield("bottom", areaType < 4);
     this.unlimited = areaType > 4;
     this.events &&
       this.events.trigger("setDanmaku", {
@@ -605,7 +607,7 @@ class Danmaku {
     if (this.showing) {
       const itemHeight = this.options.height * this._fontScale; // 弹幕轨道高度
       const danWidth = this.container.offsetWidth; //弹幕容器宽度
-      const danHeight = this.container.offsetHeight; //弹幕容器高度
+      const danHeight = this.container.offsetHeight * this._limitArea; //弹幕容器高度
       const itemY = Math.floor(danHeight / itemHeight); //轨道数量
       // console.log(itemY);
       if (this.tunnelHeights.right.length !== itemY) this.tunnelHeights.right = utils.createArray(itemY, itemHeight);
@@ -665,39 +667,46 @@ class Danmaku {
                 //轨道弹幕组遍历完毕，组内所有弹幕均完全进入容器，可以向该轨道装填弹幕
                 this.tunnelHeights[type][i] =
                   parseInt(this.miniMode ? 16 : item[j].style.fontSize) + this.tunnelPadding;
-                // if (i === 0 && type === "right") {
                 const items = [...this.container.querySelectorAll(".mfunsPlayer-danmaku-right")].filter(
                   (el) => el.dataset.tunnel === `${i}`
                 );
                 // console.log(this.danTunnel["right"][`${i}`]?.length, items.length);
-                if (this.danTunnel["right"][`${i}`]?.length !== items.length) {
+                if (this.danTunnel["right"][`${i}`]?.length !== items.length && !this.unlimited) {
                   this.danTunnel["right"][`${i}`] = items;
+                  return -1;
                 }
-                // }
                 this.danTunnel[type][i + ""].push(ele);
                 ele.addEventListener("animationend", () => {
                   const index = this.danTunnel[type][i + ""]?.indexOf(ele);
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
                 });
-                return i % Math.floor(itemY * this._limitArea);
+                return i % itemY;
               }
             }
           } else {
             // i === 0 && type === "right" && console.log("-------", this.danTunnel["right"]["0"]?.length);
             // console.log(this.danTunnel[type][i + ""]);
             // this.danTunnel[type][i + ""] = [ele];
-
+            const items = [...this.container.querySelectorAll(".mfunsPlayer-danmaku-right")].filter(
+              (el) => el.dataset.tunnel === `${i}`
+            );
+            // console.log(this.danTunnel["right"][`${i}`]?.length, items.length);
+            if (this.danTunnel["right"][`${i}`]?.length !== items.length && !this.unlimited) {
+              this.danTunnel["right"][`${i}`] = items;
+              return -1;
+            }
             if (Array.isArray(this.danTunnel[type][i + ""])) {
               this.danTunnel[type][i + ""].push(ele);
             } else {
               this.danTunnel[type][i + ""] = [ele];
             }
+
             ele.addEventListener("animationend", () => {
               const index = this.danTunnel[type][i + ""]?.indexOf(ele);
               this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
             });
             // console.log(item, i);
-            return i % Math.floor(itemY * this._limitArea);
+            return i % itemY;
           }
         }
         return -1;
@@ -909,6 +918,7 @@ class Danmaku {
   }
 
   clear(type) {
+    console.log("clear");
     if (type) {
       this.danTunnel[type] = {};
       return;
