@@ -66,9 +66,6 @@ export default class mfunsPlayer {
           this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
-          if (advDanData?.length) {
-            this.advDanmaku = new AdvancedDanmaku(this, advDanData);
-          }
           length && this.loadHighEnergy();
           this.removeMask();
           this.videoLoaded && this.template.footBar.classList.remove("loading");
@@ -99,6 +96,7 @@ export default class mfunsPlayer {
         };
       }
       this.danmaku = new Danmaku(this.danmakuOptions, this);
+      this.advancedDanmaku = new AdvancedDanmaku(this, []);
       this.controller.initDanmakuSettingsButton();
     } else {
       this.template.footBar.classList.add("hide");
@@ -228,7 +226,7 @@ export default class mfunsPlayer {
     if (this.autoPlay || this.isReloaded || this.isSwitched) {
       //chrome禁止自动播放视频
       if (this.autoPlay && !this.isSwitched) {
-        this.muted();
+        this.mute();
         this.play();
 
         this.notice("已静音自动播放", true, {
@@ -266,7 +264,7 @@ export default class mfunsPlayer {
       this.pause();
     }
   }
-  muted() {
+  mute() {
     this.video.muted = true;
     this.template.volumeIcon.classList.add("button-volume-off");
     this.controller.components.volumeSlider.change(0);
@@ -464,6 +462,7 @@ export default class mfunsPlayer {
       clearTimeout(this.playTimer);
       this.playEnd && this.danmaku && this.danmaku.seek();
       this.danmaku && this.danmaku.play();
+      this.advancedDanmaku && this.advancedDanmaku.play()
       if (this.videoLoaded) this.timer.enable("loading");
       this.playEnd = false;
       this.controller.setAutoHide();
@@ -481,6 +480,7 @@ export default class mfunsPlayer {
       clearTimeout(this.playTimer);
       clearTimeout(this.timeUpdateTimer);
       this.danmaku && this.danmaku.pause();
+      this.advancedDanmaku && this.advancedDanmaku.pause()
       !this.template.mask.classList.contains("mfunsPlayer-mask-show") &&
         this.updateVideoPosition(this.video.currentTime);
       this.controller.setAutoHide();
@@ -510,6 +510,7 @@ export default class mfunsPlayer {
       this.timer.enable("loading");
       this.template.loading.classList.add("show");
       this.danmaku && this.danmaku.seek();
+      this.advancedDanmaku && this.advancedDanmaku.seek();
     });
     for (let i = 0; i < this.events.videoEvents.length; i++) {
       video.addEventListener(this.events.videoEvents[i], (e) => {

@@ -23,6 +23,7 @@ class AdvancedDanmakuPosEditor {
         this.template.ade_pos_preview = $(".mfunsPlayer-ade-preview");   // 高级弹幕编辑预览
         this.template.ade_pos_emit = $(".mfunsPlayer-ade-emit");         // 高级弹幕发送
 
+        this.template.ade_pos_preview.onclick = () => { this.preview() }
         this.template.ade_pos_emit.onclick = () => { this.send() }
 
         this.c.area_content = $(".PosEditor-area-content")
@@ -38,7 +39,7 @@ class AdvancedDanmakuPosEditor {
         this.c.input_shadow_y = $(".PosEditor-input-shadow-y")
         this.c.input_shadow_blur = $(".PosEditor-input-shadow-blur")
         this.c.input_stroke_color = $(".PosEditor-input-stroke-color")
-        this.c.input_stroke_width = $(".PosEditor-input-stroke")
+        this.c.input_stroke_width = $(".PosEditor-input-stroke-width")
         this.c.input_start = $(".PosEditor-input-start")
         this.c.input_zIndex = $(".PosEditor-input-zIndex")
         this.c.input_anchor_x = $(".PosEditor-input-anchor-x")
@@ -136,6 +137,7 @@ class AdvancedDanmakuPosEditor {
             size: Number(this.c.input_size.value),
             font: this.c.input_font.value,
             bold: this.c.input_bold.checked,
+            ratative: 800,
             shadow: this.c.switch_shadow.checked ? [
                 this.c.input_shadow_color.value,
                 Number(this.c.input_shadow_x.value),
@@ -260,8 +262,25 @@ class AdvancedDanmakuPosEditor {
     _keyframeBarMinus() {
         this.c.list_keyFrames.removeChild(this.c.list_keyFrames.lastElementChild)
     }
+    preview() {
+        let danmaku = {
+            text: this.c.input_content.value,
+            content: this.generateDanmaku(),
+            time: this.c.switch_current.checked ? this.player.video.currentTime*1000 : Number(this.c.input_start.value),
+            id: `preview-${Date.now()}`
+        }
+        this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+    }
     send() {
+        let danmaku = {
+            text: this.c.input_content.value,
+            content: this.generateDanmaku(),
+            time: this.c.switch_current.checked ? this.player.video.currentTime*1000 : Number(this.c.input_start.value)
+        }
         console.log(JSON.parse(this.generateDanmaku()))
+        console.log(danmaku)
+        this.player.advancedDanmaku.posDanmaku.addDanmaku(danmaku)
+        this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
     }
 }
 export default AdvancedDanmakuPosEditor

@@ -30,6 +30,7 @@
   "dependencies": {
     "axios": "^0.22.0",
     "flv.js": "^1.5.0",
+    "mfuns-pos-danmaku": "^1.1.1",
     "node-sass": "^6.0.1"
   }
 }
