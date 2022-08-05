@@ -139,22 +139,20 @@ class Controller {
     }
   }
   initThumbnails() {
-    if (this.player.options.video[this.player.currentVideo].thumbnails) {
-      this.thumbnails = new Thumbnails({
-        container: this.player.template.barPreview,
-        barWidth: this.player.template.barWrap.offsetWidth,
-        url: this.player.options.video[this.player.currentVideo].thumbnails,
-        events: this.player.events,
-      });
+    this.thumbnails = new Thumbnails({
+      container: this.player.template.barPreview,
+      barWidth: this.player.template.barWrap.offsetWidth,
+      url: this.player.options.video[this.player.currentVideo].thumbnails,
+      events: this.player.events,
+    });
 
-      this.player.on("loadedmetadata", () => {
-        this.thumbnails.resize(
-          160,
-          (this.player.video.videoHeight / this.player.video.videoWidth) * 160,
-          this.player.template.barWrap.offsetWidth
-        );
-      });
-    }
+    this.player.on("loadedmetadata", () => {
+      this.thumbnails.resize(
+        160,
+        (this.player.video.videoHeight / this.player.video.videoWidth) * 160,
+        this.player.template.barWrap.offsetWidth
+      );
+    });
   }
   initPlayedBar() {
     const allPanel = document.querySelectorAll(".mfunsPlayer-controller-panel-mask");
@@ -168,7 +166,7 @@ class Controller {
       if (tx < 0 || tx > this.player.template.barWrap.offsetWidth) {
         return;
       }
-      if (this.thumbnails) {
+      if (this.thumbnails.isShow) {
         if (tx >= 80 && tx <= this.player.template.barWrap.offsetWidth - 80) {
           this.player.template.barTime.classList.remove("thumbLimit");
           this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;

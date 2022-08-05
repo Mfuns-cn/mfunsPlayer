@@ -29,16 +29,15 @@ export default class HighEnergy {
     });
     const max = Math.max(...this.Ydata);
     const min = Math.min(...this.Ydata);
-    const thorn = (max - min) / 3;
-    // console.log(max, min);
-
+    const thorn = (max - min) / 5;
+    console.log("单位弹幕量极值分别为：", max, min);
     this.Ydata.forEach((el, index) => {
-      this.Ydata[index] = Math.min(el + 20, 50);
+      this.Ydata[index] = Math.max(thorn, el);
       if (Math.abs(this.Ydata[index + 1] - el) <= thorn && index !== this.Ydata.length - 1) {
         this.Ydata[index + 1] = parseInt((el + this.Ydata[index + 1]) / 2);
       }
     });
-    // console.log(this.Ydata);
+    console.log(this.Ydata);
   }
   init() {
     this.getData();
