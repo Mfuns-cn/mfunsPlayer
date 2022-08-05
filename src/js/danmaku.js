@@ -956,7 +956,7 @@ class Danmaku {
     this.showing = false;
     this.pause();
     this.clear();
-
+    this.events && this.events.trigger("danmaku_hide");
     this.events &&
       this.events.trigger("setDanmaku", {
         key: "show",
@@ -968,7 +968,7 @@ class Danmaku {
     this.seek();
     this.showing = true;
     this.play();
-
+    this.events && this.events.trigger("danmaku_show");
     this.events &&
       this.events.trigger("setDanmaku", {
         key: "show",
