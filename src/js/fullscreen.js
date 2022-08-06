@@ -70,6 +70,14 @@ class FullScreen {
         );
       case "web":
         return !!this.player.template.videoWrap.classList.contains("mfunsPlayer-web-fullscreen");
+      case "all":
+        return !!(
+          document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement ||
+          this.player.template.videoWrap.classList.contains("mfunsPlayer-web-fullscreen")
+        );
     }
   }
   handleFullscrren(type) {
