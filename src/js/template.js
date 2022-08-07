@@ -74,6 +74,7 @@ class Template {
     this.repeat_btn = $(".mfunsPlayer-controller-repeat"); // 洗脑循环按钮
     this.repeat_tip = $(".mfunsPlayer-controller-repeat .mfunsPlayer-controller-tip"); // 洗脑循环提示
     this.pagelistItem = $all(".mfunsPlayer-pagelist-item");
+    this.pagelist = $(".mfunsPlayer-pagelist-list");
     this.volume_btn = $(".mfunsPlayer-controller-volume"); // 音量按钮
     this.volumeMask = $(".mfunsPlayer-controller-volume-mask");
     this.volumeBarWrap = $(".mfunsPlayer-controller-volume-wrap");

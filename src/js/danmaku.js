@@ -208,8 +208,9 @@ class Danmaku {
     //举报提交
     this.player.template.danmakuReportSubmit.addEventListener("click", () => {
       if (this.player.template.danmakuReportSubmit.classList.contains("disable")) return;
-      const { author, text } = this.lockDanmakuData;
+      const { author, text, origin } = this.lockDanmakuData;
       const { id } = this.options.api;
+      console.log(this.lockDanmakuData);
       const reportData = {
         danId: id ?? null,
         author: author ?? null,
@@ -217,7 +218,8 @@ class Danmaku {
         reason: reportIReason || this.player.template.danmakuReportDetail.value,
       };
 
-      this.player.events.trigger("danmaku_report", reportData);
+      if (origin === "mfuns") this.player.events.trigger("danmaku_report", reportData);
+      else this.player.notice("不能跨站执法哦~");
       this.currentLockDanmaku && this.currentLockDanmaku.classList.remove("lock");
       this.player.template.danmakuReportMask.classList.remove("show");
       this.player.template.danmakuReportDetail.classList.remove("show");

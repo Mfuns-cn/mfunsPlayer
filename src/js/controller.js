@@ -316,6 +316,9 @@ class Controller {
     });
   }
   initPagelistButton() {
+    this.player.template.pagelist.addEventListener("wheel", (e) => {
+      e.stopPropagation();
+    });
     for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
       this.player.template.pagelistItem[i].addEventListener("click", (event) => {
         window.event ? (window.event.cancelBubble = true) : event.stopPropagation();

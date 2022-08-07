@@ -9,7 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
   <title>mfunsPlayer</title>
 </head>
-<!-- <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script> -->
 <script src="./src/static/echarts.js"></script>
 <script src="./dist/mfunsPlayer.js"></script>
 <style type="text/css">
@@ -22,8 +21,75 @@
     text-decoration: none;
   }
 
+  .test-title {
+    margin: 10px auto;
+    font-size: 40px;
+    width: fit-content;
+  }
+
+  .test-tip {
+    margin: 10px auto;
+    width: fit-content;
+    color: #f00
+  }
+
+  .header {
+    position: relative;
+    width: 1000px;
+    margin: 10px auto;
+  }
+
+  .header>.title {
+    font-size: 20px;
+    margin-left: -10px;
+  }
+
+  .header>.updater {
+    position: absolute;
+    top: -10px;
+    right: 50px;
+    width: 250px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .avater {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: url("https://m.kms233.com/user_files/7376/avatar/60005787_1631265278.jpeg");
+    background-size: 100% 100%;
+  }
+
+  .updater-info {
+    width: 180px;
+    height: 50px;
+    padding-left: 20px;
+
+  }
+
+  .updater-name {
+    margin-top: 5px;
+    font-size: 18px;
+  }
+
+  .updater-sign {
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  .play-data {
+    margin: 0 auto;
+    width: 1000px;
+    color: #999;
+    font-size: 14px;
+  }
+
   .player {
     width: 1000px;
+    /* height: 460px; */
     margin: 20px auto;
     display: flex;
     justify-content: center;
@@ -43,10 +109,10 @@
     margin: 80px auto;
     padding: 20px;
     width: 1000px;
-    height: 360px;
-    border: 1px solid #999;
+    height: 400px;
+    border: 1px solid #e6e6e6;
     display: flex;
-
+    box-sizing: border-box;
   }
 
   .inroduce>img {
@@ -80,6 +146,14 @@
     margin: 15px 0;
   }
 
+  .inroduce>.staff {
+    margin-left: 50px;
+    padding-left: 50px;
+    color: #666;
+    font-size: 15px;
+    border-left: 1px solid #e6e6e6;
+  }
+
   .comment {
     margin: 20px auto;
     height: 1200px;
@@ -94,6 +168,20 @@
 </style>
 
 <body>
+
+  <h2 class="test-title">mfunsPlayer v2.1.0 测试</h2>
+  <h4 class="test-tip">注：请尽量使用谷歌或者火狐内核的浏览器进行测试</h4>
+  <div class="header">
+    <div class="title">【4月】命运石之门 【KFCX雪酷X曙光】</div>
+    <a href="https://www.mfuns.fun/author/7376" target="_blank" class="updater">
+      <div class="avater"></div>
+      <div class="updater-info">
+        <div class="updater-name">鲁迪钨丝</div>
+        <div class="updater-sign">尘归尘，土归土</div>
+      </div>
+    </a>
+  </div>
+  <div class="play-data">播放量：0 &nbsp;&nbsp;弹幕数：7.2w &nbsp;&nbsp;2011-06-22 14:48:41</div>
   <div class="player">
     <div class="content"></div>
     <div class="extra"">
@@ -115,7 +203,7 @@
         <a href="" title="命运石之门" class="media-title">命运石之门</a>
         <div class="pub-wrapper">
           <span class="home-link">番剧</span>
-          <span class="pub-info">已完结 更新至12集 全24话 </span>
+          <span class="pub-info"> 更新至12集 &nbsp;全24话 </span>
         </div>
         <div class="inroduce-content">
           <div class="inroduce-content-line">舞台是2010年夏的秋叶原。</div>
@@ -129,6 +217,24 @@
           <div class="inroduce-content-line">而他到底能否克服命运呢！？</div>
         </div>
       </div>
+      <ul class="staff">
+        <li>原作：5pb./Nitroplus</li>
+        <li>动画制作：WHITE FOX</li>
+        <li>监督：佐藤卓哉、滨崎博嗣</li>
+        <li>系列构成：花田十辉</li>
+        <li>人物设定、总作画监督：坂井久太</li>
+        <li>机械设定：コレサワシゲユキ、中村和久</li>
+        <li>美术设定：金平和茂</li>
+        <li>美术监督：卫藤功二</li>
+        <li>色彩设计：佐藤美由纪</li>
+        <li>特殊效果：垣田由纪子</li>
+        <li>3DCG：相马洋</li>
+        <li>摄影监督：中村圭介</li>
+        <li>编辑：后藤正浩</li>
+        <li>音响监督：藤山房伸</li>
+        <li>音乐：阿保刚、村上纯</li>
+        <li>制作：未来道具研究所</li>
+      </ul>
     </div>
 
     <div class="comment">
@@ -183,9 +289,9 @@
       {
         url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
         type: "mp4",
-        pic: "http://www.dmoe.cc/random.php?165529917318",
+        // pic: "http://www.dmoe.cc/random.php?165529917318",
         title: "第一话 起源与终结的序章 TurningPoint",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/1.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/01.xml",
@@ -197,7 +303,7 @@
         url: "https://video_api.kms233.com/bili/BV1Sx411c7wA",
         type: "mp4",
         title: "第二话 时间跳跃的偏执狂 TimeTravelParanoia",
-        // thumbnails: "./src/static/thumbnails/kyoujin/1.png",
+        thumbnails: "./src/static/thumbnails/steingate/2.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/02.xml",
@@ -210,7 +316,7 @@
         url: "https://bj.bcebos.com/ksv-video-upload/bb37487f579b9ef8b59487f93740ab1996c5b991",
         type: "mp4",
         title: "第三话 并列过程的偏执狂 ParallelWorldParanoia",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/3.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/03.xml",
@@ -222,7 +328,7 @@
         url: "https://video_api.kms233.com/bili/BV1kx411c7kz",
         type: "mp4",
         title: "第四话 空理彷徨的交汇 InterpreterRendezvous ",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/4.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/04.xml",
@@ -234,7 +340,7 @@
         url: "https://video_api.kms233.com/bili/BV1kx411c7Gm",
         type: "mp4",
         title: "第五话 电荷冲突的交汇 StarmineRendezvous",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/5.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/05.xml",
@@ -246,7 +352,7 @@
         url: "https://video_api.kms233.com/bili/BV1Cx411c7ix",
         type: "mp4",
         title: "第六话 蝶翼的偏差值 ButterflyEffect",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/6.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/06.xml",
@@ -258,7 +364,7 @@
         url: "https://video_api.kms233.com/bili/BV1Cx411c7Pa",
         type: "mp4",
         title: "第七话 断层的变动率 DivergenceSingularity",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/7.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/07.xml",
@@ -270,7 +376,7 @@
         url: "https://video_api.kms233.com/bili/BV1yx411c7QQ",
         type: "mp4",
         title: "第八话 梦幻的自平衡 ChaosTheoryHomeostasis",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/8.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/08.xml",
@@ -282,7 +388,7 @@
         url: "https://video_api.kms233.com/bili/BV1yx411c75j",
         type: "mp4",
         title: "第九话 幻像的自平衡 ChaosTheoryHomeostasis",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/9.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/09.xml",
@@ -294,7 +400,7 @@
         url: "https://video_api.kms233.com/bili/BV1dx411c7Ye",
         type: "mp4",
         title: "第十话 相生的自平衡 ChaosTheoryHomeostasis",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/10.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/10.xml",
@@ -306,7 +412,7 @@
         url: "https://video_api.kms233.com/bili/BV1Zx411c7Fz",
         type: "mp4",
         title: "第十一话 时空境界的教条 DogmainEventHorizon",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/11.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/11.xml",
@@ -318,7 +424,7 @@
         url: "https://video_api.kms233.com/bili/BV1ox411c7hx",
         type: "mp4",
         title: "第十二话 静止限界的教条 DogmainErgosphere",
-        // thumbnails: "./src/static/thumbnails/kyoujin/2.png",
+        thumbnails: "./src/static/thumbnails/steingate/12.png",
         danmakuAddition: [
           {
             url: "./src/static/danmaku/steingate/012.xml",
