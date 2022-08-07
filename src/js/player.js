@@ -67,7 +67,7 @@ export default class mfunsPlayer {
           this.danmakuLoaded = true;
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [完成]";
           this.loadHighEnergy();
-          !isReload && this.removeMask();
+          // !isReload && this.removeMask();
           this.videoLoaded && this.template.footBar.classList.remove("loading");
         },
         error: (msg, isReload) => {
@@ -75,7 +75,7 @@ export default class mfunsPlayer {
           this.template.danmakuLoad.innerHTML = "请求弹幕数据中... [失败]";
           this.template.danmakuCount.innerHTML = `共 0 条弹幕`;
           this.loadHighEnergy();
-          !isReload && this.removeMask();
+          // !isReload && this.removeMask();
           this.template.loading.classList.remove("show");
         },
         apiBackend: this.options.apiBackend,
