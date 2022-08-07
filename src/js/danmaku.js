@@ -329,6 +329,7 @@ class Danmaku {
       if (!loadStatus) {
         console.log(loadStatus, results);
         this.events && this.events.trigger("danmaku_load_end", []);
+        this.options.error(results, true);
       } else {
         console.log(this.danData);
         const { acfun, bili, mfuns, unknown } = this.danData;
@@ -345,7 +346,7 @@ class Danmaku {
         });
         this.events && this.events.trigger("danmaku_load_end", this.dan);
         this.loaded = true;
-        this.options.callback(this.dan.length);
+        this.options.callback(this.dan.length, null, true);
       }
     });
   }
@@ -394,7 +395,7 @@ class Danmaku {
             originOperate.addEventListener("click", () => {
               this.reloadEndPoints(link.origin);
             });
-            resolve([]);
+            reject(error);
           },
         });
       });
