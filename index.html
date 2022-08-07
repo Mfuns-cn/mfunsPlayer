@@ -18,6 +18,10 @@
     padding: 0;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   .player {
     width: 1000px;
     margin: 20px auto;
@@ -34,12 +38,64 @@
     border: 1px solid #e6e6e6;
     border-left: none;
   }
+
+  .inroduce {
+    margin: 80px auto;
+    padding: 20px;
+    width: 1000px;
+    height: 360px;
+    border: 1px solid #999;
+    display: flex;
+
+  }
+
+  .inroduce>img {
+    width: 220px;
+    height: 340px
+  }
+
+  .media-right {
+    margin-left: 20px;
+  }
+
+  .media-title {
+    font-size: 20px;
+    color: #000;
+  }
+
+  .pub-wrapper {
+    color: #999;
+    font-size: 14px;
+  }
+
+  .inroduce-content {
+    width: 320px;
+    /* white-space: pre; */
+
+    font-size: 14px;
+    color: rgb(88, 84, 84);
+  }
+
+  .inroduce-content-line {
+    margin: 15px 0;
+  }
+
+  .comment {
+    margin: 20px auto;
+    height: 1200px;
+    width: 1000px;
+    border: 1px solid #000;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 100px;
+  }
 </style>
 
 <body>
   <div class="player">
     <div class="content"></div>
-
     <div class="extra"">
          <!-- <h1>本周任务</h3>
         <ol>
@@ -51,43 +107,45 @@
         </ol> -->
       </div>
     </div>
-   <h1 style=" margin-top:280px ;">11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
+  </div>
+   
+  <div class=" inroduce">
+      <img src="./src/static/steingate.png" alt="">
+      <div class="media-right">
+        <a href="" title="命运石之门" class="media-title">命运石之门</a>
+        <div class="pub-wrapper">
+          <span class="home-link">番剧</span>
+          <span class="pub-info">已完结 更新至12集 全24话 </span>
+        </div>
+        <div class="inroduce-content">
+          <div class="inroduce-content-line">舞台是2010年夏的秋叶原。</div>
+          <div>无法摆脱中二病的大学生冈部伦太郎，成立了“未来道具研究所”，每天都生产出用途不明的发明。
+            但是，某日，偶然间发明出可以把电子讯息传送过去的时间机器。
+          </div>
+          <div class="inroduce-content-line">
+            抑制不住对世纪发明的兴奋，纯粹由于感兴趣而不断对过去进行干涉。结果，席卷世界的大悲剧降临在冈部等人的身上……
+          </div>
+          <div class="inroduce-content-line">为了避免悲剧的发生，冈部的孤独的战斗开始了。</div>
+          <div class="inroduce-content-line">而他到底能否克服命运呢！？</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment">
+      <h1>假</h1>
+      <h1>装</h1>
+      <h1>我</h1>
+      <h1>是</h1>
+      <h1>个</h1>
+      <h1>评</h1>
+      <h1>论</h1>
+      <h1>区</h1>
     </div>
 </body>
 <script>
-  //     url: "https://api.moegirl.love/v1/bilibiliav/av810872",
+  //    url: "https://api.moegirl.love/v1/bilibiliav/av810872",
   //    url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
   //    url: "https://api.moegirl.love/v1/bilibiliav/av12",
-  //     title: "【炮姐/AMV】我永远都会守护在你的身边！",
   //     danId: 70385,
   //     addition: [
   //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
@@ -121,20 +179,6 @@
   const mfunsPlayerParams = {
     container,
     uid: 2333,
-    // theme: "#00a1d6",
-    // autoPlay,
-    // autoSwitch,
-    // autoSkip,
-    // blackBorder,
-    // volume,
-    // dragable: true,
-    // hotkey: true,
-
-    // currentVideo: 0,
-    // widescreen: true, // 宽屏模式
-    // widescreenSwitch: true, // 可切换宽屏模式
-    // mutex: true,
-
     video: [
       {
         url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
@@ -367,8 +411,6 @@
     } else {
       mfuns_video_point.push(data)
     }
-
-    // console.log(mfuns_video_point)
     localStorage.setItem("mfuns_video_point", JSON.stringify(mfuns_video_point))
   })
 </script>
