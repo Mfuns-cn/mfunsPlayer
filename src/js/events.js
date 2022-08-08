@@ -71,7 +71,15 @@ class Events {
       this.events[name].push(callback);
     }
   }
-
+  off(name, callback) {
+    if (this.type(name) && typeof callback === "function") {
+      if (!this.events[name]) {
+        this.events[name] = [];
+      }
+      const index = this.events[name].indexOf(callback);
+      if (typeof index === "number") this.events[name].splice(index, 1);
+    }
+  }
   trigger(name, ...args) {
     if (this.events[name] && this.events[name].length) {
       for (let i = 0; i < this.events[name].length; i++) {

@@ -3,6 +3,7 @@
 	.mfunsPlayer-controller-wrap {
 		> .mfunsPlayer-video-danmaku-root {
 			justify-content: flex-start;
+			pointer-events: none;
 			.input_box {
 				display: none !important;
 			}
@@ -383,6 +384,7 @@
 	align-items: center;
 	height: 100%;
 	.mfunsPlayer-controller-button {
+		pointer-events: all;
 		padding: 0 5px;
 	}
 	.mfunsPlayer-controller-icon {
