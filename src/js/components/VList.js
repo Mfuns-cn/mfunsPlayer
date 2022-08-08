@@ -46,9 +46,9 @@ export class VList {
       this.viewEnd = this.getViewEnd(scrollTop, clientH)
       if (this.viewStart <= this.renderStart || this.viewEnd >= this.renderEnd) {
         this.render(clientH, scrollTop)
-        console.log(`${this.renderStart} - ${this.renderEnd}`)
+        // console.log(`${this.renderStart} - ${this.renderEnd}`)
       }
-      console.log(`${scrollTop} + ${clientH} @ ${this.viewStart} - ${this.viewEnd} # ${this.renderStart} - ${this.renderEnd}`)
+      // console.log(`${scrollTop} + ${clientH} @ ${this.viewStart} - ${this.viewEnd} # ${this.renderStart} - ${this.renderEnd}`)
     } else {
       // console.log("none")
     }
@@ -60,25 +60,25 @@ export class VList {
     // 获取新渲染范围
     this.renderStart = this.getViewStart(scrollTop) - this.overflow
     this.renderEnd = this.getViewEnd(scrollTop, clientH) + this.overflow
-    console.log(`old ${oldRenderStart}-${oldRenderEnd} new ${this.renderStart}-${this.renderEnd}`)
+    // console.log(`old ${oldRenderStart}-${oldRenderEnd} new ${this.renderStart}-${this.renderEnd}`)
     // 与列表前段比较
     if (this.renderStart < oldRenderStart) {  // 列表前段范围扩张, 添加新列表项
       let beforeItems = document.createDocumentFragment()
       let addFrom = Math.max(this.renderStart, 0)
       let addTo = Math.min(oldRenderStart - 1, this.renderEnd, this.data.length - 1)
-      console.log(`add ${addFrom}-${addTo}`)
+      // console.log(`add ${addFrom}-${addTo}`)
       for (let i = addFrom; i <= addTo ; i++) {
         beforeItems.appendChild(this.createItem(this.data[i], i))
-        console.log("add: " + i)
+        // console.log("add: " + i)
       }
       this.content.insertBefore(beforeItems, this.content.firstElementChild)
     } else {    // 若不扩张, 则删除多余的列表项
       let removeFrom = Math.max(oldRenderStart, 0)
       let removeTo = Math.min(this.renderStart - 1, oldRenderEnd)
-      console.log(`remove ${removeFrom}-${removeTo}`)
+      // console.log(`remove ${removeFrom}-${removeTo}`)
       for (let i = removeFrom; i <= removeTo ; i++) {
         this.content.removeChild(this.content.firstElementChild)
-        console.log("remove: " + i)
+        // console.log("remove: " + i)
       }
     }
 
@@ -87,19 +87,19 @@ export class VList {
       let afterItems = document.createDocumentFragment()
       let addFrom = Math.max(oldRenderEnd + 1 ,this.renderStart)
       let addTo = Math.min(this.renderEnd, this.data.length - 1)
-      console.log(`add ${addFrom}-${addTo}`)
+      // console.log(`add ${addFrom}-${addTo}`)
       for (let i = addFrom; i <= addTo ; i++) {
         afterItems.appendChild(this.createItem(this.data[i], i))
-        console.log("add: " + i)
+        // console.log("add: " + i)
       }
       this.content.appendChild(afterItems)
     } else {    // 若不扩张, 则删除多余的列表项
       let removeFrom = Math.min(oldRenderEnd, this.data.length - 1)
       let removeTo = Math.max(this.renderEnd + 1, oldRenderStart)
-      console.log(`remove ${removeFrom}-${removeTo}`)
+      // console.log(`remove ${removeFrom}-${removeTo}`)
       for (let i = removeFrom; i >= removeTo ; i--) {
         this.content.removeChild(this.content.lastElementChild)
-        console.log("remove: " + i)
+        // console.log("remove: " + i)
       }
     }
 
@@ -116,7 +116,7 @@ export class VList {
   // 清空列表
   clear() {
     this.content.innerHTML = ""
-    this.content.style.paddingTop = `0px`
-    this.content.style.paddingBottom = `0px`
+    this.content.style.paddingTop = "0px"
+    this.content.style.paddingBottom = "0px"
   }
 }

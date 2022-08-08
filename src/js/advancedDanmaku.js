@@ -15,8 +15,9 @@ export default class AdvancedDanmaku {
       // 舞台基本尺寸, 可选
       stageSize: [1920, 1080]
     });
-    window.requestAnimationFrame(() => {
-      this.posDanmaku.resize()
+    this.player.on("danmaku_load_end", () => {
+      this.posDanmaku.resize();
+      this.posDanmaku.reload();
     })
   }
   play() {
