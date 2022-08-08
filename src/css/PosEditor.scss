@@ -22,6 +22,9 @@
         padding: 4px;
         font-size: 12px;
     }
+    input[type=number].PosEditor-input-start {
+        width: 70px;
+    }
     .PosEditor-row {
         height: 26px;
         margin-bottom: 4px;

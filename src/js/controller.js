@@ -1,4 +1,4 @@
-import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components";
+import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components/components";
 import utils from "./utils";
 import Thumbnails from "./thumbnails";
 class Controller {

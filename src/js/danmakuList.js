@@ -1,4 +1,5 @@
 import utils from "./utils";
+import { VList } from "./components/VList";
 
 /** 弹幕列表
  *  
@@ -9,14 +10,40 @@ class DanmakuList {
     this.player = player;
     this.el = el;
     this.template = this.player.template;
+    this.data = []
     this.init();
   }
   init() {
     const $ = this.el.querySelector.bind(this.el);
     this.template.danmaku_list_container = $(".mfunsPlayer-danmaku-list-container"); // 弹幕列表容器
-    this.template.danmaku_list = $(".mfunsPlayer-danmaku-list"); // 弹幕列表
     this.template.danmaku_list_status = $(".mfunsPlayer-danmaku-list-status"); // 弹幕列表状态
 
+    this.list = new VList({
+      el: this.template.danmaku_list_container,
+      getData: () => { return this.data },
+      itemHeight: 24,
+      createItem: (danmaku, i) => {
+        let tipText = danmaku.text;
+        let listItem = document.createElement("div")
+        listItem.className = "list-row"
+        listItem.title = `${tipText}\n${
+          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
+        } @ ${utils.secondToTime(danmaku.time, false)}`
+        listItem.setAttribute("data-index", i)
+        listItem.innerHTML = `
+          <span class="list-cell col-time">${utils.secondToTime(
+            danmaku.time,
+            false
+          )}</span><span class="list-cell col-text" ${
+            danmaku.mode > 6 ? 'style="font-weight:600"' : ""
+          }>${tipText}</span><span class="list-cell col-date">${
+            danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
+          }</span>`
+        return listItem
+      },
+      overflow: 5
+    })
+    
     this.danmakuLoadingFailed = false;
     if (this.player.danmaku.loaded) {
       this.fill(this.player.danmaku.dan);
@@ -34,42 +61,18 @@ class DanmakuList {
   }
   fill(dan) {
     // 弹幕列表装填
-    let danList = "";
     if (this.danmakuLoadingFailed) {
       this.setStatus("failed");
     } else if (!dan.length) {
       this.setStatus("empty");
     } else {
-      dan.forEach((danmaku) => {
-        let tipText = danmaku.text;
-        if (danmaku.mode == 8) {
-          tipText = tipText.replaceAll("\r", "");
-          tipText = danmaku.text.length < 400 ? tipText : tipText.slice(0, 400) + "...";
-        } else {
-          tipText = tipText.replaceAll("\\", "\\\\");
-        }
-        let row = `
-        <div class="list-row" title='${tipText}\n${
-          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
-        } @ ${utils.secondToTime(danmaku.time, false)}'>
-          <span class="list-cell col-time">${utils.secondToTime(
-            danmaku.time,
-            false
-          )}</span><span class="list-cell col-text" ${
-          danmaku.mode > 6 ? 'style="font-weight:600"' : ""
-        }>${tipText}</span><span class="list-cell col-date">${
-          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
-        }</span>
-        </div>
-        `;
-        danList += row;
-      });
+      this.data = dan
+      this.list.reload()
       this.setStatus(true);
-      this.template.danmaku_list.innerHTML = danList;
     }
   }
   clear() {
-    this.template.danmaku_list.innerHTML = "";
+    this.list.clear()
     this.danmakuLoadingFailed = false;
     this.setStatus("loading");
   }

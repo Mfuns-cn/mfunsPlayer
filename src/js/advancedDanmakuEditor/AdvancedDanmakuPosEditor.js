@@ -124,7 +124,7 @@ class AdvancedDanmakuPosEditor {
         }
     }
     getCurrentTime() {  // 捕捉当前时间
-        
+        this.c.input_start.value = parseInt(this.player.video.currentTime * 1000)
     }
     useAutoCurrentTime(b) {  // 自动使用当前时间
         this.autoCurrentTime = b
@@ -150,6 +150,7 @@ class AdvancedDanmakuPosEditor {
             ] : undefined,
             start: this.c.switch_current.checked ? undefined : Number(this.c.input_start.value),
             zIndex: Number(this.c.input_zIndex.value),
+            anchor: [Number(this.c.input_anchor_x.value), Number(this.c.input_anchor_y.value)],
             duration: Number(this.c.input_duration.value),
             // 分离初始帧数据
             position: this.keyFrames[0].position,
@@ -269,7 +270,12 @@ class AdvancedDanmakuPosEditor {
             time: this.c.switch_current.checked ? this.player.video.currentTime*1000 : Number(this.c.input_start.value),
             id: `preview-${Date.now()}`
         }
-        this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+        if (!this.c.switch_current.checked) {
+            this.player.seek(danmaku.time / 1000)
+        }
+        window.requestAnimationFrame(() => {
+            this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+        })
     }
     send() {
         let danmaku = {
@@ -280,7 +286,9 @@ class AdvancedDanmakuPosEditor {
         console.log(JSON.parse(this.generateDanmaku()))
         console.log(danmaku)
         this.player.advancedDanmaku.posDanmaku.addDanmaku(danmaku)
-        this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+        if (this.c.switch_current.checked) {
+            this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+        }
     }
 }
 export default AdvancedDanmakuPosEditor
