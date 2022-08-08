@@ -1,5 +1,5 @@
 import utils from "./utils";
-import { Switch } from "./components";
+import { Switch } from "./components/components";
 class Danmaku {
   constructor(options, player) {
     this.options = options;

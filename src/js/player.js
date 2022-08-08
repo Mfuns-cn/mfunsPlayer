@@ -14,7 +14,7 @@ import InfoPanel from "./info-panel";
 import Template from "./template";
 import utils from "./utils";
 import DanmakuAuxiliary from "./danmakuAuxiliary";
-import { Switch } from "./components";
+import { Switch } from "./components/components";
 let index = 0;
 const instances = [];
 export default class mfunsPlayer {
