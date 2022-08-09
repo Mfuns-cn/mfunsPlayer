@@ -198,13 +198,14 @@ class Template {
 
   buildVideo(hasBlackborder) {
     if (!hasBlackborder) {
-      this.videoMask.classList.add("noborder");
+      this.previewMask.classList.add("noborder");
       this.bezel.classList.add("noborder");
     } else {
-      this.videoMask.classList.remove("noborder");
+      this.previewMask.classList.remove("noborder");
       this.bezel.classList.remove("noborder");
     }
-    this.videoWrap.style.height = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + "px";
+    // this.container.style.height =
+    //   ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + 80 + "px";
   }
 }
 export default Template;
