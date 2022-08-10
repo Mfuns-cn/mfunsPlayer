@@ -15,6 +15,7 @@ export class VList {
     this.viewStart = 0      // 可视范围起点
     this.viewEnd = 0        // 可视范围终点
     this.throttle = false   // 节流开关
+    this.cleared = false    // 已清空状态
 
     this.init()
     this.reload()
@@ -25,7 +26,7 @@ export class VList {
     this.content.classList.add("vlist-content")
     this.el.appendChild(this.content)
 
-    this.el.addEventListener("scroll", () => {this.handleScroll()})
+    this.el.addEventListener("scroll", () => {this.cleared || this.handleScroll()})
   }
   reload() {
     this.clear()
@@ -37,6 +38,7 @@ export class VList {
     this.viewEnd = 0
     this.throttle = false   // 节流开关
     this.handleScroll()
+    this.cleared = false
   }
   handleScroll() {
     if (!this.throttle) {
@@ -118,5 +120,18 @@ export class VList {
     this.content.innerHTML = ""
     this.content.style.paddingTop = "0px"
     this.content.style.paddingBottom = "0px"
+    this.cleared = true
+  }
+  locateStart(n) {  // 定位到某项开头
+    this.el.scrollTo({
+      top: n * this.itemHeight,
+      behavior: "instant"
+    })
+  }
+  locateEnd(n) {    // 定位到某项末尾
+    this.el.scrollTo({
+      top: n * this.itemHeight - this.el.clientHeight,
+      behavior: "instant"
+    })
   }
 }
