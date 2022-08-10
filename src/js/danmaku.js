@@ -555,7 +555,7 @@ class Danmaku {
       const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-item");
       for (let i = 0; i < items.length; i++) {
         if (items[i].classList.contains("subtitle")) continue;
-        items[i].children[0].style.opacity = percentage;
+        items[i].style.opacity = percentage;
       }
       this._opacity = percentage;
 
@@ -771,7 +771,7 @@ class Danmaku {
         if (typeof dan[i].color !== "string") {
           item.style.color = utils.number2Color(dan[i].color);
         }
-        item.children[0].style.opacity = this._opacity;
+        item.style.opacity = this._opacity;
         item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
         item.addEventListener("animationend", () => {
           if ([...this.container.children].indexOf(item) > -1) this.container.removeChild(item);
