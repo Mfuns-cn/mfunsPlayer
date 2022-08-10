@@ -50,6 +50,7 @@ class Danmaku {
     this.biliLimit = false;
     this.acfunLimit = false;
     this.unknownLimit = false;
+    this.originFilter = new Set()
     this.unlimited = this.options.unlimited;
     this.loaded = false; // 弹幕是否加载完毕
     this.paused = true;
@@ -373,10 +374,17 @@ class Danmaku {
             originCount.innerHTML = data.length;
             originOperate.onclick = () => {
               if (currentOrigin.classList.contains("forbidden")) {
+                // 解除弹幕来源屏蔽
                 currentOrigin.classList.replace("forbidden", "success");
                 console.log(currentOrigin.classList);
                 this[`${link.origin}Limit`] = false;
+                this.originFilter.delete(link.origin)
+                this.events && this.events.trigger("danmaku_filter", {
+                  key: "origin",
+                  value: [...this.originFilter],
+                })
               } else {
+                // 弹幕来源屏蔽
                 currentOrigin.classList.replace("success", "forbidden");
                 console.log(currentOrigin.classList);
                 this[`${link.origin}Limit`] = true;
@@ -386,6 +394,11 @@ class Danmaku {
                     el.innerHTML = "";
                   }
                 });
+                this.originFilter.add(link.origin)
+                this.events && this.events.trigger("danmaku_filter", {
+                  key: "origin",
+                  value: [...this.originFilter],
+                })
               }
             };
             resolve(data);
@@ -535,10 +548,10 @@ class Danmaku {
         }
       });
     }
-    if (type === "advance") {
+    if (type === "special") {
     }
     let filterArr = [];
-    const allType = ["top", "bottom", "left", "right", "color", "advance"];
+    const allType = ["top", "bottom", "left", "right", "color", "special"];
     allType.forEach((el) => {
       if (this[`${el}Limit`]) {
         filterArr.push(el);
@@ -549,6 +562,10 @@ class Danmaku {
         key: "shields",
         value: filterArr,
       });
+    this.events && this.events.trigger("danmaku_filter", {
+      key: "type",
+      value: filterArr,
+    })
   }
   opacity(percentage) {
     if (percentage !== undefined) {

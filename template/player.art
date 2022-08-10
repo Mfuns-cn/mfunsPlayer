@@ -469,7 +469,7 @@
                             <li class="picker-item" data-value="top">顶部</li>
                             <li class="picker-item" data-value="bottom">底部</li>
                             <li class="picker-item" data-value="color">彩色</li>
-                            <li class="picker-item" data-value="advance">高级</li>
+                            <li class="picker-item" data-value="special">特殊</li>
                         </ul>
                     </div>
                     <div class="mfunsPlayer-panel-row">

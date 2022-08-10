@@ -13,7 +13,11 @@
         </div>
     </div>
     <div class="mfunsPlayer-danmaku-auxiliary-foot">
-        <div class="flex-left"></div>
+        <div class="flex-left">
+            <span class="mfunsPlayer-danmaku-list-autoscroll">
+                列表滚动[关]
+            </span>
+        </div>
         <div class="flex-right">
             <div class="mfunsPlayer-controller-button mfunsPlayer-ade-button" title="高级弹幕">
                 <i class="mfunsPlayer-controller-icon icon-advanced-danmaku"></i>
