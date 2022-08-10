@@ -13,7 +13,9 @@ export default class AdvancedDanmaku {
         return (data)
       },
       // 舞台基本尺寸, 可选
-      stageSize: [1920, 1080]
+      stageSize: [1920, 1080],
+      // 弹幕舞台resize由播放器控制, 无需自动调整大小
+      autoResize: false,
     });
     this.player.on("danmaku_load_end", () => {
       this.posDanmaku.resize();
@@ -31,5 +33,8 @@ export default class AdvancedDanmaku {
   }
   load() {
     
+  }
+  resize() {
+    this.posDanmaku.resize()
   }
 }

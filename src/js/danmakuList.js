@@ -148,6 +148,9 @@ class DanmakuList {
       return this.sortReverse ? b[this.sortedBy] - a[this.sortedBy] : a[this.sortedBy] - b[this.sortedBy]
     })
     this.list.reload()
+    if (this.autoScroll) {
+      this.locateByTime(this.player.video.currentTime)
+    }
   }
   clear() {   // 清空弹幕列表
     this.list.clear()
@@ -162,7 +165,7 @@ class DanmakuList {
   }
   locateByTime(time) {
     let viewEnd = this.list.viewEnd
-    if(this.listData[viewEnd].time > time) {    // 如果列表可视区域最后一项的时间超过当前时间, 则重头开始遍历, 否则从列表可视区域最后一项遍历
+    if(this.listData[viewEnd]?.time > time) {    // 如果列表可视区域最后一项的时间超过当前时间, 则重头开始遍历, 否则从列表可视区域最后一项遍历
       viewEnd = 0
     }
     while (this.listData[viewEnd + 1]?.time <= time) { // 遍历并检测下一项弹幕时间是否超过当前时间, 若超过, 则以当前弹幕为定位点

@@ -687,6 +687,7 @@ export default class mfunsPlayer {
   }
   resize() {
     this.danmaku && this.danmaku.resize();
+    this.advancedDanmaku && this.advancedDanmaku.resize();
     if (this.controller.thumbnails) {
       this.controller.thumbnails.resize(
         160,
