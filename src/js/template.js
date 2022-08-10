@@ -115,6 +115,7 @@ class Template {
     this.controller = $(".mfunsPlayer-controller");
     this.controllerWrap = $(".mfunsPlayer-controller-wrap");
     this.footBar = $(".mfunsPlayer-footBar");
+    this.footBarWrap = $(".mfunsPlayer-footBar-wrap");
     this.loading = $(".mfunsPlayer-loading-tip");
     this.loadingSpeed = $(".mfunsPlayer-loading-speed");
     this.hitokoto = $(".mfunsPlayer-loading-hitokoto");
@@ -190,7 +191,7 @@ class Template {
         this.hitokotoFrom.innerHTML = `———— 「${res.from}」${res.from_who ?? ""}`;
       },
       error: (err) => {
-        console.log(err);
+        console.error(err);
       },
     });
   }
@@ -198,14 +199,15 @@ class Template {
 
   buildVideo(hasBlackborder) {
     if (!hasBlackborder) {
-      this.previewMask.classList.add("noborder");
+      this.videoMask.classList.remove("border");
       this.bezel.classList.add("noborder");
     } else {
-      this.previewMask.classList.remove("noborder");
+      this.videoMask.classList.add("border");
       this.bezel.classList.remove("noborder");
     }
-    // this.container.style.height =
-    //   ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + 80 + "px";
+    const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
+
+    this.container.style.height = viewHeight + "px";
   }
 }
 export default Template;
