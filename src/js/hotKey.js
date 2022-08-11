@@ -10,7 +10,7 @@ export default class HotKey {
         const danmakuRoot = player.template.danmakuRoot;
         if ([...player.template.controllerWrap.childNodes].indexOf(danmakuRoot) > -1) {
           player.template.controllerWrap.removeChild(danmakuRoot);
-          player.template.footBar.appendChild(danmakuRoot);
+          player.template.footBarWrap.appendChild(danmakuRoot);
         }
       }
     };

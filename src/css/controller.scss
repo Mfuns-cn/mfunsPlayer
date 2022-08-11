@@ -190,6 +190,37 @@
 							padding: 5px 0;
 							transition: all 0.3s ease-in-out;
 							color: #fff;
+							scrollbar-color: rgba(162, 152, 152, 0.8);
+							scrollbar-width: 5px;
+							&:hover {
+								&::-webkit-scrollbar {
+									background: rgba(162, 152, 152, 0.8);
+								}
+								&::-webkit-scrollbar-thumb {
+									border-radius: 10px;
+									background: rgba(0, 0, 0, 0.4);
+									&:hover {
+										background: rgba(37, 35, 35, 0.8);
+									}
+								}
+							}
+							&::-webkit-scrollbar {
+								width: 7px;
+								height: 7px;
+								position: fixed;
+								bottom: 0;
+								left: 0;
+								background: rgba(255, 255, 255, 0);
+
+								border-radius: 10px;
+							}
+							&::-webkit-scrollbar-thumb {
+								border-radius: 10px;
+								background: rgba(255, 255, 255, 0);
+								&:hover {
+									background: rgba(255, 255, 255, 0);
+								}
+							}
 							.mfunsPlayer-pagelist-item {
 								width: 320px;
 

@@ -158,10 +158,11 @@
   const createVideo = () => {
     video = document.createElement("video");
     video.setAttribute("width", 700);
-    // video.setAttribute("crossorigin", "anonymous");
+    video.setAttribute("crossorigin", "anonymous");
     video.className = "video";
     videoBox.appendChild(video);
   };
+
   const destroyVideo = () => {
     [...videoBox.childNodes].includes(video) && videoBox.removeChild(video);
     video = null;

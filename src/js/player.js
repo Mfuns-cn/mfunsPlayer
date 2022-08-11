@@ -147,8 +147,8 @@ export default class mfunsPlayer {
       this.checkAutoPlay();
       // }
       setTimeout(() => {
+        type === "error" && this.template.loading.classList.remove("show");
         this.template.videoWrap.classList.remove("load");
-        // this.template.loading.classList.remove("show");
         this.template.danmakuLoad.classList.add("hide");
         this.template.videoLoad.classList.add("hide");
         this.template.playerLoad.classList.add("hide");
