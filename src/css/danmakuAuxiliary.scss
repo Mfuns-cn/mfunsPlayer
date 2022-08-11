@@ -10,14 +10,34 @@
 		height: 100%;
 
 		.list-row {
+			position: relative;
 			line-height: 24px;
 			height: 24px;
 			white-space: nowrap;
 		}
 		.mfunsPlayer-danmaku-list-head {
 			@extend .list-row;
-
 			box-shadow: 1px 0px 2px #ccc;
+			:hover {
+				background-color: rgba($light-grey, 0.2);
+			}
+		}
+		.mfunsPlayer-danmaku-list-container .list-row {
+			&:hover{
+				background-color: rgba($light-grey, 0.2);
+				.list-operations {
+					display: block;
+				}
+				.col-date {
+					visibility: hidden;
+				}
+			}
+			&[data-mode="7"] {
+				background-color: rgba(#FF9900, 0.05);
+				&:hover{
+					background-color: rgba(#FF9900, 0.1);
+				}
+			}
 		}
 		.list-column,
 		.list-cell {
@@ -31,13 +51,27 @@
 			}
 			&.col-date {
 				padding-right: 8px;
-				width: 100px;
+				width: 90px;
 				text-align: center;
 			}
 			&.col-text {
-				width: calc(100% - 172px);
+				width: calc(100% - 162px);
 				text-overflow: ellipsis;
 				white-space: overflow;
+			}
+		}
+		.list-operations {
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding-right: 8px;
+			width: 100px;
+			height: 100%;
+			display: none;
+			text-align: right;
+			.list-action {
+				cursor: pointer;
+				margin-left: 4px;
 			}
 		}
 		.mfunsPlayer-danmaku-list-wrap {

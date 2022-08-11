@@ -1,7 +1,7 @@
 import utils from "./utils";
 // import moment from "moment";
 import DanmakuAuxiliaryTemplate from "../../template/danmakuAuxiliary.art";
-import DanmakuList from "./danmakuList";
+import DanmakuList from "./danmakuList/danmakuList";
 import AdvancedDanmakuEditor from "./advancedDanmakuEditor/advancedDanmakuEditor";
 
 /**

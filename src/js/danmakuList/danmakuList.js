@@ -1,5 +1,6 @@
-import utils from "./utils";
-import { VList } from "./components/VList";
+import utils from "../utils";
+import { VList } from "../components/VList";
+import DanmakuListItem from "./danmakuListItem";
 
 /** 弹幕列表
  *  
@@ -54,25 +55,7 @@ class DanmakuList {
       el: this.template.danmaku_list_container,
       getData: () => { return this.listData },
       itemHeight: 24,
-      createItem: (danmaku, i) => {
-        let tipText = danmaku.text;
-        let listItem = document.createElement("div")
-        listItem.className = "list-row"
-        listItem.title = `${tipText}\n${
-          danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
-        } @ ${utils.secondToTime(danmaku.time, false)}`
-        listItem.setAttribute("data-index", i)
-        listItem.innerHTML = `
-          <span class="list-cell col-time">${utils.secondToTime(
-            danmaku.time,
-            false
-          )}</span><span class="list-cell col-text" ${
-            danmaku.mode > 6 ? 'style="font-weight:600"' : ""
-          }>${tipText}</span><span class="list-cell col-date">${
-            danmaku.date ? utils.formatterDate(new Date(danmaku.date * 1000), "YYYY-MM-DD HH:mm:ss") : "-"
-          }</span>`
-        return listItem
-      },
+      createItem: (danmaku, i) => (new DanmakuListItem(this.player, danmaku, i)).el,
       overflow: 5
     })
     
