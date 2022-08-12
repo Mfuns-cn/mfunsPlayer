@@ -415,7 +415,7 @@ class Danmaku {
   send(dan) {
     const newDanmakuId = this.createHash(8);
     const danmakuData = {
-      time: this.options.time() + 0.52,
+      time: this.options.time() + 0.2,
       size: dan.size || 25,
       author: this.player.options.uid,
       id: newDanmakuId,
