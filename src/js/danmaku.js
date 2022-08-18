@@ -50,7 +50,7 @@ class Danmaku {
     this.biliLimit = false;
     this.acfunLimit = false;
     this.unknownLimit = false;
-    this.originFilter = new Set()
+    this.originFilter = new Set();
     this.unlimited = this.options.unlimited;
     this.loaded = false; // 弹幕是否加载完毕
     this.paused = true;
@@ -378,11 +378,12 @@ class Danmaku {
                 currentOrigin.classList.replace("forbidden", "success");
                 console.log(currentOrigin.classList);
                 this[`${link.origin}Limit`] = false;
-                this.originFilter.delete(link.origin)
-                this.events && this.events.trigger("danmaku_filter", {
-                  key: "origin",
-                  value: [...this.originFilter],
-                })
+                this.originFilter.delete(link.origin);
+                this.events &&
+                  this.events.trigger("danmaku_filter", {
+                    key: "origin",
+                    value: [...this.originFilter],
+                  });
               } else {
                 // 弹幕来源屏蔽
                 currentOrigin.classList.replace("success", "forbidden");
@@ -394,11 +395,12 @@ class Danmaku {
                     el.innerHTML = "";
                   }
                 });
-                this.originFilter.add(link.origin)
-                this.events && this.events.trigger("danmaku_filter", {
-                  key: "origin",
-                  value: [...this.originFilter],
-                })
+                this.originFilter.add(link.origin);
+                this.events &&
+                  this.events.trigger("danmaku_filter", {
+                    key: "origin",
+                    value: [...this.originFilter],
+                  });
               }
             };
             resolve(data);
@@ -508,7 +510,7 @@ class Danmaku {
     });
   }
   limitArea(areaType) {
-    this.seek();
+    // this.seek();
     if (areaType === "keepOutSubtitle") {
       this.keepOutSubtitle = true;
       this.container.style.bottom = "20%";
@@ -562,10 +564,11 @@ class Danmaku {
         key: "shields",
         value: filterArr,
       });
-    this.events && this.events.trigger("danmaku_filter", {
-      key: "type",
-      value: filterArr,
-    })
+    this.events &&
+      this.events.trigger("danmaku_filter", {
+        key: "type",
+        value: filterArr,
+      });
   }
   opacity(percentage) {
     if (percentage !== undefined) {
@@ -664,24 +667,32 @@ class Danmaku {
       //弹幕速度
       const danSpeed = (width) =>
         ((danWidth + width) / this.player.fullScreen.isFullScreen() ? 8 : 5) * (this._speedVal ?? 1);
-
+      const realDOMTunnel = (type, i) => {
+        // if (type !== "right" && type !== "left") {
+        //   return;
+        // }
+        return [...this.container.querySelectorAll(`.mfunsPlayer-danmaku-${type}`)].filter(
+          (el) => el.dataset.tunnel === `${i}`
+        );
+      };
       //获取弹幕可进入的轨道
       const getTunnel = (ele, type, width) => {
         const tmp = danWidth / danSpeed(width); //弹幕自身完全进入弹幕容器所需要的时间
-        const max = this.player.fullScreen.isFullScreen("all") ? 15 : 10;
         for (let i = 0; this.unlimited || i < itemY; i++) {
-          const item = this.danTunnel[type][i + ""]; //轨道弹幕组(单轨道内的所有弹幕)
-          const itemDOM = [...this.container.querySelectorAll(".mfunsPlayer-danmaku-right")].filter(
-            (el) => el.dataset.tunnel === `${i}`
-          );
+          const DOMTunnel = realDOMTunnel(type, i);
+          let item = this.danTunnel[type][i + ""]; //轨道弹幕组(单轨道内的所有弹幕)
+          this.danTunnel[type][i + ""] = DOMTunnel;
+          // if (fixTunnel(type, i)) {
+          //   break;
+          // }
+          if (itemY < i) console.log("-------", i);
           if (item && item.length) {
             if (type !== "right" && type !== "left") {
               continue;
             }
-            if (this.unlimited && item?.length > max) {
-              continue;
+            if (item.length !== DOMTunnel.length) {
+              item = DOMTunnel;
             }
-
             // --------轨道弹幕组弹幕防碰撞检测--------//
             for (let j = 0; j < item.length; j++) {
               if (type === "right") {
@@ -689,7 +700,6 @@ class Danmaku {
                 if (danRight <= 0) {
                   this.tunnelHeights[type][i] =
                     parseInt(this.miniMode ? 16 : item[j].style.fontSize) + this.tunnelPadding;
-                  // i === 0 && console.log(item[j].children[0].innerHTML + "----未完全进入轨道0");
                   //该情况表示当前轨道有滚动弹幕未完全进入弹幕容器，禁止向该轨道装填弹幕
                   break;
                 }
@@ -707,33 +717,15 @@ class Danmaku {
                 this.tunnelHeights[type][i] =
                   parseInt(this.miniMode ? 16 : item[j].style.fontSize) + this.tunnelPadding;
 
-                // console.log(this.danTunnel["right"][`${i}`]?.length, items.length);
-                if (this.danTunnel["right"][`${i}`]?.length !== itemDOM.length && !this.unlimited) {
-                  this.danTunnel["right"][`${i}`] = itemDOM;
-                  return -1;
-                }
                 this.danTunnel[type][i + ""].push(ele);
                 ele.addEventListener("animationend", () => {
                   const index = this.danTunnel[type][i + ""]?.indexOf(ele);
                   this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
                 });
-                return i % itemY;
+                return i;
               }
             }
           } else {
-            // i === 0 && type === "right" && console.log("-------", this.danTunnel["right"]["0"]?.length);
-            // console.log(this.danTunnel[type][i + ""]);
-            // this.danTunnel[type][i + ""] = [ele];
-
-            // console.log(this.danTunnel["right"][`${i}`]?.length, items.length);
-
-            if (this.unlimited && itemDOM?.length > max && ["right", "left"].indexOf(type) > -1) {
-              continue;
-            }
-            if (this.danTunnel["right"][`${i}`]?.length !== itemDOM.length && !this.unlimited) {
-              this.danTunnel["right"][`${i}`] = itemDOM;
-              return -1;
-            }
             if (Array.isArray(this.danTunnel[type][i + ""])) {
               this.danTunnel[type][i + ""].push(ele);
             } else {
@@ -744,9 +736,10 @@ class Danmaku {
               const index = this.danTunnel[type][i + ""]?.indexOf(ele);
               this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
             });
-            // console.log(item, i);
-            return i % itemY;
+            return i;
           }
+          // console.log("hhhhhhh", this.danIndex % itemY, type);
+          // if (this.unlimited) return this.danIndex % itemY;
         }
         return -1;
       };
@@ -797,11 +790,13 @@ class Danmaku {
         const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
 
         let tunnel;
-
+        let realTunnel;
         // adjust
         switch (dan[i].type) {
           case "right":
-            tunnel = getTunnel(item, dan[i].type, itemWidth);
+            realTunnel = getTunnel(item, dan[i].type, itemWidth);
+            tunnel = realTunnel % itemY;
+            // console.log(tunnel);
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.right.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.right.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
@@ -810,7 +805,7 @@ class Danmaku {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
-              item.dataset.tunnel = tunnel;
+              item.dataset.tunnel = realTunnel;
               item.dataset.origin = dan[i].origin;
               // item.classList[this.miniMode ? "add" : "remove"]("fast");
               item.style.width = itemWidth + 1 + "px";
@@ -820,7 +815,8 @@ class Danmaku {
             break;
           case "left":
             if (this.miniMode) return;
-            tunnel = getTunnel(item, dan[i].type, itemWidth);
+            realTunnel = getTunnel(item, dan[i].type, itemWidth);
+            tunnel = realTunnel % itemY;
             if (tunnel >= 0 || dan[i].isSubtitle) {
               const maxTop = this.tunnelHeights.left.slice(0, itemY).reduce((prev, cur) => prev + cur, 0);
               const top = this.tunnelHeights.left.slice(0, tunnel).reduce((prev, cur) => prev + cur, 0) % maxTop;
@@ -828,7 +824,7 @@ class Danmaku {
                 this.danTunnel[dan[i].type][i + ""]?.pop();
                 return;
               }
-              item.dataset.tunnel = tunnel;
+              item.dataset.tunnel = realTunnel;
               item.dataset.origin = dan[i].origin;
               item.style.width = itemWidth + 1 + "px";
               item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
@@ -837,7 +833,7 @@ class Danmaku {
             break;
           case "top":
             if (this.miniMode) return;
-            tunnel = getTunnel(item, dan[i].type);
+            tunnel = getTunnel(item, dan[i].type) % itemY;
             if (tunnel >= 0 || dan[i].isSubtitle) {
               let topArr = [];
               const topDan = this.danTunnel.top;
@@ -864,7 +860,7 @@ class Danmaku {
             break;
           case "bottom":
             if (this.miniMode) return;
-            tunnel = getTunnel(item, dan[i].type);
+            tunnel = getTunnel(item, dan[i].type) % itemY;
             if (tunnel >= 0 || dan[i].isSubtitle) {
               let bottomArr = [];
               const bottomDan = this.danTunnel.bottom;

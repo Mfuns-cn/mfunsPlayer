@@ -578,9 +578,7 @@
 {{ /if }}
 
 
-{{ if smallWindow}}
 <div class="mfunsPlayer-miniPlayer hide">
     <div class="content"></div>
 </div>
-{{ /if }}
 </div>
