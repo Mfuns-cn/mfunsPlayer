@@ -52,7 +52,7 @@ export default class mfunsPlayer {
     this.infoPanel = new InfoPanel(this);
     this.initVideo(this.video, this.options.video[this.currentVideo].type);
     this.initPlayerTip();
-    if (this.options?.danmaku?.api) {
+    if (this.options?.danmaku?.api || this.options.video[this.currentVideo].danmakuAddition) {
       this.showDanmaku = this.options.danmaku.showDanmaku;
       this.danmakuOptions = {
         container: this.template.danmaku,

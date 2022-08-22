@@ -58,7 +58,7 @@ export default (options) => {
         keepOutSubtitle: false,
         showDanmaku: true,
       },
-      Object.prototype.toString.call(options.danmaku) === "[Object Object]" ? options.danmaku : {}
+      options.danmaku || {}
     );
   }
   options.contextmenu = options.contextmenu.concat([

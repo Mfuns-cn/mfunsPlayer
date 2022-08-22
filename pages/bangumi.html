@@ -126,8 +126,7 @@
                 danmakuAddition: [
                     {
 
-                        // url: "../src/static/danmaku/steingate/01.xml",
-                        url: "../src/static/danmaku/pressure/1.xml",
+                        url: "../src/static/danmaku/steingate/01.xml",
                         type: "bili-danmaku"
                     }
                 ]
@@ -333,6 +332,7 @@
     })
     mp.on("setDanmaku", (setting) => {
         playerSettings.danmaku[setting.key] = setting.value
+        console.log(playerSettings)
         localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
     })
     mp.on("update_video_position", (data) => {
