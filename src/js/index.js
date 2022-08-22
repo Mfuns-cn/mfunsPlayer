@@ -9,3 +9,4 @@ if (globalThis) {
     "background: #f5f5f5; padding:5px 0;"
   );
 }
+export default mfunsPlayer;
