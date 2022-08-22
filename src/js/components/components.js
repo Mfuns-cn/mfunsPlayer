@@ -1,4 +1,4 @@
-import utils from "./utils.js";
+import utils from "../utils.js";
 
 // 滑动条
 
@@ -39,7 +39,7 @@ export class Slider {
       // 鼠标X位置
       let clientX = e.clientX || e.changedTouches[0].clientX;
       // 滑动条位置
-      let nLeft = Math.round(utils.getBoundingClientRectViewLeft(this));
+      let nLeft = THIS.el.getBoundingClientRect().left;
       // 计算滑块位置
       let nLength = clientX - nLeft - thumbTrackX;
       // 限制滑块移动位置
@@ -162,7 +162,7 @@ export class Slider_vertical {
       // 鼠标Y位置
       let clientY = e.clientY || e.changedTouches[0].clientY;
       // 滑动条位置
-      let nTop = utils.getElementViewTop(this);
+      let nTop = THIS.el.getBoundingClientRect().top;
       // 计算滑块位置
       let nLength = nMax - (clientY - nTop - thumbTrackY);
       // 限制滑块移动位置

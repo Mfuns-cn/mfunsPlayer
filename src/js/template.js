@@ -3,10 +3,12 @@ import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
+    this.options = options;
     options.theme && this.setTheme(options.theme);
     options.smallWindow && this.buildSmallWindow();
     options.isFireFox = utils.isFirefox;
     options.hasEcharts = !!window.echarts;
+    options.hasAceEditor = !!window.ace;
     this.init(options);
     this.initHitokoto(options);
   }
@@ -36,6 +38,11 @@ class Template {
     this.menuItem = $all(".mfunsPlayer-menu-item");
     this.danmaku = $(".mfunsPlayer-danmaku");
     this.danmakuCount = $(".mfunsPlayer-video-danmaku-count");
+    this.danmakuSource = $(".mfunsPlayer-video-danmaku-source");
+    this.danmakuSource_mfuns = $(".mfunsPlayer-video-danmaku-source-item.mfuns");
+    this.danmakuSource_bili = $(".mfunsPlayer-video-danmaku-source-item.bili");
+    this.danmakuSource_acfun = $(".mfunsPlayer-video-danmaku-source-item.acfun");
+    this.danmakuSource_unknown = $(".mfunsPlayer-video-danmaku-source-item.unknown");
     this.danmaku_btn = $(".mfunsPlayer-controller-danmaku-trigger"); // 弹幕开关
     this.danmakuSettings_btn = $(".mfunsPlayer-controller-danmaku-settings"); // 弹幕设置
     this.danmakuSettings_panel = $(".mfunsPlayer-danmaku-settings-mask");
@@ -68,6 +75,7 @@ class Template {
     this.repeat_btn = $(".mfunsPlayer-controller-repeat"); // 洗脑循环按钮
     this.repeat_tip = $(".mfunsPlayer-controller-repeat .mfunsPlayer-controller-tip"); // 洗脑循环提示
     this.pagelistItem = $all(".mfunsPlayer-pagelist-item");
+    this.pagelist = $(".mfunsPlayer-pagelist-list");
     this.volume_btn = $(".mfunsPlayer-controller-volume"); // 音量按钮
     this.volumeMask = $(".mfunsPlayer-controller-volume-mask");
     this.volumeBarWrap = $(".mfunsPlayer-controller-volume-wrap");
@@ -108,6 +116,7 @@ class Template {
     this.controller = $(".mfunsPlayer-controller");
     this.controllerWrap = $(".mfunsPlayer-controller-wrap");
     this.footBar = $(".mfunsPlayer-footBar");
+    this.footBarWrap = $(".mfunsPlayer-footBar-wrap");
     this.loading = $(".mfunsPlayer-loading-tip");
     this.loadingSpeed = $(".mfunsPlayer-loading-speed");
     this.hitokoto = $(".mfunsPlayer-loading-hitokoto");
@@ -177,27 +186,30 @@ class Template {
     this.hitokotoText.innerHTML = "loading...";
     this.hitokotoFrom.innerHTML = "";
     options.apiBackend.read({
-      url: "http://v1.hitokoto.cn?c=a&c=b&c=c",
+      url: "https://v1.hitokoto.cn?c=a&c=b&c=c",
       success: (res) => {
         this.hitokotoText.innerHTML = res.hitokoto;
         this.hitokotoFrom.innerHTML = `———— 「${res.from}」${res.from_who ?? ""}`;
       },
       error: (err) => {
-        console.log(err);
+        console.error(err);
       },
     });
   }
   buildSmallWindow() {}
-
   buildVideo(hasBlackborder) {
     if (!hasBlackborder) {
-      this.videoMask.classList.add("noborder");
+      this.videoMask.classList.remove("border");
       this.bezel.classList.add("noborder");
     } else {
-      this.videoMask.classList.remove("noborder");
+      this.videoMask.classList.add("border");
       this.bezel.classList.remove("noborder");
     }
-    this.videoWrap.style.height = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2) + "px";
+    console.log(this.options.danmaku);
+    !this.options.danmaku && this.container.classList.add("noDanmaku");
+    const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
+
+    this.container.style.height = viewHeight + "px";
   }
 }
 export default Template;

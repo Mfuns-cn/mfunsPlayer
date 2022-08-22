@@ -3,17 +3,31 @@
 自研的弹幕播放器，没啥优点，能用就行 Ծ‸Ծ
 
 ### 功能
-
+- 主题色设置
 - 视频的暂停/播放（快捷键 space）
-- 进度条
-- 全屏/退出全屏
-- 弹幕开关
-- 发送弹幕
-- 编辑弹幕/高级弹幕
-- 控制音量（快捷键 ↑ ↓）
-- 快进快退（快捷键 ← →）
+- 可控进度条
+- 全屏/退出全屏(快捷键 F)
+- 弹幕展示(支持拓展bilibili格式弹幕)
+- 弹幕屏蔽及属性控制(快捷键D)
+- 弹幕防挡字幕
+- 弹幕举报/复制/撤回
+- 发送弹幕(快捷键 Enter)
+- 编辑弹幕/高级弹幕(支持换行符\n)
+- 音量调节(快捷键 ↑ ↓)
+- 一键静音(快捷键 M)
+- 洗脑循环
+- 快进快退(快捷键 ← →)
+- 分P切集(快捷键 < >)
+- 断点续播
+- 关灯模式
+- 镜像画面
+- 高能进度条(需要自行引入echarts.js)
+- 倍速播放
 - 画中画
-
+- 小窗播放
+- 视频滤镜
+- 视频色彩调整
+- 视频暂停展示活动弹窗(可恰饭或站内活动引导)
 ### 使用方法
 
 - 下载 dist/mfunsPlayer.js 文件
@@ -32,32 +46,21 @@
 //播放器的容器（示例）
 const container = document.querySelector(".content");
 
-// 回调函数（示例）
-function emitDanmaku(danmaku, type) {
-  console.log("发送弹幕", danmaku, type);
-}
-function checkLogin() {
-  console.log("检测用户登录");
-}
-function play(time) {
-  console.log("播放时调用", time);
-}
-function pause(time) {
-  console.log("暂停时调用", time);
-}
+
 //初始化播放器
 new mfunsPlayer({
   container, //容器dom
   uid:2333,//用户id
-  theme: "#666", //主题
+  theme: "#666", //主题色
   autoPlay: false, //自动播放
-  autoSkip:true,//自动跳转
+  autoSkip:true,//断点续播
   autoSwitch: true,//自动切集
   blackBorder: false, // 播放器黑边
   draggable: false, //进度条是否可拖拽
   hotkey: true, //是否启用快捷键
   volume: 0.7, //视频初始音量
   currentVideo: 0, //当前播放视频的下标
+  smallWindow:true, //小窗播放
   widescreenSwitch: false, // 宽屏模式是否可用
   widescreen: false, // 宽屏模式
   video: [ //type:ObjectArray
@@ -91,6 +94,7 @@ new mfunsPlayer({
     editor: 0, //弹幕样式面板类型，0为普通面板，1为全功能面板(不传默认为普通面板)
     danmakuCatch: false, //开启弹幕捕获模式，鼠标移至弹幕上可暂停该条弹幕移动并显示操作tip
     showHighEnergy: true,//是否显示高能进度条
+    keepOutSubtitle:false,//防挡字幕
   },
   //高级弹幕
   advancedDanmaku: {

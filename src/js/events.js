@@ -57,8 +57,10 @@ class Events {
       // "fixcontroller_on",     // 开启底栏固定(未启用)
       // "fixcontroller_off",    // 取消底栏固定(未启用)
 
+      "danmaku_filter",    // 弹幕屏蔽
+
       "setPlayer",
-      "setDanmaku",
+      "setDanmaku",             // 弹幕设置
       "update_video_position",
     ];
   }
@@ -71,7 +73,15 @@ class Events {
       this.events[name].push(callback);
     }
   }
-
+  off(name, callback) {
+    if (this.type(name) && typeof callback === "function") {
+      if (!this.events[name]) {
+        this.events[name] = [];
+      }
+      const index = this.events[name].indexOf(callback);
+      if (typeof index === "number") this.events[name].splice(index, 1);
+    }
+  }
   trigger(name, ...args) {
     if (this.events[name] && this.events[name].length) {
       for (let i = 0; i < this.events[name].length; i++) {

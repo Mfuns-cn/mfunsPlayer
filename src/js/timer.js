@@ -35,6 +35,7 @@ class Timer {
       if (this.enableloadingChecker && !this.player.video.paused) {
         // whether the video is buffering
         currentPlayPos = this.player.video.currentTime;
+        // console.log(currentPlayPos, lastPlayPos);
         if (!bufferingDetected && currentPlayPos === lastPlayPos) {
           this.enabledownloadChecker = utils.isChrome;
           this.player.template.loading.classList.add("show");
@@ -102,7 +103,6 @@ class Timer {
   }
   enable(type) {
     this[`enable${type}Checker`] = true;
-
     if (type === "fps") {
       this.initfpsChecker();
     }

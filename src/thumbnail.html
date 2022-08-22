@@ -1,471 +1,486 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>缩略图</title>
-    <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
-    <!-- <script src="../dist/mfunsPlayer.js"></script> -->
-  </head>
 
-  <body>
-    <div class="main">
-      <div class="video-box">
-        <div class="loading hide">loading...</div>
-        <div class="operate-mask">
-          <ul class="option-wrap">
-            <li class="option-item" onclick="changeVideoGetWay(this)">
-              <input class="option" id="local-select" type="radio" name="local" value="1" checked="true" />
-              <span>本地上传</span>
-            </li>
-            <li class="option-item" onclick="changeVideoGetWay(this)">
-              <input class="option" id="link-select" type="radio" name="link" value="2" />
-              <span>视频链接</span>
-            </li>
-          </ul>
-          <div class="video-select">
-            <div class="local-file">
-              <input class="file-selector" type="file" style="width: 180px" />
-            </div>
-            <div class="link-set hide">
-              <input class="link-input" placeholder="请输入视频链接" oninput="checkVideoLink(this)" />
-              <select class="link-type" name="link-type" disabled onchange="selectVideoType(this)">
-                <option value="mp4">mp4</option>
-                <option value="flv">flv</option>
-                <option value="hls">hls</option>
-              </select>
-              <button class="link-confirm" onclick="confirmLink(this)">确 定</button>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>缩略图</title>
+  <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
+  <!-- <script src="../dist/mfunsPlayer.js"></script> -->
+</head>
+
+<body>
+  <div class="main">
+    <div class="video-box">
+      <div class="loading hide">loading...</div>
+      <div class="operate-mask">
+        <ul class="option-wrap">
+          <li class="option-item" onclick="changeVideoGetWay(this)">
+            <input class="option" id="local-select" type="radio" name="local" value="1" checked="true" />
+            <span>本地上传</span>
+          </li>
+          <li class="option-item" onclick="changeVideoGetWay(this)">
+            <input class="option" id="link-select" type="radio" name="link" value="2" />
+            <span>视频链接</span>
+          </li>
+        </ul>
+        <div class="video-select">
+          <div class="local-file">
+            <input class="file-selector" type="file" style="width: 180px" />
           </div>
-          <div class="tip">1.请使用谷歌内核的浏览器，支持拖拽上传</div>
-          <div class="tip">2.目前仅支持mp4,flv,hls(m3u8)格式的视频</div>
-          <div class="tip">3.使用前请确认视频文件完整且无损坏情况</div>
+          <div class="link-set hide">
+            <input class="link-input" placeholder="请输入视频链接" oninput="checkVideoLink(this)" />
+            <select class="link-type" name="link-type" disabled onchange="selectVideoType(this)">
+              <option value="mp4">mp4</option>
+              <option value="flv">flv</option>
+              <option value="hls">hls</option>
+            </select>
+            <button class="link-confirm" onclick="confirmLink(this)">确 定</button>
+          </div>
         </div>
-        <!-- <video class="video" width="700" crossorigin="anonymous"></video> -->
+        <div class="tip">1.请使用谷歌内核的浏览器，支持拖拽上传</div>
+        <div class="tip">2.目前仅支持mp4,flv,hls(m3u8)格式的视频</div>
+        <div class="tip">3.使用前请确认视频文件完整且无损坏情况</div>
       </div>
-      <div class="trigger hide">
-        <button class="trigger-start disable" onclick="start()" style="background: #7b7ff7">开始</button>
-        <button class="trigger-reset disable" onclick="reset()" style="background: #404040">重置</button>
-        <button class="trigger-download disable" onclick="download()" style="background: #3bf467">下载</button>
-      </div>
-
-      <div class="video-preview"></div>
+      <!-- <video class="video" width="700" crossorigin="anonymous"></video> -->
     </div>
-  </body>
-  <script>
-    let count = 0;
-    let video;
-    let videoType;
-    let mediaStream;
-    let player;
-    let mode;
-    let downloadURL;
-    const $ = document.querySelector.bind(document);
-    const $all = document.querySelectorAll.bind(document);
+    <div class="trigger hide">
+      <button class="trigger-start disable" onclick="start()" style="background: #7b7ff7">开始</button>
+      <button class="trigger-reset disable" onclick="reset()" style="background: #404040">重置</button>
+      <button class="trigger-download disable" onclick="download()" style="background: #3bf467">下载</button>
+    </div>
 
-    const fileSelector = $(".file-selector");
-    const videoBox = $(".video-box");
-    const trigger = $(".trigger");
-    const loading = $(".loading");
-    const operateMask = $(".operate-mask");
-    const videoPreview = $(".video-preview");
-    const localSelect = $("#local-select");
-    const linkSelect = $("#link-select");
-    const localFile = $(".local-file");
-    const linkSet = $(".link-set");
-    const startBtn = $(".trigger-start");
-    const resetBtn = $(".trigger-reset");
-    const downloadBtn = $(".trigger-download");
-    const linkInput = $(".link-input");
-    const linkType = $(".link-type");
-    const slice = 50; //图片个数
+    <div class="video-preview"></div>
+  </div>
+</body>
+<script>
+  let count = 0;
+  let video;
+  let videoType;
+  let mediaStream;
+  let player;
+  let mode;
+  let downloadURL;
+  const $ = document.querySelector.bind(document);
+  const $all = document.querySelectorAll.bind(document);
 
-    const loadBar = document.createElement("div");
-    loadBar.className = "loadBar-mask";
-    loadBar.innerHTML = `<div class="bar-wrap"><div class="bar"></div></div><div class="bar-value">0% (0/30)</div>`;
-    const initVideo = (url, type) => {
-      switch (type) {
-        case "mp4":
-          video.src = url;
-          break;
-        case "flv":
-          if (window.flvjs) {
-            if (window.flvjs.isSupported()) {
-              player = window.flvjs.createPlayer({
-                type: "flv",
-                url,
-              });
-              player.attachMediaElement(video);
-              player.load();
-            } else {
-              console.error("Error: Flvjs is not supported.");
-            }
+  const fileSelector = $(".file-selector");
+  const videoBox = $(".video-box");
+  const trigger = $(".trigger");
+  const loading = $(".loading");
+  const operateMask = $(".operate-mask");
+  const videoPreview = $(".video-preview");
+  const localSelect = $("#local-select");
+  const linkSelect = $("#link-select");
+  const localFile = $(".local-file");
+  const linkSet = $(".link-set");
+  const startBtn = $(".trigger-start");
+  const resetBtn = $(".trigger-reset");
+  const downloadBtn = $(".trigger-download");
+  const linkInput = $(".link-input");
+  const linkType = $(".link-type");
+  const slice = 50; //图片个数
+
+  const loadBar = document.createElement("div");
+  loadBar.className = "loadBar-mask";
+  loadBar.innerHTML = `<div class="bar-wrap"><div class="bar"></div></div><div class="bar-value">0% (0/30)</div>`;
+  const initVideo = (url, type) => {
+    switch (type) {
+      case "mp4":
+        video.src = url;
+        break;
+      case "flv":
+        if (window.flvjs) {
+          if (window.flvjs.isSupported()) {
+            player = window.flvjs.createPlayer({
+              type: "flv",
+              url,
+            });
+            player.attachMediaElement(video);
+            player.load();
           } else {
-            console.error("Error: Can't find Flvjs.");
+            console.error("Error: Flvjs is not supported.");
           }
+        } else {
+          console.error("Error: Can't find Flvjs.");
+        }
 
-          break;
-        case "hls":
-        case "m3u8":
-          if (window.Hls) {
-            if (window.Hls.isSupported()) {
-              player = new window.Hls();
-              player.loadSource(url);
-              player.attachMedia(video);
-            } else {
-              console.error("Error: Hls is not supported.");
-            }
+        break;
+      case "hls":
+      case "m3u8":
+        if (window.Hls) {
+          if (window.Hls.isSupported()) {
+            player = new window.Hls();
+            player.loadSource(url);
+            player.attachMedia(video);
           } else {
-            console.error("Error: Can't find Hls.");
+            console.error("Error: Hls is not supported.");
           }
-          break;
-      }
-      video.addEventListener("loadstart", () => {
-        if (operateMask.classList.contains("hide")) {
-          loading.classList.remove("hide");
+        } else {
+          console.error("Error: Can't find Hls.");
         }
-      });
-
-      video.addEventListener("loadedmetadata", () => {
-        video.controls = true;
-        loading.classList.add("hide");
-        trigger.classList.remove("hide");
-        resetBtn.classList.remove("disable");
-        startBtn.classList.remove("disable");
-      });
-      video.addEventListener("error", () => {
-        if (video.src) {
-          console.log(video.src);
-          loading.innerHTML = "视频加载错误，请检查视频链接或格式是否正确！";
-          trigger.classList.remove("hide");
-          resetBtn.classList.remove("disable");
-        }
-      });
-    };
-    const reloadVideo = (type) => {
-      switch (type) {
-        case "mp4":
-          video.src = mediaStream;
-          break;
-        case "flv":
-          player.destroy();
-          initFlv(mediaStream);
-          break;
-      }
-    };
-    const createVideo = () => {
-      video = document.createElement("video");
-      video.setAttribute("width", 700);
-      video.setAttribute("crossorigin", "anonymous");
-      video.className = "video";
-      videoBox.appendChild(video);
-    };
-    const destroyVideo = () => {
-      [...videoBox.childNodes].includes(video) && videoBox.removeChild(video);
-      video = null;
-      player = null;
-    };
-    const changeVideoGetWay = (e) => {
-      const option = e.querySelector(".option");
-      if (mode === option.name) return;
-      mode = option.name;
-      option.checked = true;
-      destroyVideo();
-      if (option.name === "link") {
-        localSelect.checked = false;
-        localFile.classList.add("hide");
-        linkSet.classList.remove("hide");
-      } else {
-        linkSelect.checked = false;
-        linkSet.classList.add("hide");
-        localFile.classList.remove("hide");
-      }
-    };
-    const checkVideoLink = (e) => {
-      linkType.disabled = !!!e.value.trim();
-    };
-    const selectVideoType = (e) => {
-      console.dir(e.value);
-    };
-    const confirmLink = () => {
-      console.log(linkInput.value, linkType.value);
-      if (linkInput.value.trim() && linkType.value) {
-        createVideo();
-        operateMask.classList.add("hide");
+        break;
+    }
+    video.addEventListener("loadstart", () => {
+      if (operateMask.classList.contains("hide")) {
         loading.classList.remove("hide");
-        videoBox.appendChild(video);
-        initVideo(linkInput.value, linkType.value);
       }
-    };
-    const thumbnail = (slice, w = 160, h = 90) => {
-      video.play();
-      videoBox.appendChild(loadBar);
-      let bar = document.querySelector(".bar");
-      let barValue = document.querySelector(".bar-value");
-      let oCanvas = document.createElement("canvas");
-      oCanvas.width = slice * 160;
-      oCanvas.height = 90;
-      let ctx = oCanvas.getContext("2d");
-      videoPreview.appendChild(oCanvas);
-      const draw = () => {
-        if (count === slice) {
-          video.removeEventListener("canplay", draw);
-          video.pause();
-          count = 0;
-          barValue.innerHTML = "执行完毕~";
-          let base64 = oCanvas.toDataURL("image/png");
-          if (base64.length / 1024 > 1000) {
-            base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
-          }
-          videoBox.removeChild(loadBar);
-          console.log("结束");
-          resetBtn.classList.remove("disable");
-          downloadBtn.classList.remove("disable");
-          video.currentTime = 0;
-          downloadURL = base64;
-          return;
-        }
-        loadBar.style.display = "block";
-        bar.style.width = parseInt(((count + 1) / slice) * 100) + "%";
-        barValue.innerHTML = `${parseInt(((count + 1) / slice) * 100)}%  (${count + 1}/${slice}) `;
-        ctx.save();
-        ctx.restore();
-        let L = count % slice;
-        let T = (count - (count % slice)) / slice;
-        ctx.drawImage(video, L * w, T * h, w, h);
-        video.currentTime = Math.min((count + 1) * (video.duration / slice).toFixed(2), video.duration - 1);
-        count++;
-      };
-      video.currentTime = 0;
-      video.addEventListener("canplay", draw);
-    };
-    const start = () => {
-      video.duration && thumbnail(slice);
-      startBtn.classList.add("disable");
-      resetBtn.classList.add("disable");
-    };
-    const reset = () => {
-      operateMask.classList.remove("hide");
-      trigger.classList.add("hide");
-      videoPreview.innerHTML = "";
-      loading.innerHTML = "loading...";
+    });
+
+    video.addEventListener("loadedmetadata", () => {
+      video.controls = true;
       loading.classList.add("hide");
-      downloadBtn.classList.add("disable");
-      fileSelector.value = null;
-      linkInput.value = null;
-      linkType.value = "mp4";
-      linkType.disabled = true;
-      destroyVideo();
-    };
-    const download = () => {
-      const a = document.createElement("a");
-      a.href = downloadURL;
-      a.download = "缩略图";
-      a.style.display = "none";
-      a.click();
-    };
-    fileSelector.onchange = (e) => {
-      operateMask.classList.add("hide");
-      loading.classList.remove("hide");
-      createVideo();
-      const resultFile = e.target.files;
-      videoType = resultFile[0].name ? resultFile[0].name.split(".")[1] : "";
-      if (["mp4", "flv", "hls", "m3u8"].includes(videoType)) {
-        const aBlob = new Blob([resultFile[0]], { type: resultFile[0].type });
-        const reader = new FileReader();
-        reader.readAsDataURL(aBlob);
-        reader.onload = (e) => {
-          mediaStream = e.target.result;
-          videoBox.appendChild(video);
-          initVideo(mediaStream, videoType);
-        };
-      } else {
+      trigger.classList.remove("hide");
+      resetBtn.classList.remove("disable");
+      startBtn.classList.remove("disable");
+    });
+    video.addEventListener("error", () => {
+      if (video.src) {
+        console.log(video.src);
         loading.innerHTML = "视频加载错误，请检查视频链接或格式是否正确！";
         trigger.classList.remove("hide");
         resetBtn.classList.remove("disable");
       }
+    });
+  };
+  const reloadVideo = (type) => {
+    switch (type) {
+      case "mp4":
+        video.src = mediaStream;
+        break;
+      case "flv":
+        player.destroy();
+        initFlv(mediaStream);
+        break;
+    }
+  };
+  const createVideo = () => {
+    video = document.createElement("video");
+    video.setAttribute("width", 700);
+    video.setAttribute("crossorigin", "anonymous");
+    video.className = "video";
+    videoBox.appendChild(video);
+  };
+
+  const destroyVideo = () => {
+    [...videoBox.childNodes].includes(video) && videoBox.removeChild(video);
+    video = null;
+    player = null;
+  };
+  const changeVideoGetWay = (e) => {
+    const option = e.querySelector(".option");
+    if (mode === option.name) return;
+    mode = option.name;
+    option.checked = true;
+    destroyVideo();
+    if (option.name === "link") {
+      localSelect.checked = false;
+      localFile.classList.add("hide");
+      linkSet.classList.remove("hide");
+    } else {
+      linkSelect.checked = false;
+      linkSet.classList.add("hide");
+      localFile.classList.remove("hide");
+    }
+  };
+  const checkVideoLink = (e) => {
+    linkType.disabled = !!!e.value.trim();
+  };
+  const selectVideoType = (e) => {
+    console.dir(e.value);
+  };
+  const confirmLink = () => {
+    console.log(linkInput.value, linkType.value);
+    if (linkInput.value.trim() && linkType.value) {
+      createVideo();
+      operateMask.classList.add("hide");
+      loading.classList.remove("hide");
+      videoBox.appendChild(video);
+      initVideo(linkInput.value, linkType.value);
+    }
+  };
+  const thumbnail = (slice, w = 160, h = 90) => {
+    video.play();
+    videoBox.appendChild(loadBar);
+    let bar = document.querySelector(".bar");
+    let barValue = document.querySelector(".bar-value");
+    let oCanvas = document.createElement("canvas");
+    oCanvas.width = slice * 160;
+    oCanvas.height = 90;
+    let ctx = oCanvas.getContext("2d");
+    videoPreview.appendChild(oCanvas);
+    const draw = () => {
+      if (count === slice) {
+        video.removeEventListener("canplay", draw);
+        video.pause();
+        count = 0;
+        barValue.innerHTML = "执行完毕~";
+        let base64 = oCanvas.toDataURL("image/png");
+        if (base64.length / 1024 > 1000) {
+          base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
+        }
+        videoBox.removeChild(loadBar);
+        console.log("结束");
+        resetBtn.classList.remove("disable");
+        downloadBtn.classList.remove("disable");
+        video.currentTime = 0;
+        downloadURL = base64;
+        return;
+      }
+      loadBar.style.display = "block";
+      bar.style.width = parseInt(((count + 1) / slice) * 100) + "%";
+      barValue.innerHTML = `${parseInt(((count + 1) / slice) * 100)}%  (${count + 1}/${slice}) `;
+      ctx.save();
+      ctx.restore();
+      let L = count % slice;
+      let T = (count - (count % slice)) / slice;
+      ctx.drawImage(video, L * w, T * h, w, h);
+      video.currentTime = Math.min((count + 1) * (video.duration / slice).toFixed(2), video.duration - 1);
+      count++;
     };
-  </script>
+    video.currentTime = 0;
+    video.addEventListener("canplay", draw);
+  };
+  const start = () => {
+    video.duration && thumbnail(slice);
+    startBtn.classList.add("disable");
+    resetBtn.classList.add("disable");
+  };
+  const reset = () => {
+    operateMask.classList.remove("hide");
+    trigger.classList.add("hide");
+    videoPreview.innerHTML = "";
+    loading.innerHTML = "loading...";
+    loading.classList.add("hide");
+    downloadBtn.classList.add("disable");
+    fileSelector.value = null;
+    linkInput.value = null;
+    linkType.value = "mp4";
+    linkType.disabled = true;
+    destroyVideo();
+  };
+  const download = () => {
+    const a = document.createElement("a");
+    a.href = downloadURL;
+    a.download = "缩略图";
+    a.style.display = "none";
+    a.click();
+  };
+  fileSelector.onchange = (e) => {
+    operateMask.classList.add("hide");
+    loading.classList.remove("hide");
+    createVideo();
+    const resultFile = e.target.files;
+    videoType = resultFile[0].name ? resultFile[0].name.split(".")[1] : "";
+    if (["mp4", "flv", "hls", "m3u8"].includes(videoType)) {
+      const aBlob = new Blob([resultFile[0]], { type: resultFile[0].type });
+      const reader = new FileReader();
+      reader.readAsDataURL(aBlob);
+      reader.onload = (e) => {
+        mediaStream = e.target.result;
+        videoBox.appendChild(video);
+        initVideo(mediaStream, videoType);
+      };
+    } else {
+      loading.innerHTML = "视频加载错误，请检查视频链接或格式是否正确！";
+      trigger.classList.remove("hide");
+      resetBtn.classList.remove("disable");
+    }
+  };
+</script>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    button:hover {
-      filter: brightness(1.05);
-      cursor: pointer;
-    }
-    .disable {
-      color: rgba(0, 0, 0, 0.25) !important;
-      background-color: #f5f5f5 !important;
-      border: 1px solid #d9d9d9 !important;
-      pointer-events: none;
-    }
-    .hide {
-      display: none !important;
-    }
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
 
-    .main {
-      width: 640px;
-      margin: 20px auto;
-    }
+  button:hover {
+    filter: brightness(1.05);
+    cursor: pointer;
+  }
 
-    .video-box {
-      position: relative;
-      width: 100%;
-      height: 360px;
-      background: #000;
-    }
-    .loading {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      background: #000;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .operate-mask {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      background: rgba(255, 255, 255, 0.5);
-      color: #e6e6e6;
-    }
-    .operate-mask > .tip {
-      margin: 20px auto;
-      text-align: center;
-      height: 30px;
-      line-height: 30px;
-    }
-    .link-input {
-      padding-left: 10px;
-      width: 200px;
-      height: 25px;
-      outline: none;
-      border: none;
-      border-radius: 3px;
-    }
-    .link-type {
-      outline: none;
-      border: none;
-      width: 50px;
-      height: 25px;
-      border-radius: 3px;
-    }
-    .link-confirm {
-      width: 60px;
-      height: 25px;
-      border-radius: 3px;
-      border: none;
-      background: #7b7ff7;
-      color: #fff;
-    }
-    .video-box > video {
-      width: 100%;
-      max-height: 100%;
-    }
+  .disable {
+    color: rgba(0, 0, 0, 0.25) !important;
+    background-color: #f5f5f5 !important;
+    border: 1px solid #d9d9d9 !important;
+    pointer-events: none;
+  }
 
-    .video-preview {
-      width: 100%;
-      height: 116px;
-      overflow: auto;
-    }
+  .hide {
+    display: none !important;
+  }
 
-    .option-wrap {
-      width: 100%;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      margin: 20px auto;
-    }
+  .main {
+    width: 640px;
+    margin: 20px auto;
+  }
 
-    .option-item {
-      margin-right: 10px;
-      list-style: none;
-      cursor: pointer;
-      user-select: none;
-    }
+  .video-box {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    background: #000;
+  }
 
-    .option-item > input {
-      cursor: pointer;
-    }
+  .loading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .video-select {
-      width: 100%;
-      height: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .trigger {
-      width: 100%;
-      padding: 15px 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid #b6b6b6;
-      box-sizing: border-box;
-    }
-    .trigger > button {
-      width: 100px;
-      height: 30px;
-      margin-right: 10px;
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-    }
+  .operate-mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.5);
+    color: #e6e6e6;
+  }
 
-    .loadBar-mask {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      background: rgba(0, 0, 0, 1);
-    }
+  .operate-mask>.tip {
+    margin: 20px auto;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+  }
 
-    .loadBar-mask .bar-wrap {
-      position: absolute;
-      left: 5%;
-      top: 50%;
-      width: 90%;
-      height: 20px;
-      border-radius: 10px;
-      background: #fff;
-      overflow: hidden;
-    }
+  .link-input {
+    padding-left: 10px;
+    width: 200px;
+    height: 25px;
+    outline: none;
+    border: none;
+    border-radius: 3px;
+  }
 
-    .loadBar-mask .bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0;
-      height: 20px;
-      background: #7b7ff7;
-      /* border-radius: 10px; */
-    }
+  .link-type {
+    outline: none;
+    border: none;
+    width: 50px;
+    height: 25px;
+    border-radius: 3px;
+  }
 
-    .bar-value {
-      position: absolute;
-      left: 50%;
-      bottom: 120px;
-      width: 140px;
-      text-align: center;
-      margin-left: -70px;
-      height: 30px;
-      line-height: 30px;
-      color: #fff;
-    }
-  </style>
+  .link-confirm {
+    width: 60px;
+    height: 25px;
+    border-radius: 3px;
+    border: none;
+    background: #7b7ff7;
+    color: #fff;
+  }
+
+  .video-box>video {
+    width: 100%;
+    max-height: 100%;
+  }
+
+  .video-preview {
+    width: 100%;
+    height: 116px;
+    overflow: auto;
+  }
+
+  .option-wrap {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+  }
+
+  .option-item {
+    margin-right: 10px;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .option-item>input {
+    cursor: pointer;
+  }
+
+  .video-select {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .trigger {
+    width: 100%;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #b6b6b6;
+    box-sizing: border-box;
+  }
+
+  .trigger>button {
+    width: 100px;
+    height: 30px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .loadBar-mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 1);
+  }
+
+  .loadBar-mask .bar-wrap {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    width: 90%;
+    height: 20px;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .loadBar-mask .bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 20px;
+    background: #7b7ff7;
+    /* border-radius: 10px; */
+  }
+
+  .bar-value {
+    position: absolute;
+    left: 50%;
+    bottom: 120px;
+    width: 140px;
+    text-align: center;
+    margin-left: -70px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+  }
+</style>
+
 </html>

@@ -70,12 +70,20 @@ class FullScreen {
         );
       case "web":
         return !!this.player.template.videoWrap.classList.contains("mfunsPlayer-web-fullscreen");
+      case "all":
+        return !!(
+          document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement ||
+          this.player.template.videoWrap.classList.contains("mfunsPlayer-web-fullscreen")
+        );
     }
   }
   handleFullscrren(type) {
     const danmakuRoot = this.player.template.danmakuRoot;
     if (this.player.danmaku && !danmakuRoot.classList.contains("hide") && !this.isFullScreen(type)) {
-      this.player.template.footBar.removeChild(danmakuRoot);
+      this.player.template.footBarWrap.removeChild(danmakuRoot);
       this.player.template.controllerWrap.appendChild(danmakuRoot);
     }
     this.player.videoLoaded && this.player.template.videoWrap.addEventListener("wheel", this.scrollToVolume);
@@ -128,7 +136,7 @@ class FullScreen {
     const danmakuRoot = this.player.template.danmakuRoot;
     if (this.player.danmaku && !danmakuRoot.classList.contains("hide") && this.isFullScreen(type)) {
       this.player.template.controllerWrap.removeChild(danmakuRoot);
-      this.player.template.footBar.appendChild(danmakuRoot);
+      this.player.template.footBarWrap.appendChild(danmakuRoot);
     }
     this.player.template.videoWrap.removeEventListener("wheel", this.scrollToVolume);
   }

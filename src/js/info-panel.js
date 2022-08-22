@@ -38,7 +38,7 @@ class InfoPanel {
   }
 
   update() {
-    const currentVideo = this.player.options.currentVideo;
+    const currentVideo = this.player.currentVideo;
     // this.template.infoVersion.innerHTML = `v${DPLAYER_VERSION} ${GIT_HASH}`;
     this.template.infoVersion.innerHTML = `v2.1.0`;
 
@@ -50,7 +50,7 @@ class InfoPanel {
     if (this.player.options.danmaku) {
       this.template.infoDanmakuId.innerHTML = this.player.options.video[currentVideo].danId;
       this.template.infoDanmakuApi.innerHTML = this.player.options.danmaku.api;
-      this.template.infoDanmakuAmount.innerHTML = this.player.danmaku.dan.length;
+      this.template.infoDanmakuAmount.innerHTML = this.player.danmaku.dan?.length;
     }
   }
 

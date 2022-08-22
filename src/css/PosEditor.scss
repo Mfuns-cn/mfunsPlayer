@@ -1,0 +1,126 @@
+@import "./theme.scss";
+
+.PosEditor {
+    user-select: none;
+    color: $text-black;
+    .PosEditor-title {
+        height: 26px;
+        line-height: 26px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        &::before {
+            content: "> ";
+            display: inline;
+        }
+    }
+    .PosEditor-input-content {
+        font-family: inherit;
+        box-sizing: border-box;
+        width: calc(100% - 8px);
+        height: 60px;
+        resize: none;
+        padding: 4px;
+        font-size: 12px;
+    }
+    input[type=number].PosEditor-input-start {
+        width: 70px;
+    }
+    .PosEditor-row {
+        height: 26px;
+        margin-bottom: 4px;
+        .PosEditor-label {
+            line-height: 26px;
+        }
+        .PosEditor-sub-label {
+            line-height: 26px;
+            margin-left: 4px;
+        }
+    }
+    .PosEditor-keyframe-bar {
+        line-height: 26px;
+        margin-bottom: 4px;
+        .PosEditor-keyframes {
+            span {
+                display: inline-block;
+                padding: 0 2px;
+                cursor: pointer;
+                &.item-on {
+                    font-weight: bold;
+                }
+            }
+        }
+        .PosEditor-action-delKeyFrame, .PosEditor-action-addKeyFrame {
+            cursor: pointer;
+        }
+    }
+    .PosEditor-animation-settings {
+        &[data-frame="0"] {
+            .PosEditor-row-duration, .PosEditor-row-ease {
+                display: none;
+            }
+        }
+    }
+    .PosEditor-area-content {
+        .PosEditor-row-shadow-1,
+        .PosEditor-row-shadow-2,
+        .PosEditor-row-stroke-1 {
+            display: none;
+        }
+        &.Pos-use-shadow {
+            .PosEditor-row-shadow-1,
+            .PosEditor-row-shadow-2 {
+                display: block;
+            }
+        }
+        &.Pos-use-stroke {
+            .PosEditor-row-stroke-1 {
+                display: block;
+            }
+        }
+    }
+    .PosEditor-animation-settings {
+        .PosEditor-row-position-1,
+        .PosEditor-row-rotation-1,
+        .PosEditor-row-scale-1,
+        .PosEditor-input-opacity {
+            display: none;
+        }
+        &.Pos-use-position {
+            .PosEditor-row-position-1 {
+                display: block;
+            }
+        }
+        &.Pos-use-rotation {
+            .PosEditor-row-rotation-1 {
+                display: block;
+            }
+        }
+        &.Pos-use-scale {
+            .PosEditor-row-scale-1 {
+                display: block;
+            }
+        }
+        &.Pos-use-opacity {
+            .PosEditor-input-opacity {
+                display: inline-block;
+            }
+        }
+    }
+    input, select {
+        font-family: inherit;
+        font-size: 12px;
+        height: 18px;
+        &[type=number] {
+            width: 50px;
+            &::-webkit-inner-spin-button, 
+            &::-webkit-outer-spin-button {
+            opacity: 1;
+            }
+        }
+        &[type=checkbox] {
+            transform: translateY(4px);
+        }
+        padding-left: 4px;
+        margin-left: 4px;
+    }
+}

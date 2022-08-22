@@ -1,4 +1,4 @@
-import { Slider, Picker } from "./components";
+import { Slider, Picker } from "./components/components";
 export default class VideoColor {
   constructor(player) {
     this.player = player;

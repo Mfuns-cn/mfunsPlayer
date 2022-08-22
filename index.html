@@ -7,9 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
+  <script src="https://cdn.bootcss.com/ace/1.4.9/ace.js"></script>
+  <script src="https://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js"></script>
   <title>mfunsPlayer</title>
 </head>
-<!-- <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script> -->
 <script src="./src/static/echarts.js"></script>
 <script src="./dist/mfunsPlayer.js"></script>
 <style type="text/css">
@@ -18,266 +19,86 @@
     padding: 0;
   }
 
-  .player {
-    width: 1000px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
+  @media screen and (max-width: 1000px) {
+    .test-title {
+      font-size: 30px !important;
+    }
+
+    .test-tip {
+      font-size: 16px !important;
+    }
   }
 
-  .content {
-    min-width: 700px;
+  a {
+    text-decoration: none;
   }
 
-  .extra {
-    width: 400px;
-    border: 1px solid #e6e6e6;
-    border-left: none;
+  .test-title,
+  .test-tip {
+    width: 100%;
     text-align: center;
+  }
+
+  .test-title {
+    font-size: 40px;
+    color: #3199ff;
+  }
+
+  .test-tip {
+    color: #f00;
+    font-size: 25px;
+  }
+
+  .scene {
+    margin-top: 50px;
+    width: 100%;
+    /* display: flex; */
+    text-align: center;
+
+  }
+
+  .scene-title {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    margin: 10px auto;
   }
 </style>
 
 <body>
-  <div class="player">
-    <div class="content"></div>
 
-    <div class="extra"">
-         <!-- <h1>本周任务</h3>
-        <ol>
-          <li>自动播放逻辑调整 [完成]</li>
-          <li>自动跳转至上次播放位置 [完成]</li>
-          <li>滚轮音量提示设计 [完成]</li>
-          <li>活动广告轮播设计 [进行中]</li>
-          <li>增值服务设计 [未开始]</li>
-        </ol> -->
-      </div>
-    </div>
-   <h1 style=" margin-top:180px ;">11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-      <h1>11111111</h1>
-    </div>
+  <h2 class="test-title">mfunsPlayer v2.1.0 测试</h2>
+  <h4 class="test-tip">注：请尽量使用谷歌或者火狐内核的浏览器进行测试</h4>
+  <ul class="scene">
+    <div class="scene-title">使用场景：</div>
+    <li>
+      <a href="./pages/base.html">基础</a>
+    </li>
+    <li>
+      <a href="./pages/index.html">普通</a>
+    </li>
+    <li>
+      <a href="./pages/list.html">分p切集</a>
+    </li>
+    <li>
+      <a href="./pages/bangumi.html">番剧</a>
+    </li>
+
+    <li>
+      <a href="./pages/extra.html">弹幕拓展功能</a>
+    </li>
+
+  </ul>
+
 </body>
 <script>
-  //     url: "https://api.moegirl.love/v1/bilibiliav/av810872",
-  //    url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-  //    url: "https://api.moegirl.love/v1/bilibiliav/av12",
-  //     title: "【炮姐/AMV】我永远都会守护在你的身边！",
-  //     danId: 70385,
-  //     addition: [
-  //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
-  //      ],
-  // shields: ["top", "bottom"],
 
-  const container = document.querySelector(".content");
-  const playerExtra = document.querySelector(".extra");
-  const playerSettings = { player: {}, danmaku: {} }
-
-  localStorage.mfunsPlayerSettings ?? localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
-  localStorage.mfuns_video_point ?? localStorage.setItem("mfuns_video_point", JSON.stringify([]))
-  const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings
-  const {
-    autoPlay,
-    autoSwitch,
-    autoSkip,
-    blackBorder,
-    volume
-  } = player
-  const {
-    danmakuCatch,
-    keepOutSubtitle,
-    limitArea,
-    opacity,
-    size,
-    speed
-  } = danmaku
-  console.log(player, danmaku)
-
-  const mfunsPlayerParams = {
-    container,
-    uid: 2333,
-    theme: "#00a1d6",
-    // autoPlay,
-    // autoSwitch,
-    // autoSkip,
-    // blackBorder,
-    // volume,
-    // dragable: true,
-    // hotkey: true,
-
-    // currentVideo: 0,
-    // widescreen: true, // 宽屏模式
-    // widescreenSwitch: true, // 可切换宽屏模式
-    // mutex: true,
-
-    video: [
-      {
-        // url: "https://api.moegirl.love/v1/bilibiliav/av39444",
-        // url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
-        url: "https://bj.bcebos.com/ksv-video-upload/9c421f23282f8670a74a18cb069e39a8c2961f04",
-        pic: "http://www.dmoe.cc/random.php?165529917318",
-        type: "mp4",
-        title: "进击的巨人第一季 01",
-        thumbnails: "./src/static/thumbnails/kyoujin/1.png",
-        // danId: 70385,
-        // advDanId: 31255,
-        danmakuAddition: [
-          // {
-          //   url: "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json",
-          //   type: "dplayer-danmaku"
-          // }
-          {
-            url: "./src/static/danmaku/kyoujin/1.xml",
-            type: "bili-danmaku"
-          }
-        ]
-
-      },
-      {
-        // url: "https://api.moegirl.love/v1/bilibiliav/av810872",
-        url: "https://bj.bcebos.com/ksv-video-upload/99551ceea9e76662b8961b32675a5e268483f080",
-        type: "mp4",
-        pic: "http://www.dmoe.cc/random.php?165529917318",
-        // title: "绯色月下，狂咲の絶",
-        title: "进击的巨人第一季 02",
-        thumbnails: "./src/static/thumbnails/kyoujin/2.png",
-        // danId: 24254,
-        danmakuAddition: [
-          // {
-          //   url: "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json",
-          //   type: "dplayer-danmaku"
-          // }
-          {
-            url: "./src/static/danmaku/kyoujin/2.xml",
-            type: "bili-danmaku"
-          }
-        ]
-      },
-    ],
-    danmaku: {
-      api: "https://www.mfuns.fun/wp-json/mfuns",
-      // bottom: 5,
-      opacity: 0.8,
-      // limitArea: 4,
-      // fontScale: 1,
-      // speed: 1,
-      // editor: 1,
-      // sensitivity: 3,
-      // danmakuCatch: true,
-      // showHighEnergy: true,
-      // showDanmaku: true,
-    },
-    // advancedDanmaku:{
-    //   api: "https://www.mfuns.fun/wp-json/mfuns",
-    //   editor: 1,
-    // },
-
-    // activity: [
-    //   {
-    //     pic: "https://uploadstatic.mihoyo.com/puzzle/upload/puzzle/2022/05/25/ae1b27c1994be8bc7503c1dc2a98bf14_5644210846563075870.png?x-oss-process=image/format,webp",
-    //     link: "https://ys.mihoyo.com/?utm_source=adbdsem016&from_channel=adbdsem#/"
-    //   },
-    //   {
-    //     pic: "https://imgs.aixifan.com/fsjvI363GQ-VNZJF3-yY77ni-FrAbiu-FJjE7j.png?x-oss-process=image/resize,m_fill,w_964,h_494",
-    //     link: "https://activity.acfun.cn/mega/anniversary-2022"
-    //   },
-    //   {
-    //     pic: "http://www.dmoe.cc/random.php?165517318",
-    //     link: "https://www.mfuns.fun"
-    //   }
-    // ]
-
-
-  }
-  for (let key in player) {
-    if (key) mfunsPlayerParams[key] = player[key]
-  }
-  for (let key in danmaku) {
-    if (key) mfunsPlayerParams.danmaku[key] = danmaku[key]
-  }
-  for (let i = 0; i < mfunsPlayerParams.video.length; i++) {
-    const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
-    if (!mfuns_video_point.length) break;
-    else {
-      for (let j = 0; j < mfuns_video_point.length; j++) {
-        if (mfunsPlayerParams.video[i].url === mfuns_video_point[j].link) {
-          mfunsPlayerParams.video[i].lastPosition = mfuns_video_point[j].position
-        }
-      }
-    }
-
-  }
-  console.log(mfunsPlayerParams)
-  let mp = new mfunsPlayer(mfunsPlayerParams);
-  mp.mountDanmakuAuxiliary(playerExtra);
-  mp.on("danmaku_send", (dan) => {
-    console.log(dan)
-  })
-  mp.on("danmaku_report", data => {
-    console.log(data)
-    setTimeout(() => {
-      mp.notice("提交成功，感谢您的反馈")
-    }, 300)
-  })
-  mp.on("toLogin", () => {
-    console.log("log")
-    if (confirm("登录")) {
-      console.log("111")
-    }
-  })
-  mp.on("setPlayer", (setting) => {
-    playerSettings.player[setting.key] = setting.value
-    localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
-  })
-  mp.on("setDanmaku", (setting) => {
-    playerSettings.danmaku[setting.key] = setting.value
-    localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
-  })
-  mp.on("update_video_position", (data) => {
-    // console.log(data)
-    const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
-    if (mfuns_video_point.length > 0) {
-      for (let i = 0; i < mfuns_video_point.length; i++) {
-        if (mfuns_video_point[i].link === data.link) {
-          mfuns_video_point[i].position = data.position
-          break;
-        } else if (i === mfuns_video_point.length - 1) {
-          mfuns_video_point.push(data)
-        }
-      }
-    } else {
-      mfuns_video_point.push(data)
-    }
-
-    // console.log(mfuns_video_point)
-    localStorage.setItem("mfuns_video_point", JSON.stringify(mfuns_video_point))
-  })
 </script>
 
 </html>

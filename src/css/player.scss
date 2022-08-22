@@ -4,10 +4,15 @@
     justify-content: center;
     position: relative;
     box-sizing: content-box;
-    overflow: hidden;
+    padding-bottom: 40px;
+    background: #000;
+    // overflow: hidden;
     line-height: 1;
     z-index: 10016;
     user-select: none;
+    &.noDanmaku {
+        padding-bottom: 0;
+    }
     &.mfunsPlayer-darkmode {
         box-shadow: 0 0px 8px 0 rgba(255, 255, 255, 0.5);
     }
@@ -22,13 +27,6 @@
         .mfunsPlayer-danmaku-move {
             animation-play-state: paused !important;
         }
-    }
-    &.mfunsPlayer-web-fullscreen-fix {
-        position: fixed;
-        top: 0;
-        left: 0;
-        margin: 0;
-        padding: 0;
     }
 
     .mfunsPlayer-headBar {

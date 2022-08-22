@@ -8,7 +8,7 @@ export default (options) => {
     autoSwitch: false, // 自动切P
     smallWindow: true, //小窗播放
     draggable: true,
-    blackBorder: true, // 开启黑边
+    blackBorder: false, // 开启黑边
     theme: "#7b7ff7",
     loop: false, // 洗脑循环
     muted: false,
@@ -41,24 +41,26 @@ export default (options) => {
     ],
   };
   options = Object.assign(defaultOption, options);
-  options.danmaku = Object.assign(
-    {
-      api: "",
-      margin: 5,
-      opacity: 1,
-      shields: [],
-      limitArea: 4,
-      fontScale: 1,
-      speed: 1,
-      editor: 1,
-      sensitivity: 3,
-      danmakuCatch: true,
-      showHighEnergy: true,
-      keepOutSubtitle: false,
-      showDanmaku: true,
-    },
-    options.danmaku ?? {}
-  );
+  if (options.danmaku) {
+    options.danmaku = Object.assign(
+      {
+        api: "",
+        margin: 5,
+        opacity: 1,
+        shields: [],
+        limitArea: 4,
+        fontScale: 1,
+        speed: 1,
+        editor: 1,
+        sensitivity: 3,
+        danmakuCatch: true,
+        showHighEnergy: true,
+        keepOutSubtitle: false,
+        showDanmaku: true,
+      },
+      options.danmaku || {}
+    );
+  }
   options.contextmenu = options.contextmenu.concat([
     {
       text: "作者信息",

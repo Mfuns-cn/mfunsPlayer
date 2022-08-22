@@ -1,4 +1,4 @@
-import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components";
+import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from "./components/components";
 import utils from "./utils";
 import Thumbnails from "./thumbnails";
 class Controller {
@@ -97,7 +97,7 @@ class Controller {
     };
   }
   checkLogin(player) {
-    if (player.options.uid === undefined) {
+    if (player.options.uid === undefined && player.options.danmaku) {
       player.template.toLogin.addEventListener("click", () => {
         // player.options.toLogin && player.options.toLogin();
         player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
@@ -139,22 +139,20 @@ class Controller {
     }
   }
   initThumbnails() {
-    if (this.player.options.video[this.player.currentVideo].thumbnails) {
-      this.thumbnails = new Thumbnails({
-        container: this.player.template.barPreview,
-        barWidth: this.player.template.barWrap.offsetWidth,
-        url: this.player.options.video[this.player.currentVideo].thumbnails,
-        events: this.player.events,
-      });
+    this.thumbnails = new Thumbnails({
+      container: this.player.template.barPreview,
+      barWidth: this.player.template.barWrap.offsetWidth,
+      url: this.player.options.video[this.player.currentVideo].thumbnails,
+      events: this.player.events,
+    });
 
-      this.player.on("loadedmetadata", () => {
-        this.thumbnails.resize(
-          160,
-          (this.player.video.videoHeight / this.player.video.videoWidth) * 160,
-          this.player.template.barWrap.offsetWidth
-        );
-      });
-    }
+    this.player.on("loadedmetadata", () => {
+      this.thumbnails.resize(
+        160,
+        (this.player.video.videoHeight / this.player.video.videoWidth) * 160,
+        this.player.template.barWrap.offsetWidth
+      );
+    });
   }
   initPlayedBar() {
     const allPanel = document.querySelectorAll(".mfunsPlayer-controller-panel-mask");
@@ -168,7 +166,7 @@ class Controller {
       if (tx < 0 || tx > this.player.template.barWrap.offsetWidth) {
         return;
       }
-      if (this.thumbnails) {
+      if (this.thumbnails.isShow) {
         if (tx >= 80 && tx <= this.player.template.barWrap.offsetWidth - 80) {
           this.player.template.barTime.classList.remove("thumbLimit");
           this.player.template.barTime.style.left = `${tx - (time >= 3600 ? 25 : 20)}px`;
@@ -318,6 +316,9 @@ class Controller {
     });
   }
   initPagelistButton() {
+    this.player.template.pagelist.addEventListener("wheel", (e) => {
+      e.stopPropagation();
+    });
     for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
       this.player.template.pagelistItem[i].addEventListener("click", (event) => {
         window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
@@ -511,7 +512,6 @@ class Controller {
       {
         on: (nonotice) => {
           // 打开开关
-          console.log("11111");
           window.addEventListener("scroll", this.watchPlayerScroll);
           THIS.player.events &&
             THIS.player.events.trigger("setPlayer", {
@@ -561,7 +561,7 @@ class Controller {
       on(nonotice) {
         // 打开开关
         document.body.classList.add("player-mode-blackmask");
-        THIS.player.template.footBar.classList.add("darkmode");
+        THIS.player.template.footBar?.classList?.add("darkmode");
         THIS.player.container.classList.add("mfunsPlayer-darkmode");
         document.body.appendChild(THIS.mask);
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启关灯模式");
@@ -569,7 +569,7 @@ class Controller {
       off(nonotice) {
         // 关闭开关
         if ([...document.body.childNodes].includes(THIS.mask)) {
-          THIS.player.template.footBar.classList.remove("darkmode");
+          THIS.player.template.footBar?.classList?.remove("darkmode");
           THIS.player.container.classList.remove("mfunsPlayer-darkmode");
           document.body.classList.remove("player-mode-blackmask");
           document.body.removeChild(THIS.mask);

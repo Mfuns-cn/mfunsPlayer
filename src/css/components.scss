@@ -164,4 +164,7 @@
             color: $translucent-white;
         }
     }
+    input, textarea {
+        font-family: inherit;
+    }
 }

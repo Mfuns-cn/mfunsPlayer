@@ -34,7 +34,8 @@ export default {
               options.success(
                 data.data.map((item) => ({
                   time: item[0],
-                  type: item[1],
+                  type: utils.number2Type(item[1]),
+                  mode: [1, 5, 4, 6][item[1]],
                   color: item[2],
                   author: item[3],
                   text: item[4],
@@ -52,8 +53,8 @@ export default {
                   let a = JSON.parse(item);
                   return {
                     time: a[0].start / 1000 || 0,
-                    type: 8,
-                    mode: 8,
+                    type: "json",
+                    mode: 9,
                     author: "0",
                     text: item,
                     date: 0,
@@ -62,17 +63,9 @@ export default {
               );
             break;
           case "bili-danmaku":
-            const convertToDp = (xmlData) => {
-              // let xmlhttp, xmlDoc;
+            const bilibiliXMLParser = (xmlData) => {
               let dan = [];
-              // if (window.XMLHttpRequest) {
-              //   xmlhttp = new XMLHttpRequest();
-              // }
-              // xmlhttp.open("GET", xmlFilePath, false);
-              // xmlhttp.send();
-              let xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml");
-              // xmlDoc.loadXML(xmlData);
-              // console.log(xmlDoc);
+              const xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml");
               //获取xml文档的所有子节点
               const nodeList = xmlDoc.childNodes;
               const generate = (nodeList) => {
@@ -89,21 +82,22 @@ export default {
               };
               generate(nodeList);
               return dan.map((el) => {
-                return [+el[0], +el[1], +el[3], el[6], el[8], +el[2], +el[4]];
+                return {
+                  time: +el[0],
+                  type: utils.number2Type(+el[1], true),
+                  mode: +el[1],
+                  color: +el[3],
+                  author: el[6],
+                  text: el[8],
+                  size: +el[2] ?? 25,
+                  date: +el[4] ?? 0,
+                  origin: "bili",
+                }
               });
             };
             options.success &&
               options.success(
-                convertToDp(data).map((item) => ({
-                  time: item[0],
-                  type: item[1],
-                  color: item[2],
-                  author: item[3],
-                  text: item[4],
-                  size: item[5] ?? 25,
-                  date: item[6] ?? 0,
-                  origin: options.origin ?? "unknown",
-                }))
+                bilibiliXMLParser(data)
               );
             break;
           case "acfun-danmaku":
