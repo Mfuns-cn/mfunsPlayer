@@ -1,104 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
-  <script src="https://cdn.bootcss.com/ace/1.4.9/ace.js"></script>
-  <script src="https://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js"></script>
-  <title>mfunsPlayer</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mfunsPlayer</title>
 </head>
-<script src="./src/static/echarts.js"></script>
-<script src="./dist/mfunsPlayer.js"></script>
-<style type="text/css">
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
-  @media screen and (max-width: 1000px) {
-    .test-title {
-      font-size: 30px !important;
-    }
-
-    .test-tip {
-      font-size: 16px !important;
-    }
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  .test-title,
-  .test-tip {
-    width: 100%;
-    text-align: center;
-  }
-
-  .test-title {
-    font-size: 40px;
-    color: #3199ff;
-  }
-
-  .test-tip {
-    color: #f00;
-    font-size: 25px;
-  }
-
-  .scene {
-    margin-top: 50px;
-    width: 100%;
-    /* display: flex; */
-    text-align: center;
-
-  }
-
-  .scene-title {
-    font-size: 16px;
-    font-weight: 800;
-  }
-
-  ul {
-    list-style: none;
-  }
-
-  li {
-    margin: 10px auto;
-  }
-</style>
+<script src="../dist/mfunsPlayer.js"></script>
 
 <body>
-
-  <h2 class="test-title">mfunsPlayer v2.1.0 测试</h2>
-  <h4 class="test-tip">注：请尽量使用谷歌或者火狐内核的浏览器进行测试</h4>
-  <ul class="scene">
-    <div class="scene-title">使用场景：</div>
-    <li>
-      <a href="./pages/base.html">基础</a>
-    </li>
-    <li>
-      <a href="./pages/index.html">普通</a>
-    </li>
-    <li>
-      <a href="./pages/list.html">分p切集</a>
-    </li>
-    <li>
-      <a href="./pages/bangumi.html">番剧</a>
-    </li>
-
-    <li>
-      <a href="./pages/extra.html">弹幕拓展功能</a>
-    </li>
-
-  </ul>
-
+    <div class="player">
+    </div>
 </body>
 <script>
-
+    const container = document.querySelector(".player");
+    const mfunsPlayerParams = {
+        container,
+        video: [
+            { url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4" }
+        ]
+    }
+    let mp = new mfunsPlayer(mfunsPlayerParams);
 </script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .player {
+        width: 700px;
+        margin: 20px auto;
+    }
+</style>
 
 </html>
