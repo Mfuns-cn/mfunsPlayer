@@ -97,7 +97,7 @@ class Controller {
     };
   }
   checkLogin(player) {
-    if (player.options.uid === undefined) {
+    if (player.options.uid === undefined && player.options.danmaku) {
       player.template.toLogin.addEventListener("click", () => {
         // player.options.toLogin && player.options.toLogin();
         player.fullScreen.isFullScreen("browser") && player.fullScreen.cancel("browser");
@@ -561,7 +561,7 @@ class Controller {
       on(nonotice) {
         // 打开开关
         document.body.classList.add("player-mode-blackmask");
-        THIS.player.template.footBar.classList.add("darkmode");
+        THIS.player.template.footBar?.classList?.add("darkmode");
         THIS.player.container.classList.add("mfunsPlayer-darkmode");
         document.body.appendChild(THIS.mask);
         THIS.player.videoLoaded && !nonotice && THIS.player.notice("已开启关灯模式");
@@ -569,7 +569,7 @@ class Controller {
       off(nonotice) {
         // 关闭开关
         if ([...document.body.childNodes].includes(THIS.mask)) {
-          THIS.player.template.footBar.classList.remove("darkmode");
+          THIS.player.template.footBar?.classList?.remove("darkmode");
           THIS.player.container.classList.remove("mfunsPlayer-darkmode");
           document.body.classList.remove("player-mode-blackmask");
           document.body.removeChild(THIS.mask);

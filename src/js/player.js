@@ -52,7 +52,7 @@ export default class mfunsPlayer {
     this.infoPanel = new InfoPanel(this);
     this.initVideo(this.video, this.options.video[this.currentVideo].type);
     this.initPlayerTip();
-    if (this.options.danmaku.api) {
+    if (this.options?.danmaku?.api) {
       this.showDanmaku = this.options.danmaku.showDanmaku;
       this.danmakuOptions = {
         container: this.template.danmaku,
@@ -104,7 +104,7 @@ export default class mfunsPlayer {
       this.advancedDanmaku = new AdvancedDanmaku(this, []);
       this.controller.initDanmakuSettingsButton();
     } else {
-      this.template.footBar.classList.add("hide");
+      this.template.footBar && this.template.footBar.classList.add("hide");
     }
 
     document.addEventListener(
@@ -129,8 +129,11 @@ export default class mfunsPlayer {
   }
   showMask() {
     this.template.videoWrap.classList.add("load");
-    this.template.danmakuLoad.classList.remove("hide");
-    this.template.danmakuLoad.innerHTML = "请求弹幕数据中...";
+    if (this.options.danmaku) {
+      this.template.danmakuLoad.classList.remove("hide");
+      this.template.danmakuLoad.innerHTML = "请求弹幕数据中...";
+    }
+
     this.template.videoLoad.classList.remove("hide");
     this.template.videoLoad.innerHTML = "请求视频数据中...";
     this.template.mask.classList.add("mfunsPlayer-mask-show");
@@ -142,8 +145,8 @@ export default class mfunsPlayer {
   removeMask(type = "loaded") {
     if (this.videoLoaded || !this.danmaku || type === "error") {
       // if (this.danmakuLoaded && this.videoLoaded) {
-      this.template.danmakuRoot.classList.remove("loading");
-      this.template.footBar.classList.remove("loading");
+      this.template.danmakuRoot && this.template.danmakuRoot.classList.remove("loading");
+      this.template.footBar && this.template.footBar.classList.remove("loading");
       this.checkAutoPlay();
       // }
       setTimeout(() => {
@@ -422,10 +425,10 @@ export default class mfunsPlayer {
       this.template.loading.classList.add("show");
       this.template.loadingSpeed.innerHTML = "";
       this.template.headBar.classList.add("disable");
-      this.template.footBar.classList.add("loading");
+      this.template.footBar && this.template.footBar.classList.add("loading");
       this.template.controllerMask.classList.add("disable");
       this.template.bezel.classList.add("hide");
-      this.template.danmakuRoot.classList.add(this.options.uid ? "loading" : "nologin");
+      this.template.danmakuRoot && this.template.danmakuRoot.classList.add(this.options.uid ? "loading" : "nologin");
 
       this.videoLoaded = false;
       //30s后如果还处于loadstart阶段，则响应超时

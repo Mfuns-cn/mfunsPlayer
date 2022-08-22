@@ -10,6 +10,9 @@
     line-height: 1;
     z-index: 10016;
     user-select: none;
+    &.noDanmaku {
+        padding-bottom: 0;
+    }
     &.mfunsPlayer-darkmode {
         box-shadow: 0 0px 8px 0 rgba(255, 255, 255, 0.5);
     }

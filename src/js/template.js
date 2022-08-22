@@ -3,6 +3,7 @@ import utils from "./utils";
 class Template {
   constructor(options) {
     this.container = options.container;
+    this.options = options;
     options.theme && this.setTheme(options.theme);
     options.smallWindow && this.buildSmallWindow();
     options.isFireFox = utils.isFirefox;
@@ -196,7 +197,6 @@ class Template {
     });
   }
   buildSmallWindow() {}
-
   buildVideo(hasBlackborder) {
     if (!hasBlackborder) {
       this.videoMask.classList.remove("border");
@@ -205,6 +205,8 @@ class Template {
       this.videoMask.classList.add("border");
       this.bezel.classList.remove("noborder");
     }
+    console.log(this.options.danmaku);
+    !this.options.danmaku && this.container.classList.add("noDanmaku");
     const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
 
     this.container.style.height = viewHeight + "px";
