@@ -1,6 +1,6 @@
 {
   "name": "@mfuns/mfuns-player",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "基于H5的弹幕播放器",
   "main": "dist/mfunsPlayer.min.js",
   "scripts": {
