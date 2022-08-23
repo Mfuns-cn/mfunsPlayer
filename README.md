@@ -8,9 +8,10 @@
 - 可控进度条
 - 全屏/退出全屏(快捷键 F)
 - 弹幕展示(支持拓展bilibili格式弹幕)
-- 弹幕屏蔽及属性控制(快捷键D)
+- 弹幕开关(快捷键D)
+- 弹幕属性设置
 - 弹幕防挡字幕
-- 弹幕举报/复制/撤回
+- 弹幕举报/复制/撤回/点赞（大饼）
 - 发送弹幕(快捷键 Enter)
 - 编辑弹幕/高级弹幕(支持换行符\n)
 - 音量调节(快捷键 ↑ ↓)
@@ -30,7 +31,7 @@
 - 视频暂停展示活动弹窗(可恰饭或站内活动引导)
 ### 使用方法
 
-- 下载 dist/mfunsPlayer.js 文件
+- 下载 dist/mfunsPlayer.min.js 文件
 - 使用 script 标签导入到 目标 html 中
 
 - 如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
@@ -40,7 +41,7 @@
 
   > 语言工具：[http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js](http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js)
 
-### 初始化弹幕播放器
+### 配置代码示例
 
 ```js
 //播放器的容器（示例）

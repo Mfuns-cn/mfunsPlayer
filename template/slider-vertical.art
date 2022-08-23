@@ -1,6 +1,0 @@
-<div class="slider-track slider-track-vertical" style="position: absolute; height: 100%; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center">
-    <div class="slider-bar slider-bar-vertical" style="position: absolute; bottom: 0px; width: 100%"></div>
-    <div class="slider-thumb-track slider-thumb-track-vertical" style="width:0px;">
-        <div class="slider-thumb slider-thumb-vertical" style="position: absolute; transform: translate(-50%, -50%)"></div>
-    </div>
-</div>

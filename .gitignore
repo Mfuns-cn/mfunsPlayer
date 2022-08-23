@@ -1,7 +1,0 @@
-node_modules/
-
-src/static/video
-# src/static/thumbnails
-src/static/danmaku/steingate/2011
-src/static/danmaku/steingate/history
-test/
