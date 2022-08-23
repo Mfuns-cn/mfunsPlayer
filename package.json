@@ -2,7 +2,7 @@
   "name": "@mfuns/mfuns-player",
   "version": "2.1.0",
   "description": "基于H5的弹幕播放器",
-  "main": "src/js/index.js",
+  "main": "dist/mfunsPlayer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production && tsc",
@@ -13,9 +13,13 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.14.2",
+    "@babel/preset-env": "^7.4.5",
     "art-template": "^4.13.2",
     "art-template-loader": "^1.4.3",
+    "prettier": "^2.0.4",
+    "prettier-check": "^2.0.0",
     "babel-loader": "^8.2.2",
+    "exports-loader": "^1.0.0",
     "css-loader": "^5.2.4",
     "file-loader": "^6.2.0",
     "sass-loader": "^12.1.0",
@@ -24,6 +28,7 @@
     "tslint": "^6.1.3",
     "typescript": "^4.7.4",
     "url-loader": "^4.1.1",
+    "template-string-optimize-loader": "^3.0.0",
     "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0"
   },
