@@ -77,8 +77,7 @@
 			.mfunsPlayer-controller-tip {
 				position: absolute;
 				bottom: 140%;
-				padding: 2px 4px;
-				max-width: 70px;
+				padding: 0 4px;
 				white-space: nowrap;
 				height: 20px;
 				line-height: 20px;
@@ -256,7 +255,6 @@
 
 				//倍速
 				.mfunsPlayer-controller-speed {
-					width: 40px;
 					&:hover {
 						.mfunsPlayer-speed-mask {
 							display: block;
