@@ -349,28 +349,31 @@
 		}
 	}
 }
-.mfunsPlayer-video-load-status {
+.mfunsPlayer-load-status {
 	position: absolute;
-	left: 20px;
 	bottom: 70px;
-	color: #e6e6e6;
-	font-size: 14px;
-	text-shadow: 0.5px 0.5px 0.5px #999;
-	z-index: 2;
-	&.hide {
-		display: none;
+	left: 20px;
+	.mfunsPlayer-video-load-status {
+		// position: absolute;
+		// left: 20px;
+		// bottom: 90px;
+		margin: 10px 0;
+		color: #e6e6e6;
+		font-size: 14px;
+		text-shadow: 0.5px 0.5px 0.5px #999;
+		z-index: 2;
+		&.hide {
+			display: none;
+		}
+	}
+	.mfunsPlayer-player-load-status {
+		@extend .mfunsPlayer-video-load-status;
+	}
+	.mfunsPlayer-danmaku-load-status {
+		@extend .mfunsPlayer-video-load-status;
 	}
 }
-.mfunsPlayer-player-load-status {
-	@extend .mfunsPlayer-video-load-status;
 
-	bottom: 110px;
-}
-.mfunsPlayer-danmaku-load-status {
-	@extend .mfunsPlayer-video-load-status;
-
-	bottom: 90px;
-}
 @keyframes showTip {
 	from {
 		top: 10px;

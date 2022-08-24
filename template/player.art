@@ -376,9 +376,12 @@
         <p>正在缓冲...</p>
         <p class="mfunsPlayer-loading-speed"></p>
     </div>
-    <div class="mfunsPlayer-player-load-status ">播放器初始化...</div>
-    <div class="mfunsPlayer-danmaku-load-status hide"></div>
-    <div class="mfunsPlayer-video-load-status hide"></div>
+    <div class="mfunsPlayer-load-status">
+        <div class="mfunsPlayer-player-load-status">播放器初始化...</div>
+        <div class="mfunsPlayer-danmaku-load-status hide"></div>
+        <div class="mfunsPlayer-video-load-status hide"></div>
+    </div>
+
 </div>
 
 {{ if danmaku }}

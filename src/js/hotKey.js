@@ -20,7 +20,7 @@ export default class HotKey {
           const tag = document.activeElement.tagName.toUpperCase();
           const editable = document.activeElement.getAttribute("contenteditable");
           const event = e || window.event;
-          if (event.keyCode === 13) {
+          if (event.keyCode === 13&&player.danmaku) {
             const danmakuText = player.template.danmakuText.value;
             if (danmakuText.trim()) {
               player.danmaku.send({
@@ -73,7 +73,7 @@ export default class HotKey {
                 break;
               case 68:
                 event.preventDefault();
-                player.danmaku.toggle();
+                player?.danmaku?.toggle();
                 break;
               case 70:
                 event.preventDefault();

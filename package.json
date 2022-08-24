@@ -2,7 +2,10 @@
   "name": "@mfuns/mfuns-player",
   "version": "2.1.0",
   "description": "基于H5的弹幕播放器",
-  "main": "dist/mfunsPlayer.js",
+  "main": "dist/mfunsPlayer.min.es.js",
+  "module":"dist/mfunsPlayer.min.es.js",
+  "unpkg":"dist/mfunsPlayer.min.umd.js",
+  "jsdelivr":"dist/mfunsPlayer.min.umd.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production && tsc",

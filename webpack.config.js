@@ -1,20 +1,10 @@
 const path = require('path');
-
-module.exports = {
+const baseConfig = {
     mode: 'production',
     entry: {
         mfunsPlayer: './src/js/index.js',
     },
     performance: { hints: false },
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].min.js',
-        library: '[name]',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
-        umdNamedDefine: true,
-        publicPath: '/',
-    },
     devtool: 'source-map',
     resolve: {
         modules: ['node_modules'],
@@ -89,3 +79,23 @@ module.exports = {
         ],
     },
 };
+const esConfig = Object.assign({}, baseConfig, {
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].min.es.js',
+        publicPath: '/',
+    },
+});
+const umdConfig = Object.assign({}, baseConfig, {
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].min.umd.js',
+        library: '[name]',
+        libraryTarget: 'umd',
+        libraryExport: 'default',
+        umdNamedDefine: true,
+        publicPath: '/',
+    },
+});
+
+module.exports = [esConfig, umdConfig];

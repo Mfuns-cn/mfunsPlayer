@@ -1,0 +1,15 @@
+node_modules/
+dist/mfunsPlayer.min.es.js.map
+dist/mfunsPlayer.min.umd.js.map
+.vscode/
+pages/
+src/
+template/
+.prettierrc
+.prettierrcignore
+.gitignore
+.npmignore
+index.html
+package-lock.json
+tslint.json
+webpack.config.js

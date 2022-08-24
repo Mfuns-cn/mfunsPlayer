@@ -61,9 +61,12 @@ class Controller {
           content.onclick = () => {
             this.player.toggle();
           };
-          this.player.danmaku.mini(true);
-          this.player.danmaku.resize();
-          this.player.danmaku.seek();
+          if (this.player.danmaku) {
+            this.player.danmaku.mini(true);
+            this.player.danmaku.resize();
+            this.player.danmaku.seek();
+          }
+
         }
       } else {
         if (!this.template.miniPlayer.classList.contains("hide")) {
@@ -73,9 +76,11 @@ class Controller {
           content.removeChild(this.template.danmaku);
           this.template.previewMask.appendChild(this.template.videoMask);
           this.template.previewMask.appendChild(this.template.danmaku);
-          this.player.danmaku.mini(false);
-          this.player.danmaku.resize();
-          this.player.danmaku.seek();
+          if (this.player.danmaku) {
+            this.player.danmaku.mini(false);
+            this.player.danmaku.resize();
+            this.player.danmaku.seek();
+          }
         }
       }
     };
@@ -630,7 +635,7 @@ class Controller {
     const danmakuSize = this.player.options.danmaku.fontScale;
     const danmakuSpeed = this.player.options.danmaku.speed;
     this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-      created(thisArg) {},
+      created(thisArg) { },
       pick(value, nonotice) {
         console.log(`屏蔽弹幕类型：${value}`);
         THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
@@ -864,7 +869,7 @@ class Controller {
       this.player.template.pip_btn.classList.remove("button-picture-in-picture");
     });
   }
-  widescreenTrigger(widescreen) {}
+  widescreenTrigger(widescreen) { }
   initWidescreenButton() {
     this.template.widescreen_btn.addEventListener("click", () => {
       this.player.widescreen = !this.player.widescreen;
