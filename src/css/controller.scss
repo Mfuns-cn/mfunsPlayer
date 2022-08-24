@@ -1,0 +1,671 @@
+@import "./theme";
+@media screen and (max-width: 1200px) {
+	.mfunsPlayer-controller-wrap {
+		> .mfunsPlayer-video-danmaku-root {
+			justify-content: flex-start;
+			pointer-events: none;
+			.input_box {
+				display: none !important;
+			}
+		}
+	}
+}
+.mfunsPlayer-controller-mask {
+	width: 100%;
+	height: 100px;
+	position: absolute;
+	pointer-events: none;
+	bottom: 0;
+	background: url("../icon/mask.png") repeat-x bottom;
+	transition: all 0.3s ease-in-out;
+
+	z-index: 107;
+	&.hide {
+		opacity: 0;
+	}
+	&.disable {
+		display: none;
+	}
+	.mfunsPlayer-highEnergy-bar {
+		opacity: 0;
+		height: 30px;
+		position: absolute;
+		pointer-events: all;
+		bottom: 45px;
+		left: 0;
+		right: 0;
+		padding: 0 15px;
+		z-index: 10;
+		&.show {
+			opacity: 1;
+		}
+	}
+	.mfunsPlayer-controller {
+		height: 50px;
+		position: absolute;
+		pointer-events: all;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0 15px;
+		z-index: 11;
+		color: #fff;
+		&.hide {
+			display: none;
+		}
+
+		.mfunsPlayer-controller-button {
+			padding: 0 7px;
+			color: #e0e0e0;
+			&:hover {
+				color: #fff;
+			}
+		}
+
+		.mfunsPlayer-controller-wrap {
+			height: calc(100% - 20px);
+			//line-height: calc(100% - 15px);
+			position: relative;
+			margin: 15px 0 5px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			z-index: 10;
+			.unable {
+				pointer-events: none;
+			}
+			.mfunsPlayer-controller-tip {
+				position: absolute;
+				bottom: 140%;
+				padding: 0 4px;
+				white-space: nowrap;
+				height: 20px;
+				line-height: 20px;
+				background: rgba(28, 28, 28, 0.9);
+				transition: all 0.2s ease-in-out;
+				transform: scale(0);
+				border-radius: $theme-border-radius;
+				font-size: 10px;
+				opacity: 0;
+				z-index: 1001;
+			}
+			.mfunsPlayer-controller-button:hover {
+				.mfunsPlayer-controller-tip {
+					transform: scale(1);
+					opacity: 1;
+					&.hide {
+						display: none;
+					}
+				}
+			}
+			.mfunsPlayer-controller-left {
+				max-width: 200px;
+				display: flex;
+				align-items: center;
+				.mfunsPlayer-controller-play {
+					.icon-play {
+						display: none;
+					}
+					&.button-paused {
+						.icon-play {
+							display: block;
+						}
+						.icon-pause {
+							display: none;
+						}
+					}
+				}
+				.mfunsPlayer-controller-next {
+					.icon-next {
+						font-size: 16px;
+					}
+				}
+				.mfunsPlayer-controller-time {
+					width: 90px;
+					text-align: center;
+					font-size: 13px;
+					margin: 0 5px;
+					cursor: pointer;
+					.mfunsPlayer-controller-time-input {
+						display: none;
+						width: 60px;
+						margin: auto;
+						font-size: 13px;
+						text-align: center;
+					}
+					.mfunsPlayer-controller-time-label {
+						width: 100%;
+						white-space: nowrap;
+						text-align: center;
+					}
+					&.inputting {
+						.mfunsPlayer-controller-time-input {
+							display: block;
+						}
+						.mfunsPlayer-controller-time-label {
+							display: none;
+						}
+					}
+				}
+			}
+			//洗脑循环
+			.mfunsPlayer-controller-repeat {
+				.icon-repeat {
+					display: none;
+				}
+				&.button-repeat {
+					.icon-repeat-off {
+						display: none;
+					}
+					.icon-repeat {
+						display: block;
+					}
+				}
+			}
+
+			//控制器右功能键
+
+			.mfunsPlayer-controller-right {
+				height: 100%;
+				min-width: 200px;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				//选集
+				.mfunsPlayer-controller-pagelist {
+					cursor: pointer;
+					&:hover {
+						.mfunsPlayer-pagelist-mask {
+							display: block;
+						}
+					}
+					.mfunsPlayer-pagelist-mask {
+						.mfunsPlayer-pagelist-list {
+							max-height: 300px;
+							overflow-y: auto;
+							font-weight: 400;
+							border-radius: $theme-border-radius;
+							background: rgba(28, 28, 28, 0.9);
+							padding: 5px 0;
+							transition: all 0.3s ease-in-out;
+							color: #fff;
+							scrollbar-color: rgba(162, 152, 152, 0.8);
+							scrollbar-width: 5px;
+							&:hover {
+								&::-webkit-scrollbar {
+									background: rgba(162, 152, 152, 0.8);
+								}
+								&::-webkit-scrollbar-thumb {
+									border-radius: 10px;
+									background: rgba(0, 0, 0, 0.4);
+									&:hover {
+										background: rgba(37, 35, 35, 0.8);
+									}
+								}
+							}
+							&::-webkit-scrollbar {
+								width: 7px;
+								height: 7px;
+								position: fixed;
+								bottom: 0;
+								left: 0;
+								background: rgba(255, 255, 255, 0);
+
+								border-radius: 10px;
+							}
+							&::-webkit-scrollbar-thumb {
+								border-radius: 10px;
+								background: rgba(255, 255, 255, 0);
+								&:hover {
+									background: rgba(255, 255, 255, 0);
+								}
+							}
+							.mfunsPlayer-pagelist-item {
+								width: 320px;
+
+								white-space: nowrap;
+								text-overflow: ellipsis;
+								overflow: hidden;
+								height: 30px;
+								box-sizing: border-box;
+								cursor: pointer;
+								line-height: 30px;
+								padding: 0 15px;
+								&:hover {
+									background-color: rgba(255, 255, 255, 0.1);
+								}
+								&.focus {
+									color: $theme-color;
+									padding: 0 15px 0 30px;
+									position: relative;
+									&::before {
+										content: "";
+										position: absolute;
+										top: 10px;
+										left: 15px;
+										border-color: transparent transparent transparent $theme-color;
+										border-style: solid;
+										border-width: 5px 8px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				//倍速
+				.mfunsPlayer-controller-speed {
+					&:hover {
+						.mfunsPlayer-speed-mask {
+							display: block;
+						}
+					}
+					.mfunsPlayer-speed-mask {
+						// 浮动面板通用样式已移动
+						// .mfunsPlayer-controller-panel-mask
+						.mfunsPlayer-speed-list {
+							font-weight: 400;
+							width: 80px;
+							.mfunsPlayer-speed-item {
+								height: 30px;
+								box-sizing: border-box;
+								text-align: center;
+								cursor: pointer;
+								line-height: 30px;
+								&.focus {
+									color: $theme-color;
+								}
+								&:hover {
+									background-color: rgba(255, 255, 255, 0.1);
+								}
+							}
+						}
+					}
+				}
+				//音量
+				.mfunsPlayer-controller-volume {
+					&:hover {
+						.mfunsPlayer-controller-volume-mask {
+							display: block;
+						}
+					}
+					.mfunsPlayer-controller-volume-icon {
+						.icon-volume-off {
+							display: none;
+						}
+						&.button-volume-off {
+							.icon-volume-off {
+								display: block;
+							}
+							.icon-volume {
+								display: none;
+							}
+						}
+					}
+					.mfunsPlayer-controller-volume-mask {
+						// 浮动面板通用样式已移动
+						// .mfunsPlayer-controller-panel-mask
+						.mfunsPlayer-controller-volume-wrap {
+							width: 32px;
+							height: 100px;
+							.mfunsPlayer-controller-volume-num {
+								color: #e5e9ef;
+								width: 100%;
+								text-align: center;
+								font-size: 12px;
+								height: 28px;
+								line-height: 28px;
+								margin-bottom: 2px;
+							}
+							.mfunsPlayer-controller-volume-bar {
+								width: 100%;
+								height: 60px;
+								position: relative;
+								cursor: pointer;
+								// .slider-track{
+								// 	background: #fff;
+								// }
+								.slider-bar {
+									background: $theme-color;
+								}
+								.slider-thumb {
+									background: $theme-color;
+								}
+							}
+						}
+					}
+				}
+
+				//设置
+				.mfunsPlayer-controller-settings {
+					.mfunsPlayer-settings-mask {
+						.mfunsPlayer-controller-settings-wrap {
+							font-size: 12px;
+							width: 250px;
+							text-align: center;
+							padding-top: 4px;
+						}
+						.row-title {
+							width: 60px;
+						}
+						.mfunsPlayer-picker {
+							display: inline-block;
+							//line-height: 0;
+						}
+					}
+				}
+
+				//画中画
+				.mfunsPlayer-controller-pip {
+					.icon-picture-in-picture-exit {
+						display: none;
+					}
+					&.button-picture-in-picture {
+						.icon-picture-in-picture {
+							display: none;
+						}
+						.icon-picture-in-picture-exit {
+							display: block;
+						}
+					}
+				}
+				//宽屏模式
+				.mfunsPlayer-controller-widescreen {
+					&.hide {
+						display: none;
+					}
+					.icon-widescreen-exit {
+						display: none;
+					}
+					&.exit {
+						.icon-widescreen {
+							display: none;
+						}
+						.icon-widescreen-exit {
+							display: block;
+						}
+					}
+				}
+				//网页全屏
+				.mfunsPlayer-controller-webfull {
+					&.hide {
+						display: none;
+					}
+					.icon-web-fullscreen-exit {
+						display: none;
+					}
+				}
+				//全屏
+				.mfunsPlayer-controller-fullscreen {
+					.icon-fullscreen-exit {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}
+
+.mfunsPlayer-video-danmaku-root {
+	display: flex;
+	flex-grow: 1;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+	.mfunsPlayer-controller-button {
+		pointer-events: all;
+		padding: 0 5px;
+	}
+	.mfunsPlayer-controller-icon {
+		color: #999;
+		&:hover {
+			color: $theme-color;
+		}
+	}
+	.mfunsPlayer-controller-danmaku-trigger {
+		.icon-danmaku {
+			color: $theme-color-light;
+		}
+		&.open {
+			.icon-danmaku-off {
+				display: none;
+			}
+		}
+		&.close {
+			.icon-danmaku {
+				display: none;
+			}
+		}
+	}
+	// 弹幕设置
+	.mfunsPlayer-controller-danmaku-settings {
+		.mfunsPlayer-danmaku-settings-mask {
+			.mfunsPlayer-controller-danmaku-settings-wrap {
+				font-size: 12px;
+				width: 300px;
+				padding-top: 5px;
+				.mfunsPlayer-panel-row {
+					padding: 5px 0 5px 15px;
+					margin: 0;
+				}
+			}
+			.row-title {
+				min-width: 60px;
+			}
+			.row-value {
+				min-width: 50px;
+				margin-left: 10px;
+			}
+			.mfunsPlayer-picker {
+				display: inline-block;
+				//line-height: 0;
+			}
+			.mfunsPlayer-slider {
+				position: relative;
+				width: 160px;
+				margin-left: 5px;
+				cursor: pointer;
+			}
+			.mfunsPlayer-danmaku-highEnergy-switch {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	.input_box {
+		display: flex;
+		flex-grow: 1;
+		align-items: center;
+		position: relative;
+		height: 100%;
+		border-left: 1px solid #e6e6e6;
+		margin-left: 5px;
+
+		.mfunsPlayer-controller-danmaku-style {
+			&:hover {
+				.mfunsPlayer-danmaku-style-mask {
+					display: block;
+				}
+			}
+			.icon-text {
+				&:hover {
+					color: $theme-color;
+				}
+			}
+			.mfunsPlayer-danmaku-style-mask {
+				.mfunsPlayer-controller-danmaku-style-fulloptions-wrap {
+					font-size: 12px;
+					width: 280px;
+					padding-top: 5px;
+					.mfunsPlayer-danmaku-color-picker {
+						width: auto;
+					}
+				}
+				.mfunsPlayer-controller-danmaku-style-wrap {
+					font-size: 12px;
+					width: 180px;
+					.mfunsPlayer-danmaku-color-picker {
+						width: 120px;
+					}
+				}
+				.row-title {
+					width: 40px;
+					text-align: center;
+				}
+				.mfunsPlayer-control-panel-danmaku-style {
+					text-align: left;
+					height: 150px;
+					width: 180px;
+					padding-top: 5px;
+				}
+				.mfunsPlayer-danmaku-fontsize-picker,
+				.mfunsPlayer-danmaku-mode-picker {
+					display: inline-block;
+					line-height: 0;
+				}
+				.mfunsPlayer-control-panel-danmaku-style .row-title {
+					width: 40px;
+				}
+
+				.mfunsPlayer-danmaku-color-input {
+					display: inline-block;
+					width: 60px;
+					margin-left: 10px;
+				}
+				.mfunsPlayer-danmaku-color-preview {
+					display: inline-block;
+					width: 36px;
+					height: 18px;
+					line-height: 20px;
+					margin-left: 5px;
+					border-radius: $theme-border-radius;
+					border: 2px solid #ffffffa0;
+				}
+				.mfunsPlayer-danmaku-color-picker {
+					margin: 10px 0 5px 35px;
+					text-align: center;
+					line-height: 0;
+					.picker-item {
+						display: inline-block;
+						margin-bottom: 4px;
+						width: 12px;
+						height: 12px;
+						border-radius: $theme-border-radius;
+						border: 2px solid #00000040;
+						cursor: pointer;
+						&.picked {
+							border-color: #fff;
+						}
+					}
+				}
+			}
+		}
+
+		.mfunsPlayer-danmaku-text {
+			font-size: 13px;
+			flex: 5;
+			height: 32px;
+			outline: none;
+			border: none;
+			margin-left: 5px;
+			color: #999;
+			background-color: transparent;
+			box-sizing: border-box;
+			&::-webkit-input-placeholder {
+				color: #999;
+			}
+		}
+		.mfunsPlayer-danmaku-status-loading {
+			font-size: 13px;
+			flex: 5;
+			height: 32px;
+			line-height: 32px;
+			margin-left: 5px;
+			color: #999;
+			box-sizing: border-box;
+			display: none;
+		}
+		.mfunsPlayer-danmaku-emit {
+			width: 60px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 30px;
+			font-size: 12px;
+			color: #fff;
+			background: $theme-color;
+			border-radius: $theme-border-radius;
+			cursor: pointer;
+		}
+	}
+}
+
+.mfunsPlayer,
+.mfunsPlayer-danmaku-auxiliary {
+	.mfunsPlayer-controller-button {
+		// 按钮
+		position: relative;
+		height: 30px;
+		font-size: 12px;
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+		.mfunsPlayer-controller-icon {
+			font-size: 21px;
+			line-height: 30px;
+		}
+		.mfunsPlayer-controller-label {
+			font-size: 14px;
+			line-height: 30px;
+			font-weight: 600;
+		}
+		&:hover {
+			.mfunsPlayer-controller-panel-mask {
+				display: block;
+			}
+		}
+	}
+	.mfunsPlayer-controller-panel-mask {
+		// 浮动面板遮罩
+		position: absolute;
+		padding-bottom: 15px;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 200;
+		display: none;
+		&.show {
+			display: block;
+		}
+		&.hide {
+			display: none !important;
+		}
+		&:hover {
+			display: block;
+		}
+		.mfunsPlayer-controller-panel {
+			// 浮动面板
+			cursor: default;
+			overflow: hidden;
+			background: rgba(21, 21, 21, 0.9);
+			color: #ffffff;
+			border-radius: $theme-border-radius;
+			font-size: 13px;
+			.mfunsPlayer-panel-row {
+				display: flex;
+				flex-wrap: wrap;
+				margin: 5px 10px 10px;
+				.row-title {
+					color: $translucent-light-white;
+					height: 22px;
+					line-height: 22px;
+				}
+				.row-value {
+					height: 22px;
+					line-height: 22px;
+					color: $translucent-white;
+				}
+			}
+		}
+	}
+}
