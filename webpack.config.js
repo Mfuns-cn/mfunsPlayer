@@ -84,8 +84,10 @@ const esConfig = Object.assign({}, baseConfig, {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].min.es.js',
         library: '[name]',
-        libraryTarget: 'this',
+        libraryTarget: 'umd',
         libraryExport: 'default',
+        globalObject: 'this',
+        umdNamedDefine: true,
         publicPath: '/',
     },
 });
