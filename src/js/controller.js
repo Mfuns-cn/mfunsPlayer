@@ -374,55 +374,59 @@ class Controller {
       1,
       this.player.options.volume * 100,
       {
-        start() {
+        start: () => {
           // 开始调节滑动条（点按）
-          THIS.isControl = true;
-          THIS.template.volumeMask.classList.add("show");
+          this.isControl = true;
+          this.template.volumeMask.classList.add("show");
         },
-        change(value) {
+        change: (value) => {
           // 更改进度条值，不修改绑定数据
-          THIS.template.volumeNum.innerText = Math.round(value);
-        },
-        update(value, controlFlag) {
-          // 更改进度条值，修改绑定数据
-          THIS.isControl = controlFlag;
-          console.log(value);
-          THIS.player.volume(value * 0.01, true);
-          if (value === 0) {
-            THIS.player.template.volumeIcon.classList.add("button-volume-off");
+          this.template.volumeNum.innerText = Math.round(value);
+          if (value == 0) {
+            this.player.template.volumeIcon.classList.add("button-volume-off");
           } else {
-            THIS.player.template.volumeIcon.classList.remove("button-volume-off");
+            this.player.template.volumeIcon.classList.remove("button-volume-off");
           }
         },
-        end() {
+        update: (value, controlFlag) => {
+          // 更改进度条值，修改绑定数据
+          this.isControl = controlFlag;
+          console.log(value);
+          this.player.volume(value * 0.01, true);
+        },
+        end: () => {
           // 结束滑动条调节（松手）
           // if (!THIS.template.volumeMask.classList.contains("show")) {
           setTimeout(() => {
-            THIS.isControl = false;
+            this.isControl = false;
           }, 50);
           // }
-          THIS.player.template.volumeMask.classList.remove("show");
+          this.player.template.volumeMask.classList.remove("show");
         },
       }
     );
     this.player.template.volumeIcon.addEventListener("click", (event) => {
       if (this.player.video.muted) {
         this.player.video.muted = false;
-        if (this.video.volume) this.player.template.volumeIcon.classList.remove("button-volume-off");
-        this.components.volumeSlider.change(this.video.volume * 100);
         this.player.events &&
           this.player.events.trigger("setPlayer", {
-            key: "volume",
-            value: Number(this.video.volume.toFixed(1)),
+            key: "muted",
+            value: false,
           });
+        if (this.player.video.volume == 0) {
+          this.player.video.volume = 0.1
+          this.player.events &&
+            this.player.events.trigger("setPlayer", {
+              key: "volume",
+              value: 0.1,
+            });
+        }
       } else {
         this.player.video.muted = true;
-        this.player.template.volumeIcon.classList.add("button-volume-off");
-        this.components.volumeSlider.change(0);
         this.player.events &&
           this.player.events.trigger("setPlayer", {
-            key: "volume",
-            value: 0,
+            key: "muted",
+            value: true,
           });
       }
     });
