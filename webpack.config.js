@@ -83,6 +83,9 @@ const esConfig = Object.assign({}, baseConfig, {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].min.es.js',
+        library: '[name]',
+        libraryTarget: 'this',
+        libraryExport: 'default',
         publicPath: '/',
     },
 });
