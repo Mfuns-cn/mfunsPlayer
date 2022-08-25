@@ -295,8 +295,6 @@ export default class mfunsPlayer {
   }
   mute() {
     this.video.muted = true;
-    this.template.volumeIcon.classList.add("button-volume-off");
-    this.controller.components.volumeSlider.change(0);
   }
   initMSE(video, type = "mp4") {
     this.type = type;
@@ -550,6 +548,9 @@ export default class mfunsPlayer {
       this.danmaku && this.danmaku.seek();
       this.advancedDanmaku && this.advancedDanmaku.seek();
     });
+    this.on("volumechange", () => {
+      this.controller.components.volumeSlider.change(this.video.muted ? 0 : this.video.volume * 100);
+    })
     for (let i = 0; i < this.events.videoEvents.length; i++) {
       video.addEventListener(this.events.videoEvents[i], (e) => {
         this.events.trigger(this.events.videoEvents[i], e);
@@ -625,8 +626,12 @@ export default class mfunsPlayer {
     if (!isNaN(percentage)) {
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.controller.components.volumeSlider.change(percentage * 100);
-      const formatPercentage = `${(percentage * 100).toFixed(0)}`;
+      this.video.volume = percentage;
+      if (percentage == 0) {
+        this.video.muted = true
+      } else {
+        this.video.muted = false
+      }
       if (!nonotice) {
         clearTimeout(this.voiceTimer);
         this.template.voice.classList.add("show");
@@ -635,8 +640,6 @@ export default class mfunsPlayer {
           this.template.voice.classList.remove("show");
         }, 700);
       }
-      this.switchVolumeIcon(formatPercentage);
-      this.video.volume = percentage;
       this.events &&
         this.events.trigger("setPlayer", {
           key: "volume",
@@ -783,6 +786,6 @@ export default class mfunsPlayer {
   }
 
   mountDanmakuAuxiliary(el) {
-    this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
+    if (this.danmaku) this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
   }
 }
