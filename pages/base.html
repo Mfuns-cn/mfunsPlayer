@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,14 +21,17 @@
     //     addition: [
     //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
     //      ],
-    const container = document.querySelector(".player");
-    const mfunsPlayerParams = {
-        container,
-        video: [
-            { url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4" }
-        ]
+    window.onload = () => {
+        const container = document.querySelector(".player");
+        const mfunsPlayerParams = {
+            container,
+            video: [
+                { url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4" }
+            ]
+        }
+        let mp = new mfunsPlayer(mfunsPlayerParams);
     }
-    let mp = new mfunsPlayer(mfunsPlayerParams);
+
 </script>
 <style>
     * {

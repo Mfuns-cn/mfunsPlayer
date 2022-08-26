@@ -2,10 +2,24 @@ const path = require('path');
 const webpack = require('webpack');
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 const gitRevisionPlugin = new GitRevisionPlugin();
-const baseConfig = {
-    mode: 'production',
+
+const HOST = process.env.HOST;
+const PORT = process.env.PORT && Number(process.env.PORT);
+
+const config = {
+    mode: 'development',
+
     entry: {
         mfunsPlayer: './src/js/index.js',
+    },
+    output: {
+        path: path.resolve(__dirname, '..', 'dist'),
+        filename: '[name].min.umd.js',
+        library: '[name]',
+        libraryTarget: 'umd',
+        libraryExport: 'default',
+        umdNamedDefine: true,
+        publicPath: '/',
     },
     performance: { hints: false },
     devtool: 'source-map',
@@ -81,6 +95,17 @@ const baseConfig = {
             },
         ],
     },
+    devServer: {
+        compress: true,
+        static: path.resolve(__dirname, '..'),
+        open: true,
+        host: HOST,
+        port: PORT,
+        historyApiFallback: {
+            disableDotRule: true,
+        },
+    },
+
     plugins: [
         new webpack.DefinePlugin({
             MFUNSPLAYER_VERSION: `"${require('../package.json').version}"`,
@@ -88,28 +113,5 @@ const baseConfig = {
         }),
     ],
 };
-const esConfig = Object.assign({}, baseConfig, {
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].min.es.js',
-        library: '[name]',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
-        globalObject: 'this',
-        umdNamedDefine: true,
-        publicPath: '/',
-    },
-});
-const umdConfig = Object.assign({}, baseConfig, {
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].min.umd.js',
-        library: '[name]',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
-        umdNamedDefine: true,
-        publicPath: '/',
-    },
-});
 
-module.exports = [esConfig, umdConfig];
+module.exports = config;

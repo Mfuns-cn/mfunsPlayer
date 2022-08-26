@@ -90,7 +90,7 @@ const baseConfig = {
 };
 const esConfig = Object.assign({}, baseConfig, {
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '..', 'dist'),
         filename: '[name].min.es.js',
         library: '[name]',
         libraryTarget: 'umd',
@@ -102,7 +102,7 @@ const esConfig = Object.assign({}, baseConfig, {
 });
 const umdConfig = Object.assign({}, baseConfig, {
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '..', 'dist'),
         filename: '[name].min.umd.js',
         library: '[name]',
         libraryTarget: 'umd',
