@@ -28,7 +28,7 @@ class AdvancedDanmakuEditor {
       if (!this.jsonEditor.editor) {
         this.jsonEditor.createEditor()
       }
-      this.jsonEditor.editor.focus()
+      this.jsonEditor.editor?.focus()
     })
   }
   switchMode(mode) {

@@ -36,6 +36,8 @@ class AdvancedDanmakuJsonEditor {
       });
       this.editor.setValue ('[\n  {\n    "type":"text",\n    "start":0\n    \n  }\n]');
       this.editor.gotoLine(5, 20)
+    } else {
+      this.template.ade_json_prebox.innerText = "> 页面未启用ace代码编辑器，无法使用该模式"
     }
   }
   clear() {
