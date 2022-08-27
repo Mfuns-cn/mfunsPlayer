@@ -78,7 +78,7 @@ export default (options) => {
             },
         },
         {
-            text: `mfunsPlayer v2.1.7`,
+            text: `mfunsPlayer v${MFUNSPLAYER_VERSION}`,
             link: 'https://github.com/Mfuns-cn/mfunsPlayer',
         },
     ]);

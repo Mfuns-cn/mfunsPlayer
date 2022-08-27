@@ -39,8 +39,7 @@ class InfoPanel {
 
     update() {
         const currentVideo = this.player.currentVideo;
-        // this.template.infoVersion.innerHTML = `v${DPLAYER_VERSION} ${GIT_HASH}`;
-        this.template.infoVersion.innerHTML = `v2.1.7`;
+        this.template.infoVersion.innerHTML = `v${MFUNSPLAYER_VERSION} ${GIT_HASH}`;
 
         this.template.infoType.innerHTML = this.player.options.video[currentVideo].type;
         this.template.infoUrl.innerHTML = this.player.options.video[currentVideo].url;

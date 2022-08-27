@@ -477,7 +477,7 @@
 		flex-grow: 1;
 		align-items: center;
 		position: relative;
-		height: 100%;
+		height: calc(100% - 1px);
 		border-left: 1px solid #e6e6e6;
 		margin-left: 5px;
 
