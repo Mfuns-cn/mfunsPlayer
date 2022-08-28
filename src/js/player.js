@@ -772,4 +772,13 @@ export default class mfunsPlayer {
     mountDanmakuAuxiliary(el) {
         this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
     }
+    destroy() {
+        instances.splice(instances.indexOf(this), 1);
+        this.pause();
+        this.controller.destroy();
+        this.timer.destroy();
+        this.video.src = '';
+        this.container.innerHTML = '';
+        this.events.trigger('destroy');
+    }
 }
