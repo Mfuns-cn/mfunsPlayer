@@ -3,50 +3,54 @@
 自研的弹幕播放器，没啥优点，能用就行 Ծ‸Ծ
 
 ### 功能
-- 主题色设置
-- 视频的暂停/播放（快捷键 space）
-- 可控进度条
-- 全屏/退出全屏(快捷键 F)
-- 弹幕展示(支持拓展bilibili格式弹幕)
-- 弹幕屏蔽及属性控制(快捷键D)
-- 弹幕防挡字幕
-- 弹幕举报/复制/撤回
-- 发送弹幕(快捷键 Enter)
-- 编辑弹幕/高级弹幕(支持换行符\n)
-- 音量调节(快捷键 ↑ ↓)
-- 一键静音(快捷键 M)
-- 洗脑循环
-- 快进快退(快捷键 ← →)
-- 分P切集(快捷键 < >)
-- 断点续播
-- 关灯模式
-- 镜像画面
-- 高能进度条(需要自行引入echarts.js)
-- 倍速播放
-- 画中画
-- 小窗播放
-- 视频滤镜
-- 视频色彩调整
-- 视频暂停展示活动弹窗(可恰饭或站内活动引导)
+
+-   主题色设置
+-   视频的暂停/播放（快捷键 space）
+-   可控进度条
+-   全屏/退出全屏(快捷键 F)
+-   弹幕展示(支持拓展 bilibili 格式弹幕)
+-   弹幕屏蔽及属性控制(快捷键 D)
+-   弹幕防挡字幕
+-   弹幕举报/复制/撤回
+-   发送弹幕(快捷键 Enter)
+-   编辑弹幕/高级弹幕(支持换行符\n)
+-   音量调节(快捷键 ↑ ↓)
+-   一键静音(快捷键 M)
+-   洗脑循环
+-   快进快退(快捷键 ← →)
+-   分 P 切集(快捷键 < >)
+-   断点续播
+-   关灯模式
+-   镜像画面
+-   高能进度条(需要自行引入 echarts.js)
+-   倍速播放
+-   画中画
+-   小窗播放
+-   视频滤镜
+-   视频色彩调整
+-   视频暂停展示活动弹窗(可恰饭或站内活动引导)
+
 ### 使用方法
 
-- 下载 dist/mfunsPlayer.js 文件
-- 使用 script 标签导入到 目标 html 中
+1. 下载 dist/mfunsPlayer.js 文件,使用 script 标签导入到 目标 html 中
+2. npm 包
 
-- 如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
-  cdn 引入地址:
+```
+  npm install @mfuns/mfuns-player
+```
 
-  > 编辑器：[http://cdn.bootcss.com/ace/1.4.9/ace.js](http://cdn.bootcss.com/ace/1.4.9/ace.js)
+-   如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
+    cdn 引入地址:
 
-  > 语言工具：[http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js](http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js)
+    > 编辑器：[http://cdn.bootcss.com/ace/1.4.9/ace.js](http://cdn.bootcss.com/ace/1.4.9/ace.js)
 
-### 初始化弹幕播放器
+    > 语言工具：[http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js](http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js)
+
+### 配置代码示例
 
 ```js
-//播放器的容器（示例）
+import mfunsPlayer from "@mfuns/mfuns-player"
 const container = document.querySelector(".content");
-
-
 //初始化播放器
 new mfunsPlayer({
   container, //容器dom
@@ -111,3 +115,71 @@ new mfunsPlayer({
   mutex: true, //互斥，阻止多个播放器同时播放，当前播放器播放时暂停其他播放器
 });
 ```
+
+### 事件绑定
+
+播放器实例对象有on和off两个方法用于事件绑定和解除事件绑定
+```js
+const mp = new mfunsPlayer({})
+const fn = (arg)=>{console.log(arg)}
+mp.on("play",fn) //绑定视频play事件
+mp.off("play",fn) //解除视频play事件绑定(解除事件绑定时不能使用匿名函数)
+```
+#### 视频事件
+
+- abort
+- canplay
+- canplaythrough
+- durationchange
+- emptied
+- ended
+- error
+- loadeddata
+- loadedmetadata
+- loadstart
+- mozaudioavailable
+- pause
+- play
+- playing
+- progress
+- ratechange
+- seeked
+- seeking
+- stalled
+- suspend
+- timeupdate
+- volumechange
+- waiting
+
+#### 播放器事件
+
+- danmaku_show 
+- danmaku_hide
+- danmaku_clear
+- danmaku_loaded
+- danmaku_send
+- danmaku_report
+- contextmenu_show
+- contextmenu_hide
+- notice_show
+- notice_hide
+- toLogin
+- destroy
+- resize
+- fullscreen
+- fullscreen_cancel
+- webfullscreen
+- webfullscreen_cancel
+- widescreen
+- widescreen_cancel
+- danmaku_load_start
+- danmaku_load_end
+- danmaku_load_failed
+- darkmode_on
+- darkmode_off
+- danmaku_filter 
+- setPlayer
+- setDanmaku           
+- update_video_position
+
+     
