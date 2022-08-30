@@ -32,11 +32,11 @@
 
 ### 使用方法
 
-1. 下载 dist/mfunsPlayer.js 文件,使用 script 标签导入到 目标 html 中
+1. 下载 dist/mfunsPlayer.min.umd.js 文件,使用 script 标签导入到 目标 html 中
 2. npm 包
 
 ```
-  npm install @mfuns/mfuns-player
+  npm install @mfuns/pc-player
 ```
 
 -   如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
@@ -49,7 +49,7 @@
 ### 配置代码示例
 
 ```js
-import mfunsPlayer from "@mfuns/mfuns-player"
+import mfunsPlayer from "@mfuns/pc-player"
 const container = document.querySelector(".content");
 //初始化播放器
 new mfunsPlayer({
