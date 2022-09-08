@@ -115,7 +115,8 @@
 						}
 					}
 				}
-				.mfunsPlayer-controller-next {
+				.mfunsPlayer-controller-next,
+				.mfunsPlayer-controller-prev {
 					.icon-next {
 						font-size: 16px;
 					}
@@ -418,6 +419,7 @@
 	}
 	.mfunsPlayer-controller-icon {
 		color: #999;
+
 		&:hover {
 			color: $theme-color;
 		}
@@ -610,9 +612,17 @@
 		display: flex;
 		justify-content: center;
 		cursor: pointer;
+		&.disabled {
+			color: #999;
+			pointer-events: none;
+		}
 		.mfunsPlayer-controller-icon {
 			font-size: 21px;
 			line-height: 30px;
+
+			&.rt180 {
+				transform: scaleX(-1);
+			}
 		}
 		.mfunsPlayer-controller-label {
 			font-size: 14px;

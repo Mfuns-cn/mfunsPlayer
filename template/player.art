@@ -58,14 +58,21 @@
                 </div>
                 <div class="mfunsPlayer-controller-wrap ">
                     <div class="mfunsPlayer-controller-left">
-
+                        {{ if video.length > 1 }}
+                        <div
+                            class="mfunsPlayer-controller-button mfunsPlayer-controller-prev {{currentVideo===0?'disabled':'' }}">
+                            <i class="mfunsPlayer-controller-icon rt180 icon-next"></i>
+                            <div class="mfunsPlayer-controller-tip">上一话</div>
+                        </div>
+                        {{ /if }}
                         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-play button-paused">
                             <div class="mfunsPlayer-controller-icon icon-play"></div>
                             <div class="mfunsPlayer-controller-icon icon-pause"></div>
                         </div>
                         {{ if video.length > 1}}
-                        <div class="mfunsPlayer-controller-button mfunsPlayer-controller-next">
-                            <i class="mfunsPlayer-controller-icon icon-next"></i>
+                        <div
+                            class="mfunsPlayer-controller-button mfunsPlayer-controller-next {{currentVideo===video.length-1?'disabled':'' }}">
+                            <i class="mfunsPlayer-controller-icon icon-next "></i>
                             <div class="mfunsPlayer-controller-tip">下一话</div>
                         </div>
                         {{ /if }}
@@ -83,9 +90,6 @@
                             <div class="mfunsPlayer-controller-tip">洗脑循环</div>
                         </div>
                     </div>
-
-
-
                     <div class="mfunsPlayer-controller-right">
                         {{if video.length>1}}
                         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pagelist">

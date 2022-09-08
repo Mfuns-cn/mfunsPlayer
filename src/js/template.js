@@ -71,10 +71,12 @@ class Template {
         this.tipItem = $all('.mfunsPlayer-controller-tip');
         this.speedInfo = $('.mfunsPlayer-speed-info');
         this.speedItem = $all('.mfunsPlayer-speed-item');
-        this.next_btn = $('.mfunsPlayer-controller-next'); // 下一个按钮
+        this.prev_btn = $('.mfunsPlayer-controller-prev'); // 上一P按钮
+        this.next_btn = $('.mfunsPlayer-controller-next'); // 下一P按钮
         this.repeat_btn = $('.mfunsPlayer-controller-repeat'); // 洗脑循环按钮
         this.repeat_tip = $('.mfunsPlayer-controller-repeat .mfunsPlayer-controller-tip'); // 洗脑循环提示
         this.pagelistItem = $all('.mfunsPlayer-pagelist-item');
+        this.pageListLabel = $('.mfunsPlayer-controller-label.mfunsPlayer-pagelist-info');
         this.pagelist = $('.mfunsPlayer-pagelist-list');
         this.volume_btn = $('.mfunsPlayer-controller-volume'); // 音量按钮
         this.volumeMask = $('.mfunsPlayer-controller-volume-mask');

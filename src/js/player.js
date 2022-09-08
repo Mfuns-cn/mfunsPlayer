@@ -252,7 +252,7 @@ export default class mfunsPlayer {
 
                 this.notice('已静音自动播放', true, {
                     callback: () => {
-                        this.video.muted = false;
+                        this.mute(false);
                         this.volume(this.options.volume, true);
                     },
                     text: '恢复音量',
@@ -284,10 +284,10 @@ export default class mfunsPlayer {
             this.pause();
         }
     }
-    mute() {
-        this.video.muted = true;
-        this.template.volumeIcon.classList.add('button-volume-off');
-        this.controller.components.volumeSlider.change(0);
+    mute(flag = true) {
+        this.video.muted = flag;
+        this.template.volumeIcon.classList[flag ? 'add' : 'remove']('button-volume-off');
+        this.controller.components.volumeSlider.change(flag ? 0 : this.video.volume * 100);
     }
     initMSE(video, type = 'mp4') {
         this.type = type;
@@ -588,7 +588,8 @@ export default class mfunsPlayer {
     handleSwitchVideo(index, total) {
         this.template.loadingSpeed.innerHTML = '';
         this.template.activityMask.classList.remove('show');
-        this.template.next_btn.style.display = index === total ? 'none' : 'flex';
+        this.template.prev_btn.classList[index === 0 ? 'add' : 'remove']('disabled');
+        this.template.next_btn.classList[index === total ? 'add' : 'remove']('disabled');
         this.template.pagelistItem[index].classList.add('focus');
         this.template.pagelistItem.forEach((element, i) => {
             if (i !== index) {
