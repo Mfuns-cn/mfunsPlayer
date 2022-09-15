@@ -1,6 +1,7 @@
 # mfunsPlayer 弹幕播放器
 
 自研的弹幕播放器，没啥优点，能用就行 Ծ‸Ծ
+>播放器示例地址(施工ing,持续更新)  [https://mfuns-cn.github.io/mfunsPlayer](https://mfuns-cn.github.io/mfunsPlayer)
 
 ### 功能
 

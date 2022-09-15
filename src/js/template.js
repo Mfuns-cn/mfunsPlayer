@@ -1,7 +1,7 @@
 import Player from '../../template/player.art';
 import utils from './utils';
 class Template {
-    constructor(options) {
+    constructor (options) {
         this.container = options.container;
         this.options = options;
         options.theme && this.setTheme(options.theme);
@@ -198,8 +198,10 @@ class Template {
             },
         });
     }
-    buildSmallWindow() {}
+    buildSmallWindow() { }
     buildVideo(hasBlackborder) {
+        console.log(this.container.offsetWidth)
+
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');
             this.bezel.classList.add('noborder');
@@ -208,8 +210,9 @@ class Template {
             this.bezel.classList.remove('noborder');
         }
         !this.options.danmaku && this.container.classList.add('noDanmaku');
-        const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
-        this.container.style.height = viewHeight + 'px';
+
+        // const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
+        // this.container.style.height = viewHeight + 'px';
     }
 }
 export default Template;
