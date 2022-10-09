@@ -171,7 +171,7 @@ class FullScreen {
         document.body.classList.remove("mfunsPlayer-web-fullscreen-fix");
         this.player?.highEnergy?.isShow && this.player.highEnergy.resize();
         this.player.template.webfull_tip.innerText = "网页全屏";
-        this.player.events.trigger("webfullscreen");
+        this.player.events.trigger("webfullscreen_cancel");
         break;
     }
   }
