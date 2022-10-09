@@ -1,7 +1,7 @@
 import utils from "./utils";
 import { Switch } from "./components/components";
 class Danmaku {
-  constructor(options, player) {
+  constructor (options, player) {
     this.options = options;
     this.player = player;
     this.createHash = utils.initHash();
@@ -68,7 +68,7 @@ class Danmaku {
     const danmakuTipMaskMove = (e) => {
       if (
         Math.sqrt(Math.pow(e.pageX - this.currentX, 2) + Math.pow(e.pageY - this.currentY, 2)) >
-          this.player.options.danmaku.sensitivity ??
+        this.player.options.danmaku.sensitivity ??
         3.5
       ) {
         this.currentX = e.pageX;
@@ -135,7 +135,7 @@ class Danmaku {
       e.stopPropagation();
     });
     //点赞
-    this.player.template.danmakuPraise.addEventListener("click", (e) => {});
+    this.player.template.danmakuPraise.addEventListener("click", (e) => { });
     //复制
     this.player.template.danmakuCopy.addEventListener("click", (e) => {
       navigator &&
@@ -151,7 +151,7 @@ class Danmaku {
           });
     });
     //撤销
-    this.player.template.danmakuCancel.addEventListener("click", (e) => {});
+    this.player.template.danmakuCancel.addEventListener("click", (e) => { });
     //举报
     let reportIReason;
     this.player.template.danmakuReport.addEventListener("click", (e) => {

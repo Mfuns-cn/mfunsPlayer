@@ -8,14 +8,29 @@
     <title>分p切集</title>
 </head>
 <script src="../src/static/echarts.js"></script>
-<script src="../dist/mfunsPlayer.js"></script>
+<script src="../dist/mfunsPlayer.min.umd.js"></script>
 
 <body>
-    <div class="player">
-    </div>
+    <div class="player"></div>
 </body>
 <script>
-
+    //    url: "https://api.moegirl.love/v1/bilibiliav/av810872",
+    //    url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+    //    url: "https://api.moegirl.love/v1/bilibiliav/av12",
+    //     danId: 70385,
+    //     addition: [
+    //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
+    //      ],
+    const container = document.querySelector(".player");
+    const mfunsPlayerParams = {
+        container,
+        video: [
+            { url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4", title: "光るなら (若能绽放光芒)" },
+            { url: "https://api.moegirl.love/v1/bilibiliav/av810872", title: "av810872" },
+            { url: "https://api.moegirl.love/v1/bilibiliav/av12", title: "av12" }
+        ]
+    }
+    let mp = new mfunsPlayer(mfunsPlayerParams);
 </script>
 <style>
     * {

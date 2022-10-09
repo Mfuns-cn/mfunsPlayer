@@ -1,7 +1,7 @@
 import utils from "./utils";
 
 class FullScreen {
-  constructor(player) {
+  constructor (player) {
     this.player = player;
     this.lastScrollPosition = { left: 0, top: 0 };
     this.singleVideo = !!(this.player.options.video.length > 1) ? 1 : 0;
@@ -171,7 +171,7 @@ class FullScreen {
         document.body.classList.remove("mfunsPlayer-web-fullscreen-fix");
         this.player?.highEnergy?.isShow && this.player.highEnergy.resize();
         this.player.template.webfull_tip.innerText = "网页全屏";
-        this.player.events.trigger("webfullscreen");
+        this.player.events.trigger("webfullscreen_cancel");
         break;
     }
   }

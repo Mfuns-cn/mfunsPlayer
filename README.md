@@ -1,7 +1,7 @@
 # mfunsPlayer 弹幕播放器
 
 自研的弹幕播放器，没啥优点，能用就行 Ծ‸Ծ
->播放器示例地址(施工ing,持续更新)  [https://mfuns-cn.github.io/mfunsPlayer](https://mfuns-cn.github.io/mfunsPlayer)
+>播放器示例地址(施工ing,持续更新)    [https://mfuns-cn.github.io/mfunsPlayer](https://mfuns-cn.github.io/mfunsPlayer)
 
 ### 功能
 
@@ -33,27 +33,34 @@
 
 ### 使用方法
 
-1. 下载 dist/mfunsPlayer.min.umd.js 文件,使用 script 标签导入到 目标 html 中
-2. npm 包
+1. cdn引入  [https://unpkg.com/@mfuns/pc-player](https://unpkg.com/@mfuns/pc-player)
+```
+  <script src="https://unpkg.com/@mfuns/pc-player"></script>
+```
+
+2. npm 引入
 
 ```
   npm install @mfuns/pc-player
 ```
+- 如果需要缩略图，可使用播放器配套的缩略图工具在线生成
+   > 地址：[https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail](https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail)
 
--   如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
-    cdn 引入地址:
+- 如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
+    cdn 地址:
 
     > 编辑器：[http://cdn.bootcss.com/ace/1.4.9/ace.js](http://cdn.bootcss.com/ace/1.4.9/ace.js)
 
     > 语言工具：[http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js](http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js)
 
 ### 配置代码示例
-
+⚠️注意：播放器实例化过程会操作部分DOM，请务必在页面加载完成后（window.onload(原生JS)，mounted(Vue)，componentDidMount(React)）进行实例化操作，否则部分功能会出现问题
 ```js
 import mfunsPlayer from "@mfuns/pc-player"
 const container = document.querySelector(".content");
 //初始化播放器
-new mfunsPlayer({
+window.onload = function(){
+ new mfunsPlayer({
   container, //容器dom
   uid:2333,//用户id
   theme: "#666", //主题色
@@ -115,6 +122,7 @@ new mfunsPlayer({
   ]
   mutex: true, //互斥，阻止多个播放器同时播放，当前播放器播放时暂停其他播放器
 });
+}
 ```
 
 ### 事件绑定
@@ -122,7 +130,7 @@ new mfunsPlayer({
 播放器实例对象有on和off两个方法用于事件绑定和解除事件绑定
 ```js
 const mp = new mfunsPlayer({})
-const fn = (arg)=>{console.log(arg)}
+const fn = (...arg)=>{console.log(arg)}
 mp.on("play",fn) //绑定视频play事件
 mp.off("play",fn) //解除视频play事件绑定(解除事件绑定时不能使用匿名函数)
 ```

@@ -25,12 +25,17 @@
             <span>视频链接</span>
           </li>
         </ul>
+        <div>
+          <label>切片数</label>
+          <input class="slice-input" placeholder="请输入切片数,默认50" oninput="changeSlice(this)">
+        </div>
+
         <div class="video-select">
           <div class="local-file">
             <input class="file-selector" type="file" style="width: 180px" />
           </div>
           <div class="link-set hide">
-            <input class="link-input" placeholder="请输入视频链接" oninput="checkVideoLink(this)" />
+            <input class="link-input" placeholder="请输入视频链接(不能有跨源限制)" oninput="checkVideoLink(this)" />
             <select class="link-type" name="link-type" disabled onchange="selectVideoType(this)">
               <option value="mp4">mp4</option>
               <option value="flv">flv</option>
@@ -42,13 +47,14 @@
         <div class="tip">1.请使用谷歌内核的浏览器，支持拖拽上传</div>
         <div class="tip">2.目前仅支持mp4,flv,hls(m3u8)格式的视频</div>
         <div class="tip">3.使用前请确认视频文件完整且无损坏情况</div>
+
       </div>
       <!-- <video class="video" width="700" crossorigin="anonymous"></video> -->
     </div>
     <div class="trigger hide">
-      <button class="trigger-start disable" onclick="start()" style="background: #7b7ff7">开始</button>
-      <button class="trigger-reset disable" onclick="reset()" style="background: #404040">重置</button>
-      <button class="trigger-download disable" onclick="download()" style="background: #3bf467">下载</button>
+      <button class="trigger-start disable" onclick="start()" style="background: #7b7ff7">开 始</button>
+      <button class="trigger-reset disable" onclick="reset()" style="background: #404040">重 置</button>
+      <button class="trigger-download disable" onclick="download()" style="background: #3bf467">下 载</button>
     </div>
 
     <div class="video-preview"></div>
@@ -80,11 +86,14 @@
   const downloadBtn = $(".trigger-download");
   const linkInput = $(".link-input");
   const linkType = $(".link-type");
-  const slice = 50; //图片个数
+  let slice = 50; //图片个数
 
   const loadBar = document.createElement("div");
   loadBar.className = "loadBar-mask";
   loadBar.innerHTML = `<div class="bar-wrap"><div class="bar"></div></div><div class="bar-value">0% (0/30)</div>`;
+  changeSlice = (e) => {
+    slice = +e.value
+  }
   const initVideo = (url, type) => {
     switch (type) {
       case "mp4":
@@ -158,7 +167,7 @@
   const createVideo = () => {
     video = document.createElement("video");
     video.setAttribute("width", 700);
-    video.setAttribute("crossorigin", "anonymous");
+    // video.setAttribute("crossorigin", "anonymous");
     video.className = "video";
     videoBox.appendChild(video);
   };
@@ -216,16 +225,21 @@
         video.pause();
         count = 0;
         barValue.innerHTML = "执行完毕~";
-        let base64 = oCanvas.toDataURL("image/png");
-        if (base64.length / 1024 > 1000) {
-          base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
+        try {
+          let base64 = oCanvas.toDataURL("image/png");
+          if (base64.length / 1024 > 1000) {
+            base64 = oCanvas.toDataURL("image/png", 1000 / base64.length);
+          }
+          videoBox.removeChild(loadBar);
+          console.log("结束");
+          downloadBtn.classList.remove("disable");
+          video.currentTime = 0;
+          downloadURL = base64;
+        } catch (error) {
+          barValue.innerHTML = "受浏览器跨源策略限制，请右击保存下方缩略图";
+
         }
-        videoBox.removeChild(loadBar);
-        console.log("结束");
         resetBtn.classList.remove("disable");
-        downloadBtn.classList.remove("disable");
-        video.currentTime = 0;
-        downloadURL = base64;
         return;
       }
       loadBar.style.display = "block";
@@ -322,6 +336,7 @@
     width: 100%;
     height: 360px;
     background: #000;
+    text-align: center;
   }
 
   .loading {
@@ -356,7 +371,8 @@
     line-height: 30px;
   }
 
-  .link-input {
+  .link-input,
+  .slice-input {
     padding-left: 10px;
     width: 200px;
     height: 25px;
@@ -398,7 +414,7 @@
     height: 40px;
     display: flex;
     justify-content: center;
-    margin: 20px auto;
+    margin: 20px auto 0;
   }
 
   .option-item {
@@ -474,9 +490,9 @@
     position: absolute;
     left: 50%;
     bottom: 120px;
-    width: 140px;
+    width: 340px;
     text-align: center;
-    margin-left: -70px;
+    margin-left: -170px;
     height: 30px;
     line-height: 30px;
     color: #fff;

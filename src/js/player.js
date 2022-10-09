@@ -18,11 +18,12 @@ import { Switch } from './components/components';
 let index = 0;
 const instances = [];
 export default class mfunsPlayer {
-    constructor(options) {
+    constructor (options) {
         this.options = handleOption(options);
         // console.log(this.options);
         this.template = new Template(this.options);
         this.events = new Events();
+
         this.container = options.container;
         this.container.classList.add('mfunsPlayer');
         this.autoSwitch = this.options.autoSwitch;
@@ -410,7 +411,6 @@ export default class mfunsPlayer {
             this.canplay = true;
         });
         this.on('loadstart', () => {
-            // this.notice(`正在${this.timeBeforeReload ? "重载" : "初始化"}视频...`, true);
             clearTimeout(this.loadTimer);
             this.hideTip();
             this.template.loading.classList.add('show');
@@ -560,22 +560,20 @@ export default class mfunsPlayer {
         this.template.totalTime.innerText = '00:00';
         this.bar.set('loaded', 0, 'width');
         this.bar.set('played', 0, 'width');
+        clearTimeout(this.timeUpdateTimer);
         this.handleSwitchVideo(index, total);
 
         this.showMask();
-        clearTimeout(this.timeUpdateTimer);
-        this.template.footBar.classList.add('loading');
-        this.template.danmakuCount.innerHTML = '弹幕装填中...';
         const currentVideo = this.options.video[index];
         this.danmaku &&
             this.danmaku.reload(
                 currentVideo.danId,
                 currentVideo.advDanId
                     ? {
-                          id: currentVideo.advDanId,
-                          address: this.options.advancedDanmaku.api,
-                          token: this.options.advancedDanmaku.token,
-                      }
+                        id: currentVideo.advDanId,
+                        address: this.options.advancedDanmaku.api,
+                        token: this.options.advancedDanmaku.token,
+                    }
                     : null,
                 currentVideo.danmakuAddition
             );
@@ -587,6 +585,10 @@ export default class mfunsPlayer {
 
     handleSwitchVideo(index, total) {
         this.template.loadingSpeed.innerHTML = '';
+        if (this.template.footBar) {
+            this.template.footBar.classList.add('loading');
+            this.template.danmakuCount.innerHTML = '弹幕装填中...';
+        }
         this.template.activityMask.classList.remove('show');
         this.template.prev_btn.classList[index === 0 ? 'add' : 'remove']('disabled');
         this.template.next_btn.classList[index === total ? 'add' : 'remove']('disabled');
@@ -607,7 +609,7 @@ export default class mfunsPlayer {
                 position: parseInt(time),
             });
     }
-    disableVideoEvents(event) {}
+    disableVideoEvents(event) { }
     theme(color) {
         this.template.setTheme(color);
         this.highEnergy && this.highEnergy.reload(this.video.currentTime / this.video.duration);
@@ -649,7 +651,7 @@ export default class mfunsPlayer {
         this.video.playbackRate = rate;
         return rate;
     }
-    update(url) {}
+    update(url) { }
     reload() {
         console.log('reload');
         this.template.activityMask.classList.remove('show');
@@ -672,10 +674,10 @@ export default class mfunsPlayer {
                 currentVideo.danId,
                 currentVideo.advDanId
                     ? {
-                          id: currentVideo.advDanId,
-                          address: this.options.advancedDanmaku.api,
-                          token: this.options.advancedDanmaku.token,
-                      }
+                        id: currentVideo.advDanId,
+                        address: this.options.advancedDanmaku.api,
+                        token: this.options.advancedDanmaku.token,
+                    }
                     : null,
                 currentVideo.danmakuAddition
             );

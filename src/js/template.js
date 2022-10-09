@@ -200,7 +200,7 @@ class Template {
     }
     buildSmallWindow() { }
     buildVideo(hasBlackborder) {
-        console.log(this.container.offsetWidth)
+        // console.log(this.container.offsetWidth)
 
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');
@@ -211,8 +211,10 @@ class Template {
         }
         !this.options.danmaku && this.container.classList.add('noDanmaku');
 
-        // const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
-        // this.container.style.height = viewHeight + 'px';
+        const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
+        this.container.style.height = viewHeight + 'px';
+
+
     }
 }
 export default Template;

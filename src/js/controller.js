@@ -2,7 +2,7 @@ import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from './componen
 import utils from './utils';
 import Thumbnails from './thumbnails';
 class Controller {
-    constructor(player) {
+    constructor (player) {
         const THIS = this;
         this.player = player;
         this.template = player.template;
@@ -149,7 +149,6 @@ class Controller {
             url: this.player.options.video[this.player.currentVideo].thumbnails,
             events: this.player.events,
         });
-
         this.player.on('loadedmetadata', () => {
             this.thumbnails.resize(160, (this.player.video.videoHeight / this.player.video.videoWidth) * 160, this.player.template.barWrap.offsetWidth);
         });
@@ -628,7 +627,7 @@ class Controller {
         const danmakuSize = this.player.options.danmaku.fontScale;
         const danmakuSpeed = this.player.options.danmaku.speed;
         this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-            created(thisArg) {},
+            created(thisArg) { },
             pick(value, nonotice) {
                 console.log(`屏蔽弹幕类型：${value}`);
                 THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
@@ -840,7 +839,7 @@ class Controller {
             this.player.template.pip_btn.classList.remove('button-picture-in-picture');
         });
     }
-    widescreenTrigger(widescreen) {}
+    widescreenTrigger(widescreen) { }
     initWidescreenButton() {
         this.template.widescreen_btn.addEventListener('click', () => {
             this.player.widescreen = !this.player.widescreen;
