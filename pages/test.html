@@ -1,49 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>editor test</title>
-    <script src="http://localhost:35729/livereload.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
-  </head>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      overflow: hidden;
-    }
-    video {
-      width: 100%;
-    }
-  </style>
-  <body>
-    <video id="video"></video>
-  </body>
-  <script>
-    window.onload = () => {
-      if (window.flvjs) {
-        if (window.flvjs.isSupported()) {
-          const flvPlayer = window.flvjs.createPlayer({
-            type: "flv",
-            url: "https://pull-w5-sg01.tiktokcdn.com/game/stream-7165508759627500290_hd60.flv?abr_pts=58014000",
-          });
-          flvPlayer.attachMediaElement(video);
-          flvPlayer.load();
-          video.addEventListener("loadedmetadata", () => {
-            video.muted = true;
-            video.play();
-          });
-        }
-      }
-    };
-    const video = document.querySelector("#video");
 
-    // new window.Editor({
-    //   container: box,
-    // });
-  </script>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>live test</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
+<script src="https://unpkg.com/@mfuns/pc-player"></script>
+
+<body>
+    <div class="player">
+    </div>
+</body>
+<script>
+    //    url: "https://api.moegirl.love/v1/bilibiliav/av810872",
+    //    url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
+    //    url: "https://api.moegirl.love/v1/bilibiliav/av12",
+    //     danId: 70385,
+    //     addition: [
+    //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
+    //      ],
+    window.onload = () => {
+        const container = document.querySelector(".player");
+        const mfunsPlayerParams = {
+            container,
+            video: [
+                { url: "https://pull-w5-sg01.tiktokcdn.com/game/stream-7165508759627500290_hd60.flv?abr_pts=58014000",type:"flv" }
+            ]
+        }
+        let mp = new mfunsPlayer(mfunsPlayerParams);
+    }
+
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .player {
+        width: 700px;
+        margin: 20px auto;
+    }
+</style>
+
 </html>
