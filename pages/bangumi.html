@@ -311,7 +311,7 @@
 
         }
         console.log(mfunsPlayerParams)
-        let mp = new mfunsPlayer(mfunsPlayerParams);
+        var mp = new mfunsPlayer(mfunsPlayerParams);
         mp.mountDanmakuAuxiliary(playerExtra);
         mp.on("danmaku_send", (dan) => {
             console.log(dan)
