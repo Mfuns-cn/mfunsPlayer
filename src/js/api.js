@@ -26,13 +26,16 @@ export default {
         if (!data) {
           options.error && options.error(data && data.msg);
           return;
+
         }
+        console.log("____", data)
         switch (options.type) {
           case "dplayer-danmaku":
             // case:"mfuns-danmaku":
             options.success &&
               options.success(
-                data.data.map((item) => ({
+
+                data.data.list.map((item) => ({
                   time: item[0],
                   type: utils.number2Type(item[1]),
                   mode: [1, 5, 4, 6][item[1]],

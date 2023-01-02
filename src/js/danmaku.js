@@ -227,8 +227,8 @@ class Danmaku {
     });
   }
   load() {
-    const { address, danmakuAddition, id, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
-    const apiurl = `${address}/v1/danmaku?id=${id}`;
+    const { address, danmakuAddition, id, otherDanParams, advDanApi } = JSON.parse(JSON.stringify(this.options.api));
+    const apiurl = `${address}?id=${id}${otherDanParams}`;
     this.endpoints = danmakuAddition || [];
     const advDanData = [];
     id && address && this.endpoints.push({ url: apiurl, type: "dplayer-danmaku", origin: "mfuns" });
@@ -282,10 +282,13 @@ class Danmaku {
     });
   }
   //弹幕重载(所有)
-  reload(newId, newAdvDanApi, newAddition) {
+  reload(newId, newAdvDanApi, newAddition, newOtherDanParams) {
     this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
     if (newId) {
       this.options.api.id = newId;
+    }
+    if (newOtherDanParams) {
+      this.options.api.otherDanParams = newOtherDanParams;
     }
     if (newAddition) {
       this.options.api.danmakuAddition = newAddition;
