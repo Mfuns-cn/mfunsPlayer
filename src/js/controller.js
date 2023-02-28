@@ -312,11 +312,11 @@ class Controller {
             e.stopPropagation();
         });
         this.player.template.pageListLabel.addEventListener('mouseenter', (e) => {
-            if (this.player.currentVideo > 9) {
-                const offsetScroll = this.player.template.pagelist.scrollHeight - this.player.template.pagelist.offsetHeight;
-                const scrollRate = (offsetScroll * this.player.currentVideo) / (this.player.options.video.length - 1);
-                this.player.template.pagelist.scrollTo(0, scrollRate);
-            }
+            // if (this.player.currentVideo > 9) {
+            const offsetScroll = this.player.template.pagelist.scrollHeight - this.player.template.pagelist.offsetHeight;
+            const scrollRate = (offsetScroll * this.player.currentVideo) / (this.player.options.video.length - 1);
+            this.player.template.pagelist.scrollTo(0, scrollRate);
+            // }
             // let scrollDistance = 0;
             // const scrollAnime = () => {
             //     scrollDistance += scrollRate / 10;

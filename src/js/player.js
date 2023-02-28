@@ -91,6 +91,7 @@ export default class mfunsPlayer {
                     id: this.options.video[this.options.currentVideo].danId,
                     danmakuAddition: this.options.video[this.options.currentVideo].danmakuAddition,
                     token: this.options.danmaku.token,
+                    otherDanParams: this.options.video[this.options.currentVideo].otherDanParams ?? ""
                 },
                 events: this.events,
             };
@@ -578,7 +579,8 @@ export default class mfunsPlayer {
                         token: this.options.advancedDanmaku.token,
                     }
                     : null,
-                currentVideo.danmakuAddition
+                currentVideo.danmakuAddition,
+                currentVideo.otherDanParams
             );
         this.controller.thumbnails && this.controller.thumbnails.reload(currentVideo.thumbnails);
         this.video.poster = currentVideo.pic ?? '';
