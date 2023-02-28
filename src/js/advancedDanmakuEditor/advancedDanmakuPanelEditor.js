@@ -152,6 +152,9 @@ class AdvancedDanmakuPanelEditor {
             opacity: this.keyFrames[0].opacity,
             animations: this.keyFrames.slice(1).map(k => this.genADTransform(k)),
         }
+        if (!d.animations.length) {
+            d.animations = undefined
+        }
         console.log(d)
         return d
     }
@@ -271,7 +274,6 @@ class AdvancedDanmakuPanelEditor {
     }
     preview() {
         let danmaku = {
-            text: this.c.input_content.value,
             content: this.generateDanmaku(),
             time: this.c.switch_current.checked ? this.player.video.currentTime*1000 : Number(this.c.input_start.value),
             id: `preview-${Date.now()}`
@@ -285,7 +287,6 @@ class AdvancedDanmakuPanelEditor {
     }
     send() {
         let danmaku = {
-            text: this.c.input_content.value,
             content: this.generateDanmaku(),
             time: this.c.switch_current.checked ? this.player.video.currentTime*1000 : Number(this.c.input_start.value)
         }
