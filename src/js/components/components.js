@@ -296,12 +296,13 @@ export class MultiPicker {
    * @param {Function} attr.onChange 值更改时触发
    * @param {Function} attr.onPick 选择/取消选择某一项时触发
    */
-  constructor({el, value = [], onChange, onItemChange}) {
+  constructor({el, value = [], onChange, onItemChange, onPick}) {
     this.el = el; // 标签组
     this.items = el.querySelectorAll(".picker-item"); // 标签集合
     this.valueSet = new Set(value);
     this.onChange = onChange; // 更新数据时需要执行的函数
     this.onItemChange = onItemChange; // 更新数据时需要执行的函数
+    this.onPick = onPick
     this.valueList = [];  // 所有值
     this.domMap = new Map();
     // 设置值
@@ -309,7 +310,7 @@ export class MultiPicker {
       this.valueList.push(item.getAttribute("data-value"));
       this.domMap.set(item.getAttribute("data-value"), item);
       item.addEventListener("click", () => {
-        let val = this.getAttribute("data-value");
+        let val = item.getAttribute("data-value");
         if (this.valueSet.has(val)) {
           this.unpick(val);
         } else {

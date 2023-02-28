@@ -394,7 +394,7 @@ class Controller {
                 console.log(value);
                 this.player.volume(value * 0.01, true);
             },
-            onChange: (value, controlFlag) => {
+            onChange: (value) => {
                 // 更改标签值
                 this.template.volumeNum.innerText = Math.round(value);
                 if (value == 0) {
@@ -613,7 +613,7 @@ class Controller {
             onDrag: (value) => {
                 // 有关弹幕透明度更改请写在此处
                 this.isControl = true;
-                flag && this.player.danmaku && this.player.danmaku.opacity(value / 100);
+                this.player.danmaku && this.player.danmaku.opacity(value / 100);
             },
             onDragEnd: (value) => {
                 // 结束滑动条调节（松手）
@@ -640,7 +640,7 @@ class Controller {
             },
             onDrag: (value) => {
                 // 有关弹幕显示区域的更改请写在此处
-                this.isControl = flag;
+                this.isControl = true;
                 this.player.danmaku && this.player.danmaku.limitArea(value / 20);
             },
             onChange: (value) => {
