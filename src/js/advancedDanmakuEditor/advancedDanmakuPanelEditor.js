@@ -3,11 +3,12 @@
  * 适用于mfuns定位弹幕(mode=7)的弹幕编辑
 */
 
-class AdvancedDanmakuPosEditor {
+class AdvancedDanmakuPanelEditor {
     constructor(player, el, options = {}) {
         this.player = player
         this.el = el
         this.template = this.player.template
+        this.view = {}
         this.c = {}    // 内部组件
         this.options = options
         this.keyFrames = []
@@ -20,69 +21,69 @@ class AdvancedDanmakuPosEditor {
     init() {
         const $ = this.el.querySelector.bind(this.el);
         
-        this.template.ade_pos_preview = $(".mfunsPlayer-ade-preview");   // 高级弹幕编辑预览
-        this.template.ade_pos_emit = $(".mfunsPlayer-ade-emit");         // 高级弹幕发送
+        this.view.ade_panel_preview = $(".mfunsPlayer-ade-preview");   // 高级弹幕编辑预览
+        this.view.ade_panel_emit = $(".mfunsPlayer-ade-emit");         // 高级弹幕发送
 
-        this.template.ade_pos_preview.onclick = () => { this.preview() }
-        this.template.ade_pos_emit.onclick = () => { this.send() }
+        this.view.ade_panel_preview.onclick = () => { this.preview() }
+        this.view.ade_panel_emit.onclick = () => { this.send() }
 
-        this.c.area_content = $(".PosEditor-area-content")
-        this.c.area_attribute = $(".PosEditor-area-attribute")
+        this.c.area_content = $(".mfunsADEditor-area-content")
+        this.c.area_attribute = $(".mfunsADEditor-area-attribute")
 
-        this.c.input_content = $(".PosEditor-input-content")
-        this.c.input_color = $(".PosEditor-input-color")
-        this.c.input_size = $(".PosEditor-input-size")
-        this.c.input_font = $(".PosEditor-input-font")
-        this.c.input_bold = $(".PosEditor-input-bold")
-        this.c.input_shadow_color = $(".PosEditor-input-shadow-color")
-        this.c.input_shadow_x = $(".PosEditor-input-shadow-x")
-        this.c.input_shadow_y = $(".PosEditor-input-shadow-y")
-        this.c.input_shadow_blur = $(".PosEditor-input-shadow-blur")
-        this.c.input_stroke_color = $(".PosEditor-input-stroke-color")
-        this.c.input_stroke_width = $(".PosEditor-input-stroke-width")
-        this.c.input_start = $(".PosEditor-input-start")
-        this.c.input_zIndex = $(".PosEditor-input-zIndex")
-        this.c.input_anchor_x = $(".PosEditor-input-anchor-x")
-        this.c.input_anchor_y = $(".PosEditor-input-anchor-x")
-        this.c.input_duration = $(".PosEditor-input-duration")
+        this.c.input_content = $(".mfunsADEditor-input-content")
+        this.c.input_color = $(".mfunsADEditor-input-color")
+        this.c.input_size = $(".mfunsADEditor-input-size")
+        this.c.input_font = $(".mfunsADEditor-input-font")
+        this.c.input_bold = $(".mfunsADEditor-input-bold")
+        this.c.input_shadow_color = $(".mfunsADEditor-input-shadow-color")
+        this.c.input_shadow_x = $(".mfunsADEditor-input-shadow-x")
+        this.c.input_shadow_y = $(".mfunsADEditor-input-shadow-y")
+        this.c.input_shadow_blur = $(".mfunsADEditor-input-shadow-blur")
+        this.c.input_stroke_color = $(".mfunsADEditor-input-stroke-color")
+        this.c.input_stroke_width = $(".mfunsADEditor-input-stroke-width")
+        this.c.input_start = $(".mfunsADEditor-input-start")
+        this.c.input_zIndex = $(".mfunsADEditor-input-zIndex")
+        this.c.input_anchor_x = $(".mfunsADEditor-input-anchor-x")
+        this.c.input_anchor_y = $(".mfunsADEditor-input-anchor-x")
+        this.c.input_duration = $(".mfunsADEditor-input-duration")
 
-        this.c.switch_shadow = $(".PosEditor-switch-shadow")
-        this.c.switch_stroke = $(".PosEditor-switch-stroke")
-        this.c.switch_current = $(".PosEditor-switch-current")
+        this.c.switch_shadow = $(".mfunsADEditor-switch-shadow")
+        this.c.switch_stroke = $(".mfunsADEditor-switch-stroke")
+        this.c.switch_current = $(".mfunsADEditor-switch-current")
 
-        this.c.input_a_duration = $(".PosEditor-input-a-duration")
-        this.c.input_x = $(".PosEditor-input-x")
-        this.c.input_y = $(".PosEditor-input-y")
-        this.c.input_rx = $(".PosEditor-input-rx")
-        this.c.input_ry = $(".PosEditor-input-ry")
-        this.c.input_rz = $(".PosEditor-input-rz")
-        this.c.input_scale_x = $(".PosEditor-input-scale-x")
-        this.c.input_scale_y = $(".PosEditor-input-scale-y")
-        this.c.input_opacity = $(".PosEditor-input-opacity")
-        this.c.input_ease = $(".PosEditor-input-ease")
+        this.c.input_a_duration = $(".mfunsADEditor-input-a-duration")
+        this.c.input_x = $(".mfunsADEditor-input-x")
+        this.c.input_y = $(".mfunsADEditor-input-y")
+        this.c.input_rx = $(".mfunsADEditor-input-rx")
+        this.c.input_ry = $(".mfunsADEditor-input-ry")
+        this.c.input_rz = $(".mfunsADEditor-input-rz")
+        this.c.input_scale_x = $(".mfunsADEditor-input-scale-x")
+        this.c.input_scale_y = $(".mfunsADEditor-input-scale-y")
+        this.c.input_opacity = $(".mfunsADEditor-input-opacity")
+        this.c.input_ease = $(".mfunsADEditor-input-ease")
 
-        this.c.switch_position = $(".PosEditor-switch-position")
-        this.c.switch_rotation = $(".PosEditor-switch-rotation")
-        this.c.switch_scale = $(".PosEditor-switch-scale")
-        this.c.switch_opacity = $(".PosEditor-switch-opacity")
+        this.c.switch_position = $(".mfunsADEditor-switch-position")
+        this.c.switch_rotation = $(".mfunsADEditor-switch-rotation")
+        this.c.switch_scale = $(".mfunsADEditor-switch-scale")
+        this.c.switch_opacity = $(".mfunsADEditor-switch-opacity")
 
-        this.c.action_getCurrentTime = $(".PosEditor-action-getCurrentTime")
-        this.c.action_delKeyFrame = $(".PosEditor-action-delKeyFrame")
-        this.c.action_addKeyFrame = $(".PosEditor-action-addKeyFrame")
-        this.c.list_keyFrames = $(".PosEditor-keyframes")
-        this.c.area_animation_settings = $(".PosEditor-animation-settings")
+        this.c.action_getCurrentTime = $(".mfunsADEditor-action-getCurrentTime")
+        this.c.action_delKeyFrame = $(".mfunsADEditor-action-delKeyFrame")
+        this.c.action_addKeyFrame = $(".mfunsADEditor-action-addKeyFrame")
+        this.c.list_keyFrames = $(".mfunsADEditor-keyframes")
+        this.c.area_animation_settings = $(".mfunsADEditor-animation-settings")
 
         this.c.action_getCurrentTime.onclick = () => { this.getCurrentTime() }
         this.c.action_delKeyFrame.onclick = () => { this.delKeyFrame() }
         this.c.action_addKeyFrame.onclick = () => { this.addKeyFrame() }
 
-        this.c.switch_shadow.onchange = (e) => {this.c.area_content.classList.toggle("Pos-use-shadow", e.currentTarget.checked)}
-        this.c.switch_stroke.onchange = (e) => {this.c.area_content.classList.toggle("Pos-use-stroke", e.currentTarget.checked)}
+        this.c.switch_shadow.onchange = (e) => {this.c.area_content.classList.toggle("ad-use-shadow", e.currentTarget.checked)}
+        this.c.switch_stroke.onchange = (e) => {this.c.area_content.classList.toggle("ad-use-stroke", e.currentTarget.checked)}
         
-        this.c.switch_position.onchange = (e) => {this.c.area_animation_settings.classList.toggle("Pos-use-position", e.currentTarget.checked)}
-        this.c.switch_rotation.onchange = (e) => {this.c.area_animation_settings.classList.toggle("Pos-use-rotation", e.currentTarget.checked)}
-        this.c.switch_scale.onchange = (e) => {this.c.area_animation_settings.classList.toggle("Pos-use-scale", e.currentTarget.checked)}
-        this.c.switch_opacity.onchange = (e) => {this.c.area_animation_settings.classList.toggle("Pos-use-opacity", e.currentTarget.checked)}
+        this.c.switch_position.onchange = (e) => {this.c.area_animation_settings.classList.toggle("ad-use-position", e.currentTarget.checked)}
+        this.c.switch_rotation.onchange = (e) => {this.c.area_animation_settings.classList.toggle("ad-use-rotation", e.currentTarget.checked)}
+        this.c.switch_scale.onchange = (e) => {this.c.area_animation_settings.classList.toggle("ad-use-scale", e.currentTarget.checked)}
+        this.c.switch_opacity.onchange = (e) => {this.c.area_animation_settings.classList.toggle("ad-use-opacity", e.currentTarget.checked)}
 
     }
     addKeyFrame() {   // 在第n关键帧后添加新关键帧
@@ -97,7 +98,7 @@ class AdvancedDanmakuPosEditor {
     delKeyFrame() {   // 删除第n关键帧
         let n = this.currentKeyFrame
         if (this.keyFrames.length < 2) {
-            console.log("不能删除唯一的帧")
+            console.log("不能删除初始状态")
         } else {
             console.log(n)
             this.keyFrames.splice(n, 1)
@@ -137,30 +138,35 @@ class AdvancedDanmakuPosEditor {
             size: Number(this.c.input_size.value),
             font: this.c.input_font.value,
             bold: this.c.input_bold.checked,
-            ratative: 800,
-            shadow: this.c.switch_shadow.checked ? [
-                this.c.input_shadow_color.value,
-                Number(this.c.input_shadow_x.value),
-                Number(this.c.input_shadow_y.value),
-                Number(this.c.input_shadow_blur.value),
-            ] : undefined,
-            stroke: this.c.switch_stroke.checked ? [
-                this.c.input_stroke_color.value,
-                Number(this.c.input_stroke_width.value),
-            ] : undefined,
-            start: this.c.switch_current.checked ? undefined : Number(this.c.input_start.value),
-            zIndex: Number(this.c.input_zIndex.value),
+            layer: Number(this.c.input_zIndex.value),
             anchor: [Number(this.c.input_anchor_x.value), Number(this.c.input_anchor_y.value)],
             duration: Number(this.c.input_duration.value),
             // 分离初始帧数据
-            position: this.keyFrames[0].position,
-            rotation: this.keyFrames[0].rotation,
-            scale: this.keyFrames[0].scale,
+            x: this.keyFrames[0].position?.[0],
+            y: this.keyFrames[0].position?.[1],
+            rotateX: this.keyFrames[0].rotation?.[0],
+            rotateY: this.keyFrames[0].rotation?.[1],
+            rotateZ: this.keyFrames[0].rotation?.[2],
+            scaleX: this.keyFrames[0].scale?.[0],
+            scaleY: this.keyFrames[0].scale?.[1],
             opacity: this.keyFrames[0].opacity,
-            animations: this.keyFrames.slice(1),
+            animations: this.keyFrames.slice(1).map(k => this.genADTransform(k)),
         }
         console.log(d)
         return d
+    }
+    genADTransform(f) {
+        return {
+            duration: f.duration,
+            x: f.position?.[0],
+            y: f.position?.[1],
+            rotateX: f.rotation?.[0],
+            rotateY: f.rotation?.[1],
+            rotateZ: f.rotation?.[2],
+            scaleX: f.scale?.[0],
+            scaleY: f.scale?.[1],
+            opacity: f.opacity,
+        }
     }
     generateDanmaku() {
         let d = this.getDanmakuData()
@@ -194,10 +200,10 @@ class AdvancedDanmakuPosEditor {
         this.c.switch_scale.checked = Boolean(k.scale)
         this.c.switch_opacity.checked = k.opacity != undefined
 
-        this.c.area_animation_settings.classList.toggle("Pos-use-position", Boolean(k.position))
-        this.c.area_animation_settings.classList.toggle("Pos-use-rotation", Boolean(k.rotation))
-        this.c.area_animation_settings.classList.toggle("Pos-use-scale", Boolean(k.scale))
-        this.c.area_animation_settings.classList.toggle("Pos-use-opacity", k.opacity != undefined)
+        this.c.area_animation_settings.classList.toggle("ad-use-position", Boolean(k.position))
+        this.c.area_animation_settings.classList.toggle("ad-use-rotation", Boolean(k.rotation))
+        this.c.area_animation_settings.classList.toggle("ad-use-scale", Boolean(k.scale))
+        this.c.area_animation_settings.classList.toggle("ad-use-opacity", k.opacity != undefined)
         
     }
     applyDanmaku(d) {       // 弹幕应用于表单
@@ -208,7 +214,7 @@ class AdvancedDanmakuPosEditor {
         this.c.input_bold.checked = d.bold || false
 
         this.c.switch_shadow.checked = Boolean(d.shadow)
-        this.c.area_content.classList.toggle("Pos-use-shadow", Boolean(d.shadow))
+        this.c.area_content.classList.toggle("ad-use-shadow", Boolean(d.shadow))
         if (d.shadow) {
             this.c.input_shadow_color.value = d.shadow[0] || "#000000"
             this.c.input_shadow_x.value = d.shadow[1] || 0
@@ -216,7 +222,7 @@ class AdvancedDanmakuPosEditor {
             this.c.input_shadow_blur.value = d.shadow[3] || 0
         }
         this.c.switch_stroke.checked = Boolean(d.stroke)
-        this.c.area_content.classList.toggle("Pos-use-stroke", Boolean(d.stroke))
+        this.c.area_content.classList.toggle("ad-use-stroke", Boolean(d.stroke))
         if (d.stroke) {
             this.c.input_stroke_color.value = d.stroke[0] || "#000000"
             this.c.input_stroke_width.value = d.stroke[1] || 0
@@ -274,7 +280,7 @@ class AdvancedDanmakuPosEditor {
             this.player.seek(danmaku.time / 1000)
         }
         window.requestAnimationFrame(() => {
-            this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+            this.player.advancedDanmaku.engine.playDanmaku(danmaku)
         })
     }
     send() {
@@ -285,10 +291,10 @@ class AdvancedDanmakuPosEditor {
         }
         console.log(JSON.parse(this.generateDanmaku()))
         console.log(danmaku)
-        this.player.advancedDanmaku.posDanmaku.addDanmaku(danmaku)
+        this.player.advancedDanmaku.engine.addDanmaku(danmaku)
         if (this.c.switch_current.checked) {
-            this.player.advancedDanmaku.posDanmaku.playDanmaku(danmaku)
+            this.player.advancedDanmaku.engine.playDanmaku(danmaku)
         }
     }
 }
-export default AdvancedDanmakuPosEditor
+export default AdvancedDanmakuPanelEditor

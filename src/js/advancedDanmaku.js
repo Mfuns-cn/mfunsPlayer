@@ -1,40 +1,40 @@
 import utils from "./utils";
-import { MfunsPosDanmaku } from "mfuns-pos-danmaku";
+import { MfunsAdvancedDanmaku } from "mfuns-advanced-danmaku";
 
 
 export default class AdvancedDanmaku {
   constructor(player, data) {
     this.player = player;
     this.data = data;
-    this.posDanmaku = new MfunsPosDanmaku({
+    this.engine = new MfunsAdvancedDanmaku({
       container: this.player.template.advancedDanmaku,
       // 拉取弹幕列表
       getDanmaku: () => {
         return (data)
       },
       // 舞台基本尺寸, 可选
-      stageSize: [1920, 1080],
+      stageSize: [800, 450],
       // 弹幕舞台resize由播放器控制, 无需自动调整大小
       autoResize: false,
     });
     this.player.on("danmaku_load_end", () => {
-      this.posDanmaku.resize();
-      this.posDanmaku.reload();
+      this.engine.resize();
+      this.engine.reload();
     })
   }
   play() {
-    this.posDanmaku.play()
+    this.engine.play()
   }
   pause() {
-    this.posDanmaku.pause()
+    this.engine.pause()
   }
   seek() {
-    this.posDanmaku.seek(this.player.video.currentTime * 1000)
+    this.engine.seek(this.player.video.currentTime * 1000)
   }
   load() {
     
   }
   resize() {
-    this.posDanmaku.resize()
+    this.engine.resize()
   }
 }

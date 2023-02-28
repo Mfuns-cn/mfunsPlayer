@@ -1,9 +1,9 @@
 @import "./theme.scss";
 
-.PosEditor {
+.mfunsADEditor {
     user-select: none;
     color: $text-black;
-    .PosEditor-title {
+    .mfunsADEditor-title {
         height: 26px;
         line-height: 26px;
         margin-bottom: 4px;
@@ -13,7 +13,7 @@
             display: inline;
         }
     }
-    .PosEditor-input-content {
+    .mfunsADEditor-input-content {
         font-family: inherit;
         box-sizing: border-box;
         width: calc(100% - 8px);
@@ -22,24 +22,24 @@
         padding: 4px;
         font-size: 12px;
     }
-    input[type=number].PosEditor-input-start {
+    input[type=number].mfunsADEditor-input-start {
         width: 70px;
     }
-    .PosEditor-row {
+    .mfunsADEditor-row {
         height: 26px;
         margin-bottom: 4px;
-        .PosEditor-label {
+        .mfunsADEditor-label {
             line-height: 26px;
         }
-        .PosEditor-sub-label {
+        .mfunsADEditor-sub-label {
             line-height: 26px;
             margin-left: 4px;
         }
     }
-    .PosEditor-keyframe-bar {
+    .mfunsADEditor-keyframe-bar {
         line-height: 26px;
         margin-bottom: 4px;
-        .PosEditor-keyframes {
+        .mfunsADEditor-keyframes {
             span {
                 display: inline-block;
                 padding: 0 2px;
@@ -49,59 +49,59 @@
                 }
             }
         }
-        .PosEditor-action-delKeyFrame, .PosEditor-action-addKeyFrame {
+        .mfunsADEditor-action-delKeyFrame, .mfunsADEditor-action-addKeyFrame {
             cursor: pointer;
         }
     }
-    .PosEditor-animation-settings {
+    .mfunsADEditor-animation-settings {
         &[data-frame="0"] {
-            .PosEditor-row-duration, .PosEditor-row-ease {
+            .mfunsADEditor-row-duration, .mfunsADEditor-row-ease {
                 display: none;
             }
         }
     }
-    .PosEditor-area-content {
-        .PosEditor-row-shadow-1,
-        .PosEditor-row-shadow-2,
-        .PosEditor-row-stroke-1 {
+    .mfunsADEditor-area-content {
+        .mfunsADEditor-row-shadow-1,
+        .mfunsADEditor-row-shadow-2,
+        .mfunsADEditor-row-stroke-1 {
             display: none;
         }
-        &.Pos-use-shadow {
-            .PosEditor-row-shadow-1,
-            .PosEditor-row-shadow-2 {
+        &.ad-use-shadow {
+            .mfunsADEditor-row-shadow-1,
+            .mfunsADEditor-row-shadow-2 {
                 display: block;
             }
         }
-        &.Pos-use-stroke {
-            .PosEditor-row-stroke-1 {
+        &.ad-use-stroke {
+            .mfunsADEditor-row-stroke-1 {
                 display: block;
             }
         }
     }
-    .PosEditor-animation-settings {
-        .PosEditor-row-position-1,
-        .PosEditor-row-rotation-1,
-        .PosEditor-row-scale-1,
-        .PosEditor-input-opacity {
+    .mfunsADEditor-animation-settings {
+        .mfunsADEditor-row-position-1,
+        .mfunsADEditor-row-rotation-1,
+        .mfunsADEditor-row-scale-1,
+        .mfunsADEditor-input-opacity {
             display: none;
         }
-        &.Pos-use-position {
-            .PosEditor-row-position-1 {
+        &.ad-use-position {
+            .mfunsADEditor-row-position-1 {
                 display: block;
             }
         }
-        &.Pos-use-rotation {
-            .PosEditor-row-rotation-1 {
+        &.ad-use-rotation {
+            .mfunsADEditor-row-rotation-1 {
                 display: block;
             }
         }
-        &.Pos-use-scale {
-            .PosEditor-row-scale-1 {
+        &.ad-use-scale {
+            .mfunsADEditor-row-scale-1 {
                 display: block;
             }
         }
-        &.Pos-use-opacity {
-            .PosEditor-input-opacity {
+        &.ad-use-opacity {
+            .mfunsADEditor-input-opacity {
                 display: inline-block;
             }
         }
