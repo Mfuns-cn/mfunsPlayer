@@ -174,28 +174,31 @@ class Danmaku {
       const allReports = this.player.template.danmakuReportMask.querySelectorAll(".mfunsPlayer-switch");
       allReports.forEach((el, index) => {
         if (!this[`reportOption${index}`]) {
-          this[`reportOption${index}`] = new Switch(el, false, {
-            on: () => {
-              for (let i = 0; i < allReports.length; i++) {
-                i !== index && this[`reportOption${i}`].off(1);
-              }
-              if (el.children[1].innerHTML !== "其他") {
-                reportIReason = el.children[1].innerHTML;
-                this.player.template.danmakuReportDetail.classList.remove("show");
-                this.player.template.danmakuReportSubmit.classList.remove("disable");
+          this[`reportOption${index}`] = new Switch({
+            el: el,
+            value: false,
+            onToggle: (value) => {
+              if (value) {
+                // 打开开关
+                for (let i = 0; i < allReports.length; i++) {
+                  i !== index && this[`reportOption${i}`].off(1);
+                }
+                if (el.children[1].innerHTML !== "其他") {
+                  reportIReason = el.children[1].innerHTML;
+                  this.player.template.danmakuReportDetail.classList.remove("show");
+                  this.player.template.danmakuReportSubmit.classList.remove("disable");
+                } else {
+                  reportIReason = "";
+                  this.player.template.danmakuReportDetail.classList.add("show");
+                  this.player.template.danmakuReportDetail.value = "";
+                }
               } else {
-                reportIReason = "";
-                this.player.template.danmakuReportDetail.classList.add("show");
-                this.player.template.danmakuReportDetail.value = "";
+                // 关闭开关
+                if (this.player.template.danmakuReportDetail.classList.contains("show"))
+                  this.player.template.danmakuReportDetail.classList.remove("show");
+                if (!this.player.template.danmakuReportSubmit.classList.contains("disable"))
+                  this.player.template.danmakuReportSubmit.classList.add("disable");
               }
-              // 打开开关
-            },
-            off: (optionTrigger) => {
-              // 关闭开关
-              if (this.player.template.danmakuReportDetail.classList.contains("show"))
-                this.player.template.danmakuReportDetail.classList.remove("show");
-              if (!this.player.template.danmakuReportSubmit.classList.contains("disable") && !optionTrigger)
-                this.player.template.danmakuReportSubmit.classList.add("disable");
             },
           });
         } else {

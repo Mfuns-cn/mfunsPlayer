@@ -167,16 +167,19 @@ export default class mfunsPlayer {
             if (!this.highEnergy && window.echarts) {
                 this.highEnergy = new HighEnergy(this);
                 this.highEnergy.resize();
-                this.danmakuHighEnergySwitch = new Switch(this.template.danmaku_highEnergy_switch, this.options.danmaku.showHighEnergy, {
-                    on: () => {
-                        this.highEnergy && this.highEnergy.show(); // 显示高能进度条
-                    },
-                    off: () => {
-                        this.highEnergy && this.highEnergy.hide(); // 隐藏高能进度条
+                this.danmakuHighEnergySwitch = new Switch({
+                    el: this.template.danmaku_highEnergy_switch,
+                    value: this.options.danmaku.showHighEnergy,
+                    onToggle: (value) => {
+                        if (value) {
+                            this.highEnergy?.show(); // 显示高能进度条
+                        } else {
+                            this.highEnergy?.hide(); // 隐藏高能进度条
+                        }
                     },
                 });
             } else {
-                this.highEnergy && this.highEnergy.reload();
+                this.highEnergy?.reload();
             }
         }
     }
@@ -288,7 +291,7 @@ export default class mfunsPlayer {
     mute(flag = true) {
         this.video.muted = flag;
         this.template.volumeIcon.classList[flag ? 'add' : 'remove']('button-volume-off');
-        this.controller.components.volumeSlider.change(flag ? 0 : this.video.volume * 100);
+        this.controller.components.volumeSlider.setValue(flag ? 0 : this.video.volume * 100);
     }
     initMSE(video, type = 'mp4') {
         this.type = type;
@@ -619,7 +622,7 @@ export default class mfunsPlayer {
         if (!isNaN(percentage)) {
             percentage = Math.max(percentage, 0);
             percentage = Math.min(percentage, 1);
-            this.controller.components.volumeSlider.change(percentage * 100);
+            this.controller.components.volumeSlider.setValue(percentage * 100);
             const formatPercentage = `${(percentage * 100).toFixed(0)}`;
             if (!nonotice) {
                 clearTimeout(this.voiceTimer);

@@ -89,7 +89,7 @@ export default class HotKey {
                                 } else {
                                     player.video.muted = true;
                                     player.notice('已静音');
-                                    player.controller.components.volumeSlider.change(0);
+                                    player.controller.components.volumeSlider.setValue(0);
                                 }
                                 break;
                             case 188:
