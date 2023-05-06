@@ -24,6 +24,7 @@
     "typescript"
   ],
   "author": "Minteea",
+  "contributors": ["rudiusu"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Mfuns-cn/mfuns-player/issues"

@@ -67,6 +67,8 @@ export interface DanmakuInterface {
   timestamp: number;
   /** 发送用户 */
   user: string | number
+  /** 弹幕来源平台 */
+  platform?: string,
 }
 
 /** 弹幕源 */

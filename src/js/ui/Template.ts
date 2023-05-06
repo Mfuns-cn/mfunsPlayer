@@ -14,11 +14,10 @@ const template = () => html`
         <div class="${classPrefix}-advanced-danmaku"></div>
         <div class="${classPrefix}-danmaku"></div>
         <div class="${classPrefix}-toast"></div>
-        <div class="${classPrefix}-status-volume"></div>
-        <div class="${classPrefix}-status-pause"></div>
+        <div class="${classPrefix}-status-wrap"></div>
         <div class="${classPrefix}-modal-wrap"></div>
       </div>
-      <div class="${classPrefix}-head-wrap"></div>
+      <div class="${classPrefix}-header-wrap"></div>
       <div class="${classPrefix}-controller-wrap"></div>
       <div class="${classPrefix}-side"></div>
       <div class="${classPrefix}-footbar"></div>
@@ -42,9 +41,9 @@ class Template {
   $advancedDanmaku!: HTMLElement;
   $danmaku!: HTMLElement;
   $toast!: HTMLElement;
-  $statusVolume!: HTMLElement;
-  $statusPause!: HTMLElement;
-  $headWrap!: HTMLElement;
+  $statusWrap!: HTMLElement;
+  $headerWrap!: HTMLElement;
+  $modalWrap!: HTMLElement;
   $controllerWrap!: HTMLElement;
   $side!: HTMLElement;
   $footbar!: HTMLElement;
@@ -75,9 +74,9 @@ class Template {
     this.$advancedDanmaku = $(`.${classPrefix}-video-advanced-danmaku`)!;
     this.$danmaku = $(`.${classPrefix}-video-danmaku`)!;
     this.$toast = $(`.${classPrefix}-video-toast`)!;
-    this.$statusVolume = $(`.${classPrefix}-video-status-volume`)!;
-    this.$statusPause = $(`.${classPrefix}-video-status-pause`)!;
-    this.$headWrap = $(`.${classPrefix}-head-wrap`)!
+    this.$statusWrap = $(`.${classPrefix}-video-status-wrap`)!;
+    this.$headerWrap = $(`.${classPrefix}-header-wrap`)!
+    this.$modalWrap = $(`.${classPrefix}-modal-wrap`)!
     this.$controllerWrap = $(`.${classPrefix}-controller-wrap`)!
     this.$side = $(`.${classPrefix}-side`)!
     this.$footbar = $(`.${classPrefix}-footbar`)!
