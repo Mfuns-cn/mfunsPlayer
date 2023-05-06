@@ -1,0 +1,14 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  // 无底栏模式
+  &.mode-nofootbar {
+    .#{$prefix}-main {
+      width: 100%;
+      height: 100%;
+    }
+    .#{$prefix}-footbar {
+      display: none;
+    }
+  }
+}

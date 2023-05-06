@@ -1,0 +1,61 @@
+import { classPrefix } from '@/const';
+import { html, render } from 'lit-html';
+import MfunsPlayer from "@/player";
+import { PlayerOptions } from "@/types";
+import ProgressBar from './ProgressBar';
+import { fullScreenEnabled, pictureInPictureEnabled } from '@/utils';
+import ButtonFullscreen from './button/ButtonFullscreen';
+import ButtonPip from './button/ButtonPip';
+import ButtonPlay from './button/ButtonPlay';
+import LabelTime from './label/LabelTime';
+const template = () => html`
+  <div class="${classPrefix}-controller">
+    <div class="${classPrefix}-controller-content">
+      <div class="${classPrefix}-controller-left"></div>
+      <div class="${classPrefix}-controller-right"></div>
+    </div>
+    <div class="${classPrefix}-controller-progress"></div>
+  </div>
+`
+
+/** 控制栏 */
+export default class Controller {
+  player: MfunsPlayer
+  container: HTMLElement
+  el: HTMLElement
+  $progress: HTMLElement
+  $content: HTMLElement
+  $left: HTMLElement
+  $right: HTMLElement
+  
+  progressBar: ProgressBar
+
+  buttonPlay?: ButtonPlay
+  buttoFullScreenn?: ButtonFullscreen
+  buttonPip?: ButtonPip
+
+  labelTime: LabelTime
+
+  constructor(player: MfunsPlayer, options: PlayerOptions) {
+    this.player = player
+    this.container = player.template.$controllerWrap
+    const fragment = new DocumentFragment()
+    render(template(), fragment)
+    this.el = fragment.querySelector(`.${classPrefix}-controller`)!
+    this.$progress = this.el.querySelector(`.${classPrefix}-controller-progress`)!
+    this.$content = this.el.querySelector(`.${classPrefix}-controller-content`)!
+    this.$left = this.el.querySelector(`.${classPrefix}-controller-left`)!
+    this.$right = this.el.querySelector(`.${classPrefix}-controller-right`)!
+    
+    // 进度条
+    this.progressBar = new ProgressBar(this, options)
+    // 控制栏左侧部件
+    this.buttonPlay = new ButtonPlay(this.player, this.$left)
+    this.labelTime = new LabelTime(this.player, this.$left)
+    // 控制栏右侧部件
+    if (pictureInPictureEnabled) this.buttonPip = new ButtonPip(this.player, this.$right)
+    if (fullScreenEnabled) this.buttoFullScreenn = new ButtonFullscreen(this.player, this.$right)
+    
+    this.container.appendChild(fragment)
+  }
+}

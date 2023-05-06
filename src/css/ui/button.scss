@@ -1,0 +1,43 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  &-controller-pip {
+    .mp-icon-pip-exit {
+      display: none;
+    }
+    &.state-pip {
+      .mp-icon-pip {
+        display: none;
+      }
+      .mp-icon-pip-exit {
+        display: block;
+      }
+    }
+  }
+  &-controller-fullscreen {
+    .mp-icon-fullscreen-exit {
+      display: none;
+    }
+    &.state-fullscreen {
+      .mp-icon-fullscreen {
+        display: none;
+      }
+      .mp-icon-fullscreen-exit {
+        display: block;
+      }
+    }
+  }
+  &-controller-play {
+    .mp-icon-play {
+      display: none;
+    }
+    &.state-paused {
+      .mp-icon-pause {
+        display: none;
+      }
+      .mp-icon-play {
+        display: block;
+      }
+    }
+  }
+}

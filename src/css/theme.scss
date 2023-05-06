@@ -1,0 +1,17 @@
+// 主题变量
+$prefix: "mfuns-player";
+
+$theme-color: var(--themeColor, #7b7ff7); // 默认主题色
+$theme-color-light: var(--themeColorLight, #9c9ffb); // 默认主题色(浅)
+$theme-color-dark: var(--themeColorDark, #6550eb); // 默认主题色(深)
+$translucent-black: #202020a0; // 半透明黑色(用于面板)
+$text-black: #404040; // 黑色(用于文字)
+$text-grey: #808080; // 灰色(用于文字)
+$light-grey: #e6e6e6; // 灰色(用于淡色)
+$text-white: #ffffffe0; // 半透明白色(用于文字)
+$translucent-white: #ffffffa0; // 半透明白色(用于淡色)
+$translucent-white-light: #ffffff80; // 半透明白色(用于淡色)
+$theme-border-radius: 2px; // 圆角大小
+
+$footbar-height: 40px;    // 底栏高度
+$controller-fixed-height: 36px;   // 固定控制栏高度
