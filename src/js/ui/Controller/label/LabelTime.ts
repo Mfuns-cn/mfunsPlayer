@@ -35,10 +35,10 @@ export default class LabelTime {
     container.appendChild(fragment)
   }
   init() {
-    this.player.video.el.addEventListener("timeupdate", () => {
+    this.player.video.on("timeupdate", () => {
       this.$current.innerText = secondToTime(this.player.video.currentTime);
     })
-    this.player.video.el.addEventListener("durationchange", () => {
+    this.player.video.on("durationchange", () => {
       this.$total.innerText = secondToTime(this.player.video.duration);
     })
     this.$label.addEventListener('click', () => {

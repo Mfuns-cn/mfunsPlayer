@@ -4,6 +4,7 @@ import Template from "@/ui/Template"
 import { PlayerOptions } from "@/types"
 import Video from "@/Video"
 import Mode from "./Mode"
+import HotKey from "./ui/HotKey"
 
 export default class MfunsPlayer {
   static readonly version = MFUNSPLAYER_VERSION
@@ -23,10 +24,17 @@ export default class MfunsPlayer {
   danmaku: any
   /** 播放器模式控制 */
   mode: Mode
-  /** 控制模块 */
-  controller: Controller
+
   /** 模板 */
   template: Template
+  /** 控制栏 */
+  controller: Controller
+
+  /** 快捷键 */
+  hotKey: HotKey
+
+  isFocused: boolean = false
+
   /** 插件 */
   readonly plugin: {[key: string]: any}
 
@@ -43,13 +51,22 @@ export default class MfunsPlayer {
     // 注入ui
     this.controller = new Controller(this, options)
 
+    this.hotKey = new HotKey(this, options)
+
 
     this.plugin = {}
+
+    this.init()
 
     this.part(1)
   }
   init() {
-
+    document.addEventListener("click", () => {
+      this.isFocused = false
+    }, true)
+    this.template.el.addEventListener("click", () => {
+      this.isFocused = true
+    }, true)
   }
 
   
@@ -62,6 +79,14 @@ export default class MfunsPlayer {
   /** 暂停 */
   public pause() {
     this.video.pause()
+  }
+  /** 切换播放/暂停状态 */
+  public toggle() {
+    if (this.isPaused) {
+      this.play()
+    } else {
+      this.pause()
+    }
   }
   get isPaused() {
     return this.video.isPaused

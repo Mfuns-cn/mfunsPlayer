@@ -36,10 +36,10 @@
 .mp-icon-next:before {
   content: "\e903";
 }
-.mp-icon-repeat:before {
+.mp-icon-loop:before {
   content: "\e904";
 }
-.mp-icon-repeat-off:before {
+.mp-icon-loop-off:before {
   content: "\e905";
 }
 .mp-icon-volume-off:before {

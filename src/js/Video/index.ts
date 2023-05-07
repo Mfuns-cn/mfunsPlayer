@@ -51,6 +51,11 @@ export default class Video {
   public rate(value: number) {
     this.el.playbackRate = value
   }
+  /** 设置循环播放 */
+  public loop(flag: boolean) {
+    this.el.loop = flag
+    this.player.events.trigger(flag ? "loop" : "loop_off")
+  }
   /** 静音 */
   public mute(flag: boolean = true) {
     this.el.muted = flag

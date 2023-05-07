@@ -11,19 +11,20 @@ const template = () => html`
         <div class="${classPrefix}-video-wrap">
           <video class="${classPrefix}-video"></video>
         </div>
-        <div class="${classPrefix}-advanced-danmaku"></div>
-        <div class="${classPrefix}-danmaku"></div>
-        <div class="${classPrefix}-toast"></div>
-        <div class="${classPrefix}-status-wrap"></div>
+        <div class="${classPrefix}-danmaku-wrap"></div>
+        <div class="${classPrefix}-state-loading"></div>
+        <div class="${classPrefix}-state-volume"></div>
+        <div class="${classPrefix}-toast-wrap"></div>
         <div class="${classPrefix}-modal-wrap"></div>
       </div>
       <div class="${classPrefix}-header-wrap"></div>
       <div class="${classPrefix}-controller-wrap"></div>
+      <div class="${classPrefix}-state-play"></div>
       <div class="${classPrefix}-side"></div>
-      <div class="${classPrefix}-footbar"></div>
-      <div class="${classPrefix}-miniplayer">
-        <div class="${classPrefix}-miniplayer-content"></div>
-      </div>
+    </div>
+    <div class="${classPrefix}-footbar"></div>
+    <div class="${classPrefix}-miniplayer">
+      <div class="${classPrefix}-miniplayer-content"></div>
     </div>
   </div>
 `;
@@ -38,10 +39,11 @@ class Template {
   $video!: HTMLVideoElement;
   $videoArea!: HTMLElement;
   $videoWrap!: HTMLElement;
-  $advancedDanmaku!: HTMLElement;
-  $danmaku!: HTMLElement;
-  $toast!: HTMLElement;
-  $statusWrap!: HTMLElement;
+  $danmakuWrap!: HTMLElement;
+  $toastWrap!: HTMLElement;
+  $statusPlay!: HTMLElement;
+  $statusVolume!: HTMLElement;
+  $statusLoading!: HTMLElement;
   $headerWrap!: HTMLElement;
   $modalWrap!: HTMLElement;
   $controllerWrap!: HTMLElement;
@@ -52,10 +54,7 @@ class Template {
   themeColor!: string;
   /** 绑定了主题变量的DOM元素 */
   private themeElement: HTMLElement[];
-  constructor(
-    player: MfunsPlayer,
-    options: PlayerOptions
-  ) {
+  constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.container = player.container;
     this.themeColor = options.themeColor;
     this.themeColor && this.setThemeColor(options.themeColor);
@@ -71,16 +70,17 @@ class Template {
     this.$video = $(`.${classPrefix}-video`)!;
     this.$videoArea = $(`.${classPrefix}-video-area`)!;
     this.$videoWrap = $(`.${classPrefix}-video-wrap`)!;
-    this.$advancedDanmaku = $(`.${classPrefix}-video-advanced-danmaku`)!;
-    this.$danmaku = $(`.${classPrefix}-video-danmaku`)!;
-    this.$toast = $(`.${classPrefix}-video-toast`)!;
-    this.$statusWrap = $(`.${classPrefix}-video-status-wrap`)!;
-    this.$headerWrap = $(`.${classPrefix}-header-wrap`)!
-    this.$modalWrap = $(`.${classPrefix}-modal-wrap`)!
-    this.$controllerWrap = $(`.${classPrefix}-controller-wrap`)!
-    this.$side = $(`.${classPrefix}-side`)!
-    this.$footbar = $(`.${classPrefix}-footbar`)!
-    this.$miniplayer = $(`.${classPrefix}-miniplayer`)!
+    this.$danmakuWrap = $(`.${classPrefix}-video-danmaku-wrap`)!;
+    this.$toastWrap = $(`.${classPrefix}-video-toast-wrap`)!;
+    this.$statusPlay = $(`.${classPrefix}-video-status-play`)!;
+    this.$statusVolume = $(`.${classPrefix}-video-status-volume`)!;
+    this.$statusLoading = $(`.${classPrefix}-video-status-loading`)!;
+    this.$headerWrap = $(`.${classPrefix}-header-wrap`)!;
+    this.$modalWrap = $(`.${classPrefix}-modal-wrap`)!;
+    this.$controllerWrap = $(`.${classPrefix}-controller-wrap`)!;
+    this.$side = $(`.${classPrefix}-side`)!;
+    this.$footbar = $(`.${classPrefix}-footbar`)!;
+    this.$miniplayer = $(`.${classPrefix}-miniplayer`)!;
   }
   /** 为元素绑定主题变量 */
   public addThemeElement(el: HTMLElement) {

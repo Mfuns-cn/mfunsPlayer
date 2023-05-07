@@ -2,8 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 const gitRevisionPlugin = new GitRevisionPlugin();
+
 const baseConfig = {
-    mode: 'production',
     entry: {
         ["mfuns-player"]: './src/js/index.ts',
     },
@@ -82,28 +82,5 @@ const baseConfig = {
         }),
     ],
 };
-const esConfig = Object.assign({}, baseConfig, {
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        filename: '[name].min.es.js',
-        library: 'MfunsPlayer',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
-        globalObject: 'this',
-        umdNamedDefine: true,
-        publicPath: '/',
-    },
-});
-const umdConfig = Object.assign({}, baseConfig, {
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        filename: '[name].min.umd.js',
-        library: 'MfunsPlayer',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
-        umdNamedDefine: true,
-        publicPath: '/',
-    },
-});
 
-module.exports = [esConfig, umdConfig];
+module.exports = baseConfig;

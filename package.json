@@ -8,9 +8,9 @@
   "jsdelivr": "dist/mfuns-player.min.umd.js",
   "scripts": {
     "start": "npm run dev",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "dev": "cross-env NODE_ENV=development webpack serve --config webpack.dev.js",
-    "watch": "",
+    "watch": "cross-env NODE_ENV=production webpack --config webpack.prod.js --watch",
     "test": "eslint src webpack"
   },
   "files": [

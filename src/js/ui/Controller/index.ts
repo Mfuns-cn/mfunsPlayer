@@ -8,6 +8,7 @@ import ButtonFullscreen from './button/ButtonFullscreen';
 import ButtonPip from './button/ButtonPip';
 import ButtonPlay from './button/ButtonPlay';
 import LabelTime from './label/LabelTime';
+import ButtonLoop from './button/ButtonLoop';
 const template = () => html`
   <div class="${classPrefix}-controller">
     <div class="${classPrefix}-controller-content">
@@ -31,6 +32,7 @@ export default class Controller {
   progressBar: ProgressBar
 
   buttonPlay?: ButtonPlay
+  buttonLoop: ButtonLoop;
   buttoFullScreenn?: ButtonFullscreen
   buttonPip?: ButtonPip
 
@@ -52,6 +54,7 @@ export default class Controller {
     // 控制栏左侧部件
     this.buttonPlay = new ButtonPlay(this.player, this.$left)
     this.labelTime = new LabelTime(this.player, this.$left)
+    this.buttonLoop = new ButtonLoop(this.player, this.$left)
     // 控制栏右侧部件
     if (pictureInPictureEnabled) this.buttonPip = new ButtonPip(this.player, this.$right)
     if (fullScreenEnabled) this.buttoFullScreenn = new ButtonFullscreen(this.player, this.$right)

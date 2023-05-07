@@ -40,4 +40,17 @@
       }
     }
   }
+  &-controller-loop {
+    .mp-icon-loop {
+      display: none;
+    }
+    &.state-loop {
+      .mp-icon-loop-off {
+        display: none;
+      }
+      .mp-icon-loop {
+        display: block;
+      }
+    }
+  }
 }

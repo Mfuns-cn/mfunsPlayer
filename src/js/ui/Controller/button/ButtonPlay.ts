@@ -28,11 +28,7 @@ export default class ButtonPlay {
       this.el.classList.remove("state-paused")
     })
     this.el.addEventListener("click", () => {
-      if (this.player.isPaused) {
-        this.player.play()
-      } else {
-        this.player.pause()
-      }
+      this.player.toggle()
     })
   }
 }

@@ -7,7 +7,7 @@
     width: 100%;
     height: 4px;
     background-color: $translucent-white-light;
-    transition: height 0.2s ease-in-out;
+    transition: height 0.2s ease;
     &-played {
       position: absolute;
       top: 0;
@@ -37,7 +37,7 @@
       background-color: $theme-color;
       border-radius: 7px;
       transition: transform, border;
-      transition-timing-function: ease-in-out;
+      transition-timing-function: ease;
       transition-duration: 0.2s;
       box-sizing: border-box;
       border: 4px solid white;

@@ -7,6 +7,8 @@ export default class Events {
     // "seek",           // 进度跳转
     // "volume_change",  // 音量改变
     // "rate_change",    // 播放速率改变
+    "loop",           // 开启循环播放
+    "loop_off",       // 关闭循环播放
 
     // 播放模式
     "source_change",  // 视频源改变
@@ -43,8 +45,8 @@ export default class Events {
     
     "darkmode",         // 开启关灯模式
     "darkmode_off",     // 关闭关灯模式
-    // "fixcontroller",        // 开启底栏固定(未启用)
-    // "fixcontroller_off",    // 取消底栏固定(未启用)
+    // "fixedcontroller",        // 开启底栏固定(未启用)
+    // "fixedcontroller_off",    // 取消底栏固定(未启用)
 
     "setting",          // 设置项更改
   ];
