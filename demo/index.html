@@ -91,6 +91,7 @@
 </body>
 <script>
     console.log(MfunsPlayer)
+    let mfPlayer
     const testVersion = document.querySelector(".test-version");
     testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash
     window.onload = () => {
@@ -369,7 +370,7 @@
 
         }
         console.log(mfunsPlayerConfig)
-        var mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
+        mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
         console.log(mfPlayer)
     }
 

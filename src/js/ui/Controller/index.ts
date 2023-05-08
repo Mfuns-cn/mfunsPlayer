@@ -9,13 +9,15 @@ import ButtonPip from './button/ButtonPip';
 import ButtonPlay from './button/ButtonPlay';
 import LabelTime from './label/LabelTime';
 import ButtonLoop from './button/ButtonLoop';
+import ButtonVolume from './button/ButtonVolume';
+import ButtonSettings from './button/ButtonSettings';
 const template = () => html`
   <div class="${classPrefix}-controller">
+    <div class="${classPrefix}-controller-progress"></div>
     <div class="${classPrefix}-controller-content">
       <div class="${classPrefix}-controller-left"></div>
       <div class="${classPrefix}-controller-right"></div>
     </div>
-    <div class="${classPrefix}-controller-progress"></div>
   </div>
 `
 
@@ -31,10 +33,13 @@ export default class Controller {
   
   progressBar: ProgressBar
 
-  buttonPlay?: ButtonPlay
+  buttonPlay: ButtonPlay
   buttonLoop: ButtonLoop;
-  buttoFullScreenn?: ButtonFullscreen
+  
+  buttonVolume: ButtonVolume
+  buttonSettings: ButtonSettings;
   buttonPip?: ButtonPip
+  buttoFullScreen?: ButtonFullscreen
 
   labelTime: LabelTime
 
@@ -56,8 +61,10 @@ export default class Controller {
     this.labelTime = new LabelTime(this.player, this.$left)
     this.buttonLoop = new ButtonLoop(this.player, this.$left)
     // 控制栏右侧部件
+    this.buttonVolume = new ButtonVolume(this.player, this.$right)
+    this.buttonSettings = new ButtonSettings(this.player, this.$right)
     if (pictureInPictureEnabled) this.buttonPip = new ButtonPip(this.player, this.$right)
-    if (fullScreenEnabled) this.buttoFullScreenn = new ButtonFullscreen(this.player, this.$right)
+    if (fullScreenEnabled) this.buttoFullScreen = new ButtonFullscreen(this.player, this.$right)
     
     this.container.appendChild(fragment)
   }

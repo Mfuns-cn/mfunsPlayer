@@ -1,0 +1,35 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  &-slider {
+    position: relative;
+    &-track {
+      width: 4px;
+      height: 4px;
+      border-radius: 2px;
+      background: #e5e9ef;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      cursor: pointer;
+    }
+    &-bar {
+      background: $theme-color;
+      border-radius: 2px;
+    }
+    
+    &-thumb-track {
+      position: relative;
+      width: calc(100% - 12px);
+      height: calc(100% - 12px);
+    }
+    &-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 100%;
+      background: $theme-color;
+    }
+  }
+}

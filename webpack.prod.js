@@ -7,11 +7,13 @@ const baseConfig = require("./webpack.common.js")
 
 const esConfig = merge(baseConfig, {
     mode: 'production',
+    experiments: {
+        outputModule: true,
+    },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].min.es.js',
-        library: 'MfunsPlayer',
-        libraryTarget: 'umd',
+        libraryTarget: 'module',
         libraryExport: 'default',
         globalObject: 'this',
         umdNamedDefine: true,

@@ -1,38 +1,39 @@
-import { createArray, nameMap } from "@/utils";
 import { classPrefix } from "@/const";
 import { html, render } from "lit-html";
-const template = () => html` <div
-  class="${classPrefix}-slider ${classPrefix}-slider-vertical"
-  style="position: relative; width: 100%; height: 100%"
->
+const template = () => html`
   <div
-    class="${classPrefix}-slider-track"
-    style="
-      position: absolute;
-      height: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      align-items: center
-    "
+    class="${classPrefix}-slider ${classPrefix}-slider-vertical"
+    style="position: relative; width: 100%; height: 100%"
   >
     <div
-      class="${classPrefix}-slider-bar"
-      style="position: absolute; bottom: 0; width: 100%"
-    ></div>
-    <div class="${classPrefix}-slider-thumb-track" style="width: 0px">
+      class="${classPrefix}-slider-track"
+      style="
+        position: absolute;
+        height: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center
+      "
+    >
       <div
-        class="${classPrefix}-slider-thumb"
-        style="position: absolute; transform: translate(-50%, -50%)"
+        class="${classPrefix}-slider-bar"
+        style="position: absolute; bottom: 0; width: 100%"
       ></div>
+      <div class="${classPrefix}-slider-thumb-track" style="width: 0px">
+        <div
+          class="${classPrefix}-slider-thumb"
+          style="position: absolute; transform: translate(-50%, -50%)"
+        ></div>
+      </div>
     </div>
   </div>
-</div>`;
+`;
 
 interface SliderVerticalOptions {
   /** 挂载容器 */
-  container: HTMLElement
+  container: HTMLElement;
   /** 最小值 */
   min: number;
   /** 最大值 */
@@ -65,7 +66,7 @@ export class SliderVertical implements SliderVerticalOptions {
   onDragEnd?: (value: number) => void;
   onDrag?: (value: number) => void;
   // 部件
-  el: HTMLElement
+  el: HTMLElement;
   $track: HTMLElement;
   $bar: HTMLElement;
   $thumbTrack: HTMLElement;
@@ -92,11 +93,13 @@ export class SliderVertical implements SliderVerticalOptions {
     this.onDrag = onDrag;
 
     render(template(), container);
-    
-    this.el = this.container.querySelector(`.${classPrefix}-slider`)!
+
+    this.el = this.container.querySelector(`.${classPrefix}-slider`)!;
     this.$track = this.el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
     this.$bar = this.$track.querySelector(`.${classPrefix}-slider-bar`)!; // 滑动条痕迹
-    this.$thumbTrack = this.$track.querySelector(`.${classPrefix}-slider-thumb-track`)!; // 滑块轨道
+    this.$thumbTrack = this.$track.querySelector(
+      `.${classPrefix}-slider-thumb-track`
+    )!; // 滑块轨道
     this.$thumb = this.$track.querySelector(`.${classPrefix}-slider-thumb`)!; // 滑块
 
     // 滑动条事件
@@ -123,18 +126,17 @@ export class SliderVertical implements SliderVerticalOptions {
             this.step +
           this.min
         : (nLength / nMax) * (this.max - this.min) + this.min;
-      let per = (value - (this.min + 6)) / (this.max - this.min - 12);
       // 开始滑动事件
       this.onDragStart?.(value);
       // 监测数据更新并执行函数
       if (this.value != value) {
         this.drag(value);
       }
-      
+
       let mousemoveEvent = (event: MouseEvent) => {
         const e: MouseEvent = event;
         // 鼠标X位置
-        let clientY = e.clientY
+        let clientY = e.clientY;
         // 鼠标移动时取消默认行为，避免选中其他元素或文字
         e.preventDefault();
         e.stopPropagation();
@@ -152,12 +154,12 @@ export class SliderVertical implements SliderVerticalOptions {
         if (this.value != value) {
           this.drag(value);
         }
-        window.getSelection()?.removeAllRanges()
+        window.getSelection()?.removeAllRanges();
       };
       let removeEvent = (event: MouseEvent) => {
         const e: MouseEvent = event;
         e.stopPropagation();
-        window.getSelection()?.removeAllRanges()
+        window.getSelection()?.removeAllRanges();
         document.removeEventListener("mousemove", mousemoveEvent);
         document.removeEventListener("mouseup", removeEvent);
         this.onDragEnd?.(value);
@@ -167,7 +169,7 @@ export class SliderVertical implements SliderVerticalOptions {
       document.addEventListener("mouseup", removeEvent);
     });
     // 设置滑块初始位置
-      this.setValue(this.value);
+    this.setValue(this.value);
   }
   /** 设置滑动条值 */
   setValue(value: number) {

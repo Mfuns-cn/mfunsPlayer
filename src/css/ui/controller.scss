@@ -24,7 +24,7 @@
     &-content {
       height: calc(100% - 20px);
       position: relative;
-      padding: 15px 0 5px;
+      margin: 15px 0 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -54,7 +54,6 @@
     }
     &-button {
       position: relative;
-			padding: 0 7px;
       height: 30px;
       font-size: 12px;
       display: flex;
@@ -64,6 +63,30 @@
         font-size: 21px;
         line-height: 30px;
       }
+      &:hover .#{$prefix}-tooltip {
+        display: block;
+      }
+      &:hover .#{$prefix}-controller-panel-wrap {
+        display: block;
+      }
+      &.state-control .#{$prefix}-controller-panel-wrap {
+        display: block;
+      }
+    }
+    &-icon-wrap {
+			padding: 0 7px;
+    }
+    &-panel-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      transform: translateX(-50%);
+      display: none;
+    }
+    &-panel {
+      margin-bottom: 20px;
+      background-color: $translucent-black;
+      border-radius: $theme-border-radius;
     }
     &-time {
       width: 90px;
@@ -115,7 +138,7 @@
       color: $text-black;
       &-content {
         height: calc(100% - 6px);
-        padding: 6px 0 0;
+        margin: 6px 0 0;
       }
       &-progress {
         height: 14px;
@@ -123,7 +146,7 @@
         top: -8px;
         align-items: end;
       }
-      &-button {
+      &-icon-wrap {
         padding: 0 5px;
       }
     }

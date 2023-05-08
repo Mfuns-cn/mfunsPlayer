@@ -50,4 +50,19 @@
     width: 100%;
     height: 100%;
   }
+
+  &-tooltip {
+    position: absolute;
+    left: 50%;
+    top: -30px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    display: none;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 4px;
+    font-size: 12px;
+    background-color: $translucent-black;
+    color: white;
+  }
 }
