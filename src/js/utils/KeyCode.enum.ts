@@ -123,5 +123,5 @@ export enum keyCode {
 
   OpenBracket = 219,
   ClosedBracket = 221,
-  Quote = 222
+  Quote = 222,
 }

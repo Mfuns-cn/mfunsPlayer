@@ -1,6 +1,6 @@
-import MfunsPlayer from '@/player';
-import { classPrefix } from '@/const';
-import { html, render } from "lit-html";
+import { html, render } from "lit-html"
+import MfunsPlayer from "@/player"
+import { classPrefix } from "@/const"
 
 const template = () => html`
   <div class="${classPrefix}-controller-button ${classPrefix}-controller-fullscreen">
@@ -17,6 +17,7 @@ export default class ButtonFullscreen {
   el: HTMLElement
   $iconWrap: HTMLElement
   $tooltip: HTMLElement
+
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
     const fragment = new DocumentFragment()
@@ -27,6 +28,7 @@ export default class ButtonFullscreen {
     this.init()
     container.appendChild(fragment)
   }
+
   private init() {
     this.player.on("fullscreen", () => {
       this.el.classList.add("state-fullscreen")

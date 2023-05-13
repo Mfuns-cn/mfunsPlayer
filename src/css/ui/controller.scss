@@ -4,14 +4,20 @@
 .#{$prefix} {
   &-controller-wrap {
     position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+  }
+  &-controller-mask {
+    position: absolute;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==)
       repeat-x bottom;
     bottom: 0;
     left: 0;
     right: 0;
     height: 100px;
-    bottom: 0;
-    left: 0;
+    pointer-events: none;
   }
   &-controller {
     position: absolute;
@@ -63,18 +69,32 @@
         font-size: 21px;
         line-height: 30px;
       }
-      &:hover .#{$prefix}-tooltip {
-        display: block;
+      &:hover {
+        .#{$prefix}-tooltip {
+          display: block;
+        }
+        .#{$prefix}-controller-panel-wrap {
+          display: block;
+        }
+        .#{$prefix}-controller-icon-wrap {
+          transform: translateY(-2px);
+          &:active {
+            transform: translateY(1px);
+          }
+        }
       }
-      &:hover .#{$prefix}-controller-panel-wrap {
-        display: block;
-      }
-      &.state-control .#{$prefix}-controller-panel-wrap {
-        display: block;
+      &.state-control {
+        .#{$prefix}-controller-panel-wrap {
+          display: block;
+        }
+        .#{$prefix}-controller-icon-wrap {
+          transform: translateY(-2px);
+        }
       }
     }
     &-icon-wrap {
-			padding: 0 7px;
+      padding: 0 7px;
+      transition: transform 0.3s ease;
     }
     &-panel-wrap {
       position: absolute;
@@ -132,10 +152,12 @@
       height: $controller-fixed-height;
     }
     &-controller {
-      position: relative;
       height: 100%;
       margin: 0;
       color: $text-black;
+      &-mask {
+        display: none;
+      }
       &-content {
         height: calc(100% - 6px);
         margin: 6px 0 0;

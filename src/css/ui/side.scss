@@ -1,0 +1,49 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  &-side-wrap {
+    display: none;
+    &.state-show {
+      display: block;
+    }
+  }
+  &-side {
+    position: absolute;
+    right: 20px;
+    width: 300px;
+    top: 50px;
+    height: calc(100% - 120px);
+    background-color: $translucent-black;
+    border-radius: $theme-border-radius;
+    color: white;
+    &-mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    &-head {
+      height: 30px;
+      padding: 0 8px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &-title {
+      line-height: 30px;
+    }
+    &-panel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: none;
+      &.state-show {
+        display: block;
+      }
+    }
+    .#{$prefix}-controller-icon {
+      cursor: pointer;
+      font-size: 21px;
+      line-height: 30px;
+    }
+  }
+}

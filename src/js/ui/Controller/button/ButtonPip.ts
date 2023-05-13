@@ -1,6 +1,6 @@
-import MfunsPlayer from '@/player';
-import { classPrefix } from '@/const';
-import { html, render } from "lit-html";
+import { html, render } from "lit-html"
+import MfunsPlayer from "@/player"
+import { classPrefix } from "@/const"
 
 const template = () => html`
   <div class="${classPrefix}-controller-button ${classPrefix}-controller-pip">
@@ -17,6 +17,7 @@ export default class ButtonPip {
   el: HTMLElement
   $iconWrap: HTMLElement
   $tooltip: HTMLElement
+
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
     const fragment = new DocumentFragment()
@@ -27,6 +28,7 @@ export default class ButtonPip {
     this.init()
     container.appendChild(fragment)
   }
+
   private init() {
     this.player.on("pip", () => {
       this.el.classList.add("state-pip")

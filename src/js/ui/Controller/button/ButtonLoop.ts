@@ -1,13 +1,13 @@
-import MfunsPlayer from '@/player';
-import { classPrefix } from '@/const';
-import { html, render } from "lit-html";
+import { html, render } from "lit-html"
+import MfunsPlayer from "@/player"
+import { classPrefix } from "@/const"
 
 const template = () => html`
   <div class="${classPrefix}-controller-button ${classPrefix}-controller-loop">
     <div class="${classPrefix}-controller-icon-wrap">
       <i class="${classPrefix}-controller-icon mp-icon-loop"></i>
       <i class="${classPrefix}-controller-icon mp-icon-loop-off"></i>
-      </div>
+    </div>
     <div class="${classPrefix}-tooltip">洗脑循环</div>
   </div>
 `
@@ -17,6 +17,7 @@ export default class ButtonLoop {
   el: HTMLElement
   $iconWrap: HTMLElement
   $tooltip: HTMLElement
+
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
     const fragment = new DocumentFragment()
@@ -27,6 +28,7 @@ export default class ButtonLoop {
     this.init()
     container.appendChild(fragment)
   }
+
   private init() {
     this.player.on("loop", () => {
       this.el.classList.add("state-loop")

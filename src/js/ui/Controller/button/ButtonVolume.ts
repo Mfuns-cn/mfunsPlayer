@@ -1,7 +1,7 @@
-import { SliderVertical } from '@/ui/components';
-import MfunsPlayer from '@/player';
-import { classPrefix } from '@/const';
-import { html, render } from "lit-html";
+import { html, render } from "lit-html"
+import { SliderVertical } from "@/ui/components"
+import MfunsPlayer from "@/player"
+import { classPrefix } from "@/const"
 
 const template = () => html`
   <div class="${classPrefix}-controller-button ${classPrefix}-controller-volume">
@@ -9,7 +9,7 @@ const template = () => html`
       <i class="${classPrefix}-controller-icon mp-icon-volume"></i>
       <i class="${classPrefix}-controller-icon mp-icon-volume-off"></i>
     </div>
-    
+
     <div class="${classPrefix}-controller-panel-wrap">
       <div class="${classPrefix}-controller-panel">
         <div class="${classPrefix}-controller-volume-text">0</div>
@@ -22,11 +22,11 @@ const template = () => html`
 export default class ButtonVolume {
   player: MfunsPlayer
   el: HTMLElement
-
   $iconWrap: HTMLElement
   $slider: HTMLElement
   $text: HTMLElement
   slider!: SliderVertical
+
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
     const fragment = new DocumentFragment()
@@ -38,6 +38,7 @@ export default class ButtonVolume {
     this.init()
     container.appendChild(fragment)
   }
+
   private init() {
     this.slider = new SliderVertical({
       container: this.$slider,
@@ -59,7 +60,7 @@ export default class ButtonVolume {
       },
       onDragEnd: () => {
         this.el.classList.remove("state-control")
-      }
+      },
     })
     this.player.video.on("volumechange", () => {
       if (this.player.video.el.muted) {
@@ -75,7 +76,7 @@ export default class ButtonVolume {
     })
     this.$iconWrap.addEventListener("click", () => {
       if (this.player.video.el.muted || this.player.video.el.volume == 0) {
-        if(this.player.video.el.volume == 0) {
+        if (this.player.video.el.volume == 0) {
           this.player.video.el.volume = 0.1
         }
         this.player.mute(false)

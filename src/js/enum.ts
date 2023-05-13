@@ -1,4 +1,3 @@
-
 /** 弹幕模式 */
 export enum DanmakuMode {
   LEFT = 1,

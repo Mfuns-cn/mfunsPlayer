@@ -1,8 +1,5 @@
 export default class DanmakuEngine {
-  play() {
+  play() {}
 
-  }
-  pause() {
-    
-  }
+  pause() {}
 }

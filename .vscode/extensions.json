@@ -1,5 +1,3 @@
 {
-  "recommendations": [
-    "bierner.lit-html"
-  ]
+  "recommendations": ["bierner.lit-html"]
 }
