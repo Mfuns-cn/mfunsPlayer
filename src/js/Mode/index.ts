@@ -55,4 +55,10 @@ export default class Mode {
   get isWide() {
     return false
   }
+
+  /** 设置控制栏固定 */
+  fixedController(flag: boolean) {
+    this.player.template.el.classList.toggle("mode-fixedcontroller", flag)
+    this.player.events.trigger(flag ? "fixedcontroller" : "fixedcontroller_off")
+  }
 }

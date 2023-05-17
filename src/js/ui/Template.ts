@@ -2,7 +2,7 @@ import { html, render } from "lit-html"
 import MfunsPlayer from "@/player"
 import { colorLuminance } from "@/utils"
 import { classPrefix } from "@/const"
-import { PlayerOptions } from "@/types"
+import { PlayerOptions, ThemeOptions } from "@/types"
 
 const template = () => html`
   <div class="${classPrefix}">
@@ -15,9 +15,10 @@ const template = () => html`
         <div class="${classPrefix}-state-loading"></div>
         <div class="${classPrefix}-state-volume"></div>
         <div class="${classPrefix}-toast-wrap"></div>
-        <div class="${classPrefix}-modal-wrap"></div>
       </div>
       <div class="${classPrefix}-side-wrap"></div>
+      <div class="${classPrefix}-modal-wrap"></div>
+      <div class="${classPrefix}-contextmenu-wrap"></div>
       <div class="${classPrefix}-header-wrap"></div>
       <div class="${classPrefix}-controller-wrap"></div>
       <div class="${classPrefix}-state-play"></div>
@@ -29,7 +30,8 @@ const template = () => html`
   </div>
 `
 
-class Template {
+export default class Template {
+  player: MfunsPlayer
   /** 播放器容器 */
   container: HTMLElement
   /** 播放器主体元素 */
@@ -45,21 +47,16 @@ class Template {
   $statusVolume!: HTMLElement
   $statusLoading!: HTMLElement
   $headerWrap!: HTMLElement
+  $contextmenuWrap!: HTMLElement
   $modalWrap!: HTMLElement
   $controllerWrap!: HTMLElement
   $sideWrap!: HTMLElement
   $footbar!: HTMLElement
   $miniplayer!: HTMLElement
-  /** 主题色 */
-  themeColor!: string
-  /** 绑定了主题变量的DOM元素 */
-  private themeElement: HTMLElement[]
 
   constructor(player: MfunsPlayer, options: PlayerOptions) {
-    this.container = player.container
-    this.themeColor = options.themeColor
-    this.themeColor && this.setThemeColor(options.themeColor)
-    this.themeElement = [this.container]
+    this.player = player
+    this.container = this.player.container
     this.init()
   }
 
@@ -78,32 +75,11 @@ class Template {
     this.$statusVolume = $(`.${classPrefix}-video-status-volume`)!
     this.$statusLoading = $(`.${classPrefix}-video-status-loading`)!
     this.$headerWrap = $(`.${classPrefix}-header-wrap`)!
+    this.$contextmenuWrap = $(`.${classPrefix}-contextmenu-wrap`)!
     this.$modalWrap = $(`.${classPrefix}-modal-wrap`)!
     this.$controllerWrap = $(`.${classPrefix}-controller-wrap`)!
     this.$sideWrap = $(`.${classPrefix}-side-wrap`)!
     this.$footbar = $(`.${classPrefix}-footbar`)!
     this.$miniplayer = $(`.${classPrefix}-miniplayer`)!
   }
-
-  /** 为元素绑定主题变量 */
-  public addThemeElement(el: HTMLElement) {
-    this.themeElement.push(el)
-    this.applyThemeColorVar(el, this.themeColor)
-  }
-
-  /** 设置主题色 */
-  public setThemeColor(color: string) {
-    this.themeColor = color
-    this.themeElement.forEach((el) => {
-      this.applyThemeColorVar(el, color)
-    })
-  }
-
-  /** 为元素设置主题色变量 */
-  private applyThemeColorVar(el: HTMLElement, color: string) {
-    el.style.setProperty("--theme-color", color)
-    el.style.setProperty("--theme-color-light", colorLuminance(color, 0.3))
-    el.style.setProperty("--theme-color-dark", colorLuminance(color, -0.3))
-  }
 }
-export default Template

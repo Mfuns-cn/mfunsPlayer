@@ -10,12 +10,12 @@ const templateWrap = ({
 }) => html`
   <ul class="${classPrefix}-picker">
     ${list.map(
-    (item, index) => html`
+      (item, index) => html`
         <li class="${classPrefix}-picker-item" data-value="${item.value}">
-          ${template?.(item, index) || item.label}
+          ${template?.(item, index) || item.label || item.value}
         </li>
-      `,
-  )}
+      `
+    )}
   </ul>
 `
 
@@ -68,9 +68,7 @@ export class MultiPicker implements MultiPickerOptions {
   /** 选择项标签集合 */
   private $items!: NodeListOf<HTMLElement>
 
-  constructor({
-    container, value = [], list, onChange, onToggle,
-  }: MultiPickerOptions) {
+  constructor({ container, value = [], list, onChange, onToggle }: MultiPickerOptions) {
     this.container = container
     this.list = list
     this.valueSet = new Set(value)
@@ -89,7 +87,7 @@ export class MultiPicker implements MultiPickerOptions {
         this.toggle(item.getAttribute("data-value")!)
       })
     })
-    this.setValue(value || this.value)
+    this.setValue(value ?? this.value)
   }
 
   /** 设置值 */
@@ -97,9 +95,9 @@ export class MultiPicker implements MultiPickerOptions {
     this.valueSet = new Set(value)
     this.$items.forEach((n, i) => {
       if (this.valueSet.has(n.getAttribute("data-value")!)) {
-        n.classList.add(`${classPrefix}-picker-item-picked`)
+        n.classList.add("state-picked")
       } else {
-        n.classList.remove(`${classPrefix}-picker-item-picked`)
+        n.classList.remove("state-picked")
       }
     })
     this.onChange?.(value)
@@ -115,7 +113,7 @@ export class MultiPicker implements MultiPickerOptions {
     }
     this.$items.forEach((n, i) => {
       if (n.getAttribute("data-value") == value) {
-        n.classList.toggle(`${classPrefix}-picker-item-picked`, b)
+        n.classList.toggle("state-picked", b)
       }
     })
     this.onChange?.(this.value)

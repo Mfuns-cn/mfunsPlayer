@@ -6,10 +6,8 @@ export interface PlayerOptions {
   container: HTMLElement
   /** 视频信息 */
   video: VideoInfo
-
-  /** 播放器主题色 */
-  themeColor: string
-
+  /** 主题设置 */
+  theme?: ThemeOptions
   // 播放配置
   /** 音量 */
   volume?: number
@@ -20,7 +18,14 @@ export interface PlayerOptions {
   /** 循环播放 */
   repeat?: boolean
 }
-
+export interface ThemeOptions {
+  /** 播放器主色 */
+  primaryColor?: string
+  /** 播放器辅色 */
+  secondaryColor?: string
+  /** 播放器圆角尺寸 */
+  borderRadius?: string
+}
 /** 视频信息 */
 export interface VideoInfo {
   /** 视频标题 */

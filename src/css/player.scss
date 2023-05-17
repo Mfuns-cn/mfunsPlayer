@@ -34,9 +34,22 @@
   }
   &-head-wrap {
     position: absolute;
-    
   }
   &-side-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  &-modal-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  &-contextmenu-wrap {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -66,7 +79,11 @@
     line-height: 20px;
     padding: 0 4px;
     font-size: 12px;
-    background-color: $translucent-black;
-    color: white;
+    background-color: $panel-black;
+    color: $text-white;
+    border-radius: $border-radius;
+  }
+  li {
+    list-style: none;
   }
 }

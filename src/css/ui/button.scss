@@ -79,4 +79,10 @@
       padding: 4px 0 6px;
     }
   }
+  &-controller-settings {
+    .#{$prefix}-controller-panel {
+      width: 250px;
+      padding: 6px;
+    }
+  }
 }

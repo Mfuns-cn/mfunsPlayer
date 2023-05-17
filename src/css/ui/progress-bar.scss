@@ -1,26 +1,25 @@
 @import "../theme.scss";
 
 .#{$prefix} {
-  
   &-progress-bar {
     position: relative;
     width: 100%;
     height: 4px;
-    background-color: $translucent-white-light;
+    background-color: $light-semiwhite;
     transition: height 0.2s ease;
     &-played {
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
-      background-color: $theme-color;
+      background-color: $primary-color;
     }
     &-buffered {
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
-      background-color: $translucent-white;
+      background-color: $text-semiwhite;
     }
     &-thumb-track {
       position: absolute;
@@ -34,7 +33,7 @@
       transform: translate(-50%, -50%) scale(0);
       width: 14px;
       height: 14px;
-      background-color: $theme-color;
+      background-color: $primary-color;
       border-radius: 7px;
       transition: transform, border;
       transition-timing-function: ease;
@@ -58,8 +57,9 @@
       line-height: 20px;
       padding: 0 4px;
       font-size: 12px;
-      background-color: $translucent-black;
-      color: white;
+      background-color: $panel-black;
+      color: $text-white;
+      border-radius: $border-radius;
     }
     &-tip {
       display: none;
@@ -73,7 +73,7 @@
         left: 50%;
         transform: translateX(-50%);
         border: 5px solid;
-        border-color: $theme-color transparent transparent transparent;
+        border-color: $primary-color transparent transparent transparent;
       }
     }
     &.#{$prefix}-progress-bar-active & {
@@ -99,8 +99,12 @@
     &-progress-bar {
       background-color: rgba($light-grey, 0.5);
       &-buffered {
-        background-color: $theme-color-light;
+        background-color: $primary-color;
         opacity: 0.5;
+      }
+      &-time {
+        background-color: $panel-white;
+        color: $text-black;
       }
     }
   }

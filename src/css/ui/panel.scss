@@ -1,0 +1,27 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  &-hotkey {
+    &-list {
+      padding: 5px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      &-item {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      &-key {
+        display: inline-block;
+        width: 80px;
+      }
+      &-description {
+        display: inline-block;
+        width: 180px;
+      }
+    }
+  }
+  &-about {
+    padding: 5px 8px;
+  }
+}

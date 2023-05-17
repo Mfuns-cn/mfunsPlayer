@@ -39,10 +39,10 @@ export default class ButtonLoop {
       this.$tooltip.innerText = "洗脑循环"
     })
     this.$iconWrap.addEventListener("click", () => {
-      if (this.player.video.el.loop) {
-        this.player.video.loop(false)
+      if (this.player.video.loop) {
+        this.player.loop(false)
       } else {
-        this.player.video.loop(true)
+        this.player.loop(true)
       }
     })
   }

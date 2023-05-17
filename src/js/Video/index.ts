@@ -47,21 +47,21 @@ export default class Video {
 
   /** 跳转 */
   public seek(value: number) {
-    this.el.currentTime = value
+    this.el.currentTime = value > 0 ? (value < this.el.duration ? value : this.el.duration) : 0
   }
 
   /** 设置音量 */
-  public volume(value: number) {
-    this.el.volume = value
+  public setVolume(value: number) {
+    this.el.volume = value > 0 ? (value < 1 ? value : 1) : 0
   }
 
   /** 设置倍速 */
-  public rate(value: number) {
+  public setRate(value: number) {
     this.el.playbackRate = value
   }
 
   /** 设置循环播放 */
-  public loop(flag: boolean) {
+  public setLoop(flag: boolean) {
     this.el.loop = flag
     this.player.events.trigger(flag ? "loop" : "loop_off")
   }
@@ -74,7 +74,23 @@ export default class Video {
   /** 保持视频宽高比 */
   public rescale() {}
 
-  get isPaused(): boolean {
+  get muted(): boolean {
+    return this.el.muted
+  }
+
+  get rate(): number {
+    return this.el.playbackRate
+  }
+
+  get loop(): boolean {
+    return this.el.loop
+  }
+
+  get volume(): number {
+    return this.el.volume
+  }
+
+  get paused(): boolean {
     return this.el.paused
   }
 
@@ -114,6 +130,12 @@ export default class Video {
     })
     this.on("pause", () => {
       this.player.events.trigger("pause")
+    })
+    this.on("volumechange", () => {
+      this.player.events.trigger("volume_change", this.volume)
+    })
+    this.on("ratechange", () => {
+      this.player.events.trigger("rate_change", this.rate)
     })
   }
 }

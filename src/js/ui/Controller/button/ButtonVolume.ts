@@ -62,15 +62,15 @@ export default class ButtonVolume {
         this.el.classList.remove("state-control")
       },
     })
-    this.player.video.on("volumechange", () => {
-      if (this.player.video.el.muted) {
+    this.player.on("volume_change", (value: number) => {
+      if (this.player.video.muted) {
         this.el.classList.add("state-muted")
         this.slider.setValue(0)
       } else {
         this.el.classList.remove("state-muted")
-        this.slider.setValue(Math.round(this.player.video.el.volume * 100))
+        this.slider.setValue(Math.round(value * 100))
       }
-      if (this.player.video.el.volume == 0) {
+      if (value == 0) {
         this.el.classList.add("state-muted")
       }
     })

@@ -6,6 +6,9 @@ import Video from "@/Video"
 import Mode from "@/Mode"
 import HotKey from "@/ui/HotKey"
 import Side from "@/ui/Side"
+import ContextMenu from "@/ui/ContextMenu"
+import Modal from "@/ui/Modal"
+import Theme from "@/ui/Theme"
 
 export default class MfunsPlayer {
   static readonly version = MFUNSPLAYER_VERSION
@@ -24,10 +27,16 @@ export default class MfunsPlayer {
   mode: Mode
   /** 模板 */
   template: Template
+  /** 主题样式 */
+  theme: Theme
   /** 控制栏 */
   controller: Controller
+  /** 右键菜单 */
+  contextMenu: ContextMenu
   /** 控制栏 */
   side: Side
+  /** 模态框 */
+  modal: Modal
   /** 快捷键 */
   hotKey: HotKey
   isFocused = false
@@ -39,6 +48,8 @@ export default class MfunsPlayer {
     this.container = options.container
     // 注入模板
     this.template = new Template(this, options)
+    // 初始化主题样式模块
+    this.theme = new Theme(this, options)
 
     // 初始化功能
     this.video = new Video(this, options)
@@ -47,6 +58,8 @@ export default class MfunsPlayer {
     // 注入ui
     this.controller = new Controller(this, options)
     this.side = new Side(this, options)
+    this.modal = new Modal(this, options)
+    this.contextMenu = new ContextMenu(this, options)
 
     this.hotKey = new HotKey(this, options)
 
@@ -88,15 +101,15 @@ export default class MfunsPlayer {
 
   /** 切换播放/暂停状态 */
   public toggle() {
-    if (this.isPaused) {
+    if (this.paused) {
       this.play()
     } else {
       this.pause()
     }
   }
 
-  get isPaused() {
-    return this.video.isPaused
+  get paused() {
+    return this.video.paused
   }
 
   /** 跳转 */
@@ -106,17 +119,22 @@ export default class MfunsPlayer {
 
   /** 设置音量 */
   public volume(value: number) {
-    this.video.volume(value)
+    this.video.setVolume(value)
   }
 
   /** 设置倍速 */
   public rate(value: number) {
-    this.video.rate(value)
+    this.video.setRate(value)
   }
 
   /** 静音 */
   public mute(flag = true) {
     this.video.mute(flag)
+  }
+
+  /** 设置循环播放 */
+  public loop(flag = true) {
+    this.video.setLoop(flag)
   }
 
   /** 跳转分P */

@@ -1,18 +1,19 @@
 @import "../theme.scss";
 
 .#{$prefix} {
-  &-side-wrap {
+  &-modal-wrap {
     display: none;
     &.state-show {
       display: block;
     }
   }
-  &-side {
+  &-modal {
     position: absolute;
-    right: 20px;
-    width: 300px;
-    top: 50px;
-    height: calc(100% - 120px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 200px;
+    min-height: 150px;
     background-color: $panel-black;
     border-radius: $border-radius;
     color: white;
@@ -22,14 +23,19 @@
       height: 100%;
     }
     &-head {
+      position: relative;
       height: 30px;
-      padding: 0 8px;
       font-size: 14px;
-      display: flex;
-      justify-content: space-between;
     }
     &-title {
+      position: absolute;
+      width: 100%;
+      text-align: center;
       line-height: 30px;
+    }
+    &-close {
+      position: absolute;
+      right: 8px;
     }
     &-panel {
       position: relative;

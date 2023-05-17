@@ -1,17 +1,24 @@
 // 主题变量
 $prefix: "mfuns-player";
 
-$theme-color: var(--themeColor, #7b7ff7); // 默认主题色
-$theme-color-light: var(--themeColorLight, #9c9ffb); // 默认主题色(浅)
-$theme-color-dark: var(--themeColorDark, #6550eb); // 默认主题色(深)
-$translucent-black: #202020a0; // 半透明黑色(用于面板)
-$text-black: #404040; // 黑色(用于文字)
-$text-grey: #808080; // 灰色(用于文字)
-$light-grey: #e6e6e6; // 灰色(用于淡色)
-$text-white: #ffffffe0; // 半透明白色(用于文字)
-$translucent-white: #ffffffa0; // 半透明白色(用于淡色)
-$translucent-white-light: #ffffff80; // 半透明白色(用于淡色)
-$theme-border-radius: 2px; // 圆角大小
+$bg-white: #ffffff; // 背景白色
+$bg-black: #202020; // 背景暗色
 
-$footbar-height: 40px;    // 底栏高度
-$controller-fixed-height: 36px;   // 固定控制栏高度
+$panel-white: #ffffff; // 面板白色
+$panel-black: #202020a0; // 面板黑色
+
+$text-black: #404040; // 文字黑色
+$text-grey: #808080; // 文字灰色
+$light-grey: #e6e6e6; // 淡灰色
+
+$text-white: #ffffffe0; // 文字白色
+$text-semiwhite: #ffffff80; // 文字半透明白色
+$light-semiwhite: #ffffff40; // 淡半透明白色
+
+$primary-color: var(--mp-primary-color, #7b7ff7); // 主要颜色
+$secondary-color: var(--mp-secondary-color, $primary-color); // 次要颜色
+
+$border-radius: var(--mp-border-radius, 4px); // 圆角大小
+
+$footbar-height: 40px; // 底栏高度
+$controller-fixed-height: 36px; // 固定控制栏高度

@@ -1,10 +1,14 @@
 import { html, render } from "lit-html"
 import { classPrefix } from "@/const"
 
-const templateWrap = ({ label }: { label?: string }) =>
-  html` <div class="${classPrefix}-switch">${label}</div> `
+const templateWrap = ({ label }: { label?: string }) => html`
+  <div class="${classPrefix}-checkbox">
+    <div class="${classPrefix}-checkbox-icon"></div>
+    <div class="${classPrefix}-checkbox-label">${label}</div>
+  </div>
+`
 
-interface SwitchOptions {
+interface CheckboxOptions {
   /** 挂载容器 */
   container: HTMLElement
   /** 标签 */
@@ -20,7 +24,7 @@ interface SwitchOptions {
 }
 
 /** 开关 */
-export class Switch implements SwitchOptions {
+export class Checkbox implements CheckboxOptions {
   readonly container: HTMLElement
 
   onChange?: (value: boolean) => void
@@ -34,17 +38,18 @@ export class Switch implements SwitchOptions {
 
   el: HTMLElement
 
-  constructor({ container, value = false, onChange, onToggle }: SwitchOptions) {
+  constructor({ container, value = false, onChange, onToggle, label }: CheckboxOptions) {
     this.container = container
     this.value = value
     this.onChange = onChange // 更新数据时需要执行的函数
     this.onToggle = onToggle
+    this.label = label
     // 注入模板
     render(templateWrap({ label: this.label }), this.container)
 
-    this.el = this.container.querySelector(`.${classPrefix}-switch`)!
+    this.el = this.container.querySelector(`.${classPrefix}-checkbox`)!
     this.el.addEventListener("click", () => {
-      this.toggle(!this.value)
+      this.toggle()
     })
 
     this.setValue(this.value)
@@ -53,7 +58,7 @@ export class Switch implements SwitchOptions {
   /** 设置开关状态 */
   public setValue(value: boolean) {
     this.value = value
-    this.el.classList.toggle("state-on", value)
+    this.el.classList.toggle("state-checked", value)
     this.onChange?.(value)
   }
 

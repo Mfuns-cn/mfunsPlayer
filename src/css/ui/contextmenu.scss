@@ -1,0 +1,29 @@
+@import "../theme.scss";
+
+.#{$prefix} {
+  &-contextmenu-wrap {
+    display: none;
+    &.state-show {
+      display: block;
+    }
+  }
+  &-contextmenu {
+    position: absolute;
+    min-width: 200px;
+    background-color: $panel-black;
+    border-radius: $border-radius;
+    color: $text-white;
+    li {
+      height: 36px;
+      line-height: 36px;
+      cursor: pointer;
+      padding: 0 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      & + li {
+        border-top: 1px solid $light-semiwhite;
+      }
+    }
+  }
+}

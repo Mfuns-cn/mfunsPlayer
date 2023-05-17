@@ -105,8 +105,8 @@
     }
     &-panel {
       margin-bottom: 20px;
-      background-color: $translucent-black;
-      border-radius: $theme-border-radius;
+      background-color: $panel-black;
+      border-radius: $border-radius;
     }
     &-time {
       width: 90px;
@@ -170,6 +170,25 @@
       }
       &-icon-wrap {
         padding: 0 5px;
+      }
+      &-panel {
+        background-color: $panel-white;
+      }
+      .#{$prefix} {
+        &-slider {
+          &-track {
+            background: $light-grey;
+          }
+        }
+        &-tooltip {
+          background-color: $panel-white;
+          color: $text-black;
+        }
+        &-checkbox {
+          &-icon {
+            border-color: $text-grey;
+          }
+        }
       }
     }
   }

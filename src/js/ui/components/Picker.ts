@@ -10,12 +10,12 @@ const templateWrap = ({
 }) => html`
   <ul class="${classPrefix}-picker">
     ${list.map(
-    (item, index) => html`
+      (item, index) => html`
         <li class="${classPrefix}-picker-item" data-value="${item.value}">
-          ${template?.(item, index) || item.label}
+          ${template?.(item, index) || item.label || item.value}
         </li>
-      `,
-  )}
+      `
+    )}
   </ul>
 `
 
@@ -23,8 +23,8 @@ const templateWrap = ({
 type PickerItemTemplate = (item: PickerOptionsItem, index?: number) => string | TemplateResult
 
 interface PickerOptionsItem {
-  value: string
-  label: string
+  value: string | number
+  label?: string
   disabled?: boolean
   [key: string]: any
 }
@@ -37,11 +37,11 @@ interface PickerOptions {
   /** 选择项标签模板 */
   template?: PickerItemTemplate
   /** 默认值(不填的情况下默认值为null) */
-  value?: string | null
+  value?: string | number | null
   /** 值更改时触发 */
-  onChange?: (value: string | null) => void
+  onChange?: (value: string | number | null) => void
   /** 选择某一项时触发 */
-  onPick?: (value: string | null) => void
+  onPick?: (value: string | number | null) => void
 }
 
 /** 单选选择器 */
@@ -53,23 +53,21 @@ export class Picker implements PickerOptions {
   list: PickerOptionsItem[]
 
   /** 已选值 */
-  value: string | null
+  value: string | number | null
 
-  onChange?: (value: string | null) => void
+  onChange?: (value: string | number | null) => void
 
-  onPick?: (value: string | null) => void
+  onPick?: (value: string | number | null) => void
 
   el!: HTMLElement
 
   /** 选择项标签集合 */
   private $items!: NodeListOf<HTMLElement>
 
-  constructor({
-    container, value, onChange, onPick, list,
-  }: PickerOptions) {
+  constructor({ container, value, onChange, onPick, list }: PickerOptions) {
     this.container = container
     this.list = list
-    this.value = value || null
+    this.value = value ?? null
     this.onChange = onChange // 更新数据时需要执行的函数
     this.onPick = onPick // 更新数据时需要执行的函数
     this.reload()
@@ -77,7 +75,7 @@ export class Picker implements PickerOptions {
 
   /** 重载，一般用于列表项更改 */
   public reload(value?: string) {
-    render(templateWrap({ list: this.list, template: this.template }), this.el)
+    render(templateWrap({ list: this.list, template: this.template }), this.container)
     this.el = this.container.querySelector(`.${classPrefix}-picker`)!
     this.$items = this.el.querySelectorAll(`.${classPrefix}-picker-item`) // 标签集合
     this.$items.forEach((item) => {
@@ -85,16 +83,16 @@ export class Picker implements PickerOptions {
         this.pick(item.getAttribute("data-value"))
       })
     })
-    this.setValue(value || this.value)
+    this.setValue(value ?? this.value)
   }
 
   /** 设置值 */
-  public setValue(value: string | null) {
+  public setValue(value: string | number | null) {
     this.$items.forEach((n, i) => {
       if (n.getAttribute("data-value") == value) {
-        n.classList.add(`${classPrefix}-picker-item-picked`)
+        n.classList.add("state-picked")
       } else {
-        n.classList.remove(`${classPrefix}-picker-item-picked`)
+        n.classList.remove("state-picked")
       }
     })
     this.value = value

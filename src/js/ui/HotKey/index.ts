@@ -21,6 +21,22 @@ export default class HotKey {
             e.preventDefault()
             this.player.toggle()
             break
+          case keyCode.LeftArrow:
+            e.preventDefault()
+            this.player.seek(this.player.video.currentTime - 5)
+            break
+          case keyCode.RightArrow:
+            e.preventDefault()
+            this.player.seek(this.player.video.currentTime + 5)
+            break
+          case keyCode.UpArrow:
+            e.preventDefault()
+            this.player.volume(this.player.video.volume + 0.1)
+            break
+          case keyCode.DownArrow:
+            e.preventDefault()
+            this.player.volume(this.player.video.volume - 0.1)
+            break
         }
       }
     })
