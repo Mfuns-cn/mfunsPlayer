@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/flv.js/1.6.2/flv.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/dashjs/4.6.0/dash.all.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.0/hls.min.js"></script>
+    <title>Mfuns Player v3测试 - 媒体播放测试</title>
+  </head>
+  <script src="../src/static/echarts.js"></script>
+  <script src="../dist/mfuns-player.min.umd.js"></script>
+
+  <body>
+    <h2 class="test-title">mfuns-player v3 测试</h2>
+    <h4 class="test-info">媒体播放测试</h4>
+    <h4 class="test-info">当前版本：<span class="test-version"></span></h4>
+    <h4 class="test-tip">注：请尽量使用谷歌或者火狐内核的浏览器进行测试</h4>
+    <div class="player">
+      <div class="content"></div>
+      <div class="extra"></div>
+    </div>
+  </body>
+  <script>
+    console.log(MfunsPlayer)
+    let mfPlayer
+    const testVersion = document.querySelector(".test-version")
+    testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash
+    window.onload = () => {
+      const container = document.querySelector(".content")
+      const playerExtra = document.querySelector(".extra")
+      const playerSettings = { player: {}, danmaku: {} }
+      localStorage.mfunsPlayerSettings ??
+        localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
+      localStorage.mfuns_video_point ??
+        localStorage.setItem("mfuns_video_point", JSON.stringify([]))
+      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings
+      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player
+      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku
+      console.log(player, danmaku)
+
+      const mfunsPlayerConfig = {
+        container,
+        uid: 2333,
+        currentVideo: 0,
+        video: {
+          title: "媒体播放测试",
+          list: [
+            {
+              src: [
+                {
+                  url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4",
+                  type: "mp4",
+                },
+              ],
+              title: "[MP4 720P] Big Buck Bunny",
+            },
+            {
+              src: [
+                {
+                  url: "https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd",
+                  type: "dash",
+                },
+              ],
+              title: "[DASH] Envivio",
+            },
+            {
+              src: [
+                {
+                  url: "http://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-720p.flv",
+                  type: "flv",
+                },
+              ],
+              title: "[FLV] 西瓜播放器测试",
+            },
+            {
+              src: [
+                {
+                  url: "https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/hls/xgplayer-demo.m3u8",
+                  type: "m3u8",
+                },
+              ],
+              title: "[M3U8] 西瓜播放器测试",
+            },
+          ],
+        },
+        danmaku: {
+          api: "https://www.mfuns.xyz/wp-json/mfuns",
+        },
+        // advancedDanmaku:{
+        //   api: "https://www.mfuns.fun/wp-json/mfuns",
+        //   editor: 1,
+        // },
+
+        // activity: [
+        //     {
+        //         pic: "https://uploadstatic.mihoyo.com/puzzle/upload/puzzle/2022/08/15/ccacb5a63ec19ef530a8d37466ec8081_3788366410575723900.png?x-oss-process=image/format,webp/quality,Q_90",
+        //         link: "https://ys.mihoyo.com/?utm_source=adbdsem016&from_channel=adbdsem#/"
+        //     },
+        //     {
+        //         pic: "https://imgs.aixifan.com/fsjvI363GQ-VNZJF3-yY77ni-FrAbiu-FJjE7j.png?x-oss-process=image/resize,m_fill,w_964,h_494",
+        //         link: "https://activity.acfun.cn/mega/anniversary-2022"
+        //     },
+        //     {
+        //         pic: "http://www.dmoe.cc/random.php?165517318",
+        //         link: "https://www.mfuns.fun"
+        //     }
+        // ]
+      }
+      for (let key in player) {
+        if (key) mfunsPlayerConfig[key] = player[key]
+      }
+      for (let key in danmaku) {
+        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key]
+      }
+      for (let i = 0; i < mfunsPlayerConfig.video.length; i++) {
+        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
+        if (!mfuns_video_point.length) break
+        else {
+          for (let j = 0; j < mfuns_video_point.length; j++) {
+            if (mfunsPlayerConfig.video[i].url === mfuns_video_point[j].link) {
+              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position
+            }
+          }
+        }
+      }
+      console.log(mfunsPlayerConfig)
+      mfPlayer = new MfunsPlayer(mfunsPlayerConfig)
+      console.log(mfPlayer)
+      mfPlayer.on("play", () => {
+        console.log("play")
+      })
+      mfPlayer.on("pause", () => {
+        console.log("pause")
+      })
+      mfPlayer.on("part_change", (p) => {
+        console.log("part_change", p)
+      })
+    }
+  </script>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .test-title {
+      margin: 10px auto;
+      font-size: 40px;
+      width: fit-content;
+    }
+
+    .test-info {
+      margin: 10px auto;
+      width: fit-content;
+      color: #888;
+    }
+    .test-tip {
+      margin: 10px auto;
+      width: fit-content;
+      color: #f00;
+    }
+
+    .header {
+      position: relative;
+      width: 1000px;
+      margin: 10px auto;
+    }
+
+    .header > .title {
+      font-size: 20px;
+      margin-left: -10px;
+    }
+
+    .header > .updater {
+      position: absolute;
+      top: -10px;
+      right: 50px;
+      width: 250px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .avater {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: url("../src/static/avater.png");
+      background-size: 100% 100%;
+    }
+
+    .updater-info {
+      width: 180px;
+      height: 50px;
+      padding-left: 20px;
+    }
+
+    .updater-name {
+      margin-top: 5px;
+      font-size: 18px;
+    }
+
+    .updater-sign {
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .play-data {
+      margin: 0 auto;
+      width: 1000px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .player {
+      width: 1000px;
+      /* height: 460px; */
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 0 5px #80808080;
+    }
+
+    .content {
+      width: 700px;
+    }
+
+    .extra {
+      box-sizing: border-box;
+      width: 300px;
+      border-left: 1px solid #e6e6e6;
+    }
+
+    .inroduce {
+      margin: 80px auto;
+      padding: 20px;
+      width: 1000px;
+      height: 400px;
+      border: 1px solid #e6e6e6;
+      display: flex;
+      box-sizing: border-box;
+    }
+
+    .inroduce > img {
+      width: 220px;
+      height: 340px;
+    }
+
+    .media-right {
+      margin-left: 20px;
+    }
+
+    .media-title {
+      font-size: 20px;
+      color: #000;
+    }
+
+    .pub-wrapper {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .inroduce-content {
+      width: 320px;
+      /* white-space: pre; */
+
+      font-size: 14px;
+      color: rgb(88, 84, 84);
+    }
+
+    .inroduce-content-line {
+      margin: 15px 0;
+    }
+
+    .inroduce > .staff {
+      margin-left: 50px;
+      padding-left: 50px;
+      color: #666;
+      font-size: 15px;
+      border-left: 1px solid #e6e6e6;
+    }
+
+    .comment {
+      margin: 20px auto;
+      height: 1200px;
+      width: 1000px;
+      border: 1px solid #000;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 100px;
+    }
+  </style>
+</html>

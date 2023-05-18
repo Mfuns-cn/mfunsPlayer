@@ -11,6 +11,7 @@ import LabelTime from "./label/LabelTime"
 import ButtonLoop from "./button/ButtonLoop"
 import ButtonVolume from "./button/ButtonVolume"
 import ButtonSettings from "./button/ButtonSettings"
+import ButtonPart from "./button/ButtonPart"
 
 const template = () => html`
   <div class="${classPrefix}-controller-mask"></div>
@@ -26,31 +27,22 @@ const template = () => html`
 /** 控制栏 */
 export default class Controller {
   player: MfunsPlayer
-
   container: HTMLElement
-
   el: HTMLElement
 
   $progress: HTMLElement
-
   $content: HTMLElement
-
   $left: HTMLElement
-
   $right: HTMLElement
 
   progressBar: ProgressBar
 
   buttonPlay: ButtonPlay
-
   buttonLoop: ButtonLoop
-
   buttonVolume: ButtonVolume
-
   buttonSettings: ButtonSettings
-
+  buttonPart: ButtonPart
   buttonPip?: ButtonPip
-
   buttoFullScreen?: ButtonFullscreen
 
   labelTime: LabelTime
@@ -73,6 +65,7 @@ export default class Controller {
     this.labelTime = new LabelTime(this.player, this.$left)
     this.buttonLoop = new ButtonLoop(this.player, this.$left)
     // 控制栏右侧部件
+    this.buttonPart = new ButtonPart(this.player, this.$right)
     this.buttonVolume = new ButtonVolume(this.player, this.$right)
     this.buttonSettings = new ButtonSettings(this.player, this.$right)
     if (pictureInPictureEnabled) this.buttonPip = new ButtonPip(this.player, this.$right)

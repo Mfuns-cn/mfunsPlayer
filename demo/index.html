@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5/dist/hls.min.js"></script>
     <script src="https://cdn.bootcss.com/ace/1.4.9/ace.js"></script>
     <script src="https://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js"></script>
-    <title>番剧</title>
+    <title>Mfuns Player v3测试 - 番剧</title>
 </head>
 <script src="../src/static/echarts.js"></script>
 <script src="../dist/mfuns-player.min.umd.js"></script>
@@ -372,6 +372,15 @@
         console.log(mfunsPlayerConfig)
         mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
         console.log(mfPlayer)
+        mfPlayer.on("play", () => {
+            console.log("play")
+        })
+        mfPlayer.on("pause", () => {
+            console.log("pause")
+        })
+        mfPlayer.on("part_change", (p) => {
+            console.log("part_change", p)
+        })
     }
 
 

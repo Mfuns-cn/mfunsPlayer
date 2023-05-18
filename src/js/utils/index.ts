@@ -1,7 +1,7 @@
 const isMobile = /mobile/i.test(window.navigator.userAgent)
 
 /** 创建特定长度的填充数组 */
-export const createArray = (count: number, val: any) => Array.from({ length: count }, () => val)
+export const createArray = (count: number, val: unknown) => Array.from({ length: count }, () => val)
 
 /** 获取全屏元素 */
 export const getFullscreenElement = (): HTMLElement | null =>
@@ -27,12 +27,55 @@ export const { pictureInPictureEnabled } = document
  * @param {String} str 冒号分隔的时间文本，支持全角冒号
  * @return {Number} second
  */
-export const textToSecond = (str: string): number => {
+export const timeToSecond = (str: string): number => {
   const arr = str.split(/[:：]/).slice(-3)
   const sec = parseInt(arr[arr.length - 1]) || 0
   const min = parseInt(arr[arr.length - 2]) || 0
   const hour = parseInt(arr[arr.length - 3]) || 0
   return sec + min * 60 + hour * 3600
+}
+
+/**
+ * 防抖
+ * @param {Function} fn 需要防抖处理的函数
+ * @param {number} delay 防抖延迟执行时间
+ * @param {boolean} immediate 是否立即执行一次
+ */
+export const debounce = (fn: (...args: unknown[]) => void, delay: number, immediate = false) => {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  let isInvoke = false
+  return function (this: unknown, ...args: unknown[]) {
+    if (timer) clearTimeout(timer)
+    if (immediate && !isInvoke) {
+      fn.apply(this, args)
+      isInvoke = true
+    } else {
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+        clearTimeout(timer!)
+        timer = null
+        isInvoke = false
+      }, delay)
+    }
+  }
+}
+
+/**
+ * 节流
+ * @param {Function} fn 需要节流处理的函数
+ * @param {number} wait 执行一次后需要等待的时间
+ */
+export const throttle = (fn: (...args: unknown[]) => void, wait: number) => {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  return function (this: unknown, ...args: unknown[]) {
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+        clearTimeout(timer!)
+        timer = null
+      }, wait)
+    }
+  }
 }
 
 // === 未完全重构 ==========
@@ -58,137 +101,7 @@ export const secondToTime = (second: number, showHour = true) => {
   }
   return [hour * 60 + min, sec].map(add0).join(":")
 }
-/** 防抖 */
-export const debounce = (fn = () => {}, delay = 200) => {
-  let timer: number | null = null
-  return function (...args: any) {
-    const event = args[args.length - 1]
-    if (timer) {
-      clearTimeout(timer)
-    }
-    if (event && typeof event.persist === "function") {
-      event.persist()
-    }
-    timer = window.setTimeout(() => {
-      // @ts-ignore
-      fn.apply(this, args)
-      clearTimeout(timer!)
-      timer = 0
-    }, delay)
-  }
-}
-/** 节流 */
-export const throttle = (fn: (...args: any) => any, wait: number) => {
-  let timer: number | null = null
-  return function (...args: any) {
-    if (!timer) {
-      timer = window.setTimeout(function () {
-        // @ts-ignore
-        fn.apply(this, args)
-        clearTimeout(timer!)
-        timer = null
-      }, wait)
-    }
-  }
-}
-/**
- * control play progress
- */
-// get element's view position
 
-export const getElementViewLeft = (element: HTMLElement) => {
-  let actualLeft = element.offsetLeft
-  let current = element.offsetParent
-  const elementScrollLeft = document.body.scrollLeft + document.documentElement.scrollLeft
-  if (
-    !document.fullscreenElement &&
-    !(document as any).mozFullScreenElement &&
-    !(document as any).webkitFullscreenElement
-  ) {
-    while (current !== null) {
-      actualLeft += (current as any).offsetLeft
-      current = (current as any).offsetParent
-    }
-  } else {
-    while (current !== null && current !== element) {
-      actualLeft += (current as any).offsetLeft
-      current = (current as any).offsetParent
-    }
-  }
-  return actualLeft - elementScrollLeft
-}
-export const getElementViewTop = (element: HTMLElement) => {
-  let actualTop = element.offsetTop
-  let current = element.offsetParent
-  const elementScrollTop = document.body.scrollTop + document.documentElement.scrollTop
-  if (
-    !document.fullscreenElement &&
-    !(document as any).mozFullScreenElement &&
-    !(document as any).webkitFullscreenElement
-  ) {
-    while (current !== null) {
-      actualTop += (current as any).offsetTop
-      current = (current as any).offsetParent
-    }
-    return actualTop - elementScrollTop
-  }
-  while (current !== null && current !== element) {
-    actualTop += (current as any).offsetTop
-    current = (current as any).offsetParent
-  }
-  return actualTop
-}
-/**
-    * optimize control play progress
-
-    * optimize get element's view position,for float dialog video player
-    * getBoundingClientRect 在 IE8 及以下返回的值缺失 width、height 值
-    * getBoundingClientRect 在 Firefox 11 及以下返回的值会把 transform 的值也包含进去
-    * getBoundingClientRect 在 Opera 10.5 及以下返回的值缺失 width、height 值
-    */
-export function getBoundingClientRectViewLeft(element: HTMLElement) {
-  const scrollTop =
-    window.scrollY ||
-    window.pageYOffset ||
-    document.body.scrollTop +
-      ((document.documentElement && document.documentElement.scrollTop) || 0)
-  if (element.getBoundingClientRect) {
-    // @ts-ignore
-    if (typeof this.getBoundingClientRectViewLeft.offset !== "number") {
-      let temp: HTMLElement | null = document.createElement("div")
-      temp.style.cssText = "position:absolute;top:0;left:0;"
-      document.body.appendChild(temp)
-      // @ts-ignore
-      this.getBoundingClientRectViewLeft.offset = -temp.getBoundingClientRect().top - scrollTop
-      document.body.removeChild(temp)
-      temp = null
-    }
-    const rect = element.getBoundingClientRect()
-    // @ts-ignore
-    const { offset } = this.getBoundingClientRectViewLeft
-
-    return rect.left + offset
-  }
-  // not support getBoundingClientRect
-  // @ts-ignore
-  return this.getElementViewLeft(element)
-}
-
-export const getScrollPosition = () => ({
-  left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-  top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0,
-})
-
-export const setScrollPosition = ({ left = 0, top = 0 }) => {
-  if (isFirefox) {
-    document.documentElement.scrollLeft = left
-    document.documentElement.scrollTop = top
-  } else {
-    window.scrollTo(left, top)
-  }
-}
-export const isFirefox = /firefox/i.test(window.navigator.userAgent)
-export const isChrome = /chrome/i.test(window.navigator.userAgent)
 export const storage = {
   set: (key: string, value: any) => {
     localStorage.setItem(key, value)
@@ -275,95 +188,6 @@ export const color2Number = (color: string) => {
 }
 
 export const number2Color = (number: number) => `#${`00000${number.toString(16)}`.slice(-6)}`
-export const danmakuSpeed2Number = (speed: string) => {
-  switch (speed) {
-    case "极慢":
-      return 0.5
-    case "较慢":
-      return 0.75
-    case "适中":
-      return 1
-    case "较快":
-      return 1.25
-    case "极快":
-      return 1.5
-    default:
-      return 1
-  }
-}
-export const number2danmakuSpeed = (number: number) => {
-  switch (number) {
-    case 0.5:
-      return "极慢"
-    case 0.75:
-      return "较慢"
-    case 1:
-      return "适中"
-    case 1.25:
-      return "较快"
-    case 1.5:
-      return "极快"
-    default:
-      return "适中"
-  }
-}
-export const number2Type = (number: number, biliMode: boolean) => {
-  switch (number) {
-    case 0:
-      return "right"
-    case 1:
-      return biliMode ? "right" : "top"
-    case 2:
-      return "bottom"
-    case 3:
-      return "left"
-    case 4:
-      return "bottom"
-    case 5:
-      return "top"
-    case 6:
-      return "left"
-    case 7:
-      return "special"
-    case 8:
-      return "script"
-    case 9:
-      return "json"
-    default:
-      return "right"
-  }
-}
-export const type2Number = (type: string) => {
-  switch (type) {
-    case "right":
-      return 0
-    case "top":
-      return 1
-    case "bottom":
-      return 2
-    case "left":
-      return 3
-    case "special":
-      return 7
-    case "script":
-      return 8
-    case "json":
-      return 9
-    default:
-      return 0
-  }
-}
-export const report2Num = new Map([
-  ["违法违禁", 0],
-  ["人身攻击", 1],
-  ["色情低俗", 2],
-  ["政治敏感", 3],
-  ["恶意刷屏", 4],
-  ["引战", 5],
-  ["侵犯隐私", 6],
-  ["垃圾广告", 7],
-  ["其他", 8],
-])
 export const initHash = () => {
   let count = 100
 

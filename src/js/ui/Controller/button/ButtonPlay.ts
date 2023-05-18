@@ -38,6 +38,10 @@ export default class ButtonPlay {
       this.el.classList.remove("state-paused")
       this.$tooltip.innerText = "暂停"
     })
+    this.player.on("part_change", () => {
+      this.el.classList.add("state-paused")
+      this.$tooltip.innerText = "播放"
+    })
     this.$iconWrap.addEventListener("click", () => {
       this.player.toggle()
     })

@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "axios": "^0.22.0",
-    "flv.js": "^1.5.0",
     "lit-html": "^2.7.3",
     "mfuns-advanced-danmaku": "^1.0.0"
   }

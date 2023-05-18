@@ -24,4 +24,34 @@
   &-about {
     padding: 5px 8px;
   }
+
+  &-partlist {
+    &-list {
+      height: 100%;
+      padding: 5px 0;
+      overflow-y: auto;
+      &-item {
+        padding: 0 8px;
+        height: 30px;
+        line-height: 30px;
+        display: flex;
+        cursor: pointer;
+        &:hover {
+          background-color: $light-semiwhite;
+        }
+      }
+      &-id {
+        display: inline-block;
+        width: 40px;
+        flex-shrink: 0;
+      }
+      &-title {
+        display: inline-block;
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
 }

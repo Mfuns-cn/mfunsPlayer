@@ -5,6 +5,7 @@
     "module": "commonjs",
     "paths": {
       "@css/*": ["./src/css/*"],
+      "@lib/*": ["./src/lib/*"],
       "@/*": ["./src/js/*"]
     },
     "allowJs": true,

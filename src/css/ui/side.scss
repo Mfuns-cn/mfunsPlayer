@@ -31,6 +31,10 @@
     &-title {
       line-height: 30px;
     }
+    &-content {
+      height: calc(100% - 30px);
+      overflow: hidden;
+    }
     &-panel {
       position: relative;
       width: 100%;

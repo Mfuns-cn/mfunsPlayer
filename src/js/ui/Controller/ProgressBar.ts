@@ -166,7 +166,7 @@ export default class ProgressBar {
   /** 设置已播放进度条位置 */
   public setBarPlayed(time: number) {
     // 计算进度比值
-    const per = time / this.video.duration
+    const per = time / this.video.duration || 0
     // 修改滑块位置
     this.$thumb.style.left = `${per * 100}%`
     // 修改滑动痕迹宽度
@@ -176,7 +176,7 @@ export default class ProgressBar {
   /** 设置已播放进度条位置 */
   public setBarBuffered(time: number) {
     // 计算进度比值
-    const per = time / this.video.duration
+    const per = time / this.video.duration || 0
     // 修改滑动痕迹宽度
     this.$buffered.style.width = `${per * 100}%`
   }

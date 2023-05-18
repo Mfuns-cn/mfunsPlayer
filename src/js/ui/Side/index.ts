@@ -2,6 +2,7 @@ import { html, render } from "lit-html"
 import { classPrefix } from "@/const"
 import MfunsPlayer from "@/player"
 import { PlayerOptions } from "@/types"
+import SidePartList from "./SidePartList"
 
 const template = () => html`
   <div class="${classPrefix}-side-mask"></div>
@@ -55,6 +56,7 @@ export default class Side {
     this.$close.addEventListener("click", () => {
       this.hide()
     })
+    this.add("partlist", new SidePartList(this.player))
   }
 
   show(id: string) {

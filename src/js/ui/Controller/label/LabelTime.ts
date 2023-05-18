@@ -1,7 +1,7 @@
 import { html, render } from "lit-html"
 import { classPrefix } from "@/const"
 import MfunsPlayer from "@/player"
-import { secondToTime, textToSecond } from "@/utils"
+import { secondToTime, timeToSecond } from "@/utils"
 
 const template = () => html`
   <div class="${classPrefix}-controller-time">
@@ -54,7 +54,7 @@ export default class LabelTime {
       const inputVal = this.$input.value
       if (inputVal != this.valueBeforeEdited) {
         // 如果输入值有改动，则跳转
-        this.player.seek(textToSecond(inputVal))
+        this.player.seek(timeToSecond(inputVal))
         this.player.play()
       }
       this.exitInput()
@@ -62,7 +62,7 @@ export default class LabelTime {
     this.$input.addEventListener("keydown", (event) => {
       const e = event || window.event
       if (e.keyCode == 13) {
-        this.player.seek(textToSecond(this.$input.value))
+        this.player.seek(timeToSecond(this.$input.value))
         this.player.play()
         this.exitInput()
       }

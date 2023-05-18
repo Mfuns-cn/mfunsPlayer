@@ -138,8 +138,8 @@ export default class MfunsPlayer {
   }
 
   /** 跳转分P */
-  public part(p: number) {
-    this.video.loadPart(p)
+  public part(p: number, play = false) {
+    this.video.setPart(p, play)
   }
 
   /** 尺寸模式相关 */

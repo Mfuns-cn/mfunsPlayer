@@ -1,5 +1,6 @@
 import { PlayerOptions, VideoPart, VideoSource } from "@/types"
 import MfunsPlayer from "@/player"
+import VideoLoader from "./Loader"
 
 export default class Video {
   /** 播放器主体 */
@@ -7,8 +8,10 @@ export default class Video {
   /** video对象 */
   el: HTMLVideoElement
   /** 视频分P列表 */
+  loader: VideoLoader
+  /** 视频分P列表 */
   list: VideoPart[]
-  /** 当前视频索引 */
+  /** 当前视频分P */
   private currentPart: number
   /** 视频宽高比 */
   scale: [number, number] | null = null
@@ -16,6 +19,7 @@ export default class Video {
   constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.player = player
     this.el = this.player.template.$video
+    this.loader = new VideoLoader(this)
     this.list = options.video.list
     this.currentPart = options.video.part || 1
 
@@ -23,11 +27,15 @@ export default class Video {
   }
 
   /** 加载分P */
-  async loadPart(p: number) {
+  async setPart(p: number, play = false) {
     const currentVideo = this.list[p - 1]
     // 目前播放器仅支持单一来源播放，故只选取第一个播放源
-    this.el.src = currentVideo.src[0].url
-    // this.player.emit("part_change", p)
+    this.loader.load(currentVideo.src[0])
+    this.player.events.trigger("part_change", p)
+    this.seek(0)
+    if (play) {
+      this.play()
+    }
   }
 
   /** 视频分P */

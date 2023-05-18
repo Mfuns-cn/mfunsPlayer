@@ -69,6 +69,11 @@
         font-size: 21px;
         line-height: 30px;
       }
+      .#{$prefix}-controller-texticon {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 30px;
+      }
       &:hover {
         .#{$prefix}-tooltip {
           display: block;
