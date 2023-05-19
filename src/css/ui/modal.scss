@@ -1,4 +1,4 @@
-@import "../theme.scss";
+@import "~@css/theme";
 
 .#{$prefix} {
   &-modal-wrap {
@@ -16,7 +16,7 @@
     min-height: 150px;
     background-color: $panel-black;
     border-radius: $border-radius;
-    color: white;
+    color: $text-white;
     &-mask {
       position: absolute;
       width: 100%;

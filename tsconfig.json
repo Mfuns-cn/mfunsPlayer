@@ -4,9 +4,9 @@
     "target": "es2015",
     "module": "commonjs",
     "paths": {
-      "@css/*": ["./src/css/*"],
+      "@/*": ["./src/js/*"],
       "@lib/*": ["./src/lib/*"],
-      "@/*": ["./src/js/*"]
+      "@css/*": ["./src/css/*"]
     },
     "allowJs": true,
     "esModuleInterop": true,

@@ -15,7 +15,7 @@ export default class HotKey {
 
   initKey() {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
-      if (this.player.isFocused) {
+      if (this.player.state.focused) {
         switch (e.keyCode) {
           case keyCode.Space:
             e.preventDefault()

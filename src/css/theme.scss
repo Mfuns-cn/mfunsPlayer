@@ -1,11 +1,11 @@
 // 主题变量
 $prefix: "mfuns-player";
 
-$bg-white: #ffffff; // 背景白色
-$bg-black: #202020; // 背景暗色
+$bg-white: var(--mp-bg-white, #ffffff); // 背景白色
+$bg-black: var(--mp-bg-black, #202020) #202020; // 背景暗色
 
-$panel-white: #ffffff; // 面板白色
-$panel-black: #202020a0; // 面板黑色
+$panel-white: var(--mp-panel-white, #ffffff); // 面板白色
+$panel-black: var(--mp-panel-black, #202020a0); // 面板黑色
 
 $text-black: #404040; // 文字黑色
 $text-grey: #808080; // 文字灰色

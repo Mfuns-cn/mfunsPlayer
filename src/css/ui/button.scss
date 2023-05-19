@@ -1,4 +1,4 @@
-@import "../theme.scss";
+@import "~@css/theme";
 
 .#{$prefix} {
   &-controller-pip {
@@ -23,6 +23,24 @@
         display: none;
       }
       .mp-icon-fullscreen-exit {
+        display: block;
+      }
+    }
+  }
+  &.mode-fullscreen & {
+    &-controller-webfull {
+      display: none;
+    }
+  }
+  &-controller-webfull {
+    .mp-icon-webfull-exit {
+      display: none;
+    }
+    &.state-webfull {
+      .mp-icon-webfull {
+        display: none;
+      }
+      .mp-icon-webfull-exit {
         display: block;
       }
     }
@@ -83,6 +101,43 @@
     .#{$prefix}-controller-panel {
       width: 250px;
       padding: 6px;
+    }
+  }
+  &-controller-part {
+    &.state-singlepart {
+      display: none;
+    }
+  }
+  &-controller-next {
+    &.state-lastpart {
+      display: none;
+    }
+    &:hover {
+      .#{$prefix}-controller-icon-wrap {
+        transform: translateX(2px);
+        &:active {
+          transform: translateX(-1px);
+        }
+      }
+    }
+  }
+  &-controller-prev {
+    &.state-firstpart {
+      display: none;
+    }
+    &:hover {
+      .#{$prefix}-controller-icon-wrap {
+        transform: translateX(-2px);
+        &:active {
+          transform: translateX(1px);
+        }
+      }
+    }
+  }
+  &-controller-next,
+  &-controller-prev {
+    .#{$prefix}-controller-icon {
+      font-size: 16px;
     }
   }
 }

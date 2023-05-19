@@ -7,7 +7,7 @@ export default class Video {
   player: MfunsPlayer
   /** video对象 */
   el: HTMLVideoElement
-  /** 视频分P列表 */
+  /** 视频加载模块 */
   loader: VideoLoader
   /** 视频分P列表 */
   list: VideoPart[]
@@ -28,6 +28,7 @@ export default class Video {
 
   /** 加载分P */
   async setPart(p: number, play = false) {
+    this.currentPart = p
     const currentVideo = this.list[p - 1]
     // 目前播放器仅支持单一来源播放，故只选取第一个播放源
     this.loader.load(currentVideo.src[0])
@@ -35,6 +36,8 @@ export default class Video {
     this.seek(0)
     if (play) {
       this.play()
+    } else {
+      this.player.template.el.classList.add("state-paused")
     }
   }
 
@@ -51,6 +54,15 @@ export default class Video {
   /** 暂停 */
   public pause() {
     this.el.pause()
+  }
+  /** 上一P */
+  public prev() {
+    if (this.currentPart > 1) this.setPart(this.currentPart - 1, true)
+  }
+  /** 下一P */
+  public next() {
+    if (this.currentPart < this.list.length) this.setPart(this.currentPart + 1, true)
+    this.play()
   }
 
   /** 跳转 */
@@ -135,9 +147,11 @@ export default class Video {
   private initEvent() {
     this.on("play", () => {
       this.player.events.trigger("play")
+      this.player.template.el.classList.remove("state-paused")
     })
     this.on("pause", () => {
       this.player.events.trigger("pause")
+      this.player.template.el.classList.add("state-paused")
     })
     this.on("volumechange", () => {
       this.player.events.trigger("volume_change", this.volume)

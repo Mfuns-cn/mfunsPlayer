@@ -9,6 +9,7 @@
     position: relative;
     width: 100%;
     height: calc(100% - $footbar-height);
+    overflow: hidden;
   }
   // 视频展示区
   &-video-area {
@@ -58,7 +59,7 @@
   }
   &-footbar {
     height: $footbar-height;
-    background-color: white;
+    background-color: $bg-white;
   }
   &-danmaku {
     position: absolute;
@@ -85,5 +86,19 @@
   }
   li {
     list-style: none;
+  }
+  &.mode-webfull {
+    z-index: 233333;
+    .#{$prefix} {
+      &-main {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 233333;
+        height: 100%;
+      }
+    }
   }
 }

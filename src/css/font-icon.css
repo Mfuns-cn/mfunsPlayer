@@ -1,18 +1,19 @@
 @font-face {
-  font-family: 'mfunsPlayerIcon';
-  src:  url('../icon/fonts/mfunsPlayerIcon.eot?dkb9ab');
-  src:  url('../icon/fonts/mfunsPlayerIcon.eot?dkb9ab#iefix') format('embedded-opentype'),
-    url('../icon/fonts/mfunsPlayerIcon.ttf?dkb9ab') format('truetype'),
-    url('../icon/fonts/mfunsPlayerIcon.woff?dkb9ab') format('woff'),
-    url('../icon/fonts/mfunsPlayerIcon.svg?dkb9ab#mfunsPlayerIcon') format('svg');
+  font-family: "mfunsPlayerIcon";
+  src: url("../icon/fonts/mfunsPlayerIcon.eot?dkb9ab");
+  src: url("../icon/fonts/mfunsPlayerIcon.eot?dkb9ab#iefix") format("embedded-opentype"),
+    url("../icon/fonts/mfunsPlayerIcon.ttf?dkb9ab") format("truetype"),
+    url("../icon/fonts/mfunsPlayerIcon.woff?dkb9ab") format("woff"),
+    url("../icon/fonts/mfunsPlayerIcon.svg?dkb9ab#mfunsPlayerIcon") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="mp-icon-"], [class*=" mp-icon-"] {
+[class^="mp-icon-"],
+[class*=" mp-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'mfunsPlayerIcon' !important;
+  font-family: "mfunsPlayerIcon" !important;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;

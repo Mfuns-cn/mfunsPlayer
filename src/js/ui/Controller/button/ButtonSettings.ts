@@ -21,6 +21,7 @@ const template = () => html`
         <div class="${classPrefix}-panel-row">
           <div class="${classPrefix}-row-label">界面设置</div>
           <div class="${classPrefix}-settings-fixedcontroller-checkbox"></div>
+          <div class="${classPrefix}-settings-showPrevButton-checkbox"></div>
         </div>
       </div>
     </div>
@@ -35,10 +36,12 @@ export default class ButtonSettings {
   $ratePicker: HTMLElement
   $scalePicker: HTMLElement
   $fixedcontrollerCheckbox: HTMLElement
+  $showPrevButtonCheckbox: HTMLElement
 
   pickerRate!: Picker
   pickerScale!: Picker
   checkboxFixedcontroller!: Checkbox
+  checkboxShowPrevButton!: Checkbox
 
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
@@ -51,6 +54,9 @@ export default class ButtonSettings {
     this.$scalePicker = this.el.querySelector(`.${classPrefix}-settings-scale-picker`)!
     this.$fixedcontrollerCheckbox = this.el.querySelector(
       `.${classPrefix}-settings-fixedcontroller-checkbox`
+    )!
+    this.$showPrevButtonCheckbox = this.el.querySelector(
+      `.${classPrefix}-settings-showPrevButton-checkbox`
     )!
 
     this.init()
@@ -87,6 +93,13 @@ export default class ButtonSettings {
       label: "固定控制栏",
       onToggle: (value) => {
         this.player.mode.fixedController(value)
+      },
+    })
+    this.checkboxShowPrevButton = new Checkbox({
+      container: this.$showPrevButtonCheckbox,
+      label: "显示上一P按钮（多P下生效）",
+      onToggle: (value) => {
+        this.player.controller.buttonPrev.show(value)
       },
     })
   }

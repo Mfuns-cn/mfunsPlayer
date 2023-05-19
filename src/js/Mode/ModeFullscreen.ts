@@ -12,8 +12,10 @@ export default class ModeFullscreen {
 
     const fullScreenChangeHandler = () => {
       if (this.value) {
+        this.player.template.el.classList.add("mode-fullscreen")
         this.player.events.trigger("fullscreen")
       } else {
+        this.player.template.el.classList.remove("mode-fullscreen")
         this.player.events.trigger("fullscreen_exit")
       }
     }

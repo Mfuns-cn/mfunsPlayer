@@ -2,20 +2,30 @@ import MfunsPlayer from "@/player"
 import { PlayerOptions } from "@/types"
 import ModeFullscreen from "./ModeFullscreen"
 import ModePip from "./ModePip"
+import ModeWebfull from "./ModeWebfull"
 
 export default class Mode {
   player: MfunsPlayer
 
   protected modeFullscreen: ModeFullscreen
-
+  protected modeWebfull: ModeWebfull
   protected modePip: ModePip
 
   constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.player = player
+    this.modeWebfull = new ModeWebfull(this.player)
     this.modeFullscreen = new ModeFullscreen(this.player)
     this.modePip = new ModePip(this.player)
+    this.init()
   }
-
+  init() {
+    this.player.on("webfull", () => {
+      this.player.exitFullscreen()
+    })
+    this.player.on("fullscreen", () => {
+      this.player.exitWebfull()
+    })
+  }
   fullscreen() {
     this.modeFullscreen.enter()
   }
@@ -40,12 +50,16 @@ export default class Mode {
     return this.modePip.value
   }
 
-  webfull() {}
+  webfull() {
+    this.modeWebfull.enter()
+  }
 
-  exitWebfull() {}
+  exitWebfull() {
+    this.modeWebfull.exit()
+  }
 
   get isWebfull() {
-    return false
+    return this.modeWebfull.value
   }
 
   wide() {}

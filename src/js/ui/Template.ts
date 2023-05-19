@@ -12,8 +12,7 @@ const template = () => html`
           <video class="${classPrefix}-video"></video>
         </div>
         <div class="${classPrefix}-danmaku-wrap"></div>
-        <div class="${classPrefix}-state-loading"></div>
-        <div class="${classPrefix}-state-volume"></div>
+        <div class="${classPrefix}-state-wrap"></div>
         <div class="${classPrefix}-toast-wrap"></div>
       </div>
       <div class="${classPrefix}-side-wrap"></div>
@@ -21,7 +20,6 @@ const template = () => html`
       <div class="${classPrefix}-contextmenu-wrap"></div>
       <div class="${classPrefix}-header-wrap"></div>
       <div class="${classPrefix}-controller-wrap"></div>
-      <div class="${classPrefix}-state-play"></div>
     </div>
     <div class="${classPrefix}-footbar"></div>
     <div class="${classPrefix}-miniplayer">
@@ -43,9 +41,7 @@ export default class Template {
   $videoWrap!: HTMLElement
   $danmakuWrap!: HTMLElement
   $toastWrap!: HTMLElement
-  $statusPlay!: HTMLElement
-  $statusVolume!: HTMLElement
-  $statusLoading!: HTMLElement
+  $stateWrap!: HTMLElement
   $headerWrap!: HTMLElement
   $contextmenuWrap!: HTMLElement
   $modalWrap!: HTMLElement
@@ -69,11 +65,9 @@ export default class Template {
     this.$video = $(`.${classPrefix}-video`)!
     this.$videoArea = $(`.${classPrefix}-video-area`)!
     this.$videoWrap = $(`.${classPrefix}-video-wrap`)!
-    this.$danmakuWrap = $(`.${classPrefix}-video-danmaku-wrap`)!
-    this.$toastWrap = $(`.${classPrefix}-video-toast-wrap`)!
-    this.$statusPlay = $(`.${classPrefix}-video-status-play`)!
-    this.$statusVolume = $(`.${classPrefix}-video-status-volume`)!
-    this.$statusLoading = $(`.${classPrefix}-video-status-loading`)!
+    this.$danmakuWrap = $(`.${classPrefix}-danmaku-wrap`)!
+    this.$toastWrap = $(`.${classPrefix}-toast-wrap`)!
+    this.$stateWrap = $(`.${classPrefix}-state-wrap`)!
     this.$headerWrap = $(`.${classPrefix}-header-wrap`)!
     this.$contextmenuWrap = $(`.${classPrefix}-contextmenu-wrap`)!
     this.$modalWrap = $(`.${classPrefix}-modal-wrap`)!

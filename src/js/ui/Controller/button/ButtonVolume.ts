@@ -57,9 +57,11 @@ export default class ButtonVolume {
           this.player.mute(false)
         }
         this.el.classList.add("state-control")
+        this.player.controller.setControl(true)
       },
       onDragEnd: () => {
         this.el.classList.remove("state-control")
+        this.player.controller.setControl(false)
       },
     })
     this.player.on("volume_change", (value: number) => {

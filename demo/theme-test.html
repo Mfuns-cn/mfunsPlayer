@@ -7,19 +7,85 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/flv.js/1.6.2/flv.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/dashjs/4.6.0/dash.all.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.0/hls.min.js"></script>
-    <title>Mfuns Player v3测试 - 媒体播放测试</title>
+    <title>Mfuns Player v3测试 - 样式切换测试</title>
   </head>
   <script src="../src/static/echarts.js"></script>
   <script src="../dist/mfuns-player.min.umd.js"></script>
 
   <body>
     <h2 class="test-title">mfuns-player v3 测试</h2>
-    <h4 class="test-info">媒体播放测试</h4>
+    <h4 class="test-info">样式切换测试</h4>
     <h4 class="test-info">当前版本：<span class="test-version"></span></h4>
     <h4 class="test-tip">注：请尽量使用谷歌或者火狐内核的浏览器进行测试</h4>
     <div class="player">
       <div class="content"></div>
       <div class="extra"></div>
+    </div>
+    <div class="test-controller">
+      <div>
+        <span>主题色</span>
+        <input
+          type="radio"
+          id="themeColorMormal"
+          name="themeColorType"
+          value="normal"
+          onchange="setTheme('normal')"
+        />
+        <label for="themeColorMormal">默认</label>
+        <input
+          type="radio"
+          id="themeColorMiku"
+          name="themeColorType"
+          value="miku"
+          onchange="setTheme('miku')"
+          checked
+        />
+        <label for="themeColorMiku">Miku</label>
+        <input
+          type="radio"
+          id="themeColorRin"
+          name="themeColorType"
+          value="miku"
+          onchange="setTheme('rin')"
+        />
+        <label for="themeColorRin">Rin</label>
+        <input
+          type="radio"
+          id="themeColorBgmiku"
+          name="themeColorType"
+          value="bgmiku"
+          onchange="setTheme('bgmiku')"
+        />
+        <label for="themeColorBgmiku">Miku背景色</label>
+        <input
+          type="radio"
+          id="themeColorBgrin"
+          name="themeColorType"
+          value="bgrin"
+          onchange="setTheme('bgrin')"
+        />
+        <label for="themeColorBgrin">Rin背景色</label>
+      </div>
+      <div>
+        <span>圆角</span>
+        <input
+          type="radio"
+          id="themeRadius2"
+          name="themeRadiusType"
+          value="normal"
+          onchange="setRadius('2px')"
+        />
+        <label for="themeRadius2">2px</label>
+        <input
+          type="radio"
+          id="themeRadius4"
+          name="themeRadiusType"
+          value="colored"
+          onchange="setRadius('4px')"
+          checked
+        />
+        <label for="themeRadius4">4px</label>
+      </div>
     </div>
   </body>
   <script>
@@ -45,58 +111,23 @@
         uid: 2333,
         currentVideo: 0,
         video: {
-          title: "媒体播放测试",
+          title: "【鏡音リン・初音ミク】ねぇねぇねぇ。 (呐呐呐。)【ピノキオピー】",
           list: [
             {
               src: [
                 {
-                  url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4",
+                  url: "https://video_api.kms233.com/bili/BV1aL411n7tQ",
                   type: "mp4",
                 },
               ],
-              title: "[MP4 720P] Big Buck Bunny",
-            },
-            {
-              src: [
-                {
-                  url: "https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd",
-                  type: "dash",
-                },
-              ],
-              title: "[DASH] Envivio",
-            },
-            {
-              src: [
-                {
-                  url: "http://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-720p.flv",
-                  type: "flv",
-                },
-              ],
-              title: "[FLV] 西瓜播放器测试",
-            },
-            {
-              src: [
-                {
-                  url: "https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/hls/xgplayer-demo.m3u8",
-                  type: "m3u8",
-                },
-              ],
-              title: "[M3U8] 西瓜播放器测试",
-            },
-            {
-              src: [
-                {
-                  url: "https://livedoc.cgtn.com/500d/prog_index.m3u8",
-                  type: "m3u8",
-                },
-              ],
-              title: "[M3U8] CGTN测试",
+              title: "ねぇねぇねぇ。",
             },
           ],
         },
         danmaku: {
           api: "https://www.mfuns.xyz/wp-json/mfuns",
         },
+        theme: themes.miku,
         // advancedDanmaku:{
         //   api: "https://www.mfuns.fun/wp-json/mfuns",
         //   editor: 1,
@@ -146,6 +177,47 @@
       mfPlayer.on("part_change", (p) => {
         console.log("part_change", p)
       })
+    }
+
+    const themes = {
+      normal: {
+        primaryColor: "",
+        secondaryColor: "",
+        bgWhite: "",
+        panelWhite: "",
+      },
+      miku: {
+        primaryColor: "#02c3fb",
+        secondaryColor: "#fde202",
+        bgWhite: "#ffffff",
+        panelWhite: "#ffffff",
+      },
+      rin: {
+        primaryColor: "#fde202",
+        secondaryColor: "#02c3fb",
+        bgWhite: "#ffffff",
+        panelWhite: "#ffffff",
+      },
+      bgmiku: {
+        primaryColor: "#fde202",
+        secondaryColor: "#02c3fb",
+        bgWhite: "#02c3fb",
+        panelWhite: "#ffffff",
+      },
+      bgrin: {
+        primaryColor: "#02c3fb",
+        secondaryColor: "#02c3fb",
+        bgWhite: "#fde202",
+        panelWhite: "#ffffff",
+      },
+    }
+    function setTheme(id) {
+      mfPlayer.theme.setTheme(themes[id])
+      console.log("已设置主题", id)
+    }
+    function setRadius(r) {
+      mfPlayer.theme.setThemeProperty("borderRadius", r)
+      console.log("已设置圆角", r)
     }
   </script>
   <style type="text/css">
@@ -197,30 +269,6 @@
       align-items: center;
     }
 
-    .avater {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: url("../src/static/avater.png");
-      background-size: 100% 100%;
-    }
-
-    .updater-info {
-      width: 180px;
-      height: 50px;
-      padding-left: 20px;
-    }
-
-    .updater-name {
-      margin-top: 5px;
-      font-size: 18px;
-    }
-
-    .updater-sign {
-      font-size: 12px;
-      color: #bbb;
-    }
-
     .play-data {
       margin: 0 auto;
       width: 1000px;
@@ -247,55 +295,6 @@
       border-left: 1px solid #e6e6e6;
     }
 
-    .inroduce {
-      margin: 80px auto;
-      padding: 20px;
-      width: 1000px;
-      height: 400px;
-      border: 1px solid #e6e6e6;
-      display: flex;
-      box-sizing: border-box;
-    }
-
-    .inroduce > img {
-      width: 220px;
-      height: 340px;
-    }
-
-    .media-right {
-      margin-left: 20px;
-    }
-
-    .media-title {
-      font-size: 20px;
-      color: #000;
-    }
-
-    .pub-wrapper {
-      color: #999;
-      font-size: 14px;
-    }
-
-    .inroduce-content {
-      width: 320px;
-      /* white-space: pre; */
-
-      font-size: 14px;
-      color: rgb(88, 84, 84);
-    }
-
-    .inroduce-content-line {
-      margin: 15px 0;
-    }
-
-    .inroduce > .staff {
-      margin-left: 50px;
-      padding-left: 50px;
-      color: #666;
-      font-size: 15px;
-      border-left: 1px solid #e6e6e6;
-    }
-
     .comment {
       margin: 20px auto;
       height: 1200px;
@@ -306,6 +305,11 @@
 
     h1 {
       font-size: 100px;
+    }
+
+    .test-controller {
+      width: 1000px;
+      margin: auto;
     }
   </style>
 </html>

@@ -13,9 +13,10 @@ const baseConfig = {
     modules: ["node_modules"],
     extensions: [".js", ".scss", ".ts"],
     alias: {
-      "@css": path.resolve(__dirname, "./src/css"),
-      "@lib": path.resolve(__dirname, "./src/lib"),
       "@": path.resolve(__dirname, "./src/js"),
+      "@lib": path.resolve(__dirname, "./src/lib"),
+      "@css": path.resolve(__dirname, "./src/css"),
+      "@icon": path.resolve(__dirname, "./src/icon"),
     },
   },
   module: {

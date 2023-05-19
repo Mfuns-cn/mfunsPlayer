@@ -9,6 +9,7 @@ import Side from "@/ui/Side"
 import ContextMenu from "@/ui/ContextMenu"
 import Modal from "@/ui/Modal"
 import Theme from "@/ui/Theme"
+import State from "@/ui/State"
 
 export default class MfunsPlayer {
   static readonly version = MFUNSPLAYER_VERSION
@@ -25,6 +26,8 @@ export default class MfunsPlayer {
   danmaku: any
   /** 播放器模式控制 */
   mode: Mode
+  /** 播放器状态控制 */
+  state: State
   /** 模板 */
   template: Template
   /** 主题样式 */
@@ -39,9 +42,9 @@ export default class MfunsPlayer {
   modal: Modal
   /** 快捷键 */
   hotKey: HotKey
-  isFocused = false
+
   /** 插件 */
-  readonly plugin: { [key: string]: any }
+  readonly plugin: { [key: string]: unknown }
 
   constructor(options: PlayerOptions) {
     this.events = new Events()
@@ -54,6 +57,7 @@ export default class MfunsPlayer {
     // 初始化功能
     this.video = new Video(this, options)
     this.mode = new Mode(this, options)
+    this.state = new State(this, options)
 
     // 注入ui
     this.controller = new Controller(this, options)
@@ -70,22 +74,7 @@ export default class MfunsPlayer {
     this.part(1)
   }
 
-  init() {
-    document.addEventListener(
-      "click",
-      () => {
-        this.isFocused = false
-      },
-      true
-    )
-    this.template.el.addEventListener(
-      "click",
-      () => {
-        this.isFocused = true
-      },
-      true
-    )
-  }
+  init() {}
 
   /** 播放相关 */
 
@@ -106,6 +95,16 @@ export default class MfunsPlayer {
     } else {
       this.pause()
     }
+  }
+
+  /** 上一P */
+  public prev() {
+    this.video.prev()
+  }
+
+  /** 下一P */
+  public next() {
+    this.video.next()
   }
 
   get paused() {
@@ -161,12 +160,12 @@ export default class MfunsPlayer {
 
   /** 网页全屏 */
   public webfull() {
-    this.mode.fullscreen()
+    this.mode.webfull()
   }
 
   /** 退出网页全屏 */
   public exitWebfull() {
-    this.mode.exitFullscreen()
+    this.mode.exitWebfull()
   }
 
   /** 是否处于网页全屏 */

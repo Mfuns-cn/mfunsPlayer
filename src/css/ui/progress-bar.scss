@@ -1,4 +1,4 @@
-@import "../theme.scss";
+@import "~@css/theme";
 
 .#{$prefix} {
   &-progress-bar {
@@ -100,7 +100,7 @@
       background-color: rgba($light-grey, 0.5);
       &-buffered {
         background-color: $primary-color;
-        opacity: 0.5;
+        opacity: 0.25;
       }
       &-time {
         background-color: $panel-white;

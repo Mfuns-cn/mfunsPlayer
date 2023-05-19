@@ -4,6 +4,10 @@ const themeOptionsVars = {
   primaryColor: "--mp-primary-color",
   secondaryColor: "--mp-secondary-color",
   borderRadius: "--mp-border-radius",
+  bgWhite: "--mp-bg-white",
+  bgBlack: "--mp-bg-black",
+  panelWhite: "--mp-panel-white",
+  panelBlack: "--mp-panel-black",
 }
 
 export default class Theme implements ThemeOptions {
@@ -11,6 +15,10 @@ export default class Theme implements ThemeOptions {
   primaryColor?: string
   secondaryColor?: string
   borderRadius?: string
+  bgWhite?: string
+  bgBlack?: string
+  panelWhite?: string
+  panelBlack?: string
   /** 绑定了主题变量的DOM元素 */
   private themeElement: HTMLElement[]
   constructor(player: MfunsPlayer, options: PlayerOptions) {
@@ -38,7 +46,7 @@ export default class Theme implements ThemeOptions {
   /** 为元素绑定主题变量 */
   public addThemeElement(el: HTMLElement) {
     this.themeElement.push(el)
-    let name: keyof ThemeOptions
+    let name: keyof typeof themeOptionsVars
     for (name in themeOptionsVars) {
       const value = this[name]
       value && el.style.setProperty(themeOptionsVars[name], value)

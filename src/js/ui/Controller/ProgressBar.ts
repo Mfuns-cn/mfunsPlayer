@@ -185,6 +185,11 @@ export default class ProgressBar {
   private setActive(flag: boolean) {
     this.isActive = flag
     this.el.classList.toggle(`${classPrefix}-progress-bar-active`, flag)
+    if (flag) {
+      this.controller.setControl(true)
+    } else {
+      this.controller.setControl(false)
+    }
   }
 
   /** 更新指针位置 */

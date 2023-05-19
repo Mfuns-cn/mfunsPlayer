@@ -1,15 +1,17 @@
 // 控制栏
-@import "../theme.scss";
+@import "~@css/theme";
 
 .#{$prefix} {
   &-controller-wrap {
     position: absolute;
-    bottom: 0;
+    bottom: -50px;
     left: 0;
     right: 0;
     height: 50px;
+    transition: bottom 0.4s ease;
   }
   &-controller-mask {
+    opacity: 0;
     position: absolute;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==)
       repeat-x bottom;
@@ -18,6 +20,7 @@
     right: 0;
     height: 100px;
     pointer-events: none;
+    transition: opacity 0.4s ease;
   }
   &-controller {
     position: absolute;
@@ -141,57 +144,86 @@
       }
     }
   }
-  // 控制栏固定模式
-  &.mode-fixedcontroller & {
-    &-video-area {
-      width: 100%;
-      height: calc(100% - $controller-fixed-height);
-    }
-    &-footbar {
-      border-top: 1px solid $light-grey;
-      height: $footbar-height - 1;
-    }
+  &.state-active & {
     &-controller-wrap {
-      position: relative;
-      background: white;
-      height: $controller-fixed-height;
+      bottom: 0;
     }
-    &-controller {
-      height: 100%;
-      margin: 0;
-      color: $text-black;
-      &-mask {
-        display: none;
+    &-controller-mask {
+      opacity: 1;
+    }
+  }
+  // 控制栏固定模式
+  &.mode-fixedcontroller {
+    .#{$prefix} {
+      &-video-area {
+        width: 100%;
+        height: calc(100% - $controller-fixed-height);
       }
-      &-content {
-        height: calc(100% - 6px);
-        margin: 6px 0 0;
+      &-footbar {
+        border-top: 1px solid $light-grey;
+        height: $footbar-height - 1;
       }
-      &-progress {
-        height: 14px;
-        padding-bottom: 2px;
-        top: -8px;
-        align-items: end;
+      &-controller-wrap {
+        position: relative;
+        bottom: 0;
+        background: $bg-white;
+        height: $controller-fixed-height;
       }
-      &-icon-wrap {
-        padding: 0 5px;
-      }
-      &-panel {
-        background-color: $panel-white;
-      }
-      .#{$prefix} {
-        &-slider {
-          &-track {
-            background: $light-grey;
+      &-controller {
+        height: 100%;
+        margin: 0;
+        color: $text-black;
+        &-mask {
+          display: none;
+        }
+        &-content {
+          height: calc(100% - 6px);
+          margin: 6px 0 0;
+        }
+        &-progress {
+          height: 14px;
+          padding-bottom: 2px;
+          top: -8px;
+          align-items: end;
+        }
+        &-icon-wrap {
+          padding: 0 5px;
+        }
+        &-panel {
+          background-color: $panel-white;
+        }
+        .#{$prefix} {
+          &-slider {
+            &-track {
+              background: $light-grey;
+            }
+          }
+          &-tooltip {
+            background-color: $panel-white;
+            color: $text-black;
+          }
+          &-checkbox {
+            &-icon {
+              border-color: $text-grey;
+            }
           }
         }
-        &-tooltip {
-          background-color: $panel-white;
-          color: $text-black;
+      }
+    }
+    &.mode-fullscreen {
+      .#{$prefix} {
+        &-video-area {
+          height: 100%;
         }
-        &-checkbox {
-          &-icon {
-            border-color: $text-grey;
+        &-controller-wrap {
+          position: absolute;
+          bottom: -50px;
+        }
+      }
+      &.state-active {
+        .#{$prefix} {
+          &-controller-wrap {
+            bottom: 0;
           }
         }
       }

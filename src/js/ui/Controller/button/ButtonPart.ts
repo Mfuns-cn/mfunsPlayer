@@ -3,7 +3,7 @@ import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
 
 const template = () => html`
-  <div class="${classPrefix}-controller-button ${classPrefix}-controller-fullscreen">
+  <div class="${classPrefix}-controller-button ${classPrefix}-controller-part">
     <div class="${classPrefix}-controller-icon-wrap">
       <div class="${classPrefix}-controller-texticon">P0</div>
     </div>
@@ -31,6 +31,9 @@ export default class ButtonPart {
   }
 
   private init() {
+    if (this.player.video.list.length < 2) {
+      this.el.classList.add("state-singlepart")
+    }
     this.$iconWrap.addEventListener("click", () => {
       this.player.side.toggle("partlist")
     })
