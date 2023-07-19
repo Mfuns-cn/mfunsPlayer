@@ -2,7 +2,7 @@ import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from './componen
 import utils from './utils';
 import Thumbnails from './thumbnails';
 class Controller {
-    constructor (player) {
+    constructor(player) {
         const THIS = this;
         this.player = player;
         this.template = player.template;
@@ -32,6 +32,7 @@ class Controller {
         this.initPlayButton();
         this.initActivity();
         this.initThumbnails();
+
         if (player.options.draggable) {
             this.initPlayedBar();
             this.initTimeLabel();
@@ -46,6 +47,9 @@ class Controller {
         if (player.options.video.length > 1) {
             this.initPagelistButton();
         }
+        // if (player.options.video[player.options.currentVideo].resolution) {
+        //     this.initResolutionButton();
+        // }
         if (player.options.widescreenSwitch) {
             this.initWidescreenButton();
         }
@@ -56,8 +60,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     this.template.previewMask.removeChild(this.template.videoMask);
                     this.template.previewMask.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.add(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     content.appendChild(this.template.videoMask);
                     content.appendChild(this.template.danmaku);
+                    content.appendChild(this.template.bezel);
                     content.onclick = () => {
                         this.player.toggle();
                     };
@@ -73,8 +79,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     content.removeChild(this.template.videoMask);
                     content.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.remove(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     this.template.previewMask.appendChild(this.template.videoMask);
                     this.template.previewMask.appendChild(this.template.danmaku);
+                    this.template.previewMask.appendChild(this.template.bezel);
                     if (this.player.danmaku) {
                         this.player.danmaku.mini(false);
                         this.player.danmaku.resize();
@@ -365,6 +373,22 @@ class Controller {
             });
         }
     }
+    initResolutionButton() {
+        for (let i = 0; i < this.player.template.resolutionItem.length; i++) {
+            this.player.template.resolutionItem[i].addEventListener('click', (event) => {
+                const currentResolution = JSON.parse(this.player.template.resolutionItem[i].dataset.resolution);
+                this.player.switchResolution(currentResolution);
+                this.template.resolutionItem[i].classList.add('focus');
+                this.template.resolutionInfo.innerHTML = currentResolution.name + ' ' + currentResolution.label;
+
+                this.template.resolutionItem.forEach((element, index) => {
+                    if (index !== i) {
+                        element.classList.remove('focus');
+                    }
+                });
+            });
+        }
+    }
     repeatTrigger(loop) {
         this.player.template.repeat_btn.classList[`${loop ? 'add' : 'remove'}`]('button-repeat');
         this.player.template.repeat_tip.innerText = loop ? '关闭洗脑循环' : '开启洗脑循环';
@@ -627,7 +651,7 @@ class Controller {
         const danmakuSize = this.player.options.danmaku.fontScale;
         const danmakuSpeed = this.player.options.danmaku.speed;
         this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-            created(thisArg) { },
+            created(thisArg) {},
             pick(value, nonotice) {
                 console.log(`屏蔽弹幕类型：${value}`);
                 THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
@@ -839,7 +863,7 @@ class Controller {
             this.player.template.pip_btn.classList.remove('button-picture-in-picture');
         });
     }
-    widescreenTrigger(widescreen) { }
+    widescreenTrigger(widescreen) {}
     initWidescreenButton() {
         this.template.widescreen_btn.addEventListener('click', () => {
             this.player.widescreen = !this.player.widescreen;

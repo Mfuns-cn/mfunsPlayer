@@ -1,0 +1,14 @@
+<div class="mfunsPlayer-controller-panel-mask mfunsPlayer-resolution-mask">
+    <div class="mfunsPlayer-controller-panel mfunsPlayer-resolution-list">
+        {{if $data.resolution}}
+        {{each $data.resolution}}
+        <div class="mfunsPlayer-resolution-item {{if $value.isDefault}}focus{{/if}}" data-resolution="{{ $value }}">
+            {{ $value.name + ' ' + $value.label }}
+        </div>
+        {{/each}}
+        {{/if}}
+        {{if !$data.resolution}}
+        <div class="mfunsPlayer-resolution-item" data-resolution="unknown">未知</div>
+        {{/if}}
+    </div>
+</div>
