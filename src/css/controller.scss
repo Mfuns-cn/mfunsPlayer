@@ -5,12 +5,24 @@
 		>.mfunsPlayer-video-danmaku-root {
 			justify-content: flex-start;
 			pointer-events: none;
+			width: fit-content !important;
+			left: 300px !important;
 
 			.input_box {
 				display: none !important;
 			}
 		}
 	}
+}
+
+@media screen and (max-width: 1600px) and (min-width:1200px) {
+	.mfunsPlayer-controller-wrap {
+		>.mfunsPlayer-video-danmaku-root {
+			left: 40% !important;
+			width: 25% !important;
+		}
+	}
+
 }
 
 .mfunsPlayer-controller-mask {
