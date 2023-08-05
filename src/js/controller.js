@@ -2,7 +2,7 @@ import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from './componen
 import utils from './utils';
 import Thumbnails from './thumbnails';
 class Controller {
-    constructor (player) {
+    constructor(player) {
         const THIS = this;
         this.player = player;
         this.template = player.template;
@@ -50,6 +50,7 @@ class Controller {
             this.initWidescreenButton();
         }
         this.watchPlayerScroll = (e) => {
+            if (document.pictureInPictureElement) return;
             if (this.template.container.getBoundingClientRect().top + this.template.container.offsetHeight <= 0) {
                 if (this.template.miniPlayer.classList.contains('hide')) {
                     this.template.miniPlayer.classList.remove('hide');
@@ -236,7 +237,7 @@ class Controller {
         this.player.template.barWrap.addEventListener(utils.nameMap.dragMove, (e) => {
             if (this.player.video.duration) {
                 showTip(e);
-                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，bar也会移动，修复bug
+                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，拖拽目标也会移动
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
             }
         });
@@ -531,6 +532,8 @@ class Controller {
                     });
             },
         });
+        //隐藏黑边
+        console.log('hhhh');
         this.components.videoBorderhiddenSwitch = new Switch(this.template.video_borderhidden_switch, !this.player.options.blackBorder, {
             on(nonotice) {
                 // 打开开关
@@ -561,6 +564,8 @@ class Controller {
                 THIS.player.template.footBar?.classList?.add('darkmode');
                 THIS.player.container.classList.add('mfunsPlayer-darkmode');
                 document.body.appendChild(THIS.mask);
+                THIS.player.events && THIS.player.events.trigger('darkmode_on');
+
                 THIS.player.videoLoaded && !nonotice && THIS.player.notice('已开启关灯模式');
             },
             off(nonotice) {
@@ -571,6 +576,7 @@ class Controller {
                     document.body.classList.remove('player-mode-blackmask');
                     document.body.removeChild(THIS.mask);
                 }
+                THIS.player.events && THIS.player.events.trigger('darkmode_off');
                 THIS.player.videoLoaded && !nonotice && THIS.player.notice('已关闭关灯模式');
             },
         });
@@ -627,7 +633,7 @@ class Controller {
         const danmakuSize = this.player.options.danmaku.fontScale;
         const danmakuSpeed = this.player.options.danmaku.speed;
         this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-            created(thisArg) { },
+            created(thisArg) {},
             pick(value, nonotice) {
                 console.log(`屏蔽弹幕类型：${value}`);
                 THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
@@ -839,7 +845,7 @@ class Controller {
             this.player.template.pip_btn.classList.remove('button-picture-in-picture');
         });
     }
-    widescreenTrigger(widescreen) { }
+    widescreenTrigger(widescreen) {}
     initWidescreenButton() {
         this.template.widescreen_btn.addEventListener('click', () => {
             this.player.widescreen = !this.player.widescreen;

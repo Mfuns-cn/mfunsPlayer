@@ -22,13 +22,12 @@ export default {
     axios
       .get(options.url)
       .then((response) => {
-        const data = response.data;
+        const { data } = response;
         if (!data) {
           options.error && options.error(data && data.msg);
           return;
-
         }
-        console.log("____", data)
+        // console.log("____", data)
         switch (options.type) {
           case "dplayer-danmaku":
             // case:"mfuns-danmaku":
@@ -87,7 +86,7 @@ export default {
               return dan.map((el) => {
                 return {
                   time: +el[0],
-                  type: utils.number2Type(+el[1], true),
+                  type: utils.number2Type(+el[1], 1),
                   mode: +el[1],
                   color: +el[3],
                   author: el[6],

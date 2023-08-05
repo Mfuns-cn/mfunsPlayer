@@ -282,7 +282,7 @@ const utils = {
             case 0:
                 return 'right';
             case 1:
-                return biliMode ? 'right' : 'top';
+                return 'right';
             case 2:
                 return 'bottom';
             case 3:
@@ -306,13 +306,13 @@ const utils = {
     type2Number: (type) => {
         switch (type) {
             case 'right':
-                return 0;
-            case 'top':
                 return 1;
             case 'bottom':
-                return 2;
+                return 4;
+            case 'top':
+                return 5;
             case 'left':
-                return 3;
+                return 6;
             case 'special':
                 return 7;
             case 'script':

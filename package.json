@@ -1,7 +1,7 @@
 {
   "name": "@mfuns/pc-player",
   "version": "1.0.2",
-  "description": "基于H5的PC端弹幕播放器",
+  "description": "Mfuns开源的PC端弹幕播放器",
   "main": "dist/mfunsPlayer.min.es.js",
   "module": "dist/mfunsPlayer.min.es.js",
   "unpkg": "dist/mfunsPlayer.min.umd.js",

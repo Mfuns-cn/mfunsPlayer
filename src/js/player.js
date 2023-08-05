@@ -23,7 +23,7 @@ export default class mfunsPlayer {
         // console.log(this.options);
         this.template = new Template(this.options);
         this.events = new Events();
-
+        this.utils = utils;
         this.container = options.container;
         this.container.classList.add('mfunsPlayer');
         this.autoSwitch = this.options.autoSwitch;
@@ -83,6 +83,7 @@ export default class mfunsPlayer {
                 borderColor: '#FFFFFF',
                 height: 28,
                 time: () => this.video.currentTime,
+                videoIndex: () => this.currentVideo,
                 isShow: this.showDanmaku,
                 danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
                 unlimited: false,
@@ -349,7 +350,7 @@ export default class mfunsPlayer {
                 if (window.dashjs) {
                     const dashjsPlayer = window.dashjs.MediaPlayer().create().initialize(video, video.src, false);
                     const options = this.options.pluginOptions.dash;
-                    dashjsPlayer.updateSettings(options);
+                    // dashjsPlayer.updateSettings(options);
                     this.plugins.dash = dashjsPlayer;
                     this.events.on('destroy', () => {
                         window.dashjs.MediaPlayer().reset();
