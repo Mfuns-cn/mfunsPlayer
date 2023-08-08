@@ -1,5 +1,5 @@
-import utils from './utils';
-import { Switch } from './components/components';
+import utils from "./utils";
+import { Switch } from "./components/components";
 class Danmaku {
   constructor (options, player) {
     this.options = options;
@@ -233,7 +233,7 @@ class Danmaku {
     const apiurl = `${address}?id=${id}${otherDanParams}`;
     this.endpoints = danmakuAddition || [];
     const advDanData = [];
-    id && address && this.endpoints.push({ url: apiurl, type: "dplayer-danmaku", origin: "mfuns" });
+    id && address && this.endpoints.push({ url: apiurl, type: "mfuns-danmaku", origin: "mfuns" });
     advDanApi &&
       this.endpoints.push({
         url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`,
@@ -276,170 +276,175 @@ class Danmaku {
         });
         console.log(this.danCount);
 
-                this.events && this.events.trigger('danmaku_load_end', this.dan);
-                this.loaded = true;
-                window.requestAnimationFrame(() => {
-                    this.frame();
-                });
-                this.options.callback(this.dan.length, advDanData);
-            }
+        this.events && this.events.trigger("danmaku_load_end", this.dan);
+        this.loaded = true;
+        window.requestAnimationFrame(() => {
+          this.frame();
         });
+        this.options.callback(this.dan.length, advDanData);
+      }
+    });
+  }
+  //弹幕重载(所有)
+  reload(newId, newAdvDanApi, newAddition, newOtherDanParams) {
+    this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
+    if (newId) {
+      this.options.api.id = newId;
     }
-    //弹幕重载(所有)
-    reload(newId, newAdvDanApi, newAddition) {
-        this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
-        if (newId) {
-            this.options.api.id = newId;
-        }
-        if (newAddition) {
-            this.options.api.danmakuAddition = newAddition;
-        }
-        if (newAdvDanApi) {
-            this.options.api.advDanApi = newAdvDanApi;
-        }
-        ['mfuns', 'bili', 'acfun', 'unknown'].forEach((el) => {
-            const currentOrigin = this.player.template[`danmakuSource_${el}`];
-            const originCount = currentOrigin.querySelector('.mfunsPlayer-video-danmaku-source-item-count');
-            currentOrigin.classList.replace('success', 'nodata');
-            currentOrigin.classList.replace('error', 'nodata');
-            originCount.innerHTML = '-';
-        });
+    if (newOtherDanParams) {
+      this.options.api.otherDanParams = newOtherDanParams;
+    }
+    if (newAddition) {
+      this.options.api.danmakuAddition = newAddition;
+    }
+    if (newAdvDanApi) {
+      this.options.api.advDanApi = newAdvDanApi;
+    }
+    ["mfuns", "bili", "acfun", "unknown"].forEach((el) => {
+      const currentOrigin = this.player.template[`danmakuSource_${el}`];
+      const originCount = currentOrigin.querySelector(".mfunsPlayer-video-danmaku-source-item-count");
+      currentOrigin.classList.replace("success", "nodata");
+      currentOrigin.classList.replace("error", "nodata");
+      originCount.innerHTML = "-";
+    });
 
-        this.dan = [];
-        this.danCount = {
-            unknown: 0,
-            mfuns: 0,
-            bili: 0,
-            acfun: 0,
-        };
-        this.danData = {
-            unknown: null,
-            mfuns: null,
-            bili: null,
-            acfun: null,
-        };
-        this.clear();
-        this.load();
-    }
-    //重载某一来源的弹幕
-    reloadEndPoints(origin) {
-        const currentEndPoints = [];
-        this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
-        this.endpoints.forEach((el) => {
-            if (el.origin === origin) {
-                currentEndPoints.push(el);
-            }
+    this.dan = [];
+    this.danCount = {
+      unknown: 0,
+      mfuns: 0,
+      bili: 0,
+      acfun: 0,
+    };
+    this.danData = {
+      unknown: null,
+      mfuns: null,
+      bili: null,
+      acfun: null,
+    };
+    this.clear();
+    this.load();
+  }
+  //重载某一来源的弹幕
+  reloadEndPoints(origin) {
+    const currentEndPoints = [];
+    this.player.template.danmakuCount.innerHTML = `弹幕装填中...`;
+    this.endpoints.forEach((el) => {
+      if (el.origin === origin) {
+        currentEndPoints.push(el);
+      }
+    });
+    console.log(currentEndPoints);
+    this.events && this.events.trigger("danmaku_load_start", this.endpoints);
+    this._readAllEndpoints(currentEndPoints, (results, loadStatus) => {
+      if (!loadStatus) {
+        console.log(loadStatus, results);
+        this.events && this.events.trigger("danmaku_load_end", []);
+        this.options.error(results, true);
+      } else {
+        console.log(this.danData);
+        const { acfun, bili, mfuns, unknown } = this.danData;
+        // const
+        this.dan = [...(acfun ?? []), ...(bili ?? []), ...(mfuns ?? []), ...(unknown ?? [])].sort(
+          (a, b) => a.time - b.time
+        );
+        this.dan.forEach((d) => {
+          d.id = this.createHash(8);
+          if (d.type == 8) {
+            advDanData.push(d.text); // 筛选高级弹幕
+          }
+          this.danCount[d.origin]++;
         });
-        console.log(currentEndPoints);
-        this.events && this.events.trigger('danmaku_load_start', this.endpoints);
-        this._readAllEndpoints(currentEndPoints, (results, loadStatus) => {
-            if (!loadStatus) {
-                console.log(loadStatus, results);
-                this.events && this.events.trigger('danmaku_load_end', []);
-                this.options.error(results, true);
-            } else {
-                console.log(this.danData);
-                const { acfun, bili, mfuns, unknown } = this.danData;
-                // const
-                this.dan = [...(acfun ?? []), ...(bili ?? []), ...(mfuns ?? []), ...(unknown ?? [])].sort((a, b) => a.time - b.time);
-                this.dan.forEach((d) => {
-                    d.id = this.createHash(8);
-                    if (d.type == 8) {
-                        advDanData.push(d.text); // 筛选高级弹幕
-                    }
-                    this.danCount[d.origin]++;
-                });
-                this.events && this.events.trigger('danmaku_load_end', this.dan);
-                this.loaded = true;
-                this.options.callback(this.dan.length, null, true);
-            }
-        });
-    }
+        this.events && this.events.trigger("danmaku_load_end", this.dan);
+        this.loaded = true;
+        this.options.callback(this.dan.length, null, true);
+      }
+    });
+  }
 
-    /**
-     * Asynchronously read danmaku from all API this.endpoints
-     */
-    _readAllEndpoints(endpoints, callback) {
-        const allRequests = endpoints.map((link) => {
-            return new Promise((resolve, reject) => {
-                this.options.apiBackend.read({
-                    url: link.url,
-                    type: link.type,
-                    origin: link.origin,
-                    success: (data) => {
-                        this.danData[`${link.origin}`] = data;
-                        const currentOrigin = this.player.template[`danmakuSource_${link.origin}`];
-                        const originCount = currentOrigin.querySelector('.mfunsPlayer-video-danmaku-source-item-count');
-                        const originOperate = currentOrigin.querySelector('.mfunsPlayer-video-danmaku-source-item-operate');
-                        currentOrigin.classList.replace('nodata', 'success');
-                        currentOrigin.classList.replace('error', 'success');
-                        originCount.innerHTML = data.length;
-                        originOperate.onclick = () => {
-                            if (currentOrigin.classList.contains('forbidden')) {
-                                // 解除弹幕来源屏蔽
-                                currentOrigin.classList.replace('forbidden', 'success');
-                                console.log(currentOrigin.classList);
-                                this[`${link.origin}Limit`] = false;
-                                this.originFilter.delete(link.origin);
-                                this.events &&
-                                    this.events.trigger('danmaku_filter', {
-                                        key: 'origin',
-                                        value: [...this.originFilter],
-                                    });
-                            } else {
-                                // 弹幕来源屏蔽
-                                currentOrigin.classList.replace('success', 'forbidden');
-                                console.log(currentOrigin.classList);
-                                this[`${link.origin}Limit`] = true;
-                                const items = this.container.querySelectorAll('.mfunsPlayer-danmaku-item');
-                                items.forEach((el) => {
-                                    if (el.dataset.origin === link.origin) {
-                                        el.innerHTML = '';
-                                    }
-                                });
-                                this.originFilter.add(link.origin);
-                                this.events &&
-                                    this.events.trigger('danmaku_filter', {
-                                        key: 'origin',
-                                        value: [...this.originFilter],
-                                    });
-                            }
-                        };
-                        resolve(data);
-                    },
-                    error: (error) => {
-                        const currentOrigin = this.player.template[`danmakuSource_${link.origin}`];
-                        const originOperate = currentOrigin.querySelector('.mfunsPlayer-video-danmaku-source-item-operate');
-                        currentOrigin.classList.replace('nodata', 'error');
-                        originOperate.addEventListener('click', () => {
-                            this.reloadEndPoints(link.origin);
-                        });
-                        reject(error);
-                    },
+  /**
+   * Asynchronously read danmaku from all API this.endpoints
+   */
+  _readAllEndpoints(endpoints, callback) {
+    const allRequests = endpoints.map((link) => {
+      return new Promise((resolve, reject) => {
+        this.options.apiBackend.read({
+          url: link.url,
+          type: link.type,
+          origin: link.origin,
+          success: (data) => {
+            this.danData[`${link.origin}`] = data;
+            const currentOrigin = this.player.template[`danmakuSource_${link.origin}`];
+            const originCount = currentOrigin.querySelector(".mfunsPlayer-video-danmaku-source-item-count");
+            const originOperate = currentOrigin.querySelector(".mfunsPlayer-video-danmaku-source-item-operate");
+            currentOrigin.classList.replace("nodata", "success");
+            currentOrigin.classList.replace("error", "success");
+            originCount.innerHTML = data.length;
+            originOperate.onclick = () => {
+              if (currentOrigin.classList.contains("forbidden")) {
+                // 解除弹幕来源屏蔽
+                currentOrigin.classList.replace("forbidden", "success");
+                console.log(currentOrigin.classList);
+                this[`${link.origin}Limit`] = false;
+                this.originFilter.delete(link.origin);
+                this.events &&
+                  this.events.trigger("danmaku_filter", {
+                    key: "origin",
+                    value: [...this.originFilter],
+                  });
+              } else {
+                // 弹幕来源屏蔽
+                currentOrigin.classList.replace("success", "forbidden");
+                console.log(currentOrigin.classList);
+                this[`${link.origin}Limit`] = true;
+                const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
+                items.forEach((el) => {
+                  if (el.dataset.origin === link.origin) {
+                    el.innerHTML = "";
+                  }
                 });
+                this.originFilter.add(link.origin);
+                this.events &&
+                  this.events.trigger("danmaku_filter", {
+                    key: "origin",
+                    value: [...this.originFilter],
+                  });
+              }
+            };
+            resolve(data);
+          },
+          error: (error) => {
+            const currentOrigin = this.player.template[`danmakuSource_${link.origin}`];
+            const originOperate = currentOrigin.querySelector(".mfunsPlayer-video-danmaku-source-item-operate");
+            currentOrigin.classList.replace("nodata", "error");
+            originOperate.addEventListener("click", () => {
+              this.reloadEndPoints(link.origin);
             });
+            reject(error);
+          },
         });
-        Promise.all([...allRequests])
-            .then((res) => {
-                callback(res, 1);
-            })
-            .catch((err) => {
-                console.log(err);
-                callback(err, 0, origin);
-            });
-    }
+      });
+    });
+    Promise.all([...allRequests])
+      .then((res) => {
+        callback(res, 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        callback(err, 0, origin);
+      });
+  }
 
-    send(dan) {
-        const newDanmakuId = this.createHash(8);
-        const danmakuData = {
-            time: this.options.time() + 0.2,
-            size: dan.size || 25,
-            author: this.player.options.uid,
-            id: newDanmakuId,
-            text: dan.text,
-            color: dan.color || 16777215,
-            type: dan.type || 'right',
-        };
+  send(dan) {
+    const newDanmakuId = this.createHash(8);
+    const danmakuData = {
+      time: this.options.time() + 0.2,
+      size: dan.size || 25,
+      author: this.player.options.uid,
+      id: newDanmakuId,
+      text: dan.text,
+      color: dan.color || 16777215,
+      type: dan.type || "right",
+    };
 
     const danmaku = {
       text: this.htmlEncode(danmakuData.text),
@@ -722,70 +727,62 @@ class Danmaku {
               this.danTunnel[type][i + ""] = [ele];
             }
 
-                        if (Array.isArray(this.danTunnel[type][i + ''])) {
-                            this.danTunnel[type][i + ''].push(ele);
-                        } else {
-                            this.danTunnel[type][i + ''] = [ele];
-                        }
-                        tunnelPush[type][i + ''] = true;
-                        ele.addEventListener('animationend', () => {
-                            const index = this.danTunnel[type][i + '']?.indexOf(ele);
-                            this.danTunnel[type] !== {} && this.danTunnel[type][i + '']?.splice(index, 1);
-                        });
-                        return i;
-                    }
-                    // console.log("hhhhhhh", this.danIndex % itemY, type);
-                    // if (this.unlimited) return this.danIndex % itemY;
-                }
-                return -1;
-            };
+            ele.addEventListener("animationend", () => {
+              const index = this.danTunnel[type][i + ""]?.indexOf(ele);
+              this.danTunnel[type] !== {} && this.danTunnel[type][i + ""]?.splice(index, 1);
+            });
+            return i;
+          }
+          // console.log("hhhhhhh", this.danIndex % itemY, type);
+          // if (this.unlimited) return this.danIndex % itemY;
+        }
+        return -1;
+      };
 
-            if (Object.prototype.toString.call(dan) !== '[object Array]') {
-                dan = [dan];
-            }
+      if (Object.prototype.toString.call(dan) !== "[object Array]") {
+        dan = [dan];
+      }
 
-            const docFragment = document.createDocumentFragment();
+      const docFragment = document.createDocumentFragment();
 
-            for (let i = 0; i < dan.length; i++) {
-                // if (dan[i].type >= 7) {
-                //     continue;
-                // }
-                // if (typeof dan[i].type !== "string") {
-                //   dan[i].type = utils.number2Type(dan[i].type);
-                // }
-                if (!dan[i].color) {
-                    dan[i].color = 16777215;
-                }
-                if (!dan[i].size) {
-                    dan[i].size = 25;
-                }
-                const item = document.createElement('div');
-                if (!this.paused) {
-                    item.classList.add('mfunsPlayer-danmaku-run');
-                } else {
-                    item.classList.remove('mfunsPlayer-danmaku-run');
-                }
-                item.classList.add('mfunsPlayer-danmaku-item');
-                item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
-                dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
-                dan[i].isSubtitle && item.classList.add('subtitle');
-                if (dan[i].border) {
-                    item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, '\n')}</span>`;
-                } else {
-                    item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, '\n')}</span>`;
-                }
-                if (typeof dan[i].color !== 'string') {
-                    item.style.color = utils.number2Color(dan[i].color);
-                } else {
-                    item.style.color = dan[i].color;
-                }
-                item.style.opacity = this._opacity;
-                item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + 'px';
-                item.addEventListener('animationend', () => {
-                    [...this.container.children].includes(item) && this.container.removeChild(item);
-                });
+      for (let i = 0; i < dan.length; i++) {
+        if (dan[i].type >= 7) {
+          continue;
+        }
+        // if (typeof dan[i].type !== "string") {
+        //   dan[i].type = utils.number2Type(dan[i].type);
+        // }
+        if (!dan[i].color) {
+          dan[i].color = 16777215;
+        }
+        if (!dan[i].size) {
+          dan[i].size = 25;
+        }
+        const item = document.createElement("div");
+        if (!this.paused) {
+          item.classList.add("mfunsPlayer-danmaku-run");
+        } else {
+          item.classList.remove("mfunsPlayer-danmaku-run");
+        }
+        item.classList.add("mfunsPlayer-danmaku-item");
+        item.classList.add(`mfunsPlayer-danmaku-${dan[i].type}`);
+        dan[i].isSubtitle = /(\/n)|(\\n)/i.test(dan[i].text);
+        dan[i].isSubtitle && item.classList.add("subtitle");
+        if (dan[i].border) {
+          item.innerHTML = `<span style="border:${dan[i].border}">${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
+        } else {
+          item.innerHTML = `<span>${dan[i].text.replace(/(\/n)|(\\n)/g, "\n")}</span>`;
+        }
+        if (typeof dan[i].color !== "string") {
+          item.style.color = utils.number2Color(dan[i].color);
+        }
+        item.style.opacity = this._opacity;
+        item.style.fontSize = +dan[i].size * (dan[i].isSubtitle ? 1 : this._fontScale) + "px";
+        item.addEventListener("animationend", () => {
+          if ([...this.container.children].indexOf(item) > -1) this.container.removeChild(item);
+        });
 
-                const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
+        const itemWidth = this._measure(dan[i].text, +dan[i].size ?? 25);
 
         let tunnel;
         let realTunnel;
@@ -847,178 +844,183 @@ class Danmaku {
                 .slice(0, tunnel)
                 .reduce((prev, cur) => prev + cur, 0);
 
-                            if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                                this.danTunnel[dan[i].type][i + '']?.pop();
-                                return;
-                            }
-                            item.dataset.tunnel = tunnel;
-                            item.dataset.origin = dan[i].origin;
-                            item.style.width = itemWidth + 1 + 'px';
-                            item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
-                            item.style.top = (dan[i].isSubtitle ? 0 : top) + 'px';
-                        }
-                        break;
-                    case 'bottom':
-                        // if (this.miniMode) continue;
-                        tunnel = getTunnel(item, dan[i].type) % itemY;
-                        if (tunnel >= 0 || dan[i].isSubtitle) {
-                            let bottomArr = [];
-                            const bottomDan = this.danTunnel.bottom;
-                            for (let key in bottomDan) {
-                                bottomArr.push(...bottomDan[key]);
-                            }
-                            const bottom = bottomArr
-                                .map((el) => {
-                                    return parseInt(el.style.fontSize) + this.tunnelPadding;
-                                })
-                                .slice(0, tunnel)
-                                .reduce((prev, cur) => prev + cur, 0);
-
-                            if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
-                                this.danTunnel[dan[i].type][i + '']?.pop();
-                                return;
-                            }
-                            item.dataset.tunnel = tunnel;
-                            item.dataset.origin = dan[i].origin;
-                            item.style.width = itemWidth + 1 + 'px';
-                            item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
-                            item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + 'px';
-                        }
-                        break;
-                    default:
-                        console.error(`无法处理的弹幕模式: ${dan[i].type}`);
-                }
-                if (tunnel >= 0) {
-                    // console.log(item);
-                    // move
-                    item.classList.add('mfunsPlayer-danmaku-move');
-                    item.dataset.id = dan[i].id;
-
-                    if (!!this._speed && !dan[i].isSubtitle) {
-                        item.classList.add(this._speed);
-                    }
-                    // insert
-                    // this.container.appendChild(item);
-
-                    docFragment.appendChild(item);
-                }
+              if (top + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.dataset.tunnel = tunnel;
+              item.dataset.origin = dan[i].origin;
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.top = (dan[i].isSubtitle ? 0 : top) + "px";
             }
+            break;
+          case "bottom":
+            if (this.miniMode) return;
+            tunnel = getTunnel(item, dan[i].type) % itemY;
+            if (tunnel >= 0 || dan[i].isSubtitle) {
+              let bottomArr = [];
+              const bottomDan = this.danTunnel.bottom;
+              for (let key in bottomDan) {
+                bottomArr.push(...bottomDan[key]);
+              }
+              const bottom = bottomArr
+                .map((el) => {
+                  return parseInt(el.style.fontSize) + this.tunnelPadding;
+                })
+                .slice(0, tunnel)
+                .reduce((prev, cur) => prev + cur, 0);
 
-            this.container.appendChild(docFragment);
-        }
-    }
-
-    removeDanmakuCheck() {
-        this.lockDanmaku && this.lockDanmaku.classList.remove('lock');
-        this.player.template.danmakuTip.classList.remove('show');
-        this.lockDanmaku.dataset.moved = 0;
-        this.lockDanmaku.style.zIndex = 'auto';
-        this.container.style.cursor = 'none';
-    }
-
-    play() {
-        this.paused = false;
-    }
-
-    pause() {
-        this.paused = true;
-    }
-
-    _measure(text, size) {
-        if (!this.demoDanmaku) {
-            this.demoDanmaku = this.container.getElementsByClassName('mfunsPlayer-danmaku-item')[0];
-        }
-        this.demoDanmaku.style.fontSize = (this.miniMode ? 16 : size) * this._fontScale + 'px';
-
-        let measureStyle = getComputedStyle(this.demoDanmaku, false);
-        if (!this.context) {
-            this.context = document.createElement('canvas').getContext('2d');
-        }
-        const fontSize = measureStyle.getPropertyValue('font-size');
-        const fontWeight = measureStyle.getPropertyValue('font-weight');
-        const fontFamily = measureStyle.getPropertyValue('font-family');
-        this.context.font = measureStyle.getPropertyValue('font') ?? `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
-        return this.context.measureText(text).width;
-    }
-
-    seek() {
-        this.clear();
-        for (let i = 0; i < this.dan.length; i++) {
-            if (this.dan[i].time >= this.options.time()) {
-                this.danIndex = i;
-                break;
+              if (bottom + parseInt(item.style.fontSize) + this.tunnelPadding > danHeight) {
+                this.danTunnel[dan[i].type][i + ""]?.pop();
+                return;
+              }
+              item.dataset.tunnel = tunnel;
+              item.dataset.origin = dan[i].origin;
+              item.style.width = itemWidth + 1 + "px";
+              item.style.marginLeft = `-${(itemWidth + 1) * 0.5}px`;
+              item.style.bottom = (dan[i].isSubtitle ? 0 : bottom) + "px";
             }
-            this.danIndex = this.dan.length;
+            break;
+          default:
+            console.error(`无法处理的弹幕模式: ${dan[i].type}`);
         }
-    }
+        if (tunnel >= 0) {
+          // move
+          item.classList.add("mfunsPlayer-danmaku-move");
+          item.dataset.id = dan[i].id;
 
-    clear(type) {
-        console.log('clear');
-        if (type) {
-            this.danTunnel[type] = {};
-            return;
+          if (!!this._speed && !dan[i].isSubtitle) {
+            item.classList.add(this._speed);
+          }
+          // insert
+          this.container.appendChild(item);
+          // docFragment.appendChild(item);
         }
-        this.danTunnel = {
-            left: {},
-            right: {},
-            top: {},
-            bottom: {},
-        };
-        this.danIndex = 0;
-        this.options.container.innerHTML = '';
-        this.options.container.appendChild(this.demoDanmaku);
-        this.events && this.events.trigger('danmaku_clear');
-    }
+      }
 
-    htmlEncode(str) {
-        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-    }
+      // this.container.appendChild(docFragment);
 
-    resize() {
-        const danWidth = this.container.offsetWidth;
-        const items = this.container.getElementsByClassName('mfunsPlayer-danmaku-right');
-        for (let i = 0; i < items.length; i++) {
-            items[i].style.transform = `translateX(-${danWidth}px)`;
-        }
+      return docFragment;
     }
+  }
+  removeDanmakuCheck() {
+    this.lockDanmaku && this.lockDanmaku.classList.remove("lock");
+    this.player.template.danmakuTip.classList.remove("show");
+    this.lockDanmaku.dataset.moved = 0;
+    this.lockDanmaku.style.zIndex = "auto";
+    this.container.style.cursor = "none";
+  }
 
-    hide() {
-        this.showing = false;
-        this.pause();
-        this.clear();
-        this.events && this.events.trigger('danmaku_hide');
-        this.events &&
-            this.events.trigger('setDanmaku', {
-                key: 'show',
-                value: false,
-            });
-    }
+  play() {
+    this.paused = false;
+  }
 
-    show() {
-        this.seek();
-        this.showing = true;
-        this.play();
-        this.events && this.events.trigger('danmaku_show');
-        this.events &&
-            this.events.trigger('setDanmaku', {
-                key: 'show',
-                value: true,
-            });
+  pause() {
+    this.paused = true;
+  }
+
+  _measure(text, size) {
+    if (!this.demoDanmaku) {
+      this.demoDanmaku = this.container.getElementsByClassName("mfunsPlayer-danmaku-item")[0];
     }
-    toggle() {
-        if (this.showing) {
-            this.hide();
-        } else {
-            this.show();
-        }
+    this.demoDanmaku.style.fontSize = (this.miniMode ? 16 : size) * this._fontScale + "px";
+
+    let measureStyle = getComputedStyle(this.demoDanmaku, false);
+    if (!this.context) {
+      this.context = document.createElement("canvas").getContext("2d");
     }
-    unlimit(boolean) {
-        this.unlimited = boolean;
+    const fontSize = measureStyle.getPropertyValue("font-size");
+    const fontWeight = measureStyle.getPropertyValue("font-weight");
+    const fontFamily = measureStyle.getPropertyValue("font-family");
+    this.context.font =
+      measureStyle.getPropertyValue("font") ?? `${fontWeight}  ${fontSize} / ${fontSize} ${fontFamily}`;
+    return this.context.measureText(text).width;
+  }
+
+  seek() {
+    this.clear();
+    for (let i = 0; i < this.dan.length; i++) {
+      if (this.dan[i].time >= this.options.time()) {
+        this.danIndex = i;
+        break;
+      }
+      this.danIndex = this.dan.length;
     }
-    mini(flag) {
-        this.miniMode = flag;
-        this.options.height = flag ? 22 : 31;
+  }
+
+  clear(type) {
+    console.log("clear");
+    if (type) {
+      this.danTunnel[type] = {};
+      return;
     }
+    this.danTunnel = {
+      left: {},
+      right: {},
+      top: {},
+      bottom: {},
+    };
+    this.danIndex = 0;
+    this.options.container.innerHTML = "";
+    this.options.container.appendChild(this.demoDanmaku);
+    this.events && this.events.trigger("danmaku_clear");
+  }
+
+  htmlEncode(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;");
+  }
+
+  resize() {
+    const danWidth = this.container.offsetWidth;
+    const items = this.container.getElementsByClassName("mfunsPlayer-danmaku-right");
+    for (let i = 0; i < items.length; i++) {
+      items[i].style.transform = `translateX(-${danWidth}px)`;
+    }
+  }
+
+  hide() {
+    this.showing = false;
+    this.pause();
+    this.clear();
+    this.events && this.events.trigger("danmaku_hide");
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "show",
+        value: false,
+      });
+  }
+
+  show() {
+    this.seek();
+    this.showing = true;
+    this.play();
+    this.events && this.events.trigger("danmaku_show");
+    this.events &&
+      this.events.trigger("setDanmaku", {
+        key: "show",
+        value: true,
+      });
+  }
+  toggle() {
+    if (this.showing) {
+      this.hide();
+    } else {
+      this.show();
+    }
+  }
+  unlimit(boolean) {
+    this.unlimited = boolean;
+  }
+  mini(flag) {
+    this.miniMode = flag;
+    this.options.height = flag ? 22 : 28;
+  }
 }
 
 export default Danmaku;

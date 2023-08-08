@@ -526,6 +526,7 @@ class Controller {
                 });
             },
         });
+
         this.components.videoBorderhiddenSwitch = new Switch({
             el: this.template.video_borderhidden_switch,
             value: !this.player.options.blackBorder,
@@ -539,6 +540,8 @@ class Controller {
                 });
             },
         });
+        this.player.template.buildVideo(this.player.options.blackBorder);
+
         this.components.videoDarkmodeSwitch = new Switch({
             el: this.template.video_darkmode_switch,
             value: false,

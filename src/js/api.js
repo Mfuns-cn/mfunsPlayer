@@ -31,7 +31,7 @@ export default {
           case 'mfuns-danmaku':
             options.success &&
               options.success(
-                data.data.map((item) => ({
+                data.data.list.map((item) => ({
                   time: item[0],
                   type: utils.number2Type(item[1]),
                   mode: item[1],
