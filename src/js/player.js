@@ -15,6 +15,8 @@ import InfoPanel from './info-panel';
 import Template from './template';
 import utils from './utils';
 import DanmakuAuxiliary from './danmakuAuxiliary';
+import tplResolution from '../../template/resolution.art';
+import tplVideo from '../../template/video.art';
 import { Switch } from './components/components';
 let index = 0;
 const instances = [];
@@ -83,7 +85,7 @@ export default class mfunsPlayer {
                 },
                 apiBackend: this.options.apiBackend,
                 borderColor: '#FFFFFF',
-                height: 28,
+                height: 29,
                 time: () => this.video.currentTime,
                 isShow: this.showDanmaku,
                 danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
@@ -110,7 +112,10 @@ export default class mfunsPlayer {
         } else {
             this.template.footBar && this.template.footBar.classList.add('hide');
         }
-
+        if (this.options.video[this.currentVideo].resolution) {
+            this.resolution = this.options.video[this.currentVideo].resolution.find((el) => el.isDefault);
+            this.template.resolutionInfo.innerHTML = this.resolution.name + ' ' + this.resolution.label;
+        }
         document.addEventListener(
             'click',
             () => {
@@ -223,7 +228,6 @@ export default class mfunsPlayer {
         // console.log("play");
         this.timer.enable('loading');
         if (!this.canplay) {
-            console.log('cccccccc');
             this.timer.enable('loading');
         }
         this.video
@@ -417,32 +421,33 @@ export default class mfunsPlayer {
             this.canplay = true;
         });
         this.on('loadstart', () => {
-            clearTimeout(this.loadTimer);
-            this.hideTip();
-            this.template.loading.classList.add('show');
-            this.template.loadingSpeed.innerHTML = '';
-            this.template.headBar.classList.add('disable');
-            this.template.footBar && this.template.footBar.classList.add('loading');
-            this.template.controllerMask.classList.add('disable');
-            this.template.bezel.classList.add('hide');
-            this.template.danmakuRoot && this.template.danmakuRoot.classList.add(this.options.uid ? 'loading' : 'nologin');
-
-            this.videoLoaded = false;
-            //30s后如果还处于loadstart阶段，则响应超时
-            this.loadTimer = setTimeout(() => {
-                if (!this.videoLoaded && !this.networkError) {
-                    this.removeMask('error');
-                    this.template.loading.classList.remove('show');
-                    this.notice('视频响应超时，您可以', true, {
-                        callback: () => {
-                            this.reload();
-                        },
-                        text: '重新加载',
-                    });
-                } else {
-                    clearTimeout(this.loadTimer);
-                }
-            }, 30000);
+            if (!this.switchingResolution) {
+                clearTimeout(this.loadTimer);
+                this.hideTip();
+                this.template.loading.classList.add('show');
+                this.template.loadingSpeed.innerHTML = '';
+                this.template.headBar.classList.add('disable');
+                this.template.footBar && this.template.footBar.classList.add('loading');
+                this.template.controllerMask.classList.add('disable');
+                this.template.bezel.classList.add('hide');
+                this.template.danmakuRoot && this.template.danmakuRoot.classList.add(this.options.uid ? 'loading' : 'nologin');
+                this.videoLoaded = false;
+                //30s后如果还处于loadstart阶段，则响应超时
+                this.loadTimer = setTimeout(() => {
+                    if (!this.videoLoaded && !this.networkError) {
+                        this.removeMask('error');
+                        this.template.loading.classList.remove('show');
+                        this.notice('视频响应超时，您可以', true, {
+                            callback: () => {
+                                this.reload();
+                            },
+                            text: '重新加载',
+                        });
+                    } else {
+                        clearTimeout(this.loadTimer);
+                    }
+                }, 30000);
+            }
         });
         this.on('error', (error) => {
             //检查视频链接
@@ -472,10 +477,12 @@ export default class mfunsPlayer {
             this.template.headBar.classList.remove('disable');
             this.template.controllerMask.classList.remove('disable');
             this.template.bezel.classList.remove('hide');
+            this.video.classList.add('mfunsPlayer-video-current');
             this.template.videoLoad.innerHTML = '请求视频数据中... [完成]';
             this.videoLoaded = true;
             this.removeMask();
             this.danLength && this.loadHighEnergy();
+            !this.switchingResolution && this.initResolution();
             // this.hideTip();
             this.template.currentTime.innerText = '00:00';
             this.template.totalTime.innerText = utils.secondToTime(this.video.duration);
@@ -499,7 +506,8 @@ export default class mfunsPlayer {
             this.container.classList.remove('mfunsPlayer-paused');
             this.container.classList.add('mfunsPlayer-playing');
             this.template.play_btn.classList.remove('button-paused');
-            this.template.bezel.classList.add('bezel_play');
+            this.danmaku.miniMode && this.template.bezel.classList.remove('icon-play');
+            this.template.bezel.classList.add(this.danmaku.miniMode ? 'icon-pause' : 'bezel_play');
             this.playTimer = setTimeout(() => {
                 this.template.bezel.classList.add('hide');
             }, 1500);
@@ -518,7 +526,8 @@ export default class mfunsPlayer {
             this.container.classList.remove('mfunsPlayer-playing');
             this.template.play_btn.classList.add('button-paused');
             this.template.bezel.classList.remove('hide');
-            this.template.bezel.classList.remove('bezel_play');
+            this.template.bezel.classList.remove(this.danmaku.miniMode ? 'icon-pause' : 'bezel_play');
+            this.danmaku.miniMode && this.template.bezel.classList.add('icon-play');
             this.template.loading.classList.remove('show');
         });
         this.on('timeupdate', () => {
@@ -547,11 +556,24 @@ export default class mfunsPlayer {
             this.danmaku && this.danmaku.seek();
             this.advancedDanmaku && this.advancedDanmaku.seek();
         });
+        //创建视频所有原生事件回调事件队列并触发对应监听句柄
         for (let i = 0; i < this.events.videoEvents.length; i++) {
             video.addEventListener(this.events.videoEvents[i], (e) => {
                 this.events.trigger(this.events.videoEvents[i], e);
             });
         }
+        //视频所有原生事件回调事件队列去重
+        this.events.videoEvents.forEach((eventName) => {
+            if (this.events.events[eventName]) {
+                const eventQueue = this.events.events[eventName];
+                const newEventQueque = [];
+                eventQueue.forEach((event) => {
+                    newEventQueque.length === 0 && newEventQueque.push(event);
+                    !newEventQueque.map((ev) => ev.toString()).includes(event.toString()) && newEventQueque.push(event);
+                });
+                this.events.events[eventName] = newEventQueque;
+            }
+        });
     }
     switchVideo(index) {
         const total = this.options.video.length - 1;
@@ -606,6 +628,109 @@ export default class mfunsPlayer {
             }
         });
     }
+
+    initResolution() {
+        console.log(`当前视频分辨率为${this.video.videoWidth} * ${this.video.videoHeight}`);
+        const currentVideoOption = this.options.video[this.currentVideo];
+        const resolution = currentVideoOption?.resolution?.find((el) => el.isDefault).name ?? utils.getVideoResolution(this.video);
+
+        if (!currentVideoOption.resolution) {
+            currentVideoOption.resolution = [
+                {
+                    name: resolution,
+                    label: utils.resolutionMap.get(resolution),
+                    isDefault: true,
+                },
+            ];
+
+            this.resolution = currentVideoOption.resolution[0];
+        }
+
+        const newResolutionHTML = tplResolution(currentVideoOption);
+        this.template.resolutionInfo.innerHTML = this.resolution.name + ' ' + this.resolution.label;
+        this.template.resolutionMask.innerHTML = new DOMParser().parseFromString(newResolutionHTML, 'text/html').body.firstChild.innerHTML;
+        this.template.resolutionItem = document.querySelectorAll('.mfunsPlayer-resolution-item');
+        this.controller.initResolutionButton();
+
+        // this.off("canplay", this.initResolution);
+    }
+    switchResolution(resolution, cb = () => {}) {
+        console.log(resolution);
+
+        const { name, url, type, label } = resolution;
+
+        if (this.resolution.name === resolution.name || this.switchingResolution) {
+            return;
+        } else {
+            this.prevResolution = this.resolution;
+            this.resolution = resolution;
+        }
+        this.switchingResolution = true;
+        this.template.resolutionInfo.innerHTML = name + ' ' + label;
+        const videoHTML = tplVideo({
+            current: false,
+            pic: null,
+            preload: 'auto',
+            url,
+            // subtitle: this.options.subtitle,
+        });
+        const videoEle = new DOMParser().parseFromString(videoHTML, 'text/html').body.firstChild;
+
+        videoEle.style.width = this.video.style.width;
+        videoEle.style.height = this.video.style.height;
+        videoEle.style.objectFit = this.video.style.objectFit;
+        videoEle.style.filter = this.video.style.filter;
+        this.template.videoMask.insertBefore(videoEle, this.video);
+        this.prevVideo = this.video;
+        this.prevEvents = this.events.events;
+        // this.events.events["loadedmetadata"] = [];
+        this.initVideo(videoEle, type || this.options.video[this.currentVideo].type, true);
+        this.notice(`切换中`, true);
+        this.events.trigger('resolution_start', this.resolution.name);
+        const loadedmetadata = () => {
+            if (this.prevVideo) {
+                videoEle.currentTime = this.prevVideo.currentTime;
+                const canplay = () => {
+                    if (this.prevVideo) {
+                        const paused = this.prevVideo.paused;
+                        this.prevVideo.style.display = 'none';
+                        this.prevVideo.pause();
+                        this.template.videoMask.removeChild(this.prevVideo);
+                        this.prevVideo = null;
+                        this.video = videoEle;
+                        this.video.classList.add('mfunsPlayer-video-current');
+                        !paused && this.play();
+                        this.notice(`已切换至 ${this.resolution.name}`);
+                        this.switchingResolution = false;
+                        videoEle.removeEventListener('canplay', canplay);
+                        videoEle.removeEventListener('loadedmetadata', loadedmetadata);
+                        this.events.trigger('resolution_end');
+                    }
+                };
+                this.video.currentTime = this.prevVideo.currentTime;
+
+                videoEle.addEventListener('canplay', canplay);
+            }
+        };
+        videoEle.addEventListener('loadedmetadata', loadedmetadata);
+        videoEle.addEventListener('error', () => {
+            if (!this.video.error) {
+                return;
+            }
+            if (this.prevVideo) {
+                this.template.videoWrap.removeChild(this.video);
+                this.resolution = this.prevResolution;
+                this.events.events = this.prevEvents;
+                this.template.resolution.innerHTML = this.prevResolution.name;
+                if (!paused) {
+                    this.play();
+                }
+                this.notice(`切换失败`);
+                this.prevVideo = null;
+                this.switchingResolution = false;
+            }
+        });
+    }
     updateVideoPosition(time) {
         // console.log("--------", time, this.currentVideo);
         if (this.template.mask.classList.contains('mfunsPlayer-mask-show')) return;
@@ -616,7 +741,6 @@ export default class mfunsPlayer {
                 position: parseInt(time),
             });
     }
-    disableVideoEvents(event) {}
     theme(color) {
         this.template.setTheme(color);
         this.highEnergy && this.highEnergy.reload(this.video.currentTime / this.video.duration);

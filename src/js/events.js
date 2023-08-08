@@ -62,6 +62,9 @@ class Events {
             'setPlayer',
             'setDanmaku', // 弹幕设置
             'update_video_position',
+
+            'resolution_start',
+            'resolution_end',
         ];
     }
 

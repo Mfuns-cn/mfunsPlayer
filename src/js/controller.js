@@ -2,7 +2,7 @@ import { Picker, MultiPicker, Slider, Slider_vertical, Switch, SliderVertical } 
 import utils from './utils';
 import Thumbnails from './thumbnails';
 class Controller {
-    constructor (player) {
+    constructor(player) {
         this.player = player;
         this.template = player.template;
         this.components = player.components;
@@ -31,6 +31,7 @@ class Controller {
         this.initPlayButton();
         this.initActivity();
         this.initThumbnails();
+
         if (player.options.draggable) {
             this.initPlayedBar();
             this.initTimeLabel();
@@ -45,6 +46,9 @@ class Controller {
         if (player.options.video.length > 1) {
             this.initPagelistButton();
         }
+        // if (player.options.video[player.options.currentVideo].resolution) {
+        //     this.initResolutionButton();
+        // }
         if (player.options.widescreenSwitch) {
             this.initWidescreenButton();
         }
@@ -55,8 +59,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     this.template.previewMask.removeChild(this.template.videoMask);
                     this.template.previewMask.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.add(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     content.appendChild(this.template.videoMask);
                     content.appendChild(this.template.danmaku);
+                    content.appendChild(this.template.bezel);
                     content.onclick = () => {
                         this.player.toggle();
                     };
@@ -72,8 +78,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     content.removeChild(this.template.videoMask);
                     content.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.remove(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     this.template.previewMask.appendChild(this.template.videoMask);
                     this.template.previewMask.appendChild(this.template.danmaku);
+                    this.template.previewMask.appendChild(this.template.bezel);
                     if (this.player.danmaku) {
                         this.player.danmaku.mini(false);
                         this.player.danmaku.resize();
@@ -364,6 +372,22 @@ class Controller {
             });
         }
     }
+    initResolutionButton() {
+        for (let i = 0; i < this.player.template.resolutionItem.length; i++) {
+            this.player.template.resolutionItem[i].addEventListener('click', (event) => {
+                const currentResolution = JSON.parse(this.player.template.resolutionItem[i].dataset.resolution);
+                this.player.switchResolution(currentResolution);
+                this.template.resolutionItem[i].classList.add('focus');
+                this.template.resolutionInfo.innerHTML = currentResolution.name + ' ' + currentResolution.label;
+
+                this.template.resolutionItem.forEach((element, index) => {
+                    if (index !== i) {
+                        element.classList.remove('focus');
+                    }
+                });
+            });
+        }
+    }
     repeatTrigger(loop) {
         this.player.template.repeat_btn.classList[`${loop ? 'add' : 'remove'}`]('button-repeat');
         this.player.template.repeat_tip.innerText = loop ? '关闭洗脑循环' : '开启洗脑循环';
@@ -382,7 +406,7 @@ class Controller {
             min: 0,
             max: 100,
             step: 1,
-            value: this.player.options.volume * 100, 
+            value: this.player.options.volume * 100,
             onDragStart: () => {
                 // 开始调节滑动条（点按）
                 this.isControl = true;
@@ -433,7 +457,7 @@ class Controller {
     initSettingsButton() {
         this.components.videoScalePicker = new Picker({
             el: this.template.video_scale_picker,
-            value: 'auto', 
+            value: 'auto',
             onPick: (value) => {
                 if (value == 'auto') {
                     this.videoScale = false;
@@ -450,7 +474,7 @@ class Controller {
         //分P连播
         this.components.videoNextpageSwitch = new Switch({
             el: this.template.video_nextpage_switch,
-            value: this.player.autoSwitch, 
+            value: this.player.autoSwitch,
             onToggle: (value) => {
                 this.player.autoSwitch = value;
                 this.player.videoLoaded && this.player.notice(value ? '已开启分P连播' : '已关闭分P连播');
@@ -463,7 +487,7 @@ class Controller {
         //自动播放
         this.components.videoAutoplaySwitch = new Switch({
             el: this.template.video_autoplay_switch,
-            value: this.player.autoPlay, 
+            value: this.player.autoPlay,
             onToggle: (value) => {
                 this.player.autoPlay = value;
                 this.player.videoLoaded && this.player.notice(value ? '已开启自动播放' : '已关闭自动播放');
@@ -476,7 +500,7 @@ class Controller {
         //断点续播
         this.components.videoAutoSkipSwitch = new Switch({
             el: this.template.video_autoSkip_switch,
-            value: this.player.autoSkip, 
+            value: this.player.autoSkip,
             onToggle: (value) => {
                 this.player.autoSkip = value;
                 this.player.events?.trigger('setPlayer', {
@@ -503,7 +527,7 @@ class Controller {
         });
         this.components.videoBorderhiddenSwitch = new Switch({
             el: this.template.video_borderhidden_switch,
-            value: !this.player.options.blackBorder, 
+            value: !this.player.options.blackBorder,
             onToggle: (value) => {
                 // 打开开关
                 this.player.template.buildVideo(!value);
@@ -516,7 +540,7 @@ class Controller {
         });
         this.components.videoDarkmodeSwitch = new Switch({
             el: this.template.video_darkmode_switch,
-            value: false, 
+            value: false,
             onToggle: (value) => {
                 if (value) {
                     // 打开开关
@@ -536,7 +560,7 @@ class Controller {
         });
         this.components.videoMirrorSwitch = new Switch({
             el: this.template.video_mirror_switch,
-            value: false, 
+            value: false,
             onToggle: (value) => {
                 if (value) {
                     // 打开开关
@@ -589,7 +613,7 @@ class Controller {
         const danmakuSpeed = this.player.options.danmaku.speed;
         this.components.danmakuFilterPicker = new MultiPicker({
             el: this.template.danmaku_filter_picker,
-            value: shields, 
+            value: shields,
             onPick: (item, value) => {
                 console.log(value ? `屏蔽弹幕类型：${item}` : `取消屏蔽弹幕类型：${item}`);
                 this.player.danmaku && this.player.danmaku.shield(item, value);
@@ -623,7 +647,7 @@ class Controller {
                 }, 50);
                 // }
                 this.player.template.danmakuSettings_panel.classList.remove('show');
-            }
+            },
         });
         // 弹幕区域调节
         this.components.danmakuShowareaSlider = new Slider({
@@ -631,7 +655,7 @@ class Controller {
             min: 20,
             max: 100,
             step: 20,
-            value: showArea * 20, 
+            value: showArea * 20,
             onDragStart: () => {
                 // 开始调节滑动条（点按）
                 console.log('--------');
@@ -660,7 +684,7 @@ class Controller {
             min: 50,
             max: 150,
             step: 1,
-            value: danmakuSize * 100, 
+            value: danmakuSize * 100,
             onDragStart: () => {
                 this.isControl = true;
                 this.template.danmakuSettings_panel.classList.add('show');
@@ -687,7 +711,7 @@ class Controller {
             min: 50,
             max: 150,
             step: 25,
-            value: danmakuSpeed * 100, 
+            value: danmakuSpeed * 100,
             onDragStart: () => {
                 // 开始调节滑动条（点按）
                 console.log('--------');
@@ -712,9 +736,9 @@ class Controller {
         });
         this.components.danmakuCatchSwitch = new Switch({
             el: this.template.danmaku_catch_switch,
-            value: this.player.options.danmaku.danmakuCatch, 
+            value: this.player.options.danmaku.danmakuCatch,
             onToggle: (value) => {
-                this.player.template.danmakuTipMask.style.display = value ? '' : "none"; // 打开弹幕捕获模式，则取消tipMask的隐藏
+                this.player.template.danmakuTipMask.style.display = value ? '' : 'none'; // 打开弹幕捕获模式，则取消tipMask的隐藏
                 !nonotice && this.player.notice(value ? '已开启弹幕捕获模式' : '已关闭弹幕捕获模式');
                 this.player.events?.trigger('setDanmaku', {
                     key: 'danmakuCatch',
@@ -738,7 +762,7 @@ class Controller {
     initDanmakuStyleButton() {
         this.components.danmakuFontsizePicker = new Picker({
             el: this.template.danmaku_fontsize_picker,
-            value: this.danmakuFontsize, 
+            value: this.danmakuFontsize,
             onPick: (value) => {
                 // 有关字体大小值的更改请写在此处
                 this.danmakuFontsize = value;
@@ -756,7 +780,7 @@ class Controller {
         });
         this.components.danmakuColorPicker = new Picker({
             el: this.template.danmaku_color_picker,
-            value: this.danmakuColor, 
+            value: this.danmakuColor,
             onChange: (value) => {
                 if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
                     // 有关弹幕颜色值的更改请写在此处
@@ -768,7 +792,7 @@ class Controller {
                         this.components.danmakuColorPicker.change(value.toUpperCase());
                     }
                 }
-            }
+            },
         });
         this.template.danmaku_color_input.addEventListener('input', (e) => {
             e.target.value = '#' + e.target.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6);
@@ -802,7 +826,7 @@ class Controller {
             this.player.template.pip_btn.classList.remove('button-picture-in-picture');
         });
     }
-    widescreenTrigger(widescreen) { }
+    widescreenTrigger(widescreen) {}
     initWidescreenButton() {
         this.template.widescreen_btn.addEventListener('click', () => {
             this.player.widescreen = !this.player.widescreen;
