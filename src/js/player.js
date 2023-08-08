@@ -9,6 +9,7 @@ import HotKey from './hotKey';
 import HighEnergy from './highEnergy';
 import Events from './events';
 import VideoColor from './videoColor';
+import PlayerInfo from './playerInfo';
 import ContextMenu from './contextmenu';
 import InfoPanel from './info-panel';
 import Template from './template';
@@ -18,7 +19,7 @@ import { Switch } from './components/components';
 let index = 0;
 const instances = [];
 export default class mfunsPlayer {
-    constructor (options) {
+    constructor(options) {
         this.options = handleOption(options);
         // console.log(this.options);
         this.template = new Template(this.options);
@@ -44,6 +45,7 @@ export default class mfunsPlayer {
         this.widescreen = options.widescreen;
 
         this.videoColor = new VideoColor(this);
+        this.playerInfo = new PlayerInfo(this);
         this.bar = new Bar(this.template);
         this.controller = new Controller(this);
         this.timer = new Timer(this);
@@ -91,7 +93,7 @@ export default class mfunsPlayer {
                     id: this.options.video[this.options.currentVideo].danId,
                     danmakuAddition: this.options.video[this.options.currentVideo].danmakuAddition,
                     token: this.options.danmaku.token,
-                    otherDanParams: this.options.video[this.options.currentVideo].otherDanParams ?? ""
+                    otherDanParams: this.options.video[this.options.currentVideo].otherDanParams ?? '',
                 },
                 events: this.events,
             };
@@ -574,10 +576,10 @@ export default class mfunsPlayer {
                 currentVideo.danId,
                 currentVideo.advDanId
                     ? {
-                        id: currentVideo.advDanId,
-                        address: this.options.advancedDanmaku.api,
-                        token: this.options.advancedDanmaku.token,
-                    }
+                          id: currentVideo.advDanId,
+                          address: this.options.advancedDanmaku.api,
+                          token: this.options.advancedDanmaku.token,
+                      }
                     : null,
                 currentVideo.danmakuAddition,
                 currentVideo.otherDanParams
@@ -614,7 +616,7 @@ export default class mfunsPlayer {
                 position: parseInt(time),
             });
     }
-    disableVideoEvents(event) { }
+    disableVideoEvents(event) {}
     theme(color) {
         this.template.setTheme(color);
         this.highEnergy && this.highEnergy.reload(this.video.currentTime / this.video.duration);
@@ -656,7 +658,7 @@ export default class mfunsPlayer {
         this.video.playbackRate = rate;
         return rate;
     }
-    update(url) { }
+    update(url) {}
     reload() {
         console.log('reload');
         this.template.activityMask.classList.remove('show');
@@ -679,10 +681,10 @@ export default class mfunsPlayer {
                 currentVideo.danId,
                 currentVideo.advDanId
                     ? {
-                        id: currentVideo.advDanId,
-                        address: this.options.advancedDanmaku.api,
-                        token: this.options.advancedDanmaku.token,
-                    }
+                          id: currentVideo.advDanId,
+                          address: this.options.advancedDanmaku.api,
+                          token: this.options.advancedDanmaku.token,
+                      }
                     : null,
                 currentVideo.danmakuAddition
             );
@@ -778,7 +780,7 @@ export default class mfunsPlayer {
     }
 
     mountDanmakuAuxiliary(el) {
-        this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
+        this.danmakuAuxiliary = new DanmakuAuxiliary(this, el, this.options);
     }
     destroy() {
         instances.splice(instances.indexOf(this), 1);

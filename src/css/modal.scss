@@ -37,7 +37,7 @@
             height: 20px;
             text-align: center;
             line-height: 15px;
-            background: url("../icon/close.svg");
+            background: url('../icon/close.svg');
             background-size: 100% 100%;
             color: $translucent-white;
             cursor: pointer;
@@ -139,7 +139,7 @@
             height: 20px;
             text-align: center;
             line-height: 15px;
-            background: url("../icon/close.svg");
+            background: url('../icon/close.svg');
             background-size: 100% 100%;
             color: $translucent-white;
             cursor: pointer;
@@ -193,6 +193,55 @@
             cursor: pointer;
             &:hover {
                 filter: brightness(1.1);
+            }
+        }
+    }
+}
+.mfunsPlayer-player-info-mask {
+    @extend .mfunsPlayer-danmaku-report-mask;
+    .mfunsPlayer-player-info-modal {
+        position: relative;
+        width: 400px;
+        height: 250px;
+        background: $translucent-black;
+        border-radius: 5px;
+        .mfunsPlayer-player-info-title {
+            width: 100%;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            color: $translucent-white;
+            border-bottom: 1px solid $text-grey;
+        }
+        .mfunsPlayer-player-info-logo {
+            width: 360px;
+            height: 60px;
+            background-image: url('../icon/MfunsPlayer.svg');
+            background-size: cover;
+        }
+        .mfunsPlayer-player-info-close {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 15px;
+            background: url('../icon/close.svg');
+            background-size: 100% 100%;
+            color: $translucent-white;
+            cursor: pointer;
+            &:hover {
+                filter: brightness(0.9);
+            }
+        }
+        .mfunsPlayer-player-info-content {
+            margin: 10px 20px;
+            color: $translucent-white;
+            font-size: 14px;
+            line-height: 22px;
+            a {
+                color: $theme-color-light;
             }
         }
     }
