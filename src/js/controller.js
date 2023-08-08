@@ -53,6 +53,7 @@ class Controller {
             this.initWidescreenButton();
         }
         this.watchPlayerScroll = (e) => {
+            if (document.pictureInPictureElement) return;
             if (this.template.container.getBoundingClientRect().top + this.template.container.offsetHeight <= 0) {
                 if (this.template.miniPlayer.classList.contains('hide')) {
                     this.template.miniPlayer.classList.remove('hide');
@@ -243,7 +244,7 @@ class Controller {
         this.player.template.barWrap.addEventListener(utils.nameMap.dragMove, (e) => {
             if (this.player.video.duration) {
                 showTip(e);
-                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，bar也会移动，修复bug
+                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，拖拽目标也会移动
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
             }
         });
@@ -548,6 +549,7 @@ class Controller {
                     this.player.template.footBar?.classList?.add('darkmode');
                     this.player.container.classList.add('mfunsPlayer-darkmode');
                     document.body.appendChild(this.mask);
+                    this.player.events && this.player.events.trigger('darkmode_on');
                 } else if ([...document.body.childNodes].includes(this.mask)) {
                     // 关闭开关
                     this.player.template.footBar?.classList?.remove('darkmode');

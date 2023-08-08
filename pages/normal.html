@@ -12,6 +12,17 @@
 
 <body>
     <div class="player">
+        <div class="content"></div>
+        <div class="side">
+            <div class="bar">
+                <div class="bar-item">1</div>
+                <div class="bar-item">2</div>
+                <div class="bar-item">3</div>
+            </div>
+            <div class="extra">
+            </div>
+        </div>
+
     </div>
 </body>
 <script>
@@ -22,15 +33,21 @@
     //     addition: [
     //         "https://s-sh-17-dplayercdn.oss.dogecdn.com/1678963.json"
     //      ],
-    const container = document.querySelector(".player");
+    const container = document.querySelector(".content");
+    const playerExtra = document.querySelector(".extra");
     const mfunsPlayerParams = {
         container,
         video: [
             {
                 url: "https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4",
                 danId: 26247,
-                otherDanParams: "&part=1"
-
+                otherDanParams: "&part=1",
+                danmakuAddition: [
+                    {
+                        url: "https://mfuns-cn.github.io/mfunsPlayer/src/static/danmaku/pressure/1.xml",
+                        type: "bili-danmaku"
+                    }
+                ]
             }
         ],
         danmaku: {
@@ -38,6 +55,7 @@
         }
     }
     let mp = new mfunsPlayer(mfunsPlayerParams);
+    mp.mountDanmakuAuxiliary(playerExtra);
 </script>
 <style>
     * {
@@ -50,8 +68,42 @@
     }
 
     .player {
-        width: 700px;
+        width: 1000px;
+        /* height: 460px; */
         margin: 20px auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    .content {
+        width: 700px;
+    }
+
+    .side {
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #e6e6e6;
+        border-left: none;
+    }
+
+    .side .bar {
+        height: 60px;
+        background: #e6e6e6;
+        display: flex;
+    }
+
+    .bar .bar-item {
+        flex: 1;
+        border-left: 1px solid #333;
+        text-align: center;
+        align-items: 60px;
+    }
+
+    .side .extra {
+        flex: 1;
+
+
     }
 </style>
 

@@ -206,7 +206,7 @@ class Template {
     }
     buildSmallWindow() {}
     buildVideo(hasBlackborder) {
-        // console.log(this.container.offsetWidth)
+        console.log('dfdbffsdfdoisif---------------------', hasBlackborder);
 
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');
