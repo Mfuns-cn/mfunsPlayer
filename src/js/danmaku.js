@@ -50,8 +50,9 @@ class Danmaku {
     this.biliLimit = false;
     this.acfunLimit = false;
     this.unknownLimit = false;
-    this.originFilter = new Set();
     this.unlimited = this.options.unlimited;
+
+    this.originFilter = new Set();
     this.loaded = false; // 弹幕是否加载完毕
     this.paused = true;
     this.danmakuCheck = false;
@@ -153,7 +154,7 @@ class Danmaku {
     //撤销
     this.player.template.danmakuCancel.addEventListener("click", (e) => { });
     //举报
-    let reportIReason;
+    let reportReason;
     this.player.template.danmakuReport.addEventListener("click", (e) => {
       setTimeout(() => {
         this.currentLockDanmaku && this.currentLockDanmaku.classList.add("lock");
@@ -174,31 +175,29 @@ class Danmaku {
       const allReports = this.player.template.danmakuReportMask.querySelectorAll(".mfunsPlayer-switch");
       allReports.forEach((el, index) => {
         if (!this[`reportOption${index}`]) {
-          this[`reportOption${index}`] = new Switch({
-            el: el,
-            value: false,
-            onToggle: (value) => {
-              if (value) {
-                // 打开开关
-                for (let i = 0; i < allReports.length; i++) {
-                  i !== index && this[`reportOption${i}`].off(1);
-                }
-                if (el.children[1].innerHTML !== "其他") {
-                  reportIReason = el.children[1].innerHTML;
-                  this.player.template.danmakuReportDetail.classList.remove("show");
-                  this.player.template.danmakuReportSubmit.classList.remove("disable");
-                } else {
-                  reportIReason = "";
-                  this.player.template.danmakuReportDetail.classList.add("show");
-                  this.player.template.danmakuReportDetail.value = "";
-                }
-              } else {
-                // 关闭开关
-                if (this.player.template.danmakuReportDetail.classList.contains("show"))
-                  this.player.template.danmakuReportDetail.classList.remove("show");
-                if (!this.player.template.danmakuReportSubmit.classList.contains("disable"))
-                  this.player.template.danmakuReportSubmit.classList.add("disable");
+          this[`reportOption${index}`] = new Switch(el, false, {
+            on: () => {
+              for (let i = 0; i < allReports.length; i++) {
+                i !== index && this[`reportOption${i}`].off(1);
               }
+              if (el.children[1].innerHTML !== "其他") {
+                reportReason = el.children[1].innerHTML;
+                this.player.template.danmakuReportDetail.classList.remove("show");
+                this.player.template.danmakuReportSubmit.classList.remove("disable");
+              } else {
+                reportReason = "";
+                this.player.template.danmakuReportDetail.classList.add("show");
+                this.player.template.danmakuReportSubmit.classList.add("disable");
+                this.player.template.danmakuReportDetail.value = "";
+              }
+              // 打开开关
+            },
+            off: (optionTrigger) => {
+              // 关闭开关
+              if (this.player.template.danmakuReportDetail.classList.contains("show"))
+                this.player.template.danmakuReportDetail.classList.remove("show");
+              if (!this.player.template.danmakuReportSubmit.classList.contains("disable") && !optionTrigger)
+                this.player.template.danmakuReportSubmit.classList.add("disable");
             },
           });
         } else {
@@ -219,7 +218,7 @@ class Danmaku {
         danId: id ?? null,
         author: author ?? null,
         text,
-        reason: reportIReason || this.player.template.danmakuReportDetail.value,
+        reason: reportReason || this.player.template.danmakuReportDetail.value,
       };
 
       if (origin === "mfuns") this.player.events.trigger("danmaku_report", reportData);
@@ -234,7 +233,7 @@ class Danmaku {
     const apiurl = `${address}?id=${id}${otherDanParams}`;
     this.endpoints = danmakuAddition || [];
     const advDanData = [];
-    id && address && this.endpoints.push({ url: apiurl, type: "dplayer-danmaku", origin: "mfuns" });
+    id && address && this.endpoints.push({ url: apiurl, type: "mfuns-danmaku", origin: "mfuns" });
     advDanApi &&
       this.endpoints.push({
         url: `${advDanApi.address}/v1/advdanmaku?id=${advDanApi.id}`,
@@ -243,6 +242,7 @@ class Danmaku {
     this.events && this.events.trigger("danmaku_load_start", this.endpoints);
     this.player.template.danmakuSource.classList.add("loading");
     this.loaded = false;
+    // 判断弹幕来源
     this.endpoints.forEach((el) => {
       if (!el.origin) {
         switch (el.type) {
@@ -257,6 +257,7 @@ class Danmaku {
         }
       }
     });
+    // 请求所有弹幕api
     this._readAllEndpoints(this.endpoints, (results, loadStatus) => {
       this.player.template.danmakuSource.classList.remove("loading");
       if (!loadStatus) {
@@ -458,21 +459,11 @@ class Danmaku {
     this.dan.splice(this.danIndex, 0, danmakuData);
     this.danIndex++;
     this.draw(danmaku);
-    this.options.sendDanmaku &&
-      this.options.sendDanmaku(
-        [
-          +this.options.time().toFixed(2),
-          utils.type2Number(dan.type ?? "right"),
-          utils.color2Number(dan.color ?? "#FFFFFF"),
-          dan.text,
-          +dan.size ?? 25,
-        ],
-        this.options.videoIndex()
-      );
-    this.events && this.events.trigger("danmaku_send", danmakuData);
+
+    this.events && this.events.trigger("danmaku_send", danmakuData, this.options.videoIndex());
   }
   checkShield = (dan) => {
-    let type = typeof dan.type !== "string" ? utils.number2Type(dan.type) : dan.type;
+    let type = typeof dan.type === "number" ? utils.number2Type(dan.type) : dan.type;
     let origin = dan.origin;
     if ((this[`${type}Limit`] || this[`${origin}Limit`]) && !/(\/n)|(\\n)/i.test(dan.text)) {
       return false;
@@ -497,7 +488,6 @@ class Danmaku {
         if (this.checkShield(item)) {
           dan.push(item);
         }
-
         item = this.dan[++this.danIndex];
       }
 
@@ -548,7 +538,7 @@ class Danmaku {
         }
       });
     }
-    if (type === "color") {
+    if (type === "color" && flag) {
       const items = this.container.querySelectorAll(".mfunsPlayer-danmaku-item");
       items.forEach((el) => {
         if (el.style.color !== "rgb(255, 255, 255)" && !el.classList.contains("subtitle")) {
@@ -584,7 +574,6 @@ class Danmaku {
         items[i].style.opacity = percentage;
       }
       this._opacity = percentage;
-
       this.events &&
         this.events.trigger("setDanmaku", {
           key: "opacity",
@@ -800,6 +789,7 @@ class Danmaku {
         // adjust
         switch (dan[i].type) {
           case "right":
+            //无限弹幕模式下tunnel可能大于itemY，realTunnel标记该弹幕真实轨道，确保轨道隔离
             realTunnel = getTunnel(item, dan[i].type, itemWidth);
             tunnel = realTunnel % itemY;
             // console.log(tunnel);
@@ -821,6 +811,7 @@ class Danmaku {
             break;
           case "left":
             if (this.miniMode) return;
+            //无限弹幕模式下tunnel可能大于itemY，realTunnel标记该弹幕真实轨道，确保轨道隔离
             realTunnel = getTunnel(item, dan[i].type, itemWidth);
             tunnel = realTunnel % itemY;
             if (tunnel >= 0 || dan[i].isSubtitle) {

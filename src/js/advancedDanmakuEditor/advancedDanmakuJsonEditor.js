@@ -17,6 +17,8 @@ class AdvancedDanmakuJsonEditor {
     this.template.ade_json_clear = $(".mfunsPlayer-ade-clear"); // 高级弹幕编辑清除
     this.template.ade_json_preview = $(".mfunsPlayer-ade-preview"); // 高级弹幕编辑预览
     this.template.ade_json_emit = $(".mfunsPlayer-ade-emit"); // 高级弹幕发送
+    this.template.ade_json_copy = $(".mfunsPlayer-ade-copy"); // 高级弹幕复制
+    this.template.ade_json_copysuccess = $(".mfunsPlayer-ade-copysuccess");   // 发送成功提示
 
     this.template.ade_json_clear.addEventListener("click", () => {
       this.clear()
@@ -26,6 +28,17 @@ class AdvancedDanmakuJsonEditor {
     });
     this.template.ade_json_emit.addEventListener("click", () => {
       this.send()
+    });
+    this.template.ade_json_copy.addEventListener("click", () => {
+      navigator.clipboard.writeText(this.editor?.getValue() || "").then(
+          (res) => {
+              this.template.ade_json_copysuccess.style.display = ""
+              let timer = setTimeout(() => {
+              this.template.ade_json_copysuccess.style.display = "none"
+                  clearTimeout(timer)
+              }, 3000)
+          },
+      )
     });
   }
   createEditor() {    // 引入编辑器

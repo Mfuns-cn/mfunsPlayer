@@ -7,7 +7,9 @@
         <span class="mfunsPlayer-ade-button mfunsPlayer-ade-clear">清空</span>
         <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
         <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-copy">复制代码</span>
+        <span class="mfunsPlayer-ade-copysuccess" style="display:none">复制成功</span>
         <span>　</span>
-        <span><a href="#">Mfuns高级弹幕手册</a></span>
+        <span><a href="#" style="display: none">Mfuns高级弹幕手册</a></span>
     </div>
 </div>

@@ -1,7 +1,7 @@
 {
   "name": "@mfuns/pc-player",
-  "version": "1.0.2",
-  "description": "基于H5的PC端弹幕播放器",
+  "version": "2.1.2",
+  "description": "Mfuns开源PC端弹幕播放器",
   "main": "dist/mfunsPlayer.min.es.js",
   "module": "dist/mfunsPlayer.min.es.js",
   "unpkg": "dist/mfunsPlayer.min.umd.js",
@@ -44,6 +44,7 @@
     "prettier-check": "^2.0.0",
     "sass": "^1.58.3",
     "sass-loader": "^12.1.0",
+    "sass": "^1.58.3",
     "style-loader": "^2.0.0",
     "template-string-optimize-loader": "^3.0.0",
     "ts-loader": "^9.3.0",

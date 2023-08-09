@@ -52,14 +52,6 @@ export default (options) => {
     }
     options.contextmenu = options.contextmenu.concat([
         {
-            text: '作者信息',
-            link: 'https://www.mfuns.xyz/author/7376',
-        },
-        {
-            text: '参与开发者信息',
-            link: 'https://www.mfuns.xyz/author/6068',
-        },
-        {
             text: '视频统计信息',
             click: (player) => {
                 player.infoPanel.toggle();
@@ -79,7 +71,9 @@ export default (options) => {
         },
         {
             text: `mfunsPlayer v${MFUNSPLAYER_VERSION}`,
-            link: 'https://github.com/Mfuns-cn/mfunsPlayer',
+            click: (player) => {
+                player.playerInfo.toggle();
+            },
         },
     ]);
     return options;

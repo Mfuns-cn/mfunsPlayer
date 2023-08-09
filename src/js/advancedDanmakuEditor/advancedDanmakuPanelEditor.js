@@ -23,9 +23,21 @@ class AdvancedDanmakuPanelEditor {
         
         this.view.ade_panel_preview = $(".mfunsPlayer-ade-preview");   // 高级弹幕编辑预览
         this.view.ade_panel_emit = $(".mfunsPlayer-ade-emit");         // 高级弹幕发送
+        this.view.ade_panel_copy = $(".mfunsPlayer-ade-copy");         // 高级弹幕复制
+        this.view.ade_panel_copysuccess = $(".mfunsPlayer-ade-copysuccess");   // 发送成功提示
 
         this.view.ade_panel_preview.onclick = () => { this.preview() }
         this.view.ade_panel_emit.onclick = () => { this.send() }
+        this.view.ade_panel_copy.onclick = () => { 
+            navigator.clipboard.writeText(this.generateDanmaku() || "").then(
+                (res) => {
+                    this.view.ade_panel_copysuccess.style.display = ""
+                    let timer = setTimeout(() => {
+                    this.view.ade_panel_copysuccess.style.display = "none"
+                        clearTimeout(timer)
+                    }, 3000)
+                },
+            ) }
 
         this.c.area_content = $(".mfunsADEditor-area-content")
         this.c.area_attribute = $(".mfunsADEditor-area-attribute")

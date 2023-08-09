@@ -1,5 +1,5 @@
-import axios from "axios";
-import utils from "./utils";
+import axios from 'axios';
+import utils from './utils';
 
 export default {
   send: (options) => {
@@ -22,29 +22,41 @@ export default {
     axios
       .get(options.url)
       .then((response) => {
-        const data = response.data;
+        const { data } = response;
         if (!data) {
           options.error && options.error(data && data.msg);
           return;
-
         }
-        console.log("____", data)
         switch (options.type) {
-          case "dplayer-danmaku":
-            // case:"mfuns-danmaku":
+          case 'mfuns-danmaku':
             options.success &&
               options.success(
-
                 data.data.list.map((item) => ({
                   time: item[0],
                   type: utils.number2Type(item[1]),
-                  mode: [1, 5, 4, 6][item[1]],
+                  mode: item[1],
                   color: item[2],
                   author: item[3],
                   text: item[4],
                   size: item[5] ?? 25,
                   date: item[6] ?? 0,
-                  origin: options.origin ?? "unknown",
+                  origin: options.origin ?? 'unknown',
+                }))
+              );
+            break;
+          case 'dplayer-danmaku':
+            options.success &&
+              options.success(
+                data.data.map((item) => ({
+                  time: item[0],
+                  type: utils.number2Type([1, 5, 4, 6][item[1]]),
+                  mode: [1, 5, 4, 6][item[1]],
+                  color: item[2],
+                  author: item[3],
+                  text: item[4],
+                  size: 25,
+                  date: 0,
+                  origin: options.origin ?? 'unknown',
                 }))
               );
             break;
@@ -112,7 +124,7 @@ export default {
       .catch((e) => {
         console.error(e);
 
-        options.error && options.error(e);
-      });
-  },
+                options.error && options.error(e);
+            });
+    },
 };

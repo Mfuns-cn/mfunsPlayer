@@ -1,3 +1,5 @@
+@import './theme.scss';
+
 .mfunsPlayer {
     display: flex;
     flex-direction: column;
@@ -10,19 +12,24 @@
     line-height: 1;
     z-index: 10016;
     user-select: none;
+
     &.noDanmaku {
         padding-bottom: 0;
     }
+
     &.mfunsPlayer-darkmode {
         box-shadow: 0 0px 8px 0 rgba(255, 255, 255, 0.5);
     }
+
     &.mfunsPlayer-playing {
         .mfunsPlayer-danmaku .mfunsPlayer-danmaku-move {
             animation-play-state: running;
         }
     }
+
     &.mfunsPlayer-loading,
     &.mfunsPlayer-paused {
+
         .mfunsPlayer-danmaku,
         .mfunsPlayer-danmaku-move {
             animation-play-state: paused !important;
@@ -43,12 +50,15 @@
         background: url("../icon/mask.png") repeat-x top;
         transition: all 0.3s ease-in-out;
         z-index: 107;
+
         &.hide {
             opacity: 0;
         }
+
         &.disable {
             display: none;
         }
+
         .mfunsPlayer-headBar-title {
             width: calc(100% - 40px);
             height: 50px;
@@ -59,25 +69,32 @@
             text-overflow: ellipsis;
         }
     }
+
     &.mfunsPlayer-hide-controller {
         .mfunsPlayer-controller-mask {
             opacity: 0;
             transform: translateY(100%);
         }
+
         .mfunsPlayer-video-wrap {
             cursor: none;
         }
+
         .mfunsPlayer-headBar {
             opacity: 0;
             transform: translateY(-100%);
         }
     }
+
     &.mfunsPlayer-show-controller {
         .mfunsPlayer-controller-mask {
             opacity: 1;
         }
     }
 }
+
+
+
 .mfunsPlayer-miniPlayer {
     position: fixed;
     bottom: 50px;
@@ -86,14 +103,17 @@
     height: 225px;
     background-color: #000;
     z-index: 99999;
+
     &.hide {
         display: none;
     }
-    > .content {
+
+    >.content {
         position: relative;
         width: 400px;
         height: 225px;
         overflow: hidden;
+
         .mfunsPlayer-video-mask {
             width: 400px;
             height: 225px;
@@ -105,16 +125,18 @@
             background: #000;
 
             &.mirror {
-                > video {
+                >video {
                     transform: rotateX(1deg) rotateY(180deg);
                 }
             }
+
             video {
                 display: block;
                 width: 100%;
                 max-height: 100%;
             }
         }
+
         .mfunsPlayer-danmaku {
             width: 400px;
             overflow: hidden;
@@ -124,9 +146,7 @@
             right: 0;
             bottom: 0 !important;
             margin: 0 !important;
-            .mfunsPlayer-danmaku-item {
-                font-size: 16px !important;
-            }
+
             // .mfunsPlayer-danmaku-right {
             //     &.mfunsPlayer-danmaku-move {
             //         animation: danmaku 3s linear;
@@ -134,14 +154,36 @@
             //     }
             // }
         }
+
+        .mfunsPlayer-bezel {
+            position: absolute;
+            width: 65px;
+            height: 55px;
+            line-height: 55px;
+            text-align: center;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            // background: url(../icon/pause.png);
+            // background-size: 100% 100%;
+            z-index: 103;
+            color: $translucent-white;
+            font-size: 40px;
+
+            &.hide {
+                display: none;
+            }
+        }
     }
 }
+
 .advancedDanmaku_box {
     position: absolute;
     top: 0;
     left: 0;
     z-index: 999;
 }
+
 .advancedDanmaku_pre_box {
     z-index: 1000;
     position: absolute;

@@ -282,7 +282,7 @@ const utils = {
             case 0:
                 return 'right';
             case 1:
-                return biliMode ? 'right' : 'top';
+                return 'right';
             case 2:
                 return 'bottom';
             case 3:
@@ -306,13 +306,13 @@ const utils = {
     type2Number: (type) => {
         switch (type) {
             case 'right':
-                return 0;
-            case 'top':
                 return 1;
             case 'bottom':
-                return 2;
+                return 4;
+            case 'top':
+                return 5;
             case 'left':
-                return 3;
+                return 6;
             case 'special':
                 return 7;
             case 'script':
@@ -388,6 +388,35 @@ const utils = {
         }
         return d.toLocaleString();
     },
+    getVideoResolution(el) {
+        let resolution;
+        const vHeight = el.videoHeight;
+        if (vHeight < 480) {
+            resolution = '360P';
+        } else if (vHeight >= 480 && vHeight < 720) {
+            resolution = '480P';
+        } else if (vHeight >= 720 && vHeight < 1080) {
+            resolution = '720P';
+        } else if (vHeight >= 1080 && vHeight < 1440) {
+            resolution = '1080P';
+        } else if (vHeight >= 1440 && vHeight <= 2048) {
+            resolution = '2K';
+        } else if (vHeight > 2048) {
+            resolution = '4K';
+        } else {
+            resolution = '清晰度';
+        }
+
+        return resolution;
+    },
+    resolutionMap: new Map([
+        ['360P', '流畅'],
+        ['480P', '清晰'],
+        ['720P', '标清'],
+        ['1080P', '高清'],
+        ['2K', ''],
+        ['4K', ''],
+    ]),
 };
 
 export default utils;

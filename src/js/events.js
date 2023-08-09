@@ -1,5 +1,5 @@
 class Events {
-    constructor() {
+    constructor () {
         this.events = {};
 
         this.videoEvents = [
@@ -57,11 +57,14 @@ class Events {
             // "fixcontroller_on",     // 开启底栏固定(未启用)
             // "fixcontroller_off",    // 取消底栏固定(未启用)
 
-            'danmaku_filter', // 弹幕屏蔽
+            'danmaku_filter', // 弹幕过滤及屏蔽
 
-            'setPlayer',
+            'setPlayer',//播放器设置
             'setDanmaku', // 弹幕设置
             'update_video_position',
+
+            'resolution_start',
+            'resolution_end',
         ];
     }
 

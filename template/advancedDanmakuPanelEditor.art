@@ -2,6 +2,7 @@
     <div class="mfunsPlayer-ade-head">高级弹幕编辑面板</div>
     <div class="mfunsPlayer-ade-body">
         <div class="mfunsPlayer-ade-panel-editor mfunsADEditor">
+            <div class="mfunsPlayer-ade-warn">注意：高级弹幕功能目前处于测试开发阶段，编辑器及代码格式随时有可能变动，且<b>高级弹幕目前无法发送到后台</b>。如果需要保存弹幕以待后续发送，请点击“复制代码”按钮复制弹幕代码并自行保存到本地。</div>
             <div class="mfunsADEditor-title">弹幕内容</div>
             <div class="mfunsADEditor-area-content">
                 <textarea class="mfunsADEditor-input-content"></textarea>
@@ -123,5 +124,7 @@
     <div class="mfunsPlayer-ade-foot">
         <span class="mfunsPlayer-ade-button mfunsPlayer-ade-preview">预览</span>
         <span class="mfunsPlayer-ade-button mfunsPlayer-ade-emit">发送</span>
+        <span class="mfunsPlayer-ade-button mfunsPlayer-ade-copy">复制代码</span>
+        <span class="mfunsPlayer-ade-copysuccess" style="display:none">复制成功</span>
     </div>
 </div>

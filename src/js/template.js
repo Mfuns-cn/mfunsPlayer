@@ -1,7 +1,7 @@
 import Player from '../../template/player.art';
 import utils from './utils';
 class Template {
-    constructor (options) {
+    constructor(options) {
         this.container = options.container;
         this.options = options;
         options.theme && this.setTheme(options.theme);
@@ -71,6 +71,9 @@ class Template {
         this.tipItem = $all('.mfunsPlayer-controller-tip');
         this.speedInfo = $('.mfunsPlayer-speed-info');
         this.speedItem = $all('.mfunsPlayer-speed-item');
+        this.resolutionInfo = $('.mfunsPlayer-resolution-info');
+        this.resolutionMask = $('.mfunsPlayer-resolution-mask');
+        this.resolutionItem = $all('.mfunsPlayer-resolution-item');
         this.prev_btn = $('.mfunsPlayer-controller-prev'); // 上一P按钮
         this.next_btn = $('.mfunsPlayer-controller-next'); // 下一P按钮
         this.repeat_btn = $('.mfunsPlayer-controller-repeat'); // 洗脑循环按钮
@@ -111,6 +114,9 @@ class Template {
         this.video_saturate_value = $('.mfunsPlayer-video-saturate-value');
         this.video_color_reset = $('.mfunsPlayer-video-color-reset');
         this.video_filter_picker = $('.mfunsPlayer-video-filter-picker');
+        this.player_info_close = $('.mfunsPlayer-player-info-close');
+        this.player_info_mask = $('.mfunsPlayer-player-info-mask');
+        this.player_info_version = $('.mfunsPlayer-player-info-version');
         this.range = $('.range');
         this.play_btn = $('.mfunsPlayer-controller-play'); // 播放按钮
         this.highEnergyBar = $('.mfunsPlayer-highEnergy-bar');
@@ -198,9 +204,9 @@ class Template {
             },
         });
     }
-    buildSmallWindow() { }
+    buildSmallWindow() {}
     buildVideo(hasBlackborder) {
-        // console.log(this.container.offsetWidth)
+        console.log('dfdbffsdfdoisif---------------------', hasBlackborder);
 
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');
@@ -213,8 +219,6 @@ class Template {
 
         const viewHeight = ((this.container.clientWidth * 9) / 16 + (hasBlackborder ? 90 : 0)).toFixed(2);
         this.container.style.height = viewHeight + 'px';
-
-
     }
 }
 export default Template;

@@ -12,23 +12,29 @@
 	position: relative;
 	// z-index: 103;
 	overflow: hidden;
+
 	&.load {
 		pointer-events: none;
+
 		.mfunsPlayer-preview-mask {
 			filter: blur(10px);
 		}
+
 		.mfunsPlayer-loading-tip {
 			.mfunsPlayer-loading-hitokoto {
 				display: block;
 			}
-			> p {
+
+			>p {
 				display: none;
 			}
 		}
 	}
+
 	&.hide {
 		display: none;
 	}
+
 	.mfunsPlayer-mask {
 		position: absolute;
 		top: 0;
@@ -42,6 +48,7 @@
 			display: block;
 		}
 	}
+
 	.mfunsPlayer-preview-mask {
 		width: 100%;
 		height: 100%;
@@ -50,10 +57,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
 		&.noborder {
 			margin: 0;
 		}
 	}
+
 	.mfunsPlayer-video-mask {
 		width: 100%;
 		height: 100%;
@@ -64,22 +73,30 @@
 		z-index: 9;
 		background: #000;
 		box-sizing: border-box;
+
 		&.border {
 			border-color: transparent;
 			border-style: solid;
 			border-width: 45px 0px;
 		}
+
 		&.mirror {
-			> video {
+			>video {
 				transform: rotateX(1deg) rotateY(180deg);
 			}
 		}
-		video {
-			display: block;
+
+		.mfunsPlayer-video {
+			display: none;
 			width: 100%;
-			height: 100%;
+			max-height: 100%;
+
+			&-current {
+				display: block;
+			}
 		}
 	}
+
 	.mfunsPlayer-loading-tip {
 		margin: auto;
 		display: none;
@@ -98,9 +115,11 @@
 		align-items: center;
 		z-index: 103;
 		cursor: default;
+
 		&.show {
 			display: flex;
 		}
+
 		.mfunsPlayer-loading-icon {
 			height: 40px;
 			width: 80px;
@@ -108,7 +127,8 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			> span {
+
+			>span {
 				width: 20px;
 				height: 35px;
 				font-size: 20px;
@@ -124,22 +144,27 @@
 					animation-delay: 0.2s;
 					// color: $theme-color-light;
 				}
+
 				&:nth-child(3) {
 					animation-delay: 0.4s;
 					// color: $theme-color-light;
 				}
+
 				&:nth-child(4) {
 					animation-delay: 0.6s;
 					// color: $theme-color-light;
 				}
+
 				&:nth-child(5) {
 					animation-delay: 0.8s;
 					// color: $theme-color-light;
 				}
 			}
 		}
+
 		.mfunsPlayer-loading-hitokoto {
 			display: none;
+
 			.mfunsPlayer-loading-hitokoto-text {
 				min-width: 100px;
 				text-align: center;
@@ -148,27 +173,32 @@
 				list-style: 25px;
 				text-shadow: 1px 1px 1px #666;
 			}
+
 			.mfunsPlayer-loading-hitokoto-from {
 				@extend .mfunsPlayer-loading-hitokoto-text;
 			}
 		}
-		> p {
+
+		>p {
 			margin-top: 5px;
 			text-shadow: 0.5px 0.5px 0.5px #999;
 		}
 
 		@keyframes load {
+
 			0%,
 			100% {
 				height: 35px;
 				color: $theme-color;
 			}
+
 			50% {
 				height: 20px;
 				color: $theme-color-light;
 			}
 		}
 	}
+
 	.mfunsPlayer-tip-container {
 		position: absolute;
 		display: flex;
@@ -190,55 +220,67 @@
 			border-radius: 4px;
 			box-shadow: 0 0px 2px 0 rgba(255, 255, 255, 0.5);
 			white-space: pre;
+
 			&.show {
 				opacity: 0.8;
 				display: inline-flex;
 			}
+
 			.mfunsPlayer-notice-text {
 				margin-right: 10px;
 			}
+
 			.mfunsPlayer-notice-todo {
 				margin-right: 10px;
 				color: $theme-color-light;
 				display: none;
 				cursor: pointer;
+
 				&.show {
 					display: block;
 				}
 			}
+
 			.mfunsPlayer-notice-close {
 				width: 15px;
 				height: 15px;
 				background: url("../icon/close.svg");
 				background-size: 100% 100%;
 				cursor: pointer;
+
 				&:hover {
 					filter: brightness(1.2);
 				}
 			}
 		}
+
 		.mfunsPlayer-skip {
 			@extend .mfunsPlayer-notice;
 
 			margin-top: 10px;
+
 			.mfunsPlayer-skip-text {
 				@extend .mfunsPlayer-notice-text;
 			}
+
 			.mfunsPlayer-skip-link {
 				@extend .mfunsPlayer-notice-todo;
 
 				text-decoration: underline;
 				display: block;
+
 				&.autoSkip {
 					text-decoration: none;
 					color: #e6e6e6;
 				}
 			}
+
 			.mfunsPlayer-skip-close {
 				@extend .mfunsPlayer-notice-close;
 			}
 		}
 	}
+
 	.mfunsPlayer-voice {
 		height: 50px;
 		border-radius: 4px;
@@ -251,21 +293,25 @@
 		display: none;
 		z-index: 999;
 		cursor: default;
+
 		&.show {
 			display: flex;
 			justify-content: center;
 			align-items: center;
 		}
+
 		.mfunsPlayer-voice-icon {
 			font-size: 27px;
 			margin: 0 5px;
 		}
+
 		.mfunsPlayer-voice-value {
 			margin: 0 5px;
 			font-weight: 800;
 			font-size: 22px;
 		}
 	}
+
 	.mfunsPlayer-bezel {
 		width: 65px;
 		height: 55px;
@@ -275,17 +321,21 @@
 		background: url(../icon/pause.png);
 		background-size: 100% 100%;
 		z-index: 103;
+
 		&.noborder {
 			bottom: 50px;
 		}
+
 		&.bezel_play {
 			background: url(../icon/play.png);
 			background-size: 100% 100%;
 		}
+
 		&.hide {
 			display: none;
 		}
 	}
+
 	.mfunsPlayer-activity-mask {
 		position: absolute;
 		display: none;
@@ -294,17 +344,20 @@
 		top: 0;
 		bottom: 0;
 		z-index: 106;
+
 		&.show {
 			display: flex;
 			justify-content: center;
 			align-items: center;
 		}
+
 		.mfunsPlayer-activity {
 			position: relative;
 			width: 400px;
 			height: 250px;
 			background-size: 100% 100%;
 		}
+
 		.mfunsPlayer-activity-close {
 			position: absolute;
 			width: 15px;
@@ -315,22 +368,26 @@
 			right: 10px;
 			background: rgba($color: #aaa, $alpha: 0.6);
 			cursor: pointer;
+
 			&:hover {
 				.mfunsPlayer-activity-close-icon {
 					filter: brightness(1.2);
 				}
+
 				.mfunsPlayer-activity-close-tip {
 					display: block;
 					opacity: 1;
 					animation: showTip 0.2s;
 				}
 			}
+
 			.mfunsPlayer-activity-close-icon {
 				width: 100%;
 				height: 100%;
 				background: url("../icon/close.svg");
 				background-size: 100% 100%;
 			}
+
 			.mfunsPlayer-activity-close-tip {
 				position: absolute;
 				display: none;
@@ -349,10 +406,12 @@
 		}
 	}
 }
+
 .mfunsPlayer-load-status {
 	position: absolute;
 	bottom: 70px;
 	left: 20px;
+
 	.mfunsPlayer-video-load-status {
 		// position: absolute;
 		// left: 20px;
@@ -362,13 +421,16 @@
 		font-size: 14px;
 		text-shadow: 0.5px 0.5px 0.5px #999;
 		z-index: 2;
+
 		&.hide {
 			display: none;
 		}
 	}
+
 	.mfunsPlayer-player-load-status {
 		@extend .mfunsPlayer-video-load-status;
 	}
+
 	.mfunsPlayer-danmaku-load-status {
 		@extend .mfunsPlayer-video-load-status;
 	}
@@ -379,6 +441,7 @@
 		top: 10px;
 		opacity: 0;
 	}
+
 	to {
 		top: 25px;
 		opacity: 1;
