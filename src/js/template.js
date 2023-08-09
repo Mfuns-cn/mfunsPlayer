@@ -114,6 +114,9 @@ class Template {
         this.video_saturate_value = $('.mfunsPlayer-video-saturate-value');
         this.video_color_reset = $('.mfunsPlayer-video-color-reset');
         this.video_filter_picker = $('.mfunsPlayer-video-filter-picker');
+        this.player_info_close = $('.mfunsPlayer-player-info-close');
+        this.player_info_mask = $('.mfunsPlayer-player-info-mask');
+        this.player_info_version = $('.mfunsPlayer-player-info-version');
         this.range = $('.range');
         this.play_btn = $('.mfunsPlayer-controller-play'); // 播放按钮
         this.highEnergyBar = $('.mfunsPlayer-highEnergy-bar');
@@ -203,7 +206,7 @@ class Template {
     }
     buildSmallWindow() {}
     buildVideo(hasBlackborder) {
-        // console.log(this.container.offsetWidth)
+        console.log('dfdbffsdfdoisif---------------------', hasBlackborder);
 
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');

@@ -1,7 +1,8 @@
 # mfunsPlayer 弹幕播放器
 
 自研的弹幕播放器，没啥优点，能用就行 Ծ‸Ծ
->播放器示例地址(施工ing,持续更新)    [https://mfuns-cn.github.io/mfunsPlayer](https://mfuns-cn.github.io/mfunsPlayer)
+
+> 播放器示例地址(施工 ing,持续更新) [https://mfuns-cn.github.io/mfunsPlayer](https://mfuns-cn.github.io/mfunsPlayer)
 
 ### 功能
 
@@ -33,7 +34,8 @@
 
 ### 使用方法
 
-1. cdn引入  [https://unpkg.com/@mfuns/pc-player](https://unpkg.com/@mfuns/pc-player)
+1. cdn 引入 [https://unpkg.com/@mfuns/pc-player](https://unpkg.com/@mfuns/pc-player)
+
 ```
   <script src="https://unpkg.com/@mfuns/pc-player"></script>
 ```
@@ -43,10 +45,12 @@
 ```
   npm install @mfuns/pc-player
 ```
-- 如果需要缩略图，可使用播放器配套的缩略图工具在线生成
-   > 地址：[https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail](https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail)
 
-- 如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
+-   如果需要缩略图，可使用播放器配套的缩略图工具在线生成
+
+    > 地址：[https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail](https://mfuns-cn.github.io/mfunsPlayer/src/thumbnail)
+
+-   如果需要编辑高级弹幕，请自行用 script 标签引入 ace.js
     cdn 地址:
 
     > 编辑器：[http://cdn.bootcss.com/ace/1.4.9/ace.js](http://cdn.bootcss.com/ace/1.4.9/ace.js)
@@ -54,7 +58,9 @@
     > 语言工具：[http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js](http://cdn.bootcss.com/ace/1.4.9/ext-language_tools.js)
 
 ### 配置代码示例
-⚠️注意：播放器实例化过程会操作部分DOM，请务必在页面加载完成后（window.onload(原生JS)，mounted(Vue)，componentDidMount(React)）进行实例化操作，否则部分功能会出现问题
+
+⚠️ 注意：播放器实例化过程会操作部分 DOM，请务必在页面加载完成后（window.onload(原生 JS)，mounted(Vue)，componentDidMount(React)）进行实例化操作，否则部分功能会出现问题
+
 ```js
 import mfunsPlayer from "@mfuns/pc-player"
 const container = document.querySelector(".content");
@@ -91,6 +97,7 @@ window.onload = function(){
         }
       ],
       lastPosition:56, //上次播放位置
+      otherDanParams:"&a=1&b=2"//其他弹幕参数
     },
   ],
   //以下为选传配置
@@ -127,68 +134,70 @@ window.onload = function(){
 
 ### 事件绑定
 
-播放器实例对象有on和off两个方法用于事件绑定和解除事件绑定
+播放器实例对象有 on 和 off 两个方法用于事件绑定和解除事件绑定
+
 ```js
-const mp = new mfunsPlayer({})
-const fn = (...arg)=>{console.log(arg)}
-mp.on("play",fn) //绑定视频play事件
-mp.off("play",fn) //解除视频play事件绑定(解除事件绑定时不能使用匿名函数)
+const mp = new mfunsPlayer({});
+const fn = (...arg) => {
+    console.log(arg);
+};
+mp.on('play', fn); //绑定视频play事件
+mp.off('play', fn); //解除视频play事件绑定(解除事件绑定时不能使用匿名函数)
 ```
+
 #### 视频事件
 
-- abort
-- canplay
-- canplaythrough
-- durationchange
-- emptied
-- ended
-- error
-- loadeddata
-- loadedmetadata
-- loadstart
-- mozaudioavailable
-- pause
-- play
-- playing
-- progress
-- ratechange
-- seeked
-- seeking
-- stalled
-- suspend
-- timeupdate
-- volumechange
-- waiting
+-   abort
+-   canplay
+-   canplaythrough
+-   durationchange
+-   emptied
+-   ended
+-   error
+-   loadeddata
+-   loadedmetadata
+-   loadstart
+-   mozaudioavailable
+-   pause
+-   play
+-   playing
+-   progress
+-   ratechange
+-   seeked
+-   seeking
+-   stalled
+-   suspend
+-   timeupdate
+-   volumechange
+-   waiting
 
 #### 播放器事件
 
-- danmaku_show 
-- danmaku_hide
-- danmaku_clear
-- danmaku_loaded
-- danmaku_send
-- danmaku_report
-- contextmenu_show
-- contextmenu_hide
-- notice_show
-- notice_hide
-- toLogin
-- destroy
-- resize
-- fullscreen
-- fullscreen_cancel
-- webfullscreen
-- webfullscreen_cancel
-- widescreen
-- widescreen_cancel
-- danmaku_load_start
-- danmaku_load_end
-- danmaku_load_failed
-- darkmode_on
-- darkmode_off
-- danmaku_filter 
-- setPlayer
-- setDanmaku           
-- update_video_position
-
-     
+-   danmaku_show
+-   danmaku_hide
+-   danmaku_clear
+-   danmaku_loaded
+-   danmaku_send
+-   danmaku_report
+-   contextmenu_show
+-   contextmenu_hide
+-   notice_show
+-   notice_hide
+-   toLogin
+-   destroy
+-   resize
+-   fullscreen
+-   fullscreen_cancel
+-   webfullscreen
+-   webfullscreen_cancel
+-   widescreen
+-   widescreen_cancel
+-   danmaku_load_start
+-   danmaku_load_end
+-   danmaku_load_failed
+-   darkmode_on
+-   darkmode_off
+-   danmaku_filter
+-   setPlayer
+-   setDanmaku
+-   update_video_position

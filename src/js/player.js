@@ -9,6 +9,7 @@ import HotKey from './hotKey';
 import HighEnergy from './highEnergy';
 import Events from './events';
 import VideoColor from './videoColor';
+import PlayerInfo from './playerInfo';
 import ContextMenu from './contextmenu';
 import InfoPanel from './info-panel';
 import Template from './template';
@@ -25,7 +26,7 @@ export default class mfunsPlayer {
         // console.log(this.options);
         this.template = new Template(this.options);
         this.events = new Events();
-
+        this.utils = utils;
         this.container = options.container;
         this.container.classList.add('mfunsPlayer');
         this.autoSwitch = this.options.autoSwitch;
@@ -46,6 +47,7 @@ export default class mfunsPlayer {
         this.widescreen = options.widescreen;
 
         this.videoColor = new VideoColor(this);
+        this.playerInfo = new PlayerInfo(this);
         this.bar = new Bar(this.template);
         this.controller = new Controller(this);
         this.timer = new Timer(this);
@@ -85,6 +87,7 @@ export default class mfunsPlayer {
                 borderColor: '#FFFFFF',
                 height: 29,
                 time: () => this.video.currentTime,
+                videoIndex: () => this.currentVideo,
                 isShow: this.showDanmaku,
                 danmakuCatch: this.options.danmaku.danmakuCatch ?? false,
                 unlimited: false,
@@ -93,6 +96,7 @@ export default class mfunsPlayer {
                     id: this.options.video[this.options.currentVideo].danId,
                     danmakuAddition: this.options.video[this.options.currentVideo].danmakuAddition,
                     token: this.options.danmaku.token,
+                    otherDanParams: this.options.video[this.options.currentVideo].otherDanParams ?? '',
                 },
                 events: this.events,
             };
@@ -172,16 +176,19 @@ export default class mfunsPlayer {
             if (!this.highEnergy && window.echarts) {
                 this.highEnergy = new HighEnergy(this);
                 this.highEnergy.resize();
-                this.danmakuHighEnergySwitch = new Switch(this.template.danmaku_highEnergy_switch, this.options.danmaku.showHighEnergy, {
-                    on: () => {
-                        this.highEnergy && this.highEnergy.show(); // 显示高能进度条
-                    },
-                    off: () => {
-                        this.highEnergy && this.highEnergy.hide(); // 隐藏高能进度条
+                this.danmakuHighEnergySwitch = new Switch({
+                    el: this.template.danmaku_highEnergy_switch,
+                    value: this.options.danmaku.showHighEnergy,
+                    onToggle: (value) => {
+                        if (value) {
+                            this.highEnergy?.show(); // 显示高能进度条
+                        } else {
+                            this.highEnergy?.hide(); // 隐藏高能进度条
+                        }
                     },
                 });
             } else {
-                this.highEnergy && this.highEnergy.reload();
+                this.highEnergy?.reload();
             }
         }
     }
@@ -292,7 +299,7 @@ export default class mfunsPlayer {
     mute(flag = true) {
         this.video.muted = flag;
         this.template.volumeIcon.classList[flag ? 'add' : 'remove']('button-volume-off');
-        this.controller.components.volumeSlider.change(flag ? 0 : this.video.volume * 100);
+        this.controller.components.volumeSlider.setValue(flag ? 0 : this.video.volume * 100);
     }
     initMSE(video, type = 'mp4') {
         this.type = type;
@@ -352,7 +359,7 @@ export default class mfunsPlayer {
                 if (window.dashjs) {
                     const dashjsPlayer = window.dashjs.MediaPlayer().create().initialize(video, video.src, false);
                     const options = this.options.pluginOptions.dash;
-                    dashjsPlayer.updateSettings(options);
+                    // dashjsPlayer.updateSettings(options);
                     this.plugins.dash = dashjsPlayer;
                     this.events.on('destroy', () => {
                         window.dashjs.MediaPlayer().reset();
@@ -597,7 +604,8 @@ export default class mfunsPlayer {
                           token: this.options.advancedDanmaku.token,
                       }
                     : null,
-                currentVideo.danmakuAddition
+                currentVideo.danmakuAddition,
+                currentVideo.otherDanParams
             );
         this.controller.thumbnails && this.controller.thumbnails.reload(currentVideo.thumbnails);
         this.video.poster = currentVideo.pic ?? '';
@@ -743,7 +751,7 @@ export default class mfunsPlayer {
         if (!isNaN(percentage)) {
             percentage = Math.max(percentage, 0);
             percentage = Math.min(percentage, 1);
-            this.controller.components.volumeSlider.change(percentage * 100);
+            this.controller.components.volumeSlider.setValue(percentage * 100);
             const formatPercentage = `${(percentage * 100).toFixed(0)}`;
             if (!nonotice) {
                 clearTimeout(this.voiceTimer);
@@ -897,7 +905,7 @@ export default class mfunsPlayer {
     }
 
     mountDanmakuAuxiliary(el) {
-        this.danmakuAuxiliary = new DanmakuAuxiliary(this, el);
+        this.danmakuAuxiliary = new DanmakuAuxiliary(this, el, this.options);
     }
     destroy() {
         instances.splice(instances.indexOf(this), 1);

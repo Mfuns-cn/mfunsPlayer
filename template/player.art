@@ -28,6 +28,9 @@
         <div class="mfunsPlayer-video-color-mask">
             {{ include './videoColorModal.art' }}
         </div>
+        <div class="mfunsPlayer-player-info-mask">
+            {{ include './playerInfoModal.art' }}
+        </div>
 
         <div class="mfunsPlayer-mask">
             <div class="mfunsPlayer-menu">

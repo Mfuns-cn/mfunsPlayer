@@ -1,9 +1,8 @@
-import { Picker, MultiPicker, Slider, Slider_vertical, Switch } from './components/components';
+import { Picker, MultiPicker, Slider, Slider_vertical, Switch, SliderVertical } from './components/components';
 import utils from './utils';
 import Thumbnails from './thumbnails';
 class Controller {
     constructor(player) {
-        const THIS = this;
         this.player = player;
         this.template = player.template;
         this.components = player.components;
@@ -54,6 +53,7 @@ class Controller {
             this.initWidescreenButton();
         }
         this.watchPlayerScroll = (e) => {
+            if (document.pictureInPictureElement) return;
             if (this.template.container.getBoundingClientRect().top + this.template.container.offsetHeight <= 0) {
                 if (this.template.miniPlayer.classList.contains('hide')) {
                     this.template.miniPlayer.classList.remove('hide');
@@ -244,7 +244,7 @@ class Controller {
         this.player.template.barWrap.addEventListener(utils.nameMap.dragMove, (e) => {
             if (this.player.video.duration) {
                 showTip(e);
-                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，bar也会移动，修复bug
+                // 防止选择内容--当拖动鼠标过快时候，弹起鼠标，拖拽目标也会移动
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
             }
         });
@@ -321,11 +321,11 @@ class Controller {
             e.stopPropagation();
         });
         this.player.template.pageListLabel.addEventListener('mouseenter', (e) => {
-            if (this.player.currentVideo > 9) {
-                const offsetScroll = this.player.template.pagelist.scrollHeight - this.player.template.pagelist.offsetHeight;
-                const scrollRate = (offsetScroll * this.player.currentVideo) / (this.player.options.video.length - 1);
-                this.player.template.pagelist.scrollTo(0, scrollRate);
-            }
+            // if (this.player.currentVideo > 9) {
+            const offsetScroll = this.player.template.pagelist.scrollHeight - this.player.template.pagelist.offsetHeight;
+            const scrollRate = (offsetScroll * this.player.currentVideo) / (this.player.options.video.length - 1);
+            this.player.template.pagelist.scrollTo(0, scrollRate);
+            // }
             // let scrollDistance = 0;
             // const scrollAnime = () => {
             //     scrollDistance += scrollRate / 10;
@@ -401,16 +401,26 @@ class Controller {
         });
     }
     initVolumeButton() {
-        const THIS = this;
         let control;
-        this.components.volumeSlider = new Slider_vertical(this.template.volumeBar, 0, 100, 1, this.player.options.volume * 100, {
-            start: () => {
+        this.components.volumeSlider = new SliderVertical({
+            el: this.template.volumeBar,
+            min: 0,
+            max: 100,
+            step: 1,
+            value: this.player.options.volume * 100,
+            onDragStart: () => {
                 // 开始调节滑动条（点按）
                 this.isControl = true;
                 this.template.volumeMask.classList.add('show');
             },
-            change: (value) => {
-                // 更改进度条值，不修改绑定数据
+            onDrag: (value) => {
+                // 拖动滑动条
+                this.isControl = true;
+                console.log(value);
+                this.player.volume(value * 0.01, true);
+            },
+            onChange: (value) => {
+                // 更改标签值
                 this.template.volumeNum.innerText = Math.round(value);
                 if (value == 0) {
                     this.player.template.volumeIcon.classList.add('button-volume-off');
@@ -418,13 +428,7 @@ class Controller {
                     this.player.template.volumeIcon.classList.remove('button-volume-off');
                 }
             },
-            update: (value, controlFlag) => {
-                // 更改进度条值，修改绑定数据
-                this.isControl = controlFlag;
-                console.log(value);
-                this.player.volume(value * 0.01, true);
-            },
-            end: () => {
+            onDragEnd: () => {
                 // 结束滑动条调节（松手）
                 // if (!THIS.template.volumeMask.classList.contains("show")) {
                 setTimeout(() => {
@@ -452,162 +456,125 @@ class Controller {
         });
     }
     initSettingsButton() {
-        const THIS = this;
-        this.components.videoScalePicker = new Picker(this.template.video_scale_picker, 'auto', {
-            pick(value, nonotice) {
+        this.components.videoScalePicker = new Picker({
+            el: this.template.video_scale_picker,
+            value: 'auto',
+            onPick: (value) => {
                 if (value == 'auto') {
-                    THIS.videoScale = false;
+                    this.videoScale = false;
                 } else {
                     value.replace(/^([0-9]+)-([0-9]+)$/, (match, w, h) => {
                         if (match) {
-                            THIS.videoScale = [Number(w), Number(h)];
+                            this.videoScale = [Number(w), Number(h)];
                         }
                     });
                 }
-                THIS.player.resize();
+                this.player.resize();
             },
         });
         //分P连播
-        this.components.videoNextpageSwitch = new Switch(this.template.video_nextpage_switch, THIS.player.autoSwitch, {
-            on(nonotice) {
-                // 打开开关
-                THIS.player.autoSwitch = true;
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已开启分P连播');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoSwitch',
-                        value: true,
-                    });
-            },
-            off(nonotice) {
-                // 关闭开关
-                THIS.player.autoSwitch = false;
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已关闭分P连播');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoSwitch',
-                        value: false,
-                    });
+        this.components.videoNextpageSwitch = new Switch({
+            el: this.template.video_nextpage_switch,
+            value: this.player.autoSwitch,
+            onToggle: (value) => {
+                this.player.autoSwitch = value;
+                this.player.videoLoaded && this.player.notice(value ? '已开启分P连播' : '已关闭分P连播');
+                this.player.events?.trigger('setPlayer', {
+                    key: 'autoSwitch',
+                    value: value,
+                });
             },
         });
         //自动播放
-        this.components.videoAutoplaySwitch = new Switch(this.template.video_autoplay_switch, THIS.player.autoPlay, {
-            on(nonotice) {
-                // 打开开关
-                THIS.player.autoPlay = true;
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已开启自动播放');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoPlay',
-                        value: true,
-                    });
-            },
-            off(nonotice) {
-                // 关闭开关
-                THIS.player.autoPlay = false;
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已关闭自动播放');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoPlay',
-                        value: false,
-                    });
+        this.components.videoAutoplaySwitch = new Switch({
+            el: this.template.video_autoplay_switch,
+            value: this.player.autoPlay,
+            onToggle: (value) => {
+                this.player.autoPlay = value;
+                this.player.videoLoaded && this.player.notice(value ? '已开启自动播放' : '已关闭自动播放');
+                this.player.events?.trigger('setPlayer', {
+                    key: 'autoPlay',
+                    value: value,
+                });
             },
         });
         //断点续播
-        this.components.videoAutoSkipSwitch = new Switch(this.template.video_autoSkip_switch, THIS.player.autoSkip, {
-            on(nonotice) {
-                // 打开开关
-                THIS.player.autoSkip = true;
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoSkip',
-                        value: true,
-                    });
-            },
-            off(nonotice) {
-                // 关闭开关
-                THIS.player.autoSkip = false;
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'autoSkip',
-                        value: false,
-                    });
+        this.components.videoAutoSkipSwitch = new Switch({
+            el: this.template.video_autoSkip_switch,
+            value: this.player.autoSkip,
+            onToggle: (value) => {
+                this.player.autoSkip = value;
+                this.player.events?.trigger('setPlayer', {
+                    key: 'autoSkip',
+                    value: value,
+                });
             },
         });
         //小窗播放
-        this.components.videoSmallWindowSwitch = new Switch(this.template.video_smallWindow_switch, THIS.player.options.smallWindow, {
-            on: (nonotice) => {
-                // 打开开关
-                window.addEventListener('scroll', this.watchPlayerScroll);
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'smallWindow',
-                        value: true,
-                    });
-            },
-            off: (nonotice) => {
-                // 关闭开关
-                window.removeEventListener('scroll', this.watchPlayerScroll);
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'smallWindow',
-                        value: false,
-                    });
-            },
-        });
-        this.components.videoBorderhiddenSwitch = new Switch(this.template.video_borderhidden_switch, !this.player.options.blackBorder, {
-            on(nonotice) {
-                // 打开开关
-                THIS.player.template.buildVideo(false);
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已隐藏黑边');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'blackBorder',
-                        value: false,
-                    });
-            },
-            off(nonotice) {
-                // 关闭开关
-                THIS.player.template.buildVideo(true);
-                // THIS.player.danmaku.seek();
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已显示黑边');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setPlayer', {
-                        key: 'blackBorder',
-                        value: true,
-                    });
-            },
-        });
-        this.components.videoDarkmodeSwitch = new Switch(this.template.video_darkmode_switch, false, {
-            on(nonotice) {
-                // 打开开关
-                document.body.classList.add('player-mode-blackmask');
-                THIS.player.template.footBar?.classList?.add('darkmode');
-                THIS.player.container.classList.add('mfunsPlayer-darkmode');
-                document.body.appendChild(THIS.mask);
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已开启关灯模式');
-            },
-            off(nonotice) {
-                // 关闭开关
-                if ([...document.body.childNodes].includes(THIS.mask)) {
-                    THIS.player.template.footBar?.classList?.remove('darkmode');
-                    THIS.player.container.classList.remove('mfunsPlayer-darkmode');
-                    document.body.classList.remove('player-mode-blackmask');
-                    document.body.removeChild(THIS.mask);
+        this.components.videoSmallWindowSwitch = new Switch({
+            el: this.template.video_smallWindow_switch,
+            value: this.player.options.smallWindow,
+            onToggle: (value) => {
+                if (value) {
+                    window.addEventListener('scroll', this.watchPlayerScroll);
+                } else {
+                    window.removeEventListener('scroll', this.watchPlayerScroll);
                 }
-                THIS.player.videoLoaded && !nonotice && THIS.player.notice('已关闭关灯模式');
+                this.player.events?.trigger('setPlayer', {
+                    key: 'smallWindow',
+                    value: value,
+                });
             },
         });
-        this.components.videoMirrorSwitch = new Switch(this.template.video_mirror_switch, false, {
-            on: (nonotice) => {
+
+        this.components.videoBorderhiddenSwitch = new Switch({
+            el: this.template.video_borderhidden_switch,
+            value: !this.player.options.blackBorder,
+            onToggle: (value) => {
                 // 打开开关
-                this.player.template.videoMask.classList.add('mirror');
-                this.player.videoLoaded && !nonotice && this.player.notice('已开启镜像画面');
+                this.player.template.buildVideo(!value);
+                this.player.videoLoaded && this.player.notice(value ? '已隐藏黑边' : '已显示黑边');
+                this.player.events?.trigger('setPlayer', {
+                    key: 'blackBorder',
+                    value: !value,
+                });
             },
-            off: (nonotice) => {
-                // 关闭开关
-                this.player.template.videoMask.classList.remove('mirror');
-                this.player.videoLoaded && !nonotice && this.player.notice('已关闭镜像画面');
+        });
+        this.player.template.buildVideo(this.player.options.blackBorder);
+
+        this.components.videoDarkmodeSwitch = new Switch({
+            el: this.template.video_darkmode_switch,
+            value: false,
+            onToggle: (value) => {
+                if (value) {
+                    // 打开开关
+                    document.body.classList.add('player-mode-blackmask');
+                    this.player.template.footBar?.classList?.add('darkmode');
+                    this.player.container.classList.add('mfunsPlayer-darkmode');
+                    document.body.appendChild(this.mask);
+                    this.player.events && this.player.events.trigger('darkmode_on');
+                } else if ([...document.body.childNodes].includes(this.mask)) {
+                    // 关闭开关
+                    this.player.template.footBar?.classList?.remove('darkmode');
+                    this.player.container.classList.remove('mfunsPlayer-darkmode');
+                    document.body.classList.remove('player-mode-blackmask');
+                    document.body.removeChild(this.mask);
+                }
+                this.player.videoLoaded && this.player.notice(value ? '已开启关灯模式' : '已关闭关灯模式');
+            },
+        });
+        this.components.videoMirrorSwitch = new Switch({
+            el: this.template.video_mirror_switch,
+            value: false,
+            onToggle: (value) => {
+                if (value) {
+                    // 打开开关
+                    this.player.template.videoMask.classList.add('mirror');
+                } else {
+                    // 关闭开关
+                    this.player.template.videoMask.classList.remove('mirror');
+                }
+                this.player.videoLoaded && this.player.notice('已开启镜像画面');
             },
         });
     }
@@ -644,199 +611,200 @@ class Controller {
         });
     }
     initDanmakuSettingsButton() {
-        const THIS = this;
         const shields = this.player.options.danmaku.shields;
         const opacity = this.player.options.danmaku.opacity;
         const showArea = this.player.options.danmaku.limitArea;
         const danmakuSize = this.player.options.danmaku.fontScale;
         const danmakuSpeed = this.player.options.danmaku.speed;
-        this.components.danmakuFilterPicker = new MultiPicker(this.template.danmaku_filter_picker, shields, {
-            created(thisArg) {},
-            pick(value, nonotice) {
-                console.log(`屏蔽弹幕类型：${value}`);
-                THIS.player.danmaku && THIS.player.danmaku.shield(value, true);
-            },
-            unpick(value) {
-                console.log(`取消屏蔽弹幕类型：${value}`);
-                THIS.player.danmaku && THIS.player.danmaku.shield(value, false);
-            },
-            update(value) {
-                // console.log(`已屏蔽的弹幕类型有：${[...value]}`);
+        this.components.danmakuFilterPicker = new MultiPicker({
+            el: this.template.danmaku_filter_picker,
+            value: shields,
+            onPick: (item, value) => {
+                console.log(value ? `屏蔽弹幕类型：${item}` : `取消屏蔽弹幕类型：${item}`);
+                this.player.danmaku && this.player.danmaku.shield(item, value);
             },
         });
         // 弹幕透明度调节
-        this.components.danmakuOpacitySlider = new Slider(this.template.danmaku_opacity_slider, 10, 100, 1, opacity * 100, {
-            start() {
+        this.components.danmakuOpacitySlider = new Slider({
+            el: this.template.danmaku_opacity_slider,
+            min: 10,
+            max: 100,
+            step: 1,
+            value: opacity * 100,
+            onDragStart: () => {
                 // 开始调节滑动条（点按）
-                THIS.isControl = true;
-                THIS.template.danmakuSettings_panel.classList.add('show');
+                this.isControl = true;
+                this.template.danmakuSettings_panel.classList.add('show');
             },
-            update(value, flag) {
+            onChange: (value) => {
+                this.template.danmaku_opacity_value.innerText = `${value}%`;
+            },
+            onDrag: (value) => {
                 // 有关弹幕透明度更改请写在此处
-                THIS.isControl = flag;
-                THIS.player.danmaku && THIS.player.danmaku.opacity(value / 100);
+                this.isControl = true;
+                this.player.danmaku && this.player.danmaku.opacity(value / 100);
             },
-            change(value) {
-                THIS.template.danmaku_opacity_value.innerText = `${value}%`;
-            },
-            end() {
+            onDragEnd: (value) => {
                 // 结束滑动条调节（松手）
                 // if (!THIS.template.danmakuSettings_panel.classList.contains("show")) {
                 setTimeout(() => {
-                    THIS.isControl = false;
+                    this.isControl = false;
                 }, 50);
                 // }
-                THIS.player.template.danmakuSettings_panel.classList.remove('show');
+                this.player.template.danmakuSettings_panel.classList.remove('show');
             },
         });
         // 弹幕区域调节
-        this.components.danmakuShowareaSlider = new Slider(this.template.danmaku_showarea_slider, 20, 100, 20, showArea * 20, {
-            start() {
+        this.components.danmakuShowareaSlider = new Slider({
+            el: this.template.danmaku_showarea_slider,
+            min: 20,
+            max: 100,
+            step: 20,
+            value: showArea * 20,
+            onDragStart: () => {
                 // 开始调节滑动条（点按）
                 console.log('--------');
-                THIS.isControl = true;
-                THIS.template.danmakuSettings_panel.classList.add('show');
+                this.isControl = true;
+                this.template.danmakuSettings_panel.classList.add('show');
             },
-            update(value, flag) {
+            onDrag: (value) => {
                 // 有关弹幕显示区域的更改请写在此处
-                THIS.isControl = flag;
-                // console.log(`已更改显示区域：${["1/4", "半屏", "3/4", "不重叠", "不限"][value / 20 - 1]}`);
+                this.isControl = true;
+                this.player.danmaku && this.player.danmaku.limitArea(value / 20);
             },
-            change(value) {
-                THIS.template.danmaku_showarea_value.innerText = ['1/4', '半屏', '3/4', '不重叠', '不限'][value / 20 - 1];
-                THIS.player.danmaku && THIS.player.danmaku.limitArea(value / 20);
+            onChange: (value) => {
+                this.template.danmaku_showarea_value.innerText = ['1/4', '半屏', '3/4', '不重叠', '不限'][value / 20 - 1];
             },
-            end() {
+            onDragEnd: () => {
                 // 结束滑动条调节（松手）
                 setTimeout(() => {
-                    THIS.isControl = false;
+                    this.isControl = false;
                 }, 50);
-                THIS.player.template.danmakuSettings_panel.classList.remove('show');
+                this.player.template.danmakuSettings_panel.classList.remove('show');
             },
         });
         // 弹幕文字大小调节
-        this.components.danmakuSizeSlider = new Slider(this.template.danmaku_size_slider, 50, 150, 1, danmakuSize * 100, {
-            start() {
-                THIS.isControl = true;
-                THIS.template.danmakuSettings_panel.classList.add('show');
+        this.components.danmakuSizeSlider = new Slider({
+            el: this.template.danmaku_size_slider,
+            min: 50,
+            max: 150,
+            step: 1,
+            value: danmakuSize * 100,
+            onDragStart: () => {
+                this.isControl = true;
+                this.template.danmakuSettings_panel.classList.add('show');
             },
-            update(value, flag) {
+            onDrag: (value) => {
                 // 有关弹幕文字大小的更改请写在此处
-                THIS.isControl = flag;
+                this.isControl = true;
+                this.player.danmaku && this.player.danmaku.size(value / 100);
             },
-            change(value) {
-                THIS.template.danmaku_size_value.innerText = value + '%';
-                THIS.player.danmaku && THIS.player.danmaku.size(value / 100);
+            onChange: (value) => {
+                this.template.danmaku_size_value.innerText = value + '%';
             },
-            end() {
+            onDragEnd: () => {
                 // 结束滑动条调节（松手）
                 setTimeout(() => {
-                    THIS.isControl = false;
+                    this.isControl = false;
                 }, 50);
-                THIS.player.template.danmakuSettings_panel.classList.remove('show');
+                this.player.template.danmakuSettings_panel.classList.remove('show');
             },
         });
         // 弹幕速度调节
-        this.components.danmakuSpeedSlider = new Slider(this.template.danmaku_speed_slider, 50, 150, 25, danmakuSpeed * 100, {
-            start() {
+        this.components.danmakuSpeedSlider = new Slider({
+            el: this.template.danmaku_speed_slider,
+            min: 50,
+            max: 150,
+            step: 25,
+            value: danmakuSpeed * 100,
+            onDragStart: () => {
                 // 开始调节滑动条（点按）
                 console.log('--------');
-                THIS.isControl = true;
-                THIS.template.danmakuSettings_panel.classList.add('show');
+                this.isControl = true;
+                this.template.danmakuSettings_panel.classList.add('show');
             },
-            update(value, flag) {
+            onDrag: (value) => {
                 // 有关弹幕速度的更改请写在此处
-                THIS.isControl = flag;
+                this.isControl = true;
+                this.player.danmaku && this.player.danmaku.speed(value / 100);
             },
-            change(value) {
-                THIS.template.danmaku_speed_value.innerText = utils.number2danmakuSpeed(value / 100);
-                THIS.player.danmaku && THIS.player.danmaku.speed(value / 100);
+            onChange: (value) => {
+                this.template.danmaku_speed_value.innerText = utils.number2danmakuSpeed(value / 100);
             },
-            end() {
+            onDragEnd: () => {
                 // 结束滑动条调节（松手）
                 setTimeout(() => {
-                    THIS.isControl = false;
+                    this.isControl = false;
                 }, 50);
-                THIS.player.template.danmakuSettings_panel.classList.remove('show');
+                this.player.template.danmakuSettings_panel.classList.remove('show');
             },
         });
-        this.components.danmakuCatchSwitch = new Switch(this.template.danmaku_catch_switch, this.player.options.danmaku.danmakuCatch, {
-            on(nonotice) {
-                THIS.player.template.danmakuTipMask.style.display = ''; // 打开弹幕捕获模式，则取消tipMask的隐藏
-                !nonotice && THIS.player.notice('已开启弹幕捕获模式');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setDanmaku', {
-                        key: 'danmakuCatch',
-                        value: true,
-                    });
-            },
-            off(nonotice) {
-                THIS.player.template.danmakuTipMask.style.display = 'none'; // 关闭弹幕捕获模式，则隐藏tipMask
-                !nonotice && THIS.player.notice('已关闭弹幕捕获模式');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setDanmaku', {
-                        key: 'danmakuCatch',
-                        value: false,
-                    });
+        this.components.danmakuCatchSwitch = new Switch({
+            el: this.template.danmaku_catch_switch,
+            value: this.player.options.danmaku.danmakuCatch,
+            onToggle: (value) => {
+                this.player.template.danmakuTipMask.style.display = value ? '' : 'none'; // 打开弹幕捕获模式，则取消tipMask的隐藏
+                !nonotice && this.player.notice(value ? '已开启弹幕捕获模式' : '已关闭弹幕捕获模式');
+                this.player.events?.trigger('setDanmaku', {
+                    key: 'danmakuCatch',
+                    value: value,
+                });
             },
         });
-        this.components.danmakuKeepOutSubtitleSwitch = new Switch(this.template.danmaku_keep_out_subtitle_switch, this.player.options.danmaku.keepOutSubtitle, {
-            on(nonotice) {
-                THIS.player.danmaku.limitArea('keepOutSubtitle'); // 打开弹幕捕获模式，则取消tipMask的隐藏
-                !nonotice && THIS.player.notice('已开启防挡字幕');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setDanmaku', {
-                        key: 'keepOutSubtitle',
-                        value: true,
-                    });
-            },
-            off(nonotice) {
-                THIS.player.danmaku && THIS.player.danmaku.limitArea('notKeepOutSubtitle');
-                !nonotice && THIS.player.notice('已关闭防挡字幕');
-                THIS.player.events &&
-                    THIS.player.events.trigger('setDanmaku', {
-                        key: 'keepOutSubtitle',
-                        value: false,
-                    });
+        this.components.danmakuKeepOutSubtitleSwitch = new Switch({
+            el: this.template.danmaku_keep_out_subtitle_switch,
+            value: this.player.options.danmaku.keepOutSubtitle,
+            onToggle: (value) => {
+                this.player.danmaku?.limitArea(value ? 'keepOutSubtitle' : 'notKeepOutSubtitle'); // 打开弹幕捕获模式，则取消tipMask的隐藏
+                this.player.notice(value ? '已开启防挡字幕' : '已关闭防挡字幕');
+                this.player.events?.trigger('setDanmaku', {
+                    key: 'keepOutSubtitle',
+                    value: value,
+                });
             },
         });
     }
     initDanmakuStyleButton() {
-        const THIS = this;
-        this.components.danmakuFontsizePicker = new Picker(this.template.danmaku_fontsize_picker, this.danmakuFontsize, {
-            pick(value) {
+        this.components.danmakuFontsizePicker = new Picker({
+            el: this.template.danmaku_fontsize_picker,
+            value: this.danmakuFontsize,
+            onPick: (value) => {
                 // 有关字体大小值的更改请写在此处
-                THIS.danmakuFontsize = value;
+                this.danmakuFontsize = value;
                 // console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
             },
         });
-        this.components.danmakuModePicker = new Picker(this.template.danmaku_mode_picker, this.danmakuType, {
-            pick(value) {
+        this.components.danmakuModePicker = new Picker({
+            el: this.template.danmaku_mode_picker,
+            value: this.danmakuType,
+            onPick: (value) => {
                 // 有关弹幕模式值的更改请写在此处
-                THIS.danmakuType = value;
+                this.danmakuType = value;
                 // console.log(`已选择弹幕模式：${THIS.danmakuType}`);
             },
         });
-        this.components.danmakuColorPicker = new Picker(this.template.danmaku_color_picker, this.danmakuColor, {
-            pick(value) {
+        this.components.danmakuColorPicker = new Picker({
+            el: this.template.danmaku_color_picker,
+            value: this.danmakuColor,
+            onChange: (value) => {
                 if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
                     // 有关弹幕颜色值的更改请写在此处
-                    THIS.danmakuColor = utils.color2Number(value);
+                    this.danmakuColor = utils.color2Number(value);
                     // console.log(`已选择弹幕颜色：${THIS.danmakuColor}`);
-                    THIS.template.danmaku_color_input.value = value;
-                    THIS.template.danmaku_color_preview.style['background-color'] = value;
+                    this.template.danmaku_color_input.value = value;
+                    this.template.danmaku_color_preview.style['background-color'] = value;
                     if (value != value.toUpperCase()) {
-                        THIS.components.danmakuColorPicker.change(value.toUpperCase());
+                        this.components.danmakuColorPicker.change(value.toUpperCase());
                     }
                 }
             },
         });
-        this.template.danmaku_color_input.addEventListener('input', function () {
-            this.value = '#' + this.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6);
-            THIS.components.danmakuColorPicker.pick(this.value);
+        this.template.danmaku_color_input.addEventListener('input', (e) => {
+            e.target.value = '#' + e.target.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6);
+            this.components.danmakuColorPicker.pick(e.target.value);
         });
-        this.template.danmaku_color_preview.addEventListener('click', function () {
-            THIS.components.danmakuColorPicker.pick(THIS.danmakuColor);
+        this.template.danmaku_color_preview.addEventListener('click', (e) => {
+            this.components.danmakuColorPicker.pick(this.danmakuColor);
         });
     }
     initPictureInPicture() {

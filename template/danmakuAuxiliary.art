@@ -1,5 +1,5 @@
-<div class="mfunsPlayer-danmaku-list-panel">
-    <div class="mfunsPlayer-danmaku-list-wrap">
+<div class="mfunsPlayer-danmaku-list-wrapper">
+    <div class="mfunsPlayer-danmaku-list-main">
         <div class="mfunsPlayer-danmaku-list-head">
             <span class="list-column col-time">时间</span><span class="list-column col-text">弹幕内容</span><span class="list-column col-date">发送时间</span>
         </div>
@@ -25,15 +25,15 @@
         </div>
     </div>
 </div>
-<div class="mfunsPlayer-ade-panel mode-pos" style="display: none">
-    {{include './advancedDanmakuPosEditor.art'}}
+<div class="mfunsPlayer-ade-wrapper mode-panel" style="display: none">
+    {{include './advancedDanmakuPanelEditor.art'}}
     {{include './advancedDanmakuJsonEditor.art'}}
     <div class="mfunsPlayer-danmaku-auxiliary-foot">
         <div class="flex-left">
-            <span>切换弹幕模式:</span>
+            <span>切换编辑模式:</span>
             <span class="mfunsPlayer-ade-mode-selector">
-                <span class="label-pos">定位弹幕</span>
-                <span class="label-json">JSON弹幕</span>
+                <span class="label-panel">面板模式</span>
+                <span class="label-json">代码模式</span>
             </span>
         </div>
         <div class="flex-right">

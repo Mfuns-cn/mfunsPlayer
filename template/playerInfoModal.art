@@ -1,0 +1,22 @@
+<div class="mfunsPlayer-player-info-modal">
+  <div class="mfunsPlayer-player-info-title">关于</div>
+  <div class="mfunsPlayer-player-info-close"></div>
+  <div class="mfunsPlayer-player-info-content">
+    <div class="mfunsPlayer-player-info-logo"></div>
+    <div class="mfunsPlayer-player-info-version"></div>
+    <div class="mfunsPlayer-player-info-repository">
+      <span>github:&nbsp;</span>
+      <a href="https://github.com/Mfuns-cn/mfunsPlayer">Mfuns-cn/mfunsPlayer</a>
+    </div>
+    <div class="mfunsPlayer-player-info-developers">
+    <div>
+      <span>主要开发者:&nbsp;</span>
+      <a href="https://mfuns.cn/member/7376">鲁迪钨丝</a>
+    </div>
+    <div>
+      <span>参与开发者:&nbsp;</span>
+      <a href="https://mfuns.cn/member/6068">Minteea</a>
+    </div>
+    </div>
+  </div>
+</div>
