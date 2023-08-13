@@ -91,7 +91,19 @@
                         </div>
                     </div>
                     <div class="mfunsPlayer-controller-right">
-                        {{if video.length>1}}
+                       
+                          <div class="mfunsPlayer-controller-button mfunsPlayer-controller-resolution">
+                            <div class="mfunsPlayer-controller-label mfunsPlayer-resolution-info"></div>
+                             {{include './resolution.art' video[currentVideo]}}
+                            <!-- <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-resolution-mask">
+                                <div class="mfunsPlayer-controller-panel mfunsPlayer-resolution-list">
+                                    {{each video[currentVideo].resolution}}
+                                    <div class="mfunsPlayer-resolution-item {{if $value.isDefault}}focus{{/if}}"" data-resolution="{{$value}}">{{$value.name + ' ' +$value.label}}</div>
+                                   {{ /each }}
+                                </div>
+                            </div> -->
+                        </div>
+                         {{if video.length>1}}
                         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pagelist">
                             <div class="mfunsPlayer-controller-label mfunsPlayer-pagelist-info">选集</div>
                             <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-pagelist-mask">

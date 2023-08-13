@@ -1,19 +1,22 @@
 @import "./theme";
+
 .mfunsPlayer-danmaku {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    font-size: 22px;
+    font-size: 25px;
     color: #fff;
     z-index: 102;
 }
+
 @media screen and (max-width: 600px) {
     .mfunsPlayer-danmaku {
         font-size: 14px;
     }
 }
+
 .mfunsPlayer-danmaku-top,
 .mfunsPlayer-danmaku-bottom {
     position: absolute;
@@ -22,15 +25,18 @@
     text-align: center;
     visibility: hidden;
     white-space: pre;
+
     &.mfunsPlayer-danmaku-move {
         will-change: visibility;
         animation: danmaku-center 4s linear;
         animation-play-state: paused;
+
         &.mfunsPlayer-danmaku-run {
             animation-play-state: running;
         }
     }
 }
+
 // .mfunsPlayer-danmaku-top.mfunsPlayer-danmaku-move.mfunsPlayer-danmaku-run,
 // .mfunsPlayer-danmaku-bottom.mfunsPlayer-danmaku-move.mfunsPlayer-danmaku-run {
 
@@ -41,18 +47,24 @@
     white-space: pre;
     font-weight: 600;
     font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
-    text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px,
+    text-shadow:
+        rgb(0, 0, 0) 1px 0px 1px,
+        rgb(0, 0, 0) 0px 1px 1px,
+        rgb(0, 0, 0) 0px -1px 1px,
         rgb(0, 0, 0) -1px 0px 1px;
     cursor: default;
+
     &.lock {
         animation-play-state: paused !important;
         z-index: 101 !important;
     }
+
     &.subtitle {
         opacity: 1 !important;
         z-index: 100 !important;
     }
 }
+
 .mfunsPlayer-danmaku-item-tip-mask {
     position: absolute;
     top: 0;
@@ -72,6 +84,7 @@
         top: 0;
         left: 0;
         display: none;
+
         // animation: danmakuTipWait .2s forwards;
         &.show {
             display: block;
@@ -95,31 +108,38 @@
                     left: 0;
                     bottom: 0;
                     animation: danmakuTipShow 0.25s forwards;
+
                     i {
                         width: 20px;
                         height: 20px;
                         cursor: pointer;
                     }
+
                     .mfunsPlayer-danmaku-item-tip-cancel {
                         background: url("../icon/cancel.svg");
                         background-size: 100% 100%;
                         display: none;
+
                         &.show {
                             display: block;
                         }
                     }
+
                     .mfunsPlayer-danmaku-item-tip-copy {
                         background: url("../icon/copy.svg");
                         background-size: 100% 100%;
                     }
+
                     .mfunsPlayer-danmaku-item-tip-praise {
                         background: url("../icon/praise.svg");
                         background-size: 100% 100%;
                     }
+
                     .mfunsPlayer-danmaku-item-tip-report {
                         background: url("../icon/report.svg");
                         background-size: 100% 100%;
                         display: none;
+
                         &.show {
                             display: block;
                         }
@@ -129,6 +149,7 @@
         }
     }
 }
+
 .mfunsPlayer-danmaku--demo {
     position: absolute;
     visibility: hidden;
@@ -139,73 +160,89 @@
     right: 0;
     white-space: pre;
     transform: translateX(100%);
+
     &.mfunsPlayer-danmaku-move {
         will-change: transform;
         animation: danmaku 5s linear;
         animation-play-state: paused;
+
         &.low {
             animation: danmaku 7.5s linear;
             animation-play-state: paused;
         }
+
         &.lowest {
             animation: danmaku 10s linear;
             animation-play-state: paused;
         }
+
         &.fast {
             animation: danmaku 3s linear;
             animation-play-state: paused;
         }
+
         &.fastest {
             animation: danmaku 2s linear;
             animation-play-state: paused;
         }
     }
 }
+
 .mfunsPlayer-danmaku-left {
     position: absolute;
     left: 0;
     white-space: pre;
     transform: translateX(-100%);
+
     &.mfunsPlayer-danmaku-move {
         will-change: transform;
         animation: danmaku-reverse 5s linear;
         animation-play-state: paused;
+
         &.low {
             animation: danmaku-reverse 7.5s linear;
             animation-play-state: paused;
         }
+
         &.lowest {
             animation: danmaku-reverse 10s linear;
             animation-play-state: paused;
         }
+
         &.fast {
             animation: danmaku-reverse 3s linear;
             animation-play-state: paused;
         }
+
         &.fastest {
             animation: danmaku-reverse 2s linear;
             animation-play-state: paused;
         }
     }
 }
+
 @keyframes danmaku {
     from {
         transform: translateX(100%);
     }
 }
+
 @keyframes danmaku-reverse {
     from {
         transform: translateX(-100%);
     }
 }
+
 @keyframes danmaku-center {
     from {
         visibility: visible;
     }
+
     to {
         visibility: visible;
     }
 }
+
 // @keyframes danmakuTipWait{
 //     0% {
 //         opacity: 1;
@@ -228,6 +265,7 @@
         transform: scale(1);
     }
 }
+
 @keyframes danmakuTipHide {
     0% {
         -webkit-transform: scale(1);
@@ -246,5 +284,5 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 103;
+    z-index: 101;
 }

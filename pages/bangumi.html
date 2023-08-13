@@ -13,6 +13,8 @@
     <title>番剧</title>
 </head>
 <script src="../src/static/echarts.js"></script>
+<!-- <script src="../dist/mfunsPlayer.min.umd.js"></script> -->
+
 <script src="../mfunsPlayer.min.umd.js"></script>
 
 
@@ -113,7 +115,59 @@
             speed
         } = danmaku
         console.log(player, danmaku)
-
+        const p = {
+            container,
+            volume: 0.7,
+            video: [
+                {
+                    pic: "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=",
+                    title: "西游记",
+                    url: "https://vod.mfuns.net/571e09c014d571ee80a50675b3ed0102/d501d8c7b465c8a4bf749873f7933d6e-sd.mp4",
+                    type: "mp4",
+                    danId: "33061&part=1",
+                    resolution: [
+                        {
+                            url: "https://vod.mfuns.net/571e09c014d571ee80a50675b3ed0102/f9d82c717aeea21c5f623a60d7810ad8-fd.mp4",
+                            type: "mp4",
+                            label: "流畅",
+                            name: "360P",
+                            isDefault: false,
+                        },
+                        {
+                            url: "https://vod.mfuns.net/571e09c014d571ee80a50675b3ed0102/8892c2760b4b1db8bdec4ce7247b898e-ld.mp4",
+                            type: "mp4",
+                            label: "标清",
+                            name: "540P",
+                            isDefault: false,
+                        },
+                        {
+                            url: "https://vod.mfuns.net/571e09c014d571ee80a50675b3ed0102/d501d8c7b465c8a4bf749873f7933d6e-sd.mp4",
+                            type: "mp4",
+                            label: "高清",
+                            name: "720P",
+                            isDefault: true,
+                        },
+                        {
+                            url: "https://vod.mfuns.net/571e09c014d571ee80a50675b3ed0102/855a104b5af33bd9edcae6a6cc0110b8-hd.mp4",
+                            type: "mp4",
+                            label: "超清",
+                            name: "1080P",
+                            isDefault: false,
+                        },
+                    ],
+                    current: true,
+                },
+            ],
+            danmaku: {
+                api: "https://api.mfuns.com.cn/danmaku/get_normal",
+                bottom: "0",
+                opacity: 0.7,
+                fontScale: 1,
+                speed: 1,
+                showDanmaku: true,
+            },
+            mutex: true,
+        };
         const mfunsPlayerParams = {
             container,
             uid: 2333,
@@ -121,14 +175,18 @@
             widescreenSwitch: true, // 宽屏模式是否可用
             widescreen: true, // 宽屏模式
             blackBorder: true,
+            volume: 0.5,
             video: [
 
                 {
-                    url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
+                    // url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
+                    url: "https://pan.nyaku.moe/f/4J0PFO/...m3u8.mp4",
                     type: "mp4",
                     // pic: "http://www.dmoe.cc/random.php?165529917318",
                     title: "第一话 起源与终结的序章 TurningPoint",
                     thumbnails: "../src/static/thumbnails/steingate/1.png",
+                    // danId: 12265,
+                    otherDanParams: "&part=1",
                     danmakuAddition: [
                         {
 
@@ -272,7 +330,8 @@
                 },
             ],
             danmaku: {
-                api: "https://www.mfuns.xyz/wp-json/mfuns",
+                api: "https://api.mfuns.net/v1/danmaku/get_normal",
+
             },
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",
@@ -296,26 +355,26 @@
 
 
         }
-        for (let key in player) {
-            if (key) mfunsPlayerParams[key] = player[key]
-        }
-        for (let key in danmaku) {
-            if (key) mfunsPlayerParams.danmaku[key] = danmaku[key]
-        }
-        for (let i = 0; i < mfunsPlayerParams.video.length; i++) {
-            const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
-            if (!mfuns_video_point.length) break;
-            else {
-                for (let j = 0; j < mfuns_video_point.length; j++) {
-                    if (mfunsPlayerParams.video[i].url === mfuns_video_point[j].link) {
-                        mfunsPlayerParams.video[i].lastPosition = mfuns_video_point[j].position
-                    }
-                }
-            }
+        // for (let key in player) {
+        //     if (key) mfunsPlayerParams[key] = player[key]
+        // }
+        // for (let key in danmaku) {
+        //     if (key) mfunsPlayerParams.danmaku[key] = danmaku[key]
+        // }
+        // for (let i = 0; i < mfunsPlayerParams.video.length; i++) {
+        //     const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
+        //     if (!mfuns_video_point.length) break;
+        //     else {
+        //         for (let j = 0; j < mfuns_video_point.length; j++) {
+        //             if (mfunsPlayerParams.video[i].url === mfuns_video_point[j].link) {
+        //                 mfunsPlayerParams.video[i].lastPosition = mfuns_video_point[j].position
+        //             }
+        //         }
+        //     }
 
-        }
-        console.log(mfunsPlayerParams)
-        window.mp = new mfunsPlayer(mfunsPlayerParams);
+        // }
+        // console.log(mfunsPlayerParams)
+        var mp = new mfunsPlayer(mfunsPlayerParams);
         mp.mountDanmakuAuxiliary(playerExtra);
         mp.on("danmaku_send", (dan) => {
             console.log(dan)

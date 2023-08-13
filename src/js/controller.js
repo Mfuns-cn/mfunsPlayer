@@ -32,6 +32,7 @@ class Controller {
         this.initPlayButton();
         this.initActivity();
         this.initThumbnails();
+
         if (player.options.draggable) {
             this.initPlayedBar();
             this.initTimeLabel();
@@ -46,6 +47,9 @@ class Controller {
         if (player.options.video.length > 1) {
             this.initPagelistButton();
         }
+        // if (player.options.video[player.options.currentVideo].resolution) {
+        //     this.initResolutionButton();
+        // }
         if (player.options.widescreenSwitch) {
             this.initWidescreenButton();
         }
@@ -57,8 +61,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     this.template.previewMask.removeChild(this.template.videoMask);
                     this.template.previewMask.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.add(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     content.appendChild(this.template.videoMask);
                     content.appendChild(this.template.danmaku);
+                    content.appendChild(this.template.bezel);
                     content.onclick = () => {
                         this.player.toggle();
                     };
@@ -74,8 +80,10 @@ class Controller {
                     const content = this.template.miniPlayer.querySelector('.content');
                     content.removeChild(this.template.videoMask);
                     content.removeChild(this.template.danmaku);
+                    this.template.bezel.classList.remove(this.player.video.paused ? 'icon-play' : 'icon-pause');
                     this.template.previewMask.appendChild(this.template.videoMask);
                     this.template.previewMask.appendChild(this.template.danmaku);
+                    this.template.previewMask.appendChild(this.template.bezel);
                     if (this.player.danmaku) {
                         this.player.danmaku.mini(false);
                         this.player.danmaku.resize();
@@ -359,6 +367,22 @@ class Controller {
                 this.template.speedInfo.innerHTML = currentSpeed !== '1.0' ? currentSpeed + 'x' : '倍速';
 
                 this.template.speedItem.forEach((element, index) => {
+                    if (index !== i) {
+                        element.classList.remove('focus');
+                    }
+                });
+            });
+        }
+    }
+    initResolutionButton() {
+        for (let i = 0; i < this.player.template.resolutionItem.length; i++) {
+            this.player.template.resolutionItem[i].addEventListener('click', (event) => {
+                const currentResolution = JSON.parse(this.player.template.resolutionItem[i].dataset.resolution);
+                this.player.switchResolution(currentResolution);
+                this.template.resolutionItem[i].classList.add('focus');
+                this.template.resolutionInfo.innerHTML = currentResolution.name + ' ' + currentResolution.label;
+
+                this.template.resolutionItem.forEach((element, index) => {
                     if (index !== i) {
                         element.classList.remove('focus');
                     }

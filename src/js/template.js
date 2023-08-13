@@ -71,6 +71,9 @@ class Template {
         this.tipItem = $all('.mfunsPlayer-controller-tip');
         this.speedInfo = $('.mfunsPlayer-speed-info');
         this.speedItem = $all('.mfunsPlayer-speed-item');
+        this.resolutionInfo = $('.mfunsPlayer-resolution-info');
+        this.resolutionMask = $('.mfunsPlayer-resolution-mask');
+        this.resolutionItem = $all('.mfunsPlayer-resolution-item');
         this.prev_btn = $('.mfunsPlayer-controller-prev'); // 上一P按钮
         this.next_btn = $('.mfunsPlayer-controller-next'); // 下一P按钮
         this.repeat_btn = $('.mfunsPlayer-controller-repeat'); // 洗脑循环按钮
