@@ -1,5 +1,5 @@
-import axios from "axios"
-import { DanmakuInterface } from "../types"
+import { randomId } from "@/utils/randomId"
+import { DanmakuItem } from "../types"
 
 interface DanmakuParseItem {
   data: any
@@ -9,27 +9,22 @@ interface DanmakuParseItem {
 
 interface DanmakuParserOptions {
   defaultParser: string
-  list: { [key: string]: DanmakuParserFunction }
+  list?: Record<string, DanmakuParserFunction>
 }
 
-type DanmakuParserFunction = (data: any, origin?: string) => DanmakuInterface[]
+type DanmakuParserFunction = (data: any) => DanmakuItem[]
 
 /** 弹幕格式转换，将获取到的弹幕转换为播放器弹幕格式 */
 export default class DanmakuParser {
   defaultParser: string
 
-  list: { [key: string]: DanmakuParserFunction }
+  list: Record<string, DanmakuParserFunction>
 
   constructor({ defaultParser }: DanmakuParserOptions) {
     this.defaultParser = defaultParser || "bilibili-xml"
     this.list = {
-      dplayer: (
-        data: {
-          data: [number, number, number, number | string, string, number, number][]
-        },
-        origin?: string
-      ) =>
-        data.data.map((item) => ({
+      dplayer: (data: [number, number, number, number | string, string, number, number][]) =>
+        data.map((item, i) => ({
           time: item[0],
           mode: [1, 5, 4, 6][item[1]],
           color: item[2],
@@ -37,15 +32,10 @@ export default class DanmakuParser {
           content: item[4],
           size: 25,
           timestamp: 0,
-          origin,
+          id: randomId(),
         })),
-      "mfuns-v1": (
-        data: {
-          data: [number, number, number, number | string, string, number, number][]
-        },
-        origin?: string
-      ) =>
-        data.data.map((item) => ({
+      mfuns: (data: [number, number, number, string, string, number, number, number][]) =>
+        data.map((item) => ({
           time: item[0],
           mode: item[1],
           color: item[2],
@@ -53,11 +43,11 @@ export default class DanmakuParser {
           content: item[4],
           size: item[5] ?? 25,
           timestamp: item[6] ?? 0,
-          origin: origin ?? "unknown",
+          id: item[7],
         })),
       "bilibili-xml": (data: string) => {
         const bilibiliXMLParser = (xmlData: string) => {
-          const dan: any[] = []
+          const dan: [string, any[]][] = []
           const xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml")
           // 获取xml文档的所有子节点
           const nodeList = xmlDoc.childNodes
@@ -65,24 +55,24 @@ export default class DanmakuParser {
             for (let i = 0; i < nodeList.length; i++) {
               const currentNode = nodeList[i]
               if (currentNode?.attributes?.length && i > 0) {
-                const data = currentNode.attributes[0].nodeValue.split(",")
-                data.push(currentNode.innerHTML)
-                dan.push(data)
+                const m = currentNode.attributes[0].nodeValue.split(",")
+                const c = currentNode.innerHTML
+                dan.push([c, m])
               } else if (currentNode.childNodes.length > 0) {
                 generate(currentNode.childNodes)
               }
             }
           }
           generate(nodeList)
-          return dan.map((el) => ({
-            time: +el[0],
-            mode: +el[1],
-            color: +el[3],
-            user: el[6],
-            content: el[8],
-            size: +el[2] ?? 25,
-            timestamp: +el[4] ?? 0,
-            origin: "bili",
+          return dan.map(([c, m]) => ({
+            time: +m[0],
+            mode: +m[1],
+            color: +m[3],
+            user: m[6],
+            content: c,
+            size: +m[2] ?? 25,
+            timestamp: +m[4] ?? 0,
+            id: +m[7],
           }))
         }
         return bilibiliXMLParser(data)
@@ -91,10 +81,10 @@ export default class DanmakuParser {
   }
 
   /** 将获取到的弹幕转换为播放器弹幕格式 */
-  parse({ data, type, origin }: DanmakuParseItem) {
+  parse({ data, type }: DanmakuParseItem) {
     const parser = this.list[type]
     try {
-      return parser(data, origin)
+      return parser(data)
     } catch (err) {
       console.error(err)
     }

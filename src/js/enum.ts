@@ -1,9 +1,9 @@
 /** 弹幕模式 */
 export enum DanmakuMode {
-  LEFT = 1,
-  BOTTOM = 4,
-  TOP = 5,
-  RIGHT = 6,
-  SPECIAL = 7,
-  ADVANCED = 9,
+  roll = 1,
+  bottom = 4,
+  top = 5,
+  reverse = 6,
+  special = 7,
+  advanced = 9,
 }

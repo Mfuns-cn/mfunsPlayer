@@ -40,9 +40,9 @@ export default class ButtonLoop {
     })
     this.$iconWrap.addEventListener("click", () => {
       if (this.player.video.loop) {
-        this.player.loop(false)
+        this.player.setLoop(false)
       } else {
-        this.player.loop(true)
+        this.player.setLoop(true)
       }
     })
   }

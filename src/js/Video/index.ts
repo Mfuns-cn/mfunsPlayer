@@ -153,6 +153,14 @@ export default class Video {
       this.player.events.trigger("pause")
       this.player.template.el.classList.add("state-paused")
     })
+    this.on("seeking", () => {
+      this.player.events.trigger("seeking", this.currentTime)
+      this.player.template.el.classList.add("state-seeking")
+    })
+    this.on("seeked", () => {
+      this.player.events.trigger("seeked", this.currentTime)
+      this.player.template.el.classList.remove("state-seeking")
+    })
     this.on("volumechange", () => {
       this.player.events.trigger("volume_change", this.volume)
     })

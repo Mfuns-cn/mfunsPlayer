@@ -31,7 +31,7 @@ export default class Modal {
   $content: HTMLElement
   $title: HTMLElement
   $close: HTMLElement
-  list: { [key: string]: ModalPanel } = {}
+  list: Record<string, ModalPanel> = {}
   current = ""
   get isShow(): boolean {
     return this.container.classList.contains("state-show")

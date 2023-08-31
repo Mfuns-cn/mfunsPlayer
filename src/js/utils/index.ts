@@ -1,7 +1,7 @@
 const isMobile = /mobile/i.test(window.navigator.userAgent)
 
 /** 创建特定长度的填充数组 */
-export const createArray = (count: number, val: unknown) => Array.from({ length: count }, () => val)
+export const createArray = <T>(count: number, val: T) => Array.from({ length: count }, () => val)
 
 /** 获取全屏元素 */
 export const getFullscreenElement = (): HTMLElement | null =>

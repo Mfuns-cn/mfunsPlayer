@@ -10,8 +10,6 @@
   &-contextmenu {
     position: absolute;
     min-width: 200px;
-    background-color: $panel-black;
-    border-radius: $border-radius;
     color: $text-white;
     li {
       height: 36px;
@@ -24,6 +22,18 @@
       & + li {
         border-top: 1px solid $light-semiwhite;
       }
+      &:hover {
+        background-color: $panel-black-active;
+      }
+    }
+    &-danmaku,
+    &-menu {
+      background-color: $panel-black;
+      border-radius: $border-radius;
+      overflow: hidden;
+    }
+    &-danmaku {
+      margin-bottom: 4px;
     }
   }
 }

@@ -30,7 +30,7 @@ export default class Side {
   $content: HTMLElement
   $title: HTMLElement
   $close: HTMLElement
-  list: { [key: string]: SidePanel } = {}
+  list: Record<string, SidePanel> = {}
   current = ""
   get isShow(): boolean {
     return this.container.classList.contains("state-show")

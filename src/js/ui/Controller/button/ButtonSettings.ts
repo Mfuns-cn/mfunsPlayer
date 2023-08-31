@@ -76,7 +76,7 @@ export default class ButtonSettings {
       ],
       value: 1,
       onPick: (value) => {
-        this.player.rate(Number(value))
+        this.player.setRate(Number(value))
       },
     })
     this.player.on("rate_change", (rate: number) => {

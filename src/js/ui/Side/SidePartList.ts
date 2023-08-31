@@ -32,7 +32,7 @@ export default class SidePartList {
     const fragment = new DocumentFragment()
     render(
       template(player.video.list, (p) => {
-        this.player.part(p, true)
+        this.player.setPart(p, true)
         this.player.side.hide()
       }),
       fragment

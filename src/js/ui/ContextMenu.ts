@@ -1,17 +1,24 @@
 import { classPrefix } from "@/const"
 import MfunsPlayer from "@/player"
-import { PlayerOptions } from "@/types"
+import { DanmakuItem, PlayerOptions } from "@/types"
 import { html, render } from "lit-html"
 
 const template = (list: MenuItem[]) => html`
-  <ul class="${classPrefix}-contextmenu">
-    ${list.map(
-      ({ name, onClick }) => html`
-        <li class="${classPrefix}-contextmenu-item" @click=${onClick}>${name}</li>
-      `
-    )}
-  </ul>
+  <div class="${classPrefix}-contextmenu">
+    <ul class="${classPrefix}-contextmenu-danmaku"></ul>
+    <ul class="${classPrefix}-contextmenu-menu">
+      ${list.map(
+        ({ name, onClick }) => html`
+          <li class="${classPrefix}-contextmenu-item" @click=${onClick}>${name}</li>
+        `
+      )}
+    </ul>
+  </div>
 `
+const templateDanmaku = (danmaku: DanmakuItem[]) =>
+  html` ${danmaku.map(
+    ({ id, content }) => html` <li class="${classPrefix}-contextmenu-danmaku-item">${content}</li> `
+  )}`
 
 interface MenuItem {
   name: string
@@ -22,6 +29,8 @@ export default class ContextMenu {
   player: MfunsPlayer
   container: HTMLElement
   el: HTMLElement
+  $danmaku: HTMLElement
+  $menu: HTMLElement
   private isShow = false
   constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.player = player
@@ -44,16 +53,25 @@ export default class ContextMenu {
     this.container = this.player.template.$contextmenuWrap
     render(template(menuList), this.container)
     this.el = this.container.querySelector(`.${classPrefix}-contextmenu`)!
-
+    this.$danmaku = this.el.querySelector(`.${classPrefix}-contextmenu-danmaku`)!
+    this.$menu = this.el.querySelector(`.${classPrefix}-contextmenu-menu`)!
     this.player.template.$videoArea.addEventListener("contextmenu", (e: MouseEvent) => {
       e.preventDefault()
       const clientRect = this.player.template.$videoArea.getBoundingClientRect()
-      this.show(e.clientX - clientRect.left, e.clientY - clientRect.top)
+      const x = e.clientX - clientRect.left
+      const y = e.clientY - clientRect.top
+      this.show(x, y)
+      const captured = this.player.danmaku.engine.captureDanmaku(x, y, 4)
+      this.showDanmaku(captured)
     })
     this.container.addEventListener("contextmenu", (e: MouseEvent) => {
       e.preventDefault()
       const clientRect = this.container.getBoundingClientRect()
-      this.show(e.clientX - clientRect.left, e.clientY - clientRect.top)
+      const x = e.clientX - clientRect.left
+      const y = e.clientY - clientRect.top
+      this.show(x, y)
+      const captured = this.player.danmaku.engine.captureDanmaku(x, y, 4)
+      this.showDanmaku(captured)
     })
     document.addEventListener("click", () => {
       if (this.isShow) {
@@ -79,6 +97,14 @@ export default class ContextMenu {
       this.el.style.bottom = "initial"
     }
     this.isShow = true
+  }
+  showDanmaku(danmaku: DanmakuItem[]) {
+    if (danmaku.length) {
+      this.$danmaku.style.display = ""
+    } else {
+      this.$danmaku.style.display = "none"
+    }
+    render(templateDanmaku(danmaku), this.$danmaku)
   }
   hide() {
     this.container.classList.remove("state-show")

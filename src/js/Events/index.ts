@@ -1,15 +1,20 @@
 export default class Events {
-  protected events: { [key: string]: ((...args: any) => void)[] } = {}
+  protected events: Record<string, ((...args: any) => void)[]> = {}
 
   readonly playerEventList = [
     // 视频播放
     "play", // 播放
     "pause", // 暂停
-    // "seek",           // 进度跳转
+    "seeking", // 进度开始跳转
+    "seeked", // 进度跳转成功
+
     "volume_change", // 音量改变
     "rate_change", // 播放速率改变
     "loop", // 开启循环播放
     "loop_off", // 关闭循环播放
+
+    // "time_update", // 播放时间更新
+    // "progress", // 缓冲更新
 
     // 播放模式
     "source_change", // 视频源改变
@@ -27,29 +32,45 @@ export default class Events {
     "webfull_exit",
 
     // 弹幕事件
-    "danmaku_load_start", // 弹幕开始加载
-    "danmaku_load_end", // 弹幕加载完毕
-    "danmaku_load_fail", // 弹幕加载失败
-    "danmaku_show", // 显示弹幕
-    "danmaku_hide", // 隐藏弹幕
-    "danmaku_send", // 发送弹幕
-    // "danmaku_report",     // 举报弹幕
-    "danmaku_filter", // 弹幕屏蔽
-    "danmaku_add", // 弹幕池新增弹幕
+    "danmaku:load_start", // 弹幕开始加载
+    "danmaku:load_end", // 弹幕加载完毕
+    "danmaku:load_fail", // 弹幕加载失败
+
+    "danmaku:load_addition_start", // 附加弹幕加载完毕
+    "danmaku:load_addition_end", // 附加弹幕加载完毕
+    "danmaku:load_addition_fail", // 附加弹幕加载失败
+
+    "danmaku:load_new_start", // 加载新增弹幕
+    "danmaku:load_new_end", // 新增弹幕加载完毕
+    "danmaku:load_new_fail", // 新增弹幕加载失败
+
+    "danmaku:advanced_detected", // 检测到高级弹幕
+
+    "danmaku:show", // 显示弹幕
+    "danmaku:hide", // 隐藏弹幕
+
+    "danmaku:send", // 发送弹幕
+    "danmaku:send_success", // 发送弹幕成功
+    "danmaku:send_fail", // 发送弹幕失败
+
+    // "danmaku:report",     // 举报弹幕
+    "danmaku:filter", // 弹幕屏蔽
+    "danmaku:add", // 弹幕池新增弹幕
 
     // 界面事件
     "resize", // 播放器尺寸调整
-    "contextmenu_show", // 显示右键菜单
-    "contextmenu_hide", // 隐藏右键菜单
-    "toast_show", // 显示toast提示
-    "toast_hide", // 隐藏toast提示
+    "contextmenu:show", // 显示右键菜单
+    "contextmenu:hide", // 隐藏右键菜单
+    "toast:show", // 显示toast提示
+    "toast:hide", // 隐藏toast提示
 
     "darkmode", // 开启关灯模式
     "darkmode_off", // 关闭关灯模式
     "fixedcontroller", // 开启底栏固定
     "fixedcontroller_off", // 取消底栏固定
 
-    "setting", // 设置项更改
+    "setting:player", // 播放器设置项更改
+    "setting:danmaku", // 弹幕设置项更改
   ]
 
   readonly customEventList: string[] = []

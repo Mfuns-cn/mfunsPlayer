@@ -10,6 +10,7 @@ import ContextMenu from "@/ui/ContextMenu"
 import Modal from "@/ui/Modal"
 import Theme from "@/ui/Theme"
 import State from "@/ui/State"
+import Danmaku from "./Danmaku"
 
 export default class MfunsPlayer {
   static readonly version = MFUNSPLAYER_VERSION
@@ -23,7 +24,7 @@ export default class MfunsPlayer {
   /** 事件模块 */
   events: Events
   /** 弹幕模块 */
-  danmaku: any
+  danmaku: Danmaku
   /** 播放器模式控制 */
   mode: Mode
   /** 播放器状态控制 */
@@ -43,9 +44,6 @@ export default class MfunsPlayer {
   /** 快捷键 */
   hotKey: HotKey
 
-  /** 插件 */
-  readonly plugin: { [key: string]: unknown }
-
   constructor(options: PlayerOptions) {
     this.events = new Events()
     this.container = options.container
@@ -58,6 +56,7 @@ export default class MfunsPlayer {
     this.video = new Video(this, options)
     this.mode = new Mode(this, options)
     this.state = new State(this, options)
+    this.danmaku = new Danmaku(this, options)
 
     // 注入ui
     this.controller = new Controller(this, options)
@@ -67,11 +66,9 @@ export default class MfunsPlayer {
 
     this.hotKey = new HotKey(this, options)
 
-    this.plugin = {}
-
     this.init()
 
-    this.part(1)
+    this.setPart(1)
   }
 
   init() {}
@@ -122,7 +119,7 @@ export default class MfunsPlayer {
   }
 
   /** 设置倍速 */
-  public rate(value: number) {
+  public setRate(value: number) {
     this.video.setRate(value)
   }
 
@@ -132,13 +129,18 @@ export default class MfunsPlayer {
   }
 
   /** 设置循环播放 */
-  public loop(flag = true) {
+  public setLoop(flag = true) {
     this.video.setLoop(flag)
   }
 
   /** 跳转分P */
-  public part(p: number, play = false) {
+  public setPart(p: number, play = false) {
     this.video.setPart(p, play)
+  }
+
+  /** 获取播放器当前时间(s) */
+  public getTime() {
+    return this.video.el.currentTime
   }
 
   /** 尺寸模式相关 */
