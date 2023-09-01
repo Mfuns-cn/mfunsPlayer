@@ -1,11 +1,11 @@
 import { DanmakuMode } from "@/enum"
-import { PlayerOptions } from "@/types"
+import { PlayerOptions, DanmakuApiOptions, DanmakuItem, DanmakuSource } from "@/types"
 import MfunsPlayer from "@/player"
-import { DanmakuItem, DanmakuSource } from "../types"
 import DanmakuEngine from "./DanmakuEngine"
 import { html, render } from "lit-html"
 import { classPrefix } from "@/const"
 import DanmakuParser from "./DanmakuParser"
+import DanmakuOperate from "./DanmakuOperate"
 
 const template = html` <div class="${classPrefix}-row-danmaku-container"></div> `
 
@@ -18,19 +18,10 @@ export default class Danmaku {
   parser: DanmakuParser
 
   /** 弹幕api */
-  api: {
-    url: string
-    type: string
-    /** 获取弹幕 */
-    get: (arg: {
-      api: string
-      id: string | number
-      offset?: string | number
-      limit?: number
-    }) => Promise<unknown>
-    /** 发送弹幕 */
-    send: (id: string, danmaku: DanmakuItem) => Promise<{ code: number; message: string }>
-  }
+  api: DanmakuApiOptions
+
+  /** 弹幕操作 */
+  operate: DanmakuOperate
 
   /** 最新一条弹幕的id */
   lastDanmakuId: string | number = 0
@@ -46,11 +37,12 @@ export default class Danmaku {
   el: HTMLElement
   $rowDanmakuContainer: HTMLDivElement
 
-  constructor(player: MfunsPlayer, option: PlayerOptions) {
+  constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.player = player
     this.parser = new DanmakuParser({ defaultParser: "mfuns" })
+    this.operate = new DanmakuOperate(this)
     this.el = this.player.template.$danmakuWrap
-    this.api = option.danmaku.api
+    this.api = options.danmaku.api
     this.allowNewDanmaku = false
     render(template, this.el)
     this.$rowDanmakuContainer = this.el.querySelector(`.${classPrefix}-row-danmaku-container`)!

@@ -53,6 +53,8 @@ export default class DanmakuEngine {
     top: false,
     bottom: false,
   }
+  public userFilter: (string | number)[] = []
+  public contentFilter: (string | RegExp)[] = []
   /** 允许重叠 */
   public overlap: boolean
   /** 类名前缀 */
@@ -213,23 +215,19 @@ export default class DanmakuEngine {
       this.time = this.getTime()
       // 若待添加弹幕时间小于当前时间，则持续添加弹幕直到下一条弹幕的时间不小于当前时间为止
       while (item && item.time < this.time) {
-        if (this.checkTypeFilter(item)) {
+        if (
+          this.checkTypeFilter(item) &&
+          this.checkColorFilter(item) &&
+          this.checkUserFilter(item) &&
+          this.checkContentFilter(item)
+        ) {
           dan.push(item)
         }
         this.currentIndex += 1
         item = this.danmakuPool[this.currentIndex]
       }
       // console.log(this.currentIndex)
-
-      if (this.colorFilter) {
-        this.draw(
-          dan.filter((el) => {
-            return el.color === 16777215
-          })
-        )
-      } else {
-        this.draw(dan)
-      }
+      this.draw(dan)
     }
     window.requestAnimationFrame(() => {
       this.checkDanmaku()
@@ -239,7 +237,7 @@ export default class DanmakuEngine {
   /** 设置弹幕类型过滤 */
   setTypeFilter(type: TrackType, value: boolean) {
     this.typeFilter[type] = value
-    if (!value) {
+    if (value) {
       this.container
         .querySelectorAll<HTMLElement>(`.${this.classPrefix}-danmaku-${type}`)
         .forEach((el) => {
@@ -256,7 +254,7 @@ export default class DanmakuEngine {
   /** 设置弹幕颜色过滤 */
   setColorFilter(value: boolean) {
     this.colorFilter = value
-    if (!value) {
+    if (value) {
       const items = this.container.querySelectorAll<HTMLElement>(
         `.${this.classPrefix}-danmaku-item`
       )
@@ -266,6 +264,76 @@ export default class DanmakuEngine {
         }
       })
     }
+  }
+
+  /** 检查弹幕颜色过滤 */
+  checkColorFilter(dm: DanmakuItem) {
+    return !this.colorFilter || dm.color === 16777215
+  }
+
+  /** 设置内容过滤 */
+  setContentFilter(content: string | RegExp, value: boolean) {
+    const contentIndex = this.contentFilter.indexOf(content)
+    if (value) {
+      if (contentIndex > -1) {
+        return
+      }
+      this.contentFilter.push(content)
+      const items = this.container.querySelectorAll<HTMLElement>(
+        `.${this.classPrefix}-danmaku-item`
+      )
+      if (typeof content == "string") {
+        items.forEach((el) => {
+          if (el.innerText.includes(content)) {
+            el.innerHTML = ""
+          }
+        })
+      } else {
+        items.forEach((el) => {
+          if (content.test(el.innerText)) {
+            el.innerHTML = ""
+          }
+        })
+      }
+    } else {
+      contentIndex > -1 && this.contentFilter.splice(contentIndex, 1)
+    }
+  }
+  /** 检查弹幕内容过滤 */
+  checkContentFilter(dm: DanmakuItem) {
+    for (const keyword of this.contentFilter) {
+      if (typeof keyword == "string") {
+        if (dm.content.search(keyword)) return false
+      } else if (keyword.test(dm.content)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  /** 设置用户过滤 */
+  setUserFilter(user: string | number, value: boolean) {
+    const contentIndex = this.userFilter.indexOf(user)
+    if (value) {
+      if (contentIndex > -1) {
+        return
+      }
+      this.userFilter.push(user)
+      const items = this.container.querySelectorAll<HTMLElement>(
+        `.${this.classPrefix}-danmaku-item`
+      )
+      items.forEach((el) => {
+        if (el.dataset.user == user) {
+          el.innerHTML = ""
+        }
+      })
+    } else {
+      contentIndex > -1 && this.userFilter.splice(contentIndex, 1)
+    }
+  }
+  /** 检查用户过滤 */
+  checkUserFilter(dm: DanmakuItem) {
+    return this.userFilter.indexOf(dm.user) == -1
   }
 
   /** 绘制弹幕 */
@@ -523,6 +591,7 @@ export default class DanmakuEngine {
       }
       if (track >= 0) {
         item.dataset.id = dm.id.toString()
+        item.dataset.user = dm.user.toString()
         // 添加弹幕到容器
         this.container.appendChild(item)
       }
@@ -563,7 +632,6 @@ export default class DanmakuEngine {
         }
       }
     }
-    console.log(result)
     return result
   }
   /** 根据某一坐标捕获弹幕 */
@@ -576,7 +644,6 @@ export default class DanmakuEngine {
         result.push(dm)
       }
     }
-    console.log(result)
     return result
   }
   /** 根据id获取弹幕 */

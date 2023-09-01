@@ -22,22 +22,50 @@ export interface PlayerOptions {
   /** 弹幕设置 */
   danmaku: {
     /** 弹幕api */
-    api: {
-      /** 基准url */
-      url: string
-      /** 弹幕格式类型 */
-      type: string
-      /** 弹幕获取 */
-      get: (arg: {
-        api: string
-        id: string | number
-        offset?: string | number
-        limit?: number
-      }) => Promise<unknown>
-      /** 发送弹幕 */
-      send: (id: string, danmaku: DanmakuItem) => Promise<{ code: number; message: string }>
-    }
+    api: DanmakuApiOptions
   }
+}
+
+export interface OperationResult {
+  ok: boolean
+  code: number
+  message?: string
+}
+
+export interface DanmakuApiOptions {
+  /** 基准url */
+  url: string
+  /** 弹幕格式类型 */
+  type: string
+  /** 获取弹幕 */
+  get: (arg: {
+    api: string
+    id: string | number
+    offset?: string | number
+    limit?: number
+  }) => Promise<unknown>
+  /** 发送弹幕 */
+  send?: (arg: {
+    api: string
+    id: string | number
+    danmaku: DanmakuItem
+  }) => Promise<OperationResult>
+  /** 举报弹幕 */
+  report?: (arg: { api: string; danmaku: DanmakuItem }) => Promise<OperationResult>
+  /** 视频作者删除弹幕 */
+  delete?: (arg: { api: string; danmaku: DanmakuItem[] }) => Promise<OperationResult>
+  /** 撤回自己发送的弹幕 */
+  recall?: (arg: { api: string; danmaku: DanmakuItem }) => Promise<OperationResult>
+  /** 添加内容屏蔽 */
+  blockContent?: (arg: { api: string; content: string; flag: boolean }) => Promise<OperationResult>
+  /** 添加用户屏蔽 */
+  blockUser?: (arg: {
+    api: string
+    user: string | number
+    flag: boolean
+  }) => Promise<OperationResult>
+  /** 获取屏蔽列表 */
+  getBlockList?: (arg: { api: string; list: any }) => Promise<OperationResult>
 }
 
 export interface ThemeOptions {

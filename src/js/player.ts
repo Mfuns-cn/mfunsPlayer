@@ -43,6 +43,10 @@ export default class MfunsPlayer {
   modal: Modal
   /** 快捷键 */
   hotKey: HotKey
+  /** 用户id */
+  userId: string | number = 0
+  /** 视频作者id */
+  authorId: string | number | null = null
 
   constructor(options: PlayerOptions) {
     this.events = new Events()

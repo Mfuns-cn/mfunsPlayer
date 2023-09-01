@@ -327,7 +327,33 @@
                 ]
             },
             danmaku: {
-                api: "https://www.mfuns.xyz/wp-json/mfuns",
+                api: {
+                    url: "https://www.mfuns.xyz/wp-json/mfuns",
+                    recall: async () => {
+                        console.log("撤回成功")
+                        return {
+                            ok: true,
+                            code: 0,
+                            msg: "撤回成功"
+                        }
+                    },
+                    report: async () => {
+                        console.log("举报成功")
+                        return {
+                            ok: true,
+                            code: 0,
+                            msg: "举报成功"
+                        }
+                    },
+                    blockUser: async () => {
+                        console.log("屏蔽成功")
+                        return {
+                            ok: true,
+                            code: 0,
+                            msg: "屏蔽成功"
+                        }
+                    }
+                },
             },
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",

@@ -1,6 +1,6 @@
 import { classPrefix } from "@/const"
 import MfunsPlayer from "@/player"
-import { DanmakuItem, PlayerOptions } from "@/types"
+import { DanmakuApiOptions, DanmakuItem, PlayerOptions } from "@/types"
 import { html, render } from "lit-html"
 
 const template = (list: MenuItem[]) => html`
@@ -15,10 +15,43 @@ const template = (list: MenuItem[]) => html`
     </ul>
   </div>
 `
-const templateDanmaku = (danmaku: DanmakuItem[]) =>
-  html` ${danmaku.map(
-    ({ id, content }) => html` <li class="${classPrefix}-contextmenu-danmaku-item">${content}</li> `
-  )}`
+const templateDanmaku = (
+  danmaku: DanmakuItem[],
+  operation: (dm: DanmakuItem) => ({ name: string; onClick: (dm: DanmakuItem) => void } | null)[]
+) => html`
+  ${danmaku.map(
+    (dm) => html`
+      <li class="${classPrefix}-contextmenu-danmaku-item">
+        <div class="${classPrefix}-contextmenu-danmaku-item-content">${dm.content}</div>
+        <div class="${classPrefix}-contextmenu-danmaku-item-operate">
+          ${operation(dm).map((op) =>
+            op
+              ? html`<div
+                  class="${classPrefix}-contextmenu-danmaku-item-operate-btn"
+                  @click=${() => {
+                    op.onClick(dm)
+                  }}
+                >
+                  ${op.name}
+                </div>`
+              : ""
+          )}
+        </div>
+      </li>
+    `
+  )}
+`
+
+const copyClip = (content: string) => {
+  navigator.clipboard.writeText(content).then(
+    (res) => {
+      // success
+    },
+    (rej) => {
+      // fail
+    }
+  )
+}
 
 interface MenuItem {
   name: string
@@ -99,12 +132,51 @@ export default class ContextMenu {
     this.isShow = true
   }
   showDanmaku(danmaku: DanmakuItem[]) {
+    const api = this.player.danmaku.api
+    const operate = this.player.danmaku.operate
     if (danmaku.length) {
       this.$danmaku.style.display = ""
     } else {
       this.$danmaku.style.display = "none"
     }
-    render(templateDanmaku(danmaku), this.$danmaku)
+    render(
+      templateDanmaku(danmaku, (dm) => {
+        const myDanmaku = dm.user == this.player.userId
+        return [
+          !myDanmaku && api.report
+            ? {
+                name: "举报",
+                onClick: (dm) => {
+                  operate.report(dm)
+                },
+              }
+            : null,
+          !myDanmaku && api.blockUser
+            ? {
+                name: "屏蔽",
+                onClick: (dm) => {
+                  operate.blockUser(dm.user, true)
+                },
+              }
+            : null,
+          myDanmaku && api.recall
+            ? {
+                name: "撤回",
+                onClick: (dm) => {
+                  operate.recall(dm)
+                },
+              }
+            : null,
+          {
+            name: "复制",
+            onClick: (dm) => {
+              copyClip(dm.content)
+            },
+          },
+        ]
+      }),
+      this.$danmaku
+    )
   }
   hide() {
     this.container.classList.remove("state-show")
