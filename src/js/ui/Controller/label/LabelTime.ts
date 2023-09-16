@@ -10,7 +10,7 @@ const template = () => html`
       <span>/</span>
       <span class="${classPrefix}-controller-time-total">00:00</span>
     </div>
-    <input class="${classPrefix}-controller-time-input mfunsPlayer-input" />
+    <input class="${classPrefix}-controller-time-input mp-input" />
   </div>
 `
 

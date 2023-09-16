@@ -11,6 +11,7 @@ import Modal from "@/ui/Modal"
 import Theme from "@/ui/Theme"
 import State from "@/ui/State"
 import Danmaku from "./Danmaku"
+import { PlayerEventsMap } from "./Events/PlayerEventsMap"
 
 export default class MfunsPlayer {
   static readonly version = MFUNSPLAYER_VERSION
@@ -210,12 +211,12 @@ export default class MfunsPlayer {
   }
 
   /** 监听事件 */
-  public on(name: string, listener: (...args: any[]) => void) {
+  public on<T extends keyof PlayerEventsMap>(name: T, listener: PlayerEventsMap[T]) {
     this.events.on(name, listener)
   }
 
   /** 取消监听事件 */
-  public off(name: string, listener: (...args: any[]) => void) {
+  public off<T extends keyof PlayerEventsMap>(name: T, listener: PlayerEventsMap[T]) {
     this.events.off(name, listener)
   }
 

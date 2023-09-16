@@ -109,4 +109,43 @@
       }
     }
   }
+
+  .mp-input {
+    font-family: inherit;
+    font-size: inherit;
+    height: 20px;
+    line-height: 20px;
+    border-radius: $border-radius;
+    padding: 0 4px;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    border: 1px solid $light-semiwhite;
+    &:hover {
+      border-color: $text-semiwhite;
+    }
+    &:focus {
+      border-color: $primary-color;
+    }
+    transition: all 0.2s;
+  }
+
+  .mp-button {
+    font-family: inherit;
+    font-size: inherit;
+    height: 22px;
+    line-height: 22px;
+    border-radius: $border-radius;
+    padding: 0 4px;
+    outline: none;
+    background-color: transparent;
+    color: $text-white;
+    border: 1px solid $text-semiwhite;
+    cursor: pointer;
+    &:hover {
+      color: $primary-color;
+      border-color: $primary-color;
+    }
+    transition: all 0.2s;
+  }
 }

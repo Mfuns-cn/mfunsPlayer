@@ -4,16 +4,17 @@ import { html, render } from "lit-html"
 
 const template = () => html`
   <div class="${classPrefix}-modal-panel ${classPrefix}-about">
-    <div>Mfuns Player</div>
-    <div>version ${MfunsPlayer.version}-${MfunsPlayer.gitHash}</div>
-    <div>开源项目地址 <a href="${repositoryLink}">github</a></div>
+    <div class="${classPrefix}-about-logo"></div>
+    <div class="${classPrefix}-about-version">
+      version ${MfunsPlayer.version}-${MfunsPlayer.gitHash}
+    </div>
+    <div>github: <a href="${repositoryLink}" target="_blank">github</a></div>
     <div>开发者</div>
-    <ul>
+    <ul class="${classPrefix}-about-developers">
       ${developers.map(
         ({ name, id, link }) => html`
           <li>
-            <span>${name}</span>
-            <a href="${link}">github</a>
+            <a href="${link}" target="_blank">${name}</a>
           </li>
         `
       )}
@@ -23,7 +24,7 @@ const template = () => html`
 `
 
 export default class ModalAbout {
-  title = ""
+  title = "关于"
   el: HTMLElement
   constructor() {
     const fragment = new DocumentFragment()

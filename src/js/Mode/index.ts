@@ -25,6 +25,13 @@ export default class Mode {
     this.player.on("fullscreen", () => {
       this.player.exitWebfull()
     })
+
+    const observer = new ResizeObserver(([item]) => {
+      const { width, height } = item.contentRect
+      this.player.events.trigger("resize", [width, height])
+    })
+
+    observer.observe(this.player.template.$videoWrap)
   }
   fullscreen() {
     this.modeFullscreen.enter()
@@ -71,8 +78,8 @@ export default class Mode {
   }
 
   /** 设置控制栏固定 */
-  fixedController(flag: boolean) {
-    this.player.template.el.classList.toggle("mode-fixedcontroller", flag)
-    this.player.events.trigger(flag ? "fixedcontroller" : "fixedcontroller_off")
+  solid(flag: boolean) {
+    this.player.template.el.classList.toggle("mode-solid", flag)
+    this.player.events.trigger(flag ? "solid" : "solid_off")
   }
 }

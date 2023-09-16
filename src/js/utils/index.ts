@@ -19,7 +19,8 @@ export const fullScreenEnabled: boolean =
   (document as any).msFullscreenEnabled ||
   false
 
-export const { pictureInPictureEnabled } = document
+/** 是否支持画中画 */
+export const pictureInPictureEnabled = document.pictureInPictureEnabled
 
 /**
  * 将时间文本转换为秒数
@@ -249,40 +250,19 @@ export const randomFontsize = (range: number) => {
   return allSize[random]
 }
 
+const dateFormatMap = {
+  yyyy: (d: Date) => d.getFullYear().toString(),
+  yy: (d: Date) => d.getFullYear().toString().slice(-2),
+  MM: (d: Date) => (d.getMonth() + 1).toString().padStart(2, "0"),
+  dd: (d: Date) => d.getDate().toString().padStart(2, "0"),
+  HH: (d: Date) => d.getHours().toString().padStart(2, "0"),
+  mm: (d: Date) => d.getMinutes().toString().padStart(2, "0"),
+  ss: (d: Date) => d.getSeconds().toString().padStart(2, "0"),
+}
+
 // date: 时间对象, pattern: 日期格式
-export function formatterDate(date: Date, pattern: string) {
-  // @ts-ignore
-  Date.prototype.format = function (fmt: string) {
-    // debugger;
-    const o = {
-      "M+": this.getMonth() + 1, // 月份
-      "D+": this.getDate(), // 日
-      "H+": this.getHours(), // 小时
-      "m+": this.getMinutes(), // 分
-      "s+": this.getSeconds(), // 秒
-      "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-      S: this.getMilliseconds(), // 毫秒
-    }
-    if (/(Y+)/.test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, `${this.getFullYear()}`.substr(4 - RegExp.$1.length))
-    }
-    for (const k in o) {
-      if (new RegExp(`(${k})`).test(fmt)) {
-        fmt = fmt.replace(
-          RegExp.$1,
-          // @ts-ignore
-          RegExp.$1.length === 1 ? o[k] : `00${o[k]}`.substr(`${o[k]}`.length)
-        )
-      }
-    }
-    return fmt
-  }
-  const ts = date.getTime()
-  // @ts-ignore
-  let d = new Date(ts).format("YYYY-MM-DD HH:mm:ss") // 默认日期时间格式 YYYY-MM-DD HH:mm:ss
-  if (pattern) {
-    // @ts-ignore
-    d = new Date(ts).format(pattern)
-  }
-  return d.toLocaleString()
+export const dateFormat = (date: Date, format: string) => {
+  return format.replace(/yy|yyyy|MM|dd|HH|mm|ss/g, (match) =>
+    dateFormatMap[match as keyof typeof dateFormatMap]?.(date)
+  )
 }

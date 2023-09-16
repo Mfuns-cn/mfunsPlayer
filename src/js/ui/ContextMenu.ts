@@ -5,8 +5,8 @@ import { html, render } from "lit-html"
 
 const template = (list: MenuItem[]) => html`
   <div class="${classPrefix}-contextmenu">
-    <ul class="${classPrefix}-contextmenu-danmaku"></ul>
-    <ul class="${classPrefix}-contextmenu-menu">
+    <ul class="${classPrefix}-contextmenu-danmaku mp-black"></ul>
+    <ul class="${classPrefix}-contextmenu-menu mp-black">
       ${list.map(
         ({ name, onClick }) => html`
           <li class="${classPrefix}-contextmenu-item" @click=${onClick}>${name}</li>
@@ -143,7 +143,7 @@ export default class ContextMenu {
       templateDanmaku(danmaku, (dm) => {
         const myDanmaku = dm.user == this.player.userId
         return [
-          !myDanmaku && api.report
+          !myDanmaku && api?.report
             ? {
                 name: "举报",
                 onClick: (dm) => {
@@ -151,7 +151,7 @@ export default class ContextMenu {
                 },
               }
             : null,
-          !myDanmaku && api.blockUser
+          !myDanmaku && api?.blockUser
             ? {
                 name: "屏蔽",
                 onClick: (dm) => {
@@ -159,7 +159,7 @@ export default class ContextMenu {
                 },
               }
             : null,
-          myDanmaku && api.recall
+          myDanmaku && api?.recall
             ? {
                 name: "撤回",
                 onClick: (dm) => {

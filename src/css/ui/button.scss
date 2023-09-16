@@ -100,7 +100,7 @@
   &-controller-settings {
     .#{$prefix}-controller-panel {
       width: 250px;
-      padding: 6px;
+      padding: 5px 15px;
     }
   }
   &-controller-part {
@@ -138,6 +138,86 @@
   &-controller-prev {
     .#{$prefix}-controller-icon {
       font-size: 16px;
+    }
+  }
+  &-controller-danmaku-switch {
+    .mp-icon-danmaku {
+      display: none;
+    }
+    &.state-on {
+      color: $primary-color;
+      .mp-icon-danmaku-off {
+        display: none;
+      }
+      .mp-icon-danmaku {
+        display: block;
+      }
+    }
+  }
+  &-controller-danmaku-settings {
+    .#{$prefix}-controller-panel {
+      width: 270px;
+      padding: 5px 15px;
+    }
+    .#{$prefix}-slider-wrap {
+      width: 160px;
+    }
+  }
+  &-controller-danmaku-style {
+    .#{$prefix}-controller-panel {
+      width: 250px;
+      padding: 5px 15px;
+    }
+  }
+  &-danmaku-style-color {
+    &-input {
+      width: 60px;
+    }
+    &-preview {
+      width: 36px;
+      height: 18px;
+      border: 2px solid #ffffffa0;
+      border-radius: $border-radius;
+      margin-left: 8px;
+    }
+    &-dropper {
+      margin-left: 5px;
+    }
+    &-picker {
+      margin-top: 8px;
+      margin-left: 30px;
+      .#{$prefix}-picker-item {
+        border: none;
+        padding: 0;
+        & > div {
+          width: 12px;
+          height: 12px;
+          border: 2px solid #00000040;
+          border-radius: $border-radius;
+        }
+        &.state-picked {
+          border: none;
+          & > div {
+            border-color: #ffffff;
+          }
+        }
+      }
+    }
+    @at-root .mode-solid & {
+      &-preview {
+        border-color: #00000040;
+      }
+      &-picker {
+        .#{$prefix}-picker-item {
+          & > div {
+            border-color: #00000020;
+            border-radius: $border-radius;
+          }
+          &.state-picked > div {
+            border-color: #00000080;
+          }
+        }
+      }
     }
   }
 }

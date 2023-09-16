@@ -26,6 +26,8 @@ const template = (list: VideoPart[], setPart: (p: number) => void) => html`
 export default class SidePartList {
   player: MfunsPlayer
   title = "分P列表"
+  /** 是否挂载到播放器外部 */
+  mounted = false
   el: HTMLElement
   constructor(player: MfunsPlayer) {
     this.player = player

@@ -329,32 +329,52 @@
             danmaku: {
                 api: {
                     url: "https://www.mfuns.xyz/wp-json/mfuns",
+                    send: async ({id, danmaku}) => {
+                        console.log(`向 id:${id}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`)
+                        mfPlayer.controller.danmakuBar.setCoolDown(5)
+                        return {
+                            success: true,
+                            message: "发送成功"
+                        }
+                    },
                     recall: async () => {
                         console.log("撤回成功")
                         return {
-                            ok: true,
-                            code: 0,
-                            msg: "撤回成功"
+                            success: true,
+                            message: "撤回成功"
                         }
                     },
                     report: async () => {
                         console.log("举报成功")
                         return {
-                            ok: true,
-                            code: 0,
-                            msg: "举报成功"
+                            success: true,
+                            message: "举报成功"
                         }
                     },
                     blockUser: async () => {
                         console.log("屏蔽成功")
                         return {
-                            ok: true,
-                            code: 0,
-                            msg: "屏蔽成功"
+                            success: true,
+                            message: "屏蔽成功"
                         }
                     }
                 },
             },
+            danmakuBar: {
+                fontSizeList: [
+                    [12, "极小" ],
+                    [18, "小"],
+                    [25, "中"],
+                    [36, "大" ],
+                    [45, "加大" ],
+                    [64, "特大" ],
+                ],
+                modeList: [1, 5, 4, 6]
+            },
+            feature: {
+                solid: true,
+                webfull: true,
+            }
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",
             //   editor: 1,
@@ -397,6 +417,7 @@
         }
         console.log(mfunsPlayerConfig)
         mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
+        window.mfPlayer = mfPlayer
         console.log(mfPlayer)
         mfPlayer.on("play", () => {
             console.log("play")
@@ -406,6 +427,16 @@
         })
         mfPlayer.on("part_change", (p) => {
             console.log("part_change", p)
+        })
+        mfPlayer.side.mountPanel("danmakulist", document.querySelector(".extra"))
+/*         mfPlayer.on("fullscreen", () => {
+            mfPlayer.side.mountPanel("danmakulist")
+        })
+        mfPlayer.on("fullscreen_exit", () => {
+            mfPlayer.side.mountPanel("danmakulist", document.querySelector(".extra"))
+        }) */
+        mfPlayer.on("resize", ([width, height])=>{
+            console.log(`${width}-${height}`)
         })
     }
 

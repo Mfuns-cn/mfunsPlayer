@@ -43,6 +43,7 @@
       max-width: 200px;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
     }
     &-right {
       height: 100%;
@@ -50,6 +51,12 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      flex-shrink: 0;
+    }
+    &-center.state-bar {
+      flex-grow: 1;
+      margin: 0 60px;
+      max-width: 600px;
     }
     &-progress {
       width: 100%;
@@ -110,10 +117,12 @@
       bottom: 100%;
       transform: translateX(-50%);
       display: none;
+      cursor: default;
     }
     &-panel {
       margin-bottom: 20px;
       background-color: $panel-black;
+      color: $text-white;
       border-radius: $border-radius;
     }
     &-time {
@@ -153,7 +162,7 @@
     }
   }
   // 控制栏固定模式
-  &.mode-fixedcontroller {
+  &.mode-solid {
     .#{$prefix} {
       &-video-area {
         width: 100%;
@@ -186,25 +195,38 @@
           top: -8px;
           align-items: end;
         }
-        &-icon-wrap {
-          padding: 0 5px;
-        }
         &-panel {
           background-color: $panel-white;
+          color: $text-black;
         }
-        .#{$prefix} {
-          &-slider {
+        &,
+        &-panel {
+          .#{$prefix}-slider {
             &-track {
               background: $light-grey;
             }
           }
-          &-tooltip {
-            background-color: $panel-white;
-            color: $text-black;
-          }
-          &-checkbox {
+          .#{$prefix}-checkbox {
             &-icon {
               border-color: $text-grey;
+            }
+          }
+          .mp-input {
+            color: $text-black;
+            border: 1px solid $light-grey;
+            &:hover {
+              border-color: $text-grey;
+            }
+            &:focus {
+              border-color: $primary-color;
+            }
+          }
+          .mp-button {
+            color: $text-black;
+            border: 1px solid $text-grey;
+            &:hover {
+              color: $primary-color;
+              border-color: $primary-color;
             }
           }
         }

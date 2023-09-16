@@ -24,7 +24,7 @@ type PickerItemTemplate = (item: PickerOptionsItem, index?: number) => string | 
 
 interface PickerOptionsItem {
   value: string
-  label: string
+  label?: string
   disabled?: boolean
   [key: string]: any
 }
@@ -79,7 +79,7 @@ export class MultiPicker implements MultiPickerOptions {
 
   /** 重载，一般用于列表项更改 */
   public reload(value?: string[]) {
-    render(templateWrap({ list: this.list, template: this.template }), this.el)
+    render(templateWrap({ list: this.list, template: this.template }), this.container)
     this.el = this.container.querySelector(`.${classPrefix}-picker`)!
     this.$items = this.el.querySelectorAll(`.${classPrefix}-picker-item`) // 标签集合
     this.$items.forEach((item) => {

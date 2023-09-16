@@ -18,7 +18,7 @@ export default class Danmaku {
   parser: DanmakuParser
 
   /** 弹幕api */
-  api: DanmakuApiOptions
+  api?: DanmakuApiOptions
 
   /** 弹幕操作 */
   operate: DanmakuOperate
@@ -42,7 +42,7 @@ export default class Danmaku {
     this.parser = new DanmakuParser({ defaultParser: "mfuns" })
     this.operate = new DanmakuOperate(this)
     this.el = this.player.template.$danmakuWrap
-    this.api = options.danmaku.api
+    this.api = options.danmaku?.api
     this.allowNewDanmaku = false
     render(template, this.el)
     this.$rowDanmakuContainer = this.el.querySelector(`.${classPrefix}-row-danmaku-container`)!
@@ -63,8 +63,12 @@ export default class Danmaku {
     this.player.on("pause", () => {
       this.engine.pause()
     })
-    this.player.on("seek", () => {
+    this.player.on("seeking", () => {
+      this.engine.pause()
       this.engine.seek()
+    })
+    this.player.on("seeked", () => {
+      this.player.paused || this.engine.play()
     })
     this.player.on("part_change", (p) => {
       const { danmakuId, danmakuAddition } = this.player.video.list[p - 1]
@@ -86,10 +90,10 @@ export default class Danmaku {
         const danmakuData = data ? data(res) : res
         const dan = this.parser.parse({ data: danmakuData, type })
         dan && this.add(dan)
-        this.player.events.trigger("danmaku:load_addition_end")
+        this.player.events.trigger("danmaku:load_addition_end", url, dan || [])
       })
       .catch((err) => {
-        this.player.events.trigger("danmaku:load_addition_fail")
+        this.player.events.trigger("danmaku:load_addition_fail", url, err)
         console.error(err)
       })
   }
@@ -98,36 +102,37 @@ export default class Danmaku {
   private load(id: string | number) {
     const api = this.api
     api
-      .get({ api: api.url, id })
+      ?.get({ api: api.url, id })
       .then((data) => {
         const dan = this.parser.parse({ data, type: api.type })
         if (dan) {
           this.add(dan)
           this.lastDanmakuId = dan[dan.length - 1].id
         }
-        this.player.events.trigger("danmaku:load_end")
+        this.player.events.trigger("danmaku:load_end", dan || [])
       })
       .catch((err) => {
-        this.player.events.trigger("danmaku:load_fail")
+        this.player.events.trigger("danmaku:load_fail", err)
       })
   }
 
   /** 加载实时新增弹幕 */
   loadNew(id: string | number) {
-    this.player.events.trigger("danmaku:load_new_start")
+    const offset = this.lastDanmakuId
+    this.player.events.trigger("danmaku:load_new_start", offset)
     const api = this.api
     api
-      .get({ api: api.url, id, offset: this.lastDanmakuId })
+      ?.get({ api: api.url, id, offset: this.lastDanmakuId })
       .then((data) => {
         const dan = this.parser.parse({ data, type: api.type })
         if (dan) {
           this.add(dan)
           this.lastDanmakuId = dan[dan.length - 1].id
         }
-        this.player.events.trigger("danmaku:load_new_end")
+        this.player.events.trigger("danmaku:load_new_end", offset, dan || [])
       })
       .catch((err) => {
-        this.player.events.trigger("danmaku:load_new_fail")
+        this.player.events.trigger("danmaku:load_new_fail", offset, err)
       })
   }
 
@@ -142,11 +147,14 @@ export default class Danmaku {
     })
   }
 
-  /** 添加弹幕到弹幕池 */
-  add(dmlist: DanmakuItem[]) {
+  /**
+   * 添加弹幕到弹幕池
+   * @param dan 要添加的弹幕
+   * */
+  add(dan: DanmakuItem[]) {
     const basicDanmaku: DanmakuItem[] = []
     const advancedDanmaku: Record<number, DanmakuItem[]> = {}
-    dmlist.forEach((dm) => {
+    dan.forEach((dm) => {
       if (dm.mode < 7) {
         basicDanmaku.push(dm)
       } else {
@@ -159,11 +167,14 @@ export default class Danmaku {
     })
     basicDanmaku.length && this.engine.add(basicDanmaku)
     for (const mode in advancedDanmaku) {
-      this.player.events.trigger("danmaku:advanced_detected", parseInt(mode), advancedDanmaku[mode])
+      this.player.events.trigger("danmaku:advanced", parseInt(mode), advancedDanmaku[mode])
     }
   }
 
-  /** 根据id从弹幕池中移除弹幕 */
+  /**
+   * 根据id从弹幕池中移除弹幕
+   * @param ids 要移除的弹幕id
+   * */
   remove(ids: (string | number)[]) {
     this.engine.remove(ids)
   }
@@ -173,13 +184,81 @@ export default class Danmaku {
     this.engine.clear()
   }
 
-  /** 弹幕类型屏蔽 */
-  blockType(list: string[]) {}
+  /** 显示弹幕 */
+  show() {
+    this.engine.show()
+    this.player.events.trigger("danmaku:on")
+  }
 
-  /** 弹幕来源屏蔽 */
-  blockSource(list: string[]) {}
+  /** 隐藏弹幕 */
+  hide() {
+    this.engine.hide()
+    this.player.events.trigger("danmaku:off")
+  }
+
+  /** 切换弹幕显示 */
+  toggle() {
+    if (this.engine.hidden) {
+      this.show()
+    } else {
+      this.hide()
+    }
+  }
+
+  // 弹幕屏蔽
+
+  /**
+   * 弹幕类型屏蔽
+   * @param type 类型
+   * @param flag 设置是否屏蔽
+   */
+  filter(type: string, flag: boolean) {
+    switch (type) {
+      case "roll":
+        this.engine.setTrackFilter("roll", flag)
+        this.engine.setTrackFilter("reverse", flag)
+        break
+      case "top":
+      case "bottom":
+        this.engine.setTrackFilter(type, flag)
+        break
+      case "color":
+        this.engine.setColorFilter(flag)
+        break
+    }
+    this.player.events.trigger("danmaku:filter", type, flag)
+  }
+
+  // 其他设置
+
+  /** 设置弹幕不透明度 */
+  setOpacity(value: number, save?: boolean) {
+    this.engine.opacity = value
+    this.player.events.trigger("setting:danmaku", "opacity", value, save)
+  }
+  /** 设置弹幕速度 */
+  setSpeed(value: number, save?: boolean) {
+    this.engine.speed = value
+    this.player.events.trigger("setting:danmaku", "speed", value, save)
+  }
+  /** 设置弹幕区域 */
+  setArea(value: number, save?: boolean) {
+    this.engine.limitArea = value || Infinity
+    this.player.events.trigger("setting:danmaku", "area", value, save)
+  }
+  /** 设置弹幕大小 */
+  setSize(value: number, save?: boolean) {
+    this.engine.fontScale = value
+    this.player.events.trigger("setting:danmaku", "size", value, save)
+  }
+  /** 设置弹幕字体 */
+  setFont(value: string, save?: boolean) {
+    this.engine.fontFamily = value
+    this.player.events.trigger("setting:danmaku", "font", value, save)
+  }
+  /** 设置弹幕加粗 */
+  setBold(value: boolean, save?: boolean) {
+    this.engine.fontWeight = value ? "bold" : ""
+    this.player.events.trigger("setting:danmaku", "bold", value, save)
+  }
 }
-
-/** 支持下列事件
- *
- */

@@ -95,7 +95,7 @@
     }
   }
   // 控制栏固定模式
-  &.mode-fixedcontroller & {
+  &.mode-solid & {
     &-progress-bar {
       background-color: rgba($light-grey, 0.5);
       &-buffered {

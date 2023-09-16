@@ -22,7 +22,16 @@
     }
   }
   &-about {
-    padding: 5px 8px;
+    padding: 10px 10px;
+    &-logo {
+      width: 360px;
+      height: 60px;
+      background-image: url("~@icon/logo.svg");
+      background-size: cover;
+    }
+    a {
+      color: $primary-color;
+    }
   }
 
   &-partlist {
@@ -53,5 +62,135 @@
         white-space: nowrap;
       }
     }
+  }
+  &-danmakulist {
+    font-size: 12px;
+    .list-row {
+      position: relative;
+      line-height: 24px;
+      height: 24px;
+      white-space: nowrap;
+    }
+    &-head {
+      @extend .list-row;
+      box-shadow: 1px 0px 2px #ccc;
+      :hover {
+        background-color: rgba($light-grey, 0.2);
+      }
+    }
+    &-container .list-row {
+      &:hover {
+        background-color: rgba($light-grey, 0.2);
+        .list-operations {
+          display: block;
+        }
+        .col-date {
+          visibility: hidden;
+        }
+      }
+    }
+    .list-column,
+    .list-cell {
+      display: inline-block;
+      height: 100%;
+      padding: 0 4px;
+      overflow: hidden;
+      &.col-time {
+        padding-left: 8px;
+        width: 40px;
+      }
+      &.col-date {
+        padding-right: 8px;
+        width: 90px;
+        text-align: center;
+      }
+      &.col-content {
+        width: calc(100% - 162px);
+        text-overflow: ellipsis;
+        white-space: overflow;
+      }
+    }
+    .list-operation {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding-right: 8px;
+      width: 100px;
+      height: 100%;
+      display: none;
+      text-align: right;
+      .list-action {
+        cursor: pointer;
+        margin-left: 4px;
+      }
+    }
+    &-main {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: calc(100% - 40px);
+    }
+    &-container {
+      overflow: hidden;
+      position: absolute;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      top: 24px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 24px);
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: $text-grey;
+      }
+    }
+    &-status {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      div {
+        text-align: center;
+        display: none;
+        color: $text-grey;
+      }
+      &[data-status="loading"] {
+        .status-loading-text {
+          display: block;
+        }
+      }
+      &[data-status="failed"] {
+        .status-failed-text {
+          display: block;
+        }
+      }
+      &[data-status="empty"] {
+        .status-empty-text {
+          display: block;
+        }
+      }
+    }
+    &-autoscroll {
+      cursor: pointer;
+    }
+  }
+}
+
+.#{$prefix} {
+  &-panel-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px 0;
+  }
+  &-row-label {
+    height: 22px;
+    line-height: 22px;
+    padding-right: 10px;
+  }
+  &-row-value {
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
   }
 }

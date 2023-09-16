@@ -21,7 +21,7 @@ const template = () => html`
       <div class="${classPrefix}-header-wrap"></div>
       <div class="${classPrefix}-controller-wrap"></div>
     </div>
-    <div class="${classPrefix}-footbar"></div>
+    <div class="${classPrefix}-footbar mp-solid"></div>
     <div class="${classPrefix}-miniplayer">
       <div class="${classPrefix}-miniplayer-content"></div>
     </div>

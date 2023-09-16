@@ -13,22 +13,70 @@ export interface PlayerOptions {
   volume?: number
   /** 播放速率 */
   rate?: number
+  /** 视频比例 */
+  ratio?: [number, number]
   /** 自动播放 */
   autoPlay?: boolean
   /** 循环播放 */
   loop?: boolean
-  /** 宽屏模式 */
-  wide?: boolean
   /** 弹幕设置 */
-  danmaku: {
+  danmaku?: {
     /** 弹幕api */
-    api: DanmakuApiOptions
+    api?: DanmakuApiOptions
+    /** 类型屏蔽 */
+    filter?: string[]
+    /** 弹幕不透明度 */
+    opacity?: number
+    /** 弹幕速度 */
+    speed?: number
+    /** 弹幕显示区域 */
+    area?: number
+    /** 弹幕大小 */
+    size?: number
+    /** 弹幕字体 */
+    font?: string
+    /** 字体加粗 */
+    bold?: boolean
+  }
+  /** 弹幕栏设置 */
+  danmakuBar?: {
+    /** 占位文本 */
+    placeholder?: string
+    /** 选色列表 */
+    colorList?: string[]
+    /** 字号列表 */
+    fontSizeList?: [number, string][]
+    /** 弹幕模式列表 */
+    modeList?: number[]
+  }
+  /** 界面模式 */
+  mode?: {
+    /** 黑边模式 */
+    blackBorder?: boolean
+    /** 宽屏模式 */
+    wide?: boolean
+    /** 控制栏固定 */
+    solid?: boolean
+    /** 暗黑模式 */
+    dark?: boolean
+  }
+  /** 是否允许用户设置 */
+  feature?: {
+    /** 黑边模式 */
+    blackBorder?: boolean
+    /** 宽屏模式 */
+    wide?: boolean
+    /** 控制栏固定 */
+    solid?: boolean
+    /** 网页全屏模式 */
+    webfull?: boolean
+    /** 关灯模式 */
+    lightOff?: boolean
   }
 }
 
 export interface OperationResult {
-  ok: boolean
-  code: number
+  success: boolean
   message?: string
 }
 
@@ -48,7 +96,7 @@ export interface DanmakuApiOptions {
   send?: (arg: {
     api: string
     id: string | number
-    danmaku: DanmakuItem
+    danmaku: DanmakuSendItem
   }) => Promise<OperationResult>
   /** 举报弹幕 */
   report?: (arg: { api: string; danmaku: DanmakuItem }) => Promise<OperationResult>
@@ -137,11 +185,14 @@ export interface DanmakuItem {
   color: number | string
   /** 弹幕文字大小 */
   size: number
-  /** 时间戳 */
-  timestamp: number
+  /** 日期 */
+  date: number
   /** 发送用户 */
   user: string | number
 }
+
+/** 弹幕发送对象接口 */
+export type DanmakuSendItem = Omit<DanmakuItem, "id" | "date" | "user">
 
 /** 弹幕源 */
 export interface DanmakuSource {

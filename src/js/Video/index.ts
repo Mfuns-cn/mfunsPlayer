@@ -13,8 +13,8 @@ export default class Video {
   list: VideoPart[]
   /** 当前视频分P */
   private currentPart: number
-  /** 视频宽高比 */
-  scale: [number, number] | null = null
+
+  ratio: [number, number] | null = null
 
   constructor(player: MfunsPlayer, options: PlayerOptions) {
     this.player = player
@@ -22,8 +22,10 @@ export default class Video {
     this.loader = new VideoLoader(this)
     this.list = options.video.list
     this.currentPart = options.video.part || 1
+    this.setRatio(options.ratio || null)
 
     this.initEvent()
+    this.initKeepRatio()
   }
 
   /** 加载分P */
@@ -83,16 +85,35 @@ export default class Video {
   /** 设置循环播放 */
   public setLoop(flag: boolean) {
     this.el.loop = flag
-    this.player.events.trigger(flag ? "loop" : "loop_off")
+    this.player.events.trigger("loop_change", flag)
+  }
+
+  /** 设置视频比例 */
+  public setRatio(value: [number, number] | null) {
+    this.ratio = value
+    this.el.style.width = ""
+    this.el.style.height = ""
+    if (value) {
+      const [ratioW, ratioH] = value
+      this.el.style.aspectRatio = `${ratioW}/${ratioH}`
+      this.el.style.objectFit = "fill"
+      const { width, height } = this.el.getBoundingClientRect()
+      const { width: cWidth, height: cHeight } =
+        this.player.template.$videoArea.getBoundingClientRect()
+      if (width == cWidth && height == cHeight) {
+        this.rescale(width, height, ratioW, ratioH)
+      }
+    } else {
+      this.el.style.aspectRatio = ""
+      this.el.style.objectFit = ""
+    }
+    this.player.events.trigger("ratio_change", value)
   }
 
   /** 静音 */
   public mute(flag = true) {
     this.el.muted = flag
   }
-
-  /** 保持视频宽高比 */
-  public rescale() {}
 
   get muted(): boolean {
     return this.el.muted
@@ -167,5 +188,34 @@ export default class Video {
     this.on("ratechange", () => {
       this.player.events.trigger("rate_change", this.rate)
     })
+  }
+  /** 保持视频比例 */
+  private initKeepRatio() {
+    this.player.on("resize", ([cWidth, cHeight]) => {
+      if (this.ratio) {
+        this.el.style.width = ""
+        this.el.style.height = ""
+        const [ratioW, ratioH] = this.ratio
+        const { width, height } = this.el.getBoundingClientRect()
+        console.log(`${width} x ${height} -- ${cWidth} x ${cHeight}`)
+        if (Math.abs(width - cWidth) < 1 && Math.abs(height - cHeight) < 1) {
+          // 该情况表示播放器大小可能已被固定，需要重新计算宽高
+          this.rescale(cWidth, cHeight, ratioW, ratioH)
+        }
+      }
+    })
+  }
+
+  /** 根据当前视频宽高重新维持视频比例 */
+  private rescale(width: number, height: number, ratioW: number, ratioH: number) {
+    const rwxh = ratioW * height
+    const rhxw = ratioH * width
+    if (rwxh < rhxw) {
+      this.el.style.width = `${(rwxh / rhxw) * 100}%`
+      this.el.style.height = "100%"
+    } else {
+      this.el.style.width = "100%"
+      this.el.style.height = `${(rhxw / rwxh) * 100}%`
+    }
   }
 }

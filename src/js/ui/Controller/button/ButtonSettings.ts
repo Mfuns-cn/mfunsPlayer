@@ -2,6 +2,7 @@ import { html, render } from "lit-html"
 import { Picker, Slider, Checkbox } from "@/ui/components"
 import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
+import { PlayerOptions } from "@/types"
 
 const template = () => html`
   <div class="${classPrefix}-controller-button ${classPrefix}-controller-settings">
@@ -20,7 +21,9 @@ const template = () => html`
         </div>
         <div class="${classPrefix}-panel-row">
           <div class="${classPrefix}-row-label">界面设置</div>
-          <div class="${classPrefix}-settings-fixedcontroller-checkbox"></div>
+        </div>
+        <div class="${classPrefix}-panel-row">
+          <div class="${classPrefix}-settings-solid-checkbox"></div>
           <div class="${classPrefix}-settings-showPrevButton-checkbox"></div>
         </div>
       </div>
@@ -35,15 +38,15 @@ export default class ButtonSettings {
 
   $ratePicker: HTMLElement
   $scalePicker: HTMLElement
-  $fixedcontrollerCheckbox: HTMLElement
+  $solidCheckbox: HTMLElement
   $showPrevButtonCheckbox: HTMLElement
 
   pickerRate!: Picker
   pickerScale!: Picker
-  checkboxFixedcontroller!: Checkbox
+  checkboxSolid!: Checkbox
   checkboxShowPrevButton!: Checkbox
 
-  constructor(player: MfunsPlayer, container: HTMLElement) {
+  constructor(player: MfunsPlayer, container: HTMLElement, options: PlayerOptions) {
     this.player = player
     const fragment = new DocumentFragment()
     render(template(), fragment)
@@ -52,18 +55,16 @@ export default class ButtonSettings {
 
     this.$ratePicker = this.el.querySelector(`.${classPrefix}-settings-rate-picker`)!
     this.$scalePicker = this.el.querySelector(`.${classPrefix}-settings-scale-picker`)!
-    this.$fixedcontrollerCheckbox = this.el.querySelector(
-      `.${classPrefix}-settings-fixedcontroller-checkbox`
-    )!
+    this.$solidCheckbox = this.el.querySelector(`.${classPrefix}-settings-solid-checkbox`)!
     this.$showPrevButtonCheckbox = this.el.querySelector(
       `.${classPrefix}-settings-showPrevButton-checkbox`
     )!
 
-    this.init()
+    this.init(options)
     container.appendChild(fragment)
   }
 
-  private init() {
+  private init(options: PlayerOptions) {
     this.pickerRate = new Picker({
       container: this.$ratePicker,
       list: [
@@ -87,14 +88,25 @@ export default class ButtonSettings {
       container: this.$scalePicker,
       list: [{ value: "", label: "自动" }, { value: "16:9" }, { value: "4:3" }],
       value: "",
-    })
-    this.checkboxFixedcontroller = new Checkbox({
-      container: this.$fixedcontrollerCheckbox,
-      label: "固定控制栏",
-      onToggle: (value) => {
-        this.player.mode.fixedController(value)
+      onPick: (value) => {
+        this.player.video.setRatio(
+          value ? ((value as string).split(":").map((v) => Number(v)) as [number, number]) : null
+        )
       },
     })
+    this.player.on("ratio_change", (ratio) => {
+      this.pickerRate.setValue(ratio ? ratio.join(":") : "")
+    })
+
+    if (options.feature?.solid) {
+      this.checkboxSolid = new Checkbox({
+        container: this.$solidCheckbox,
+        label: "固定控制栏",
+        onToggle: (value) => {
+          this.player.mode.solid(value)
+        },
+      })
+    }
     this.checkboxShowPrevButton = new Checkbox({
       container: this.$showPrevButtonCheckbox,
       label: "显示上一P按钮（多P下生效）",

@@ -3,20 +3,20 @@ import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
 
 const template = () => html`
-  <div class="${classPrefix}-controller-button ${classPrefix}-controller-loop">
+  <div class="${classPrefix}-controller-button ${classPrefix}-controller-part">
     <div class="${classPrefix}-controller-icon-wrap">
-      <i class="${classPrefix}-controller-icon mp-icon-loop"></i>
-      <i class="${classPrefix}-controller-icon mp-icon-loop-off"></i>
+      <div class="${classPrefix}-controller-texticon">弹幕列表</div>
     </div>
-    <div class="${classPrefix}-tooltip">洗脑循环</div>
+    <div class="${classPrefix}-tooltip">弹幕列表</div>
   </div>
 `
 
-export default class ButtonLoop {
+export default class ButtonDanmakulist {
   player: MfunsPlayer
   el: HTMLElement
   $iconWrap: HTMLElement
   $tooltip: HTMLElement
+  $texticon: HTMLElement
 
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
@@ -25,21 +25,14 @@ export default class ButtonLoop {
     this.el = fragment.querySelector(`.${classPrefix}-controller-button`)!
     this.$iconWrap = fragment.querySelector(`.${classPrefix}-controller-icon-wrap`)!
     this.$tooltip = fragment.querySelector(`.${classPrefix}-tooltip`)!
+    this.$texticon = fragment.querySelector(`.${classPrefix}-controller-texticon`)!
     this.init()
     container.appendChild(fragment)
   }
 
   private init() {
-    this.player.on("loop_change", (flag) => {
-      this.el.classList.toggle("state-loop", flag)
-      this.$tooltip.innerText = flag ? "关闭洗脑循环" : "洗脑循环"
-    })
     this.$iconWrap.addEventListener("click", () => {
-      if (this.player.video.loop) {
-        this.player.setLoop(false)
-      } else {
-        this.player.setLoop(true)
-      }
+      this.player.side.toggle("danmakulist")
     })
   }
 }

@@ -12,6 +12,7 @@ interface DanmakuEngineOptions {
   fontWeight?: string
   speed?: number
   opacity?: number
+  limitArea?: number
   classPrefix?: string
   /** 颜色限制 */
   colorFilter?: boolean
@@ -46,8 +47,8 @@ export default class DanmakuEngine {
   public limitArea: number
   /** 颜色屏蔽 */
   public colorFilter: boolean
-  /** 类型屏蔽 */
-  public typeFilter: Record<TrackType, boolean> = {
+  /** 轨道屏蔽 */
+  public trackFilter: Record<TrackType, boolean> = {
     roll: false,
     reverse: false,
     top: false,
@@ -216,7 +217,7 @@ export default class DanmakuEngine {
       // 若待添加弹幕时间小于当前时间，则持续添加弹幕直到下一条弹幕的时间不小于当前时间为止
       while (item && item.time < this.time) {
         if (
-          this.checkTypeFilter(item) &&
+          this.checkTrackFilter(item) &&
           this.checkColorFilter(item) &&
           this.checkUserFilter(item) &&
           this.checkContentFilter(item)
@@ -235,8 +236,8 @@ export default class DanmakuEngine {
   }
 
   /** 设置弹幕类型过滤 */
-  setTypeFilter(type: TrackType, value: boolean) {
-    this.typeFilter[type] = value
+  setTrackFilter(type: TrackType, value: boolean) {
+    this.trackFilter[type] = value
     if (value) {
       this.container
         .querySelectorAll<HTMLElement>(`.${this.classPrefix}-danmaku-${type}`)
@@ -247,8 +248,8 @@ export default class DanmakuEngine {
   }
 
   /** 检查弹幕类型过滤 */
-  checkTypeFilter(dm: DanmakuItem) {
-    return !this.typeFilter[DanmakuMode[dm.mode] as TrackType]
+  checkTrackFilter(dm: DanmakuItem) {
+    return !this.trackFilter[DanmakuMode[dm.mode] as TrackType]
   }
 
   /** 设置弹幕颜色过滤 */
@@ -649,5 +650,16 @@ export default class DanmakuEngine {
   /** 根据id获取弹幕 */
   getDanmakuById(id: string | number) {
     return this.danmakuPool.find((dm) => dm.id.toString() === id.toString())
+  }
+
+  /** 显示弹幕 */
+  show() {
+    this.hidden = false
+  }
+
+  /** 隐藏弹幕 */
+  hide() {
+    this.hidden = true
+    this.clear()
   }
 }

@@ -31,7 +31,7 @@ export default class DanmakuParser {
           user: item[3],
           content: item[4],
           size: 25,
-          timestamp: 0,
+          date: 0,
           id: randomId(),
         })),
       mfuns: (data: [number, number, number, string, string, number, number, number][]) =>
@@ -41,8 +41,8 @@ export default class DanmakuParser {
           color: item[2],
           user: item[3],
           content: item[4],
-          size: item[5] ?? 25,
-          timestamp: item[6] ?? 0,
+          size: item[5],
+          date: item[6] > 1 ? item[6] : 0,
           id: item[7],
         })),
       "bilibili-xml": (data: string) => {
@@ -71,7 +71,7 @@ export default class DanmakuParser {
             user: m[6],
             content: c,
             size: +m[2] ?? 25,
-            timestamp: +m[4] ?? 0,
+            date: +m[4] ?? 0,
             id: +m[7],
           }))
         }

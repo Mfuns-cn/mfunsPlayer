@@ -1,6 +1,20 @@
 @import "~@css/theme";
 
 .#{$prefix} {
+  &-footbar {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-white;
+    border-top: none;
+    box-sizing: border-box;
+    color: $text-black;
+  }
   // 无底栏模式
   &.mode-nofootbar {
     .#{$prefix}-main {

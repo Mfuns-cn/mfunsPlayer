@@ -3,16 +3,16 @@ import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
 
 const template = () => html`
-  <div class="${classPrefix}-controller-button ${classPrefix}-controller-loop">
+  <div class="${classPrefix}-controller-button ${classPrefix}-controller-danmaku-switch state-on">
     <div class="${classPrefix}-controller-icon-wrap">
-      <i class="${classPrefix}-controller-icon mp-icon-loop"></i>
-      <i class="${classPrefix}-controller-icon mp-icon-loop-off"></i>
+      <i class="${classPrefix}-controller-icon mp-icon-danmaku"></i>
+      <i class="${classPrefix}-controller-icon mp-icon-danmaku-off"></i>
     </div>
-    <div class="${classPrefix}-tooltip">洗脑循环</div>
+    <div class="${classPrefix}-tooltip">关闭弹幕</div>
   </div>
 `
 
-export default class ButtonLoop {
+export default class ButtonDanmakuSwitch {
   player: MfunsPlayer
   el: HTMLElement
   $iconWrap: HTMLElement
@@ -30,16 +30,16 @@ export default class ButtonLoop {
   }
 
   private init() {
-    this.player.on("loop_change", (flag) => {
-      this.el.classList.toggle("state-loop", flag)
-      this.$tooltip.innerText = flag ? "关闭洗脑循环" : "洗脑循环"
+    this.player.on("danmaku:off", () => {
+      this.el.classList.remove("state-on")
+      this.$tooltip.innerText = "开启弹幕"
+    })
+    this.player.on("danmaku:on", () => {
+      this.el.classList.add("state-on")
+      this.$tooltip.innerText = "关闭弹幕"
     })
     this.$iconWrap.addEventListener("click", () => {
-      if (this.player.video.loop) {
-        this.player.setLoop(false)
-      } else {
-        this.player.setLoop(true)
-      }
+      this.player.danmaku.toggle()
     })
   }
 }

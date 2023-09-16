@@ -42,6 +42,8 @@ interface PickerOptions {
   onChange?: (value: string | number | null) => void
   /** 选择某一项时触发 */
   onPick?: (value: string | number | null) => void
+  /** 相等条件 */
+  condition?: (item: string, value: string | number | null) => boolean
 }
 
 /** 单选选择器 */
@@ -61,15 +63,20 @@ export class Picker implements PickerOptions {
 
   el!: HTMLElement
 
+  /** 相等条件 */
+  condition?: (item: string, value: string | number | null) => boolean
+
   /** 选择项标签集合 */
   private $items!: NodeListOf<HTMLElement>
 
-  constructor({ container, value, onChange, onPick, list }: PickerOptions) {
+  constructor({ container, value, onChange, onPick, list, template, condition }: PickerOptions) {
     this.container = container
     this.list = list
     this.value = value ?? null
     this.onChange = onChange // 更新数据时需要执行的函数
     this.onPick = onPick // 更新数据时需要执行的函数
+    this.template = template
+    this.condition = condition
     this.reload()
   }
 
@@ -89,7 +96,11 @@ export class Picker implements PickerOptions {
   /** 设置值 */
   public setValue(value: string | number | null) {
     this.$items.forEach((n, i) => {
-      if (n.getAttribute("data-value") == value) {
+      if (
+        this.condition
+          ? this.condition(n.getAttribute("data-value")!, value)
+          : n.getAttribute("data-value") == value
+      ) {
         n.classList.add("state-picked")
       } else {
         n.classList.remove("state-picked")
