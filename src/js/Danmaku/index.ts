@@ -55,7 +55,7 @@ export default class Danmaku {
       classPrefix: classPrefix,
       /** 颜色限制 */
       colorFilter: false,
-      getTime: () => this.player.getTime(),
+      getTime: () => this.player.time,
     })
     this.player.on("play", () => {
       this.engine.play()
@@ -70,8 +70,9 @@ export default class Danmaku {
     this.player.on("seeked", () => {
       this.player.paused || this.engine.play()
     })
-    this.player.on("part_change", (p) => {
+    this.player.on("part", (p) => {
       const { danmakuId, danmakuAddition } = this.player.video.list[p - 1]
+      console.log(danmakuAddition)
       this.reload(danmakuId, danmakuAddition)
     })
   }
@@ -229,36 +230,36 @@ export default class Danmaku {
     this.player.events.trigger("danmaku:filter", type, flag)
   }
 
-  // 其他设置
+  // 弹幕播放属性设置
 
   /** 设置弹幕不透明度 */
   setOpacity(value: number, save?: boolean) {
     this.engine.opacity = value
-    this.player.events.trigger("setting:danmaku", "opacity", value, save)
+    this.player.events.trigger("change:danmaku_opacity", value)
   }
   /** 设置弹幕速度 */
   setSpeed(value: number, save?: boolean) {
     this.engine.speed = value
-    this.player.events.trigger("setting:danmaku", "speed", value, save)
+    this.player.events.trigger("change:danmaku_speed", value)
   }
   /** 设置弹幕区域 */
   setArea(value: number, save?: boolean) {
     this.engine.limitArea = value || Infinity
-    this.player.events.trigger("setting:danmaku", "area", value, save)
+    this.player.events.trigger("change:danmaku_area", value)
   }
   /** 设置弹幕大小 */
-  setSize(value: number, save?: boolean) {
+  setScale(value: number, save?: boolean) {
     this.engine.fontScale = value
-    this.player.events.trigger("setting:danmaku", "size", value, save)
+    this.player.events.trigger("change:danmaku_scale", value)
   }
   /** 设置弹幕字体 */
   setFont(value: string, save?: boolean) {
     this.engine.fontFamily = value
-    this.player.events.trigger("setting:danmaku", "font", value, save)
+    this.player.events.trigger("change:danmaku_font", value)
   }
   /** 设置弹幕加粗 */
   setBold(value: boolean, save?: boolean) {
     this.engine.fontWeight = value ? "bold" : ""
-    this.player.events.trigger("setting:danmaku", "bold", value, save)
+    this.player.events.trigger("change:danmaku_bold", value)
   }
 }

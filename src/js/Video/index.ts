@@ -1,4 +1,4 @@
-import { PlayerOptions, VideoPart, VideoSource } from "@/types"
+import { PlayerOptions, VideoInfo, VideoPart, VideoSource } from "@/types"
 import MfunsPlayer from "@/player"
 import VideoLoader from "./Loader"
 
@@ -13,6 +13,8 @@ export default class Video {
   list: VideoPart[]
   /** 当前视频分P */
   private currentPart: number
+  /** 当前视频质量 */
+  private quality = "1080P"
 
   ratio: [number, number] | null = null
 
@@ -22,25 +24,73 @@ export default class Video {
     this.loader = new VideoLoader(this)
     this.list = options.video.list
     this.currentPart = options.video.part || 1
-    this.setRatio(options.ratio || null)
+    this.setRatio(options.aspectRatio || null)
 
     this.initEvent()
     this.initKeepRatio()
   }
 
-  /** 加载分P */
+  /** 设置视频 */
+  async setVideo(video: VideoInfo, play = false) {
+    const p = video.part || 1
+    this.list = video.list
+    this.currentPart = p
+    // 选择合适的播放源
+    this.load(this.findSourceByQuality(this.partInfo.src, this.quality), play)
+    this.player.events.trigger("video")
+    this.player.events.trigger("part", p)
+    this.seek(0)
+  }
+
+  /** 设置分P */
   async setPart(p: number, play = false) {
     this.currentPart = p
-    const currentVideo = this.list[p - 1]
-    // 目前播放器仅支持单一来源播放，故只选取第一个播放源
-    this.loader.load(currentVideo.src[0])
-    this.player.events.trigger("part_change", p)
+    // 选择合适的播放源
+    this.load(this.findSourceByQuality(this.partInfo.src, this.quality), play)
+    this.player.events.trigger("part", p)
     this.seek(0)
-    if (play) {
-      this.play()
-    } else {
-      this.player.template.el.classList.add("state-paused")
+  }
+
+  /** 切换视频质量 */
+  async setQuality(quality: string) {
+    const currentVideoSource = this.partInfo.src
+    let source = currentVideoSource.find((src) => src.quality == quality)
+    if (!source) source = this.findSourceByQuality(currentVideoSource, quality)
+    this.load(source, !this.paused, this.duration)
+  }
+
+  /** 加载视频 */
+  load(src: VideoSource, play?: boolean, time?: number) {
+    this.loader.load(src)
+    const onloadedmetadata = () => {
+      this.player.events.trigger("video:load_end")
+      if (time) {
+        this.seek(time)
+      }
+      if (play) {
+        this.play()
+      } else {
+        this.player.template.el.classList.add("state-paused")
+      }
+      this.el.removeEventListener("loadedmetadata", onloadedmetadata)
     }
+    this.el.addEventListener("loadedmetadata", onloadedmetadata)
+  }
+
+  /** 根据视频质量选择合适的视频源
+   * 返回小于等于该质量的视频源中最大的一个
+   */
+  private findSourceByQuality(sourceList: VideoSource[], quality: string) {
+    // 视频质量从高到低排序
+    const sortedSources: VideoSource[] = [...sourceList].sort(
+      (a, b) => parseInt(b.quality || "") - parseInt(a.quality || "")
+    )
+    // 从前向后找，找到小于等于该分辨率的即可
+    let source = sortedSources.find((src) => parseInt(src.quality || "") <= parseInt(quality))
+    if (!source) {
+      source = sortedSources[sortedSources.length - 1]
+    }
+    return source
   }
 
   /** 视频分P */
@@ -48,15 +98,10 @@ export default class Video {
     return this.currentPart
   }
 
-  /** 播放 */
-  public play() {
-    this.el.play()
+  get partInfo() {
+    return this.list[this.currentPart - 1]
   }
 
-  /** 暂停 */
-  public pause() {
-    this.el.pause()
-  }
   /** 上一P */
   public prev() {
     if (this.currentPart > 1) this.setPart(this.currentPart - 1, true)
@@ -67,10 +112,24 @@ export default class Video {
     this.play()
   }
 
+  // 同步视频方法
+
+  /** 播放 */
+  public play() {
+    this.el.play()
+  }
+
+  /** 暂停 */
+  public pause() {
+    this.el.pause()
+  }
+
   /** 跳转 */
   public seek(value: number) {
     this.el.currentTime = value > 0 ? (value < this.el.duration ? value : this.el.duration) : 0
   }
+
+  // 同步设置视频属性
 
   /** 设置音量 */
   public setVolume(value: number) {
@@ -78,14 +137,16 @@ export default class Video {
   }
 
   /** 设置倍速 */
-  public setRate(value: number) {
+  public setPlaybackRate(value: number) {
     this.el.playbackRate = value
   }
+
+  // 视频播放属性
 
   /** 设置循环播放 */
   public setLoop(flag: boolean) {
     this.el.loop = flag
-    this.player.events.trigger("loop_change", flag)
+    this.player.events.trigger("change:loop", flag)
   }
 
   /** 设置视频比例 */
@@ -107,7 +168,7 @@ export default class Video {
       this.el.style.aspectRatio = ""
       this.el.style.objectFit = ""
     }
-    this.player.events.trigger("ratio_change", value)
+    this.player.events.trigger("change:aspectRatio", value)
   }
 
   /** 静音 */
@@ -119,7 +180,7 @@ export default class Video {
     return this.el.muted
   }
 
-  get rate(): number {
+  get playbackRate(): number {
     return this.el.playbackRate
   }
 
@@ -137,10 +198,6 @@ export default class Video {
 
   get duration(): number {
     return this.el.duration
-  }
-
-  get buffered(): TimeRanges {
-    return this.el.buffered
   }
 
   get currentTime(): number {
@@ -174,6 +231,17 @@ export default class Video {
       this.player.events.trigger("pause")
       this.player.template.el.classList.add("state-paused")
     })
+    this.on("ended", () => {
+      this.player.events.trigger("ended")
+    })
+    this.on("waiting", () => {
+      this.player.events.trigger("waiting")
+      this.player.template.el.classList.add("state-loading")
+    })
+    this.on("playing", () => {
+      this.player.events.trigger("playing")
+      this.player.template.el.classList.remove("state-loading")
+    })
     this.on("seeking", () => {
       this.player.events.trigger("seeking", this.currentTime)
       this.player.template.el.classList.add("state-seeking")
@@ -182,11 +250,24 @@ export default class Video {
       this.player.events.trigger("seeked", this.currentTime)
       this.player.template.el.classList.remove("state-seeking")
     })
+    this.on("timeupdate", () => {
+      this.player.events.trigger("timeupdate", this.currentTime)
+    })
+    this.on("progress", () => {
+      const buffered = this.el.buffered
+      this.player.events.trigger(
+        "progress",
+        buffered.length ? buffered.end(buffered.length - 1) : 0
+      )
+    })
+    this.on("durationchange", () => {
+      this.player.events.trigger("durationchange", this.duration)
+    })
     this.on("volumechange", () => {
-      this.player.events.trigger("volume_change", this.volume)
+      this.player.events.trigger("volumechange", this.volume, this.muted)
     })
     this.on("ratechange", () => {
-      this.player.events.trigger("rate_change", this.rate)
+      this.player.events.trigger("ratechange", this.playbackRate)
     })
   }
   /** 保持视频比例 */

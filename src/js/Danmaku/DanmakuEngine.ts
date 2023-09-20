@@ -151,6 +151,7 @@ export default class DanmakuEngine {
 
   /** 重置弹幕池 */
   reset() {
+    this.clear()
     this.danmakuPool = []
     this.currentIndex = 0
   }

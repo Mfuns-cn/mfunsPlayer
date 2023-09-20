@@ -5,7 +5,7 @@ export class VirtualList<T> {
   el: HTMLElement
   $content: HTMLElement
   /** 列表数据 */
-  data: T[]
+  data: T[] = []
   /** 拉取列表数据 () => Object */
   getData: () => T[]
   /** 列表项高度 */
@@ -41,7 +41,6 @@ export class VirtualList<T> {
     overflow?: number
   }) {
     this.el = el
-    this.data = []
     this.getData = getData
     this.itemHeight = itemHeight
     this.createItem = createItem
@@ -171,6 +170,7 @@ export class VirtualList<T> {
   }
   // 清空列表
   clear() {
+    this.data = []
     this.$content.innerHTML = ""
     this.$content.style.paddingTop = "0px"
     this.$content.style.paddingBottom = "0px"

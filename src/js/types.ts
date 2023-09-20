@@ -1,4 +1,20 @@
 import { DanmakuMode } from "@/enum"
+import MfunsPlayer from "@/player"
+
+/** 插件上下文 */
+type PluginContext = any
+
+/** 播放器插件 */
+export type PlayerPlugin = () => {
+  /** 插件id */
+  readonly id: string
+  /** 插件创建 */
+  readonly create?: (player: MfunsPlayer, options: PlayerOptions) => PluginContext
+  /** 插件初始化 */
+  readonly init?: (player: MfunsPlayer, options: PlayerOptions) => void
+  /** 插件销毁 */
+  readonly destroy?: (player: MfunsPlayer) => void
+}
 
 /** 播放器初始化选项 */
 export interface PlayerOptions {
@@ -12,13 +28,15 @@ export interface PlayerOptions {
   /** 音量 */
   volume?: number
   /** 播放速率 */
-  rate?: number
+  playbackRate?: number
   /** 视频比例 */
-  ratio?: [number, number]
+  aspectRatio?: [number, number]
   /** 自动播放 */
   autoPlay?: boolean
   /** 循环播放 */
   loop?: boolean
+  /** 使用插件 */
+  plugins: PlayerPlugin[]
   /** 弹幕设置 */
   danmaku?: {
     /** 弹幕api */
@@ -32,7 +50,7 @@ export interface PlayerOptions {
     /** 弹幕显示区域 */
     area?: number
     /** 弹幕大小 */
-    size?: number
+    scale?: number
     /** 弹幕字体 */
     font?: string
     /** 字体加粗 */
@@ -159,6 +177,8 @@ export interface VideoInfo {
 export interface VideoSource {
   url: string
   type: string
+  name?: string
+  quality?: string
 }
 
 /** 视频分P */

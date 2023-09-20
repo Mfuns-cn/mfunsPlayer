@@ -142,7 +142,7 @@ export default class ButtonDanmakuSettings {
       step: 1,
       value: 100,
       onDrag: (value) => {
-        this.player.danmaku.setSize(value / 100)
+        this.player.danmaku.setScale(value / 100)
       },
       onChange: (value) => {
         this.$sizeValue.innerText = `${value}%`

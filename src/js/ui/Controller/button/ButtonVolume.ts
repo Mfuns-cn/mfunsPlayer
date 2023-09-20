@@ -50,7 +50,7 @@ export default class ButtonVolume {
         this.$text.innerText = value.toString()
       },
       onDrag: (value) => {
-        this.player.volume(value / 100)
+        this.player.setVolume(value / 100)
       },
       onDragStart: (value) => {
         if (this.player.video.el.muted && value != 0) {
@@ -64,8 +64,8 @@ export default class ButtonVolume {
         this.player.controller.setControl(false)
       },
     })
-    this.player.on("volume_change", (value: number) => {
-      if (this.player.video.muted) {
+    this.player.on("volumechange", (value: number, muted: boolean) => {
+      if (muted) {
         this.el.classList.add("state-muted")
         this.slider.setValue(0)
       } else {

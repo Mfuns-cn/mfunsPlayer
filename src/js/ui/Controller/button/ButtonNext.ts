@@ -29,7 +29,7 @@ export default class ButtonNext {
   }
 
   private init() {
-    this.player.on("part_change", (p) => {
+    this.player.on("part", (p) => {
       if (p < this.player.video.list.length) {
         this.el.classList.remove("state-lastpart")
       } else {

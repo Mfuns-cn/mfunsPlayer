@@ -77,10 +77,10 @@ export default class ButtonSettings {
       ],
       value: 1,
       onPick: (value) => {
-        this.player.setRate(Number(value))
+        this.player.setPlaybackRate(Number(value))
       },
     })
-    this.player.on("rate_change", (rate: number) => {
+    this.player.on("ratechange", (rate: number) => {
       this.pickerRate.setValue(rate)
     })
 
@@ -94,7 +94,7 @@ export default class ButtonSettings {
         )
       },
     })
-    this.player.on("ratio_change", (ratio) => {
+    this.player.on("change:aspectRatio", (ratio) => {
       this.pickerRate.setValue(ratio ? ratio.join(":") : "")
     })
 

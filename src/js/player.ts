@@ -1,3 +1,4 @@
+import { PluginManager } from "./plugin/PluginManager"
 import Controller from "@/ui/Controller"
 import Events from "@/Events"
 import Template from "@/ui/Template"
@@ -22,6 +23,10 @@ export default class MfunsPlayer {
   video: Video
   /** 播放列表模块 */
   playlist: any
+  /** 插件 */
+  plugin: Record<string, any> = {}
+  /** 插件管理 */
+  pluginManager: PluginManager
   /** 事件模块 */
   events: Events
   /** 弹幕模块 */
@@ -54,11 +59,20 @@ export default class MfunsPlayer {
     this.container = options.container
     // 注入模板
     this.template = new Template(this, options)
+
+    // 视频核心功能
+    this.video = new Video(this, options)
+
+    // 插件管理
+    this.pluginManager = new PluginManager(this, options.plugins)
+
+    // 插件执行created函数(搭建界面、实现基本功能)
+    this.pluginManager.pluginCreate(options)
+
     // 初始化主题样式模块
     this.theme = new Theme(this, options)
 
-    // 初始化功能
-    this.video = new Video(this, options)
+    // 模式
     this.mode = new Mode(this, options)
     this.state = new State(this, options)
     this.danmaku = new Danmaku(this, options)
@@ -71,13 +85,18 @@ export default class MfunsPlayer {
 
     this.hotKey = new HotKey(this, options)
 
-    this.init()
+    // 插件执行init函数(配置初始化)
+    this.pluginManager.pluginInit(options)
 
+    // 播放器初始化完毕，加载第1P
     this.setPart(1)
+
+    // --- 测试 --- //
+
+    this.on("part", (p) => {
+      console.log(`当前分P - ${p}`)
+    })
   }
-
-  init() {}
-
   /** 播放相关 */
 
   /** 播放 */
@@ -119,13 +138,8 @@ export default class MfunsPlayer {
   }
 
   /** 设置音量 */
-  public volume(value: number) {
+  public setVolume(value: number) {
     this.video.setVolume(value)
-  }
-
-  /** 设置倍速 */
-  public setRate(value: number) {
-    this.video.setRate(value)
   }
 
   /** 静音 */
@@ -133,9 +147,9 @@ export default class MfunsPlayer {
     this.video.mute(flag)
   }
 
-  /** 设置循环播放 */
-  public setLoop(flag = true) {
-    this.video.setLoop(flag)
+  /** 设置倍速 */
+  public setPlaybackRate(value: number) {
+    this.video.setPlaybackRate(value)
   }
 
   /** 跳转分P */
@@ -143,9 +157,24 @@ export default class MfunsPlayer {
     this.video.setPart(p, play)
   }
 
-  /** 获取播放器当前时间(s) */
-  public getTime() {
-    return this.video.el.currentTime
+  /** 当前播放时间 */
+  public get time() {
+    return this.video.currentTime
+  }
+
+  /** 音量 */
+  public get volume() {
+    return this.video.volume
+  }
+
+  /** 静音 */
+  public get muted() {
+    return this.video.muted
+  }
+
+  /** 当前播放速度 */
+  public get playbackRate() {
+    return this.video.playbackRate
   }
 
   /** 尺寸模式相关 */
@@ -221,5 +250,7 @@ export default class MfunsPlayer {
   }
 
   /** 播放器销毁 */
-  public destory() {}
+  public destroy() {
+    // 所有插件执行destroy函数
+  }
 }

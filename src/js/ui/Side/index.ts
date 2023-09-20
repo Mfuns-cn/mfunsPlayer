@@ -3,7 +3,6 @@ import { classPrefix } from "@/const"
 import MfunsPlayer from "@/player"
 import { PlayerOptions } from "@/types"
 import SidePartList from "./SidePartList"
-import SideDanmakuList from "./SideDanmakuList"
 
 const template = () => html`
   <div class="${classPrefix}-side-mask"></div>
@@ -58,7 +57,6 @@ export default class Side {
 
     // --- 预装功能 --- //
     this.add("partlist", new SidePartList(this.player))
-    this.add("danmakulist", new SideDanmakuList(this.player))
   }
 
   /** 显示特定侧边面板 */

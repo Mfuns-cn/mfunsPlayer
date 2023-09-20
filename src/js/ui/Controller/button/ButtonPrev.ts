@@ -29,7 +29,7 @@ export default class ButtonPrev {
   }
 
   private init() {
-    this.player.on("part_change", (p) => {
+    this.player.on("part", (p) => {
       if (p > 1) {
         this.el.classList.remove("state-firstpart")
       } else {

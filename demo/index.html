@@ -12,8 +12,8 @@
     <title>Mfuns Player v3测试 - 番剧</title>
 </head>
 <script src="../static/echarts.js"></script>
-<script src="../dist/mfuns-player.min.umd.js"></script>
-
+<script src="../dist/mfuns-player.umd.js"></script>
+<script src="../dist/danmaku-list.umd.js"></script>
 
 <body>
 
@@ -374,7 +374,8 @@
             feature: {
                 solid: true,
                 webfull: true,
-            }
+            },
+            plugins: [danmakuList]
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",
             //   editor: 1,
@@ -428,13 +429,9 @@
         mfPlayer.on("part_change", (p) => {
             console.log("part_change", p)
         })
-        mfPlayer.side.mountPanel("danmakulist", document.querySelector(".extra"))
-/*         mfPlayer.on("fullscreen", () => {
-            mfPlayer.side.mountPanel("danmakulist")
-        })
-        mfPlayer.on("fullscreen_exit", () => {
-            mfPlayer.side.mountPanel("danmakulist", document.querySelector(".extra"))
-        }) */
+        
+        playerExtra.appendChild(mfPlayer.plugin.danmakuList.el)
+
         mfPlayer.on("resize", ([width, height])=>{
             console.log(`${width}-${height}`)
         })

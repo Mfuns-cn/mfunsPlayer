@@ -30,15 +30,15 @@ export default class ButtonLoop {
   }
 
   private init() {
-    this.player.on("loop_change", (flag) => {
+    this.player.on("change:loop", (flag) => {
       this.el.classList.toggle("state-loop", flag)
       this.$tooltip.innerText = flag ? "关闭洗脑循环" : "洗脑循环"
     })
     this.$iconWrap.addEventListener("click", () => {
       if (this.player.video.loop) {
-        this.player.setLoop(false)
+        this.player.video.setLoop(false)
       } else {
-        this.player.setLoop(true)
+        this.player.video.setLoop(true)
       }
     })
   }

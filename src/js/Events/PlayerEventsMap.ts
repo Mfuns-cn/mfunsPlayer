@@ -1,34 +1,64 @@
 import { DanmakuItem } from "./../types"
-export interface PlayerEventsMap {
-  // 视频播放
 
+export interface PlayerEventsMap {
+  // --- 视频事件 --- //
+
+  // 同步视频事件
   /** 播放 */
   play: () => void
   /** 暂停 */
   pause: () => void
+  /** 播放结束 */
+  ended: () => void
+  /** 等待状态 */
+  waiting: () => void
+  /** 播放状态 */
+  playing: () => void
   /** 进度开始跳转 */
   seeking: (time: number) => void
   /** 进度跳转成功 */
   seeked: (time: number) => void
   /** 播放时间更新 */
-  time_update: (time: number) => void
+  timeupdate: (time: number) => void
+  /** 获取缓存 */
+  progress: (time: number) => void
+  /** 视频时长改变 */
+  durationchange: (time: number) => void
+
   /** 音量改变 */
-  volume_change: (volume: number) => void
+  volumechange: (volume: number, muted: boolean) => void
   /** 播放速率改变 */
-  rate_change: (rate: number) => void
+  ratechange: (rate: number) => void
+
+  // 视频播放属性
   /** 循环状态改变 */
-  loop_change: (flag: boolean) => void
+  "change:loop": (flag: boolean) => void
   /** 视频比例改变 */
-  ratio_change: (ratio: [number, number] | null) => void
+  "change:aspectRatio": (ratio: [number, number] | null) => void
+  /** 自动播放状态改变 */
+  "change:autoPlay": (ratio: [number, number] | null) => void
 
-  // 播放模式
+  // --- 播放模式 --- //
 
-  /** 视频源改变 */
-  source_change: () => void
-  /** 视频分P改变 */
-  part_change: (part: number) => void
-  /** 视频改变 */
-  video_change: () => void
+  // 视频播放内容更改
+  /** 视频更改 */
+  video: () => void
+  /** 视频分P更改 */
+  part: (part: number) => void
+  /** 视频源更改 */
+  source: () => void
+
+  /** 开始更改分辨率 */
+  "change:quality_start": (quality: string) => void
+  /** 完成分辨率更改 */
+  "change:quality_end": (quality: string) => void
+
+  /** 视频开始加载 */
+  "video:load_start": () => void
+  /** 视频加载完毕 */
+  "video:load_end": () => void
+
+  // 播放器模式事件
   /** 全屏模式 */
   fullscreen: () => void
   /** 退出全屏模式 */
@@ -46,8 +76,9 @@ export interface PlayerEventsMap {
   /** 退出网页全屏模式 */
   webfull_exit: () => void
 
-  // 弹幕事件
+  // --- 弹幕事件 --- //
 
+  // 弹幕加载
   /** 弹幕开始加载 */
   "danmaku:load_start": () => void
   /** 弹幕加载完毕 */
@@ -68,10 +99,16 @@ export interface PlayerEventsMap {
   "danmaku:load_new_fail": (offset: number | string, err: any) => void
   /** 获取到高级弹幕 */
   "danmaku:advanced": (mode: number, dan: DanmakuItem[]) => void
+
+  // 弹幕播放操作
   /** 开启弹幕 */
   "danmaku:on": () => void
   /** 关闭弹幕 */
   "danmaku:off": () => void
+  /** 弹幕类型屏蔽 */
+  "danmaku:filter": (type: string, flag: boolean) => void
+
+  // 弹幕操作
   /** 发送弹幕 */
   "danmaku:send": () => void
   /** 发送弹幕成功 */
@@ -84,15 +121,26 @@ export interface PlayerEventsMap {
   "danmaku:remove": () => void
   /** 选中指定弹幕 */
   "danmaku:select": () => void
-
-  /** 弹幕类型屏蔽 */
-  "danmaku:filter": (type: string, flag: boolean) => void
   /** 屏蔽用户弹幕 */
   "danmaku:block_user": (user: number | string, flag: boolean) => void
   /** 屏蔽弹幕内容 */
   "danmaku:block_content": (content: string, flag: boolean) => void
 
-  // 界面事件
+  // 弹幕播放属性
+  /** 弹幕不透明度更改 */
+  "change:danmaku_opacity": (value: number) => void
+  /** 弹幕速度更改 */
+  "change:danmaku_speed": (value: number) => void
+  /** 弹幕区域更改 */
+  "change:danmaku_area": (value: number) => void
+  /** 弹幕大小更改 */
+  "change:danmaku_scale": (value: number) => void
+  /** 弹幕字体更改 */
+  "change:danmaku_font": (value: string) => void
+  /** 弹幕粗体更改 */
+  "change:danmaku_bold": (value: boolean) => void
+
+  // --- 界面事件 --- //
 
   /** 显示模态框面板 */
   "modal:show": (id: string) => void
@@ -120,16 +168,10 @@ export interface PlayerEventsMap {
 
   // 其他事件
 
-  /** 播放器设置项更改 */
-  "setting:player": <T extends keyof PlayerSettingsMap>(
+  /** 用户操作设置项更改 */
+  setting: <T extends keyof PlayerSettingsMap>(
     key: T,
     value: PlayerSettingsMap[T],
-    save?: boolean
-  ) => void
-  /** 弹幕设置项更改 */
-  "setting:danmaku": <T extends keyof DanmakuSettingsMap>(
-    key: T,
-    value: DanmakuSettingsMap[T],
     save?: boolean
   ) => void
 }
@@ -155,7 +197,7 @@ interface DanmakuSettingsMap {
   /** 弹幕显示区域 */
   area: number
   /** 弹幕大小 */
-  size: number
+  scale: number
   /** 弹幕字体 */
   font: string
   /** 字体加粗 */

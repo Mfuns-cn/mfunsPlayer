@@ -1,24 +1,23 @@
 import { secondToTime } from "@/utils"
-import { dateFormat } from "./../../utils/index"
-import { DanmakuItem } from "./../../types"
+import { dateFormat } from "@/utils/index"
+import { DanmakuItem, PlayerPlugin } from "@/types"
 import MfunsPlayer from "@/player"
-import { classPrefix, developers, repositoryLink } from "@/const"
+import { classPrefix } from "@/const"
 import { html, render } from "lit-html"
-import { VideoPart } from "@/types"
 import { VirtualList } from "./VirtualList"
 
 const template = (sort: { time: () => void; content: () => void; date: () => void }) => html`
-  <div class="${classPrefix}-side-panel ${classPrefix}-danmakulist">
-    <div class="${classPrefix}-danmakulist-main">
-      <div class="${classPrefix}-danmakulist-head">
+  <div class="${classPrefix}-side-panel ${classPrefix}-danmaku-list">
+    <div class="${classPrefix}-danmaku-list-main">
+      <div class="${classPrefix}-danmaku-list-head">
         <div class="list-column col-time" @click=${sort.time}>时间</div>
         <div class="list-column col-content" @click=${sort.content}>弹幕内容</div>
         <div class="list-column col-date" @click=${sort.date}>发送时间</div>
       </div>
-      <div class="${classPrefix}-danmakulist-container">
-        <div class="${classPrefix}-danmakulist-list"></div>
+      <div class="${classPrefix}-danmaku-list-container">
+        <div class="${classPrefix}-danmaku-list-list"></div>
       </div>
-      <div class="${classPrefix}-danmakulist-status">
+      <div class="${classPrefix}-danmaku-list-status">
         <div class="status-loading-text">弹幕列表装填中……</div>
         <div class="status-failed-text">弹幕加载失败 X_X</div>
         <div class="status-empty-text">还没有弹幕哦，快来发弹幕^_^</div>
@@ -31,7 +30,7 @@ const template = (sort: { time: () => void; content: () => void; date: () => voi
 const getDanmakuListItem = (
   danmaku: DanmakuItem,
   index: number,
-  operation: { name: string; onClick: (dm: DanmakuItem) => void } | null[]
+  operation: (dm: DanmakuItem) => [string, (dm: DanmakuItem) => void, unknown][]
 ) => {
   const t = html`
     <div class="list-row" data-index="${index}" data-mode="${danmaku.mode}">
@@ -40,7 +39,20 @@ const getDanmakuListItem = (
       <div class="list-cell col-date">
         ${danmaku.date ? dateFormat(new Date(danmaku.date * 1000), "yy-MM-dd HH:mm") : "-"}
       </div>
-      <div class="list-operation"></div>
+      ${operation.length
+        ? html` <div class="list-operate">
+            ${operation(danmaku).map(
+              ([label, onClick]) => html`<div
+                class="list-operate-btn"
+                @click=${() => {
+                  onClick(danmaku)
+                }}
+              >
+                ${label}
+              </div>`
+            )}
+          </div>`
+        : ""}
     </div>
   `
   const fragment = new DocumentFragment()
@@ -48,15 +60,14 @@ const getDanmakuListItem = (
   return fragment.firstElementChild! as HTMLElement
 }
 
-export default class SideDanmakuList {
+export default class DanmakuList {
   player: MfunsPlayer
-  title = "弹幕列表"
   el: HTMLElement
   data: DanmakuItem[] = []
   sortedBy: keyof DanmakuItem = "time"
   sortOrder = 1 | -1
 
-  list: VirtualList<DanmakuItem>
+  list!: VirtualList<DanmakuItem>
   /** 是否随播放自动滚动 */
   autoScroll = true
   /** 是否挂载到播放器外部 */
@@ -72,9 +83,9 @@ export default class SideDanmakuList {
     this.player = player
     const fragment = new DocumentFragment()
     render(template({ time: () => {}, content: () => {}, date: () => {} }), fragment)
-    this.el = fragment.querySelector(`.${classPrefix}-side-panel`)!
-    this.$container = fragment.querySelector(`.${classPrefix}-danmakulist-container`)!
-    this.$status = fragment.querySelector(`.${classPrefix}-danmakulist-status`)!
+    this.el = fragment.querySelector(`.${classPrefix}-danmaku-list`)!
+    this.$container = fragment.querySelector(`.${classPrefix}-danmaku-list-container`)!
+    this.$status = fragment.querySelector(`.${classPrefix}-danmaku-list-status`)!
     this.$colTime = fragment.querySelector(".col-time")!
     this.$colDate = fragment.querySelector(".col-date")!
     this.$colContent = fragment.querySelector(".col-content")!
@@ -95,14 +106,43 @@ export default class SideDanmakuList {
         this.sort("date", 1)
       }
     }
-
+  }
+  init() {
+    const api = this.player.danmaku.api
+    const operate = this.player.danmaku.operate
     this.list = new VirtualList({
       el: this.$container,
       getData: () => {
         return this.data
       },
       itemHeight: 24,
-      createItem: (danmaku, i) => getDanmakuListItem(danmaku, i, []),
+      createItem: (danmaku, i) =>
+        getDanmakuListItem(danmaku, i, (dm) => {
+          const myDanmaku = dm.user == this.player.userId
+          return [
+            [
+              "举报",
+              (dm: DanmakuItem) => {
+                operate.report(dm)
+              },
+              !myDanmaku && api?.report,
+            ],
+            [
+              "屏蔽",
+              (dm: DanmakuItem) => {
+                operate.blockUser(dm.user, true)
+              },
+              !myDanmaku && api?.blockUser,
+            ],
+            [
+              "撤回",
+              (dm: DanmakuItem) => {
+                operate.recall(dm)
+              },
+              myDanmaku && api?.recall,
+            ],
+          ].filter((v) => v[2]) as [string, (dm: DanmakuItem) => void, unknown][]
+        }),
       overflow: 5,
     })
 
@@ -114,15 +154,19 @@ export default class SideDanmakuList {
     })
     this.setAutoScroll(this.autoScroll)
 
+    // 切换到新分P时，清空上一P弹幕
+    this.player.on("part", () => {
+      this.clear()
+    })
     this.player.on("danmaku:load_end", (dan) => {
       this.fill(dan)
     })
     this.player.on("danmaku:load_addition_end", (url, dan) => {
       this.fill(dan)
     })
-    this.player.video.on("timeupdate", () => {
+    this.player.on("timeupdate", (time) => {
       if (this.autoScroll) {
-        this.locateByTime(this.player.video.currentTime)
+        this.locateByTime(time)
       }
     })
   }
@@ -164,12 +208,13 @@ export default class SideDanmakuList {
   reload() {
     this.sort(this.sortedBy, this.sortOrder)
     if (this.autoScroll) {
-      this.locateByTime(this.player.video.currentTime)
+      this.locateByTime(this.player.time)
     }
   }
   clear() {
     // 清空弹幕列表
     this.list.clear()
+    this.data = []
     this.setStatus("loading")
   }
   setStatus(status = "") {
@@ -194,7 +239,7 @@ export default class SideDanmakuList {
     this.autoScroll = flag
     if (flag) {
       this.sort("time")
-      this.locateByTime(this.player.video.currentTime)
+      this.locateByTime(this.player.time)
     }
   }
 }

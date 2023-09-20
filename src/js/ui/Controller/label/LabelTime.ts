@@ -38,15 +38,15 @@ export default class LabelTime {
   }
 
   init() {
-    this.player.video.on("timeupdate", () => {
-      this.$current.innerText = secondToTime(this.player.video.currentTime)
+    this.player.on("timeupdate", (time) => {
+      this.$current.innerText = secondToTime(time)
     })
-    this.player.video.on("durationchange", () => {
-      this.$total.innerText = secondToTime(this.player.video.duration)
+    this.player.on("durationchange", (time) => {
+      this.$total.innerText = secondToTime(time)
     })
     this.$label.addEventListener("click", () => {
       this.el.classList.add("state-input")
-      this.$input.value = secondToTime(this.player.video.currentTime)
+      this.$input.value = secondToTime(this.player.time)
       this.valueBeforeEdited = this.$input.value
       this.$input.focus()
     })

@@ -1,4 +1,4 @@
-@import "~@css/theme";
+@import "@css/theme";
 
 .#{$prefix} {
   &-hotkey {
@@ -26,7 +26,7 @@
     &-logo {
       width: 360px;
       height: 60px;
-      background-image: url("~@icon/logo.svg");
+      background-image: url("@icon/logo.svg");
       background-size: cover;
     }
     a {
@@ -63,7 +63,7 @@
       }
     }
   }
-  &-danmakulist {
+  &-danmaku-list {
     font-size: 12px;
     .list-row {
       position: relative;
@@ -81,8 +81,8 @@
     &-container .list-row {
       &:hover {
         background-color: rgba($light-grey, 0.2);
-        .list-operations {
-          display: block;
+        .list-operate {
+          display: flex;
         }
         .col-date {
           visibility: hidden;
@@ -110,18 +110,23 @@
         white-space: overflow;
       }
     }
-    .list-operation {
+    .list-operate {
       position: absolute;
       right: 0;
       top: 0;
-      padding-right: 8px;
       width: 100px;
       height: 100%;
       display: none;
-      text-align: right;
-      .list-action {
+      justify-content: flex-end;
+      align-items: center;
+      .list-operate-btn {
         cursor: pointer;
+        line-height: 20px;
         margin-left: 4px;
+        padding: 0 8px;
+        border: 1px solid $primary-color;
+        border-radius: $border-radius;
+        color: $primary-color;
       }
     }
     &-main {

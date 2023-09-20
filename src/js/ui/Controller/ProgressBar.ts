@@ -152,14 +152,13 @@ export default class ProgressBar {
     })
 
     // 视频播放时间更新
-    this.video.on("timeupdate", (e) => {
-      if (!this.isDragging) this.setBarPlayed(this.video.currentTime)
+    this.player.on("timeupdate", (time) => {
+      if (!this.isDragging) this.setBarPlayed(time)
     })
 
     // 视频缓存更新
-    this.video.on("progress", (e) => {
-      const { buffered } = this.video
-      this.setBarBuffered(buffered.length ? buffered.end(buffered.length - 1) : 0)
+    this.player.on("progress", (time) => {
+      this.setBarBuffered(time)
     })
   }
 

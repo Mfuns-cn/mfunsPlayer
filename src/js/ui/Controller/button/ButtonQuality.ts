@@ -1,22 +1,34 @@
+import { VideoSource } from "@/types"
 import { html, render } from "lit-html"
+import { SliderVertical } from "@/ui/components"
 import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
 
 const template = () => html`
-  <div class="${classPrefix}-controller-button ${classPrefix}-controller-part">
+  <div class="${classPrefix}-controller-button ${classPrefix}-controller-volume">
     <div class="${classPrefix}-controller-icon-wrap">
-      <div class="${classPrefix}-controller-texticon">P0</div>
+      <div class="${classPrefix}-controller-texticon">自动</div>
     </div>
-    <div class="${classPrefix}-tooltip">分P列表</div>
+
+    <div class="${classPrefix}-controller-panel-wrap">
+      <div class="${classPrefix}-controller-panel"></div>
+    </div>
   </div>
 `
 
-export default class ButtonPart {
+const templateList = (source: VideoSource[], onClick: (source: VideoSource) => void) => html`
+  <ul>
+    <li></li>
+  </ul>
+`
+
+export default class ButtonQuality {
   player: MfunsPlayer
   el: HTMLElement
   $iconWrap: HTMLElement
-  $tooltip: HTMLElement
   $texticon: HTMLElement
+  $panel: HTMLElement
+  slider!: SliderVertical
 
   constructor(player: MfunsPlayer, container: HTMLElement) {
     this.player = player
@@ -24,21 +36,15 @@ export default class ButtonPart {
     render(template(), fragment)
     this.el = fragment.querySelector(`.${classPrefix}-controller-button`)!
     this.$iconWrap = fragment.querySelector(`.${classPrefix}-controller-icon-wrap`)!
-    this.$tooltip = fragment.querySelector(`.${classPrefix}-tooltip`)!
     this.$texticon = fragment.querySelector(`.${classPrefix}-controller-texticon`)!
+    this.$panel = fragment.querySelector(`.${classPrefix}-controller-panel`)!
     this.init()
     container.appendChild(fragment)
   }
 
   private init() {
-    if (this.player.video.list.length < 2) {
-      this.el.classList.add("state-singlepart")
-    }
-    this.$iconWrap.addEventListener("click", () => {
-      this.player.side.toggle("partlist")
-    })
-    this.player.on("part", (p) => {
-      this.$texticon.innerText = `P${p}`
+    this.player.on("change:quality_start", (quality: string) => {
+      this
     })
   }
 }

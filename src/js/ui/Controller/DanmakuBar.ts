@@ -125,7 +125,7 @@ export default class DanmakuBar {
   }
   generateDanmaku(): DanmakuSendItem {
     return {
-      time: this.player.getTime(),
+      time: this.player.time,
       content: this.$input.value,
       mode: this.danmakuMode,
       color: this.danmakuColor,

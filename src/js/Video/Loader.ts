@@ -12,7 +12,7 @@ declare global {
 }
 
 interface CurrentSource extends VideoSource {
-  destory: () => void
+  destroy: () => void
 }
 
 export default class VideoLoader {
@@ -24,7 +24,7 @@ export default class VideoLoader {
   }
   /** 加载视频源 */
   public load(src: VideoSource) {
-    this.destoryCurrent()
+    this.destroyCurrent()
     switch (src.type) {
       case "flv":
         this.loadFlv(src)
@@ -45,7 +45,7 @@ export default class VideoLoader {
     this.video.el.src = src.url
     this.current = {
       ...src,
-      destory: () => {
+      destroy: () => {
         this.video.el.src = ""
       },
     }
@@ -62,7 +62,7 @@ export default class VideoLoader {
       flvPlayer.load()
       this.current = {
         ...src,
-        destory: () => {
+        destroy: () => {
           flvPlayer.destroy()
         },
       }
@@ -78,7 +78,7 @@ export default class VideoLoader {
       hls.loadSource(src.url)
       this.current = {
         ...src,
-        destory: () => {
+        destroy: () => {
           hls.destroy()
         },
       }
@@ -94,7 +94,7 @@ export default class VideoLoader {
       dashPlayer.initialize(this.video.el, src.url, true)
       this.current = {
         ...src,
-        destory: () => {
+        destroy: () => {
           dashPlayer.destroy()
         },
       }
@@ -103,8 +103,8 @@ export default class VideoLoader {
     }
   }
   /** 销毁当前播放 */
-  private destoryCurrent() {
-    this.current?.destory()
+  private destroyCurrent() {
+    this.current?.destroy()
     this.current = null
   }
 }
