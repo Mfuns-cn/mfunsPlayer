@@ -1,8 +1,9 @@
+import { AllPluginExposed, EmptyObject } from "./types"
 import { PluginManager } from "./plugin/PluginManager"
 import Controller from "@/ui/Controller"
 import Events from "@/Events"
 import Template from "@/ui/Template"
-import { PlayerOptions } from "@/types"
+import { PlayerOptions, PlayerPlugin } from "@/types"
 import Video from "@/Video"
 import Mode from "@/Mode"
 import HotKey from "@/ui/HotKey"
@@ -14,7 +15,7 @@ import State from "@/ui/State"
 import Danmaku from "./Danmaku"
 import { PlayerEventsMap } from "./Events/PlayerEventsMap"
 
-export default class MfunsPlayer {
+export default class MfunsPlayer<T extends PlayerPlugin = PlayerPlugin> {
   static readonly version = MFUNSPLAYER_VERSION
   static readonly gitHash = GIT_HASH
   /** 容器 */
@@ -24,7 +25,7 @@ export default class MfunsPlayer {
   /** 播放列表模块 */
   playlist: any
   /** 插件 */
-  plugin: Record<string, any> = {}
+  plugin = {} as AllPluginExposed<T>
   /** 插件管理 */
   pluginManager: PluginManager
   /** 事件模块 */
@@ -54,7 +55,7 @@ export default class MfunsPlayer {
   /** 视频作者id */
   authorId: string | number | null = null
 
-  constructor(options: PlayerOptions) {
+  constructor(options: PlayerOptions<T>, plugins?: T[]) {
     this.events = new Events()
     this.container = options.container
     // 注入模板
@@ -64,7 +65,7 @@ export default class MfunsPlayer {
     this.video = new Video(this, options)
 
     // 插件管理
-    this.pluginManager = new PluginManager(this, options.plugins)
+    this.pluginManager = new PluginManager(this, plugins)
 
     // 插件执行created函数(搭建界面、实现基本功能)
     this.pluginManager.pluginCreate(options)

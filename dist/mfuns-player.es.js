@@ -4,15 +4,14 @@ class yt {
     this.list = [], this.player = t;
     const i = [];
     e == null || e.forEach((l) => {
-      const n = l();
-      i.indexOf(n.id) > -1 || (i.push(n.id), this.list.push(n));
+      i.indexOf(l.id) > -1 || (i.push(l.id), this.list.push(l));
     });
   }
   /** 创建所有插件 */
   pluginCreate(t) {
     this.list.forEach((e) => {
       var i;
-      this.player.plugin[e.id] = (i = e.create) == null ? void 0 : i.call(e, this.player, t);
+      this.player.plugin[e.id] = ((i = e.create) == null ? void 0 : i.call(e, this.player, t)) || {};
     });
   }
   /** 初始化所有插件 */
@@ -2894,9 +2893,9 @@ class ai {
   }
 }
 class R {
-  constructor(t) {
-    this.plugin = {}, this.userId = 0, this.authorId = null, this.events = new Ee(), this.container = t.container, this.template = new qe(this, t), this.video = new _e(this, t), this.pluginManager = new yt(this, t.plugins), this.pluginManager.pluginCreate(t), this.theme = new Ce(this, t), this.mode = new Ie(this, t), this.state = new ei(this, t), this.danmaku = new ai(this, t), this.controller = new Fe(this, t), this.side = new ze(this, t), this.modal = new Je(this, t), this.contextMenu = new Xe(this, t), this.hotKey = new Be(this, t), this.pluginManager.pluginInit(t), this.setPart(1), this.on("part", (e) => {
-      console.log(`当前分P - ${e}`);
+  constructor(t, e) {
+    this.plugin = {}, this.userId = 0, this.authorId = null, this.events = new Ee(), this.container = t.container, this.template = new qe(this, t), this.video = new _e(this, t), this.pluginManager = new yt(this, e), this.pluginManager.pluginCreate(t), this.theme = new Ce(this, t), this.mode = new Ie(this, t), this.state = new ei(this, t), this.danmaku = new ai(this, t), this.controller = new Fe(this, t), this.side = new ze(this, t), this.modal = new Je(this, t), this.contextMenu = new Xe(this, t), this.hotKey = new Be(this, t), this.pluginManager.pluginInit(t), this.setPart(1), this.on("part", (i) => {
+      console.log(`当前分P - ${i}`);
     });
   }
   /** 播放相关 */
@@ -3021,10 +3020,10 @@ class R {
   }
 }
 R.version = "3.0.0-dev";
-R.gitHash = "468ccf9";
+R.gitHash = "7c29c1b";
 console.log(
   `
- %c mfunsPlayer v3.0.0-dev 468ccf9 %c https://github.com/Mfuns-cn 
+ %c mfunsPlayer v3.0.0-dev 7c29c1b %c https://github.com/Mfuns-cn 
 
 `,
   "color: #fff; background: #7b7ff7; padding:5px 0;",

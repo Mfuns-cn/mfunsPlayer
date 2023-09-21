@@ -1,6 +1,6 @@
 import { secondToTime } from "@/utils"
 import { dateFormat } from "@/utils/index"
-import { DanmakuItem, PlayerPlugin } from "@/types"
+import { DanmakuItem } from "@/types"
 import MfunsPlayer from "@/player"
 import { classPrefix } from "@/const"
 import { html, render } from "lit-html"
@@ -174,7 +174,7 @@ export default class DanmakuList {
   sort(sortedBy: keyof DanmakuItem, sortOrder = 1) {
     this.sortedBy = sortedBy
     this.sortOrder = sortOrder
-    this.data.sort((a, b) => {
+    this.data.sort((a: any, b: any) => {
       const at = a[this.sortedBy]
       const bt = b[this.sortedBy]
       // 排序

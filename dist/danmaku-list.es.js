@@ -1,8 +1,8 @@
 const Y = (n, t = !0) => {
   if (n = n || 0, n === 0 || n === 1 / 0 || n.toString() === "NaN")
     return "00:00";
-  const e = (l) => l < 10 ? `0${l}` : `${l}`, i = Math.floor(n / 3600), s = Math.floor((n - i * 3600) / 60), r = Math.floor(n - i * 3600 - s * 60);
-  return t ? (i > 0 ? [i, s, r] : [s, r]).map(e).join(":") : [i * 60 + s, r].map(e).join(":");
+  const e = (l) => l < 10 ? `0${l}` : `${l}`, i = Math.floor(n / 3600), s = Math.floor((n - i * 3600) / 60), o = Math.floor(n - i * 3600 - s * 60);
+  return t ? (i > 0 ? [i, s, o] : [s, o]).map(e).join(":") : [i * 60 + s, o].map(e).join(":");
 }, b = {
   yyyy: (n) => n.getFullYear().toString(),
   yy: (n) => n.getFullYear().toString().slice(-2),
@@ -34,28 +34,28 @@ function z(n, t) {
 }
 const tt = (n, t) => {
   const e = n.length - 1, i = [];
-  let s, r = t === 2 ? "<svg>" : "", l = S;
+  let s, o = t === 2 ? "<svg>" : "", l = S;
   for (let a = 0; a < e; a++) {
-    const o = n[a];
+    const r = n[a];
     let h, d, c = -1, $ = 0;
-    for (; $ < o.length && (l.lastIndex = $, d = l.exec(o), d !== null); )
+    for (; $ < r.length && (l.lastIndex = $, d = l.exec(r), d !== null); )
       $ = l.lastIndex, l === S ? d[1] === "!--" ? l = V : d[1] !== void 0 ? l = F : d[2] !== void 0 ? (W.test(d[2]) && (s = RegExp("</" + d[2], "g")), l = g) : d[3] !== void 0 && (l = g) : l === g ? d[0] === ">" ? (l = s ?? S, c = -1) : d[1] === void 0 ? c = -2 : (c = l.lastIndex - d[2].length, h = d[1], l = d[3] === void 0 ? g : d[3] === '"' ? P : U) : l === P || l === U ? l = g : l === V || l === F ? l = S : (l = g, s = void 0);
     const m = l === g && n[a + 1].startsWith("/>") ? " " : "";
-    r += l === S ? o + J : c >= 0 ? (i.push(h), o.slice(0, c) + D + o.slice(c) + p + m) : o + p + (c === -2 ? (i.push(void 0), a) : m);
+    o += l === S ? r + J : c >= 0 ? (i.push(h), r.slice(0, c) + D + r.slice(c) + p + m) : r + p + (c === -2 ? (i.push(void 0), a) : m);
   }
-  return [z(n, r + (n[e] || "<?>") + (t === 2 ? "</svg>" : "")), i];
+  return [z(n, o + (n[e] || "<?>") + (t === 2 ? "</svg>" : "")), i];
 };
 class E {
   constructor({ strings: t, _$litType$: e }, i) {
     let s;
     this.parts = [];
-    let r = 0, l = 0;
-    const a = t.length - 1, o = this.parts, [h, d] = tt(t, e);
+    let o = 0, l = 0;
+    const a = t.length - 1, r = this.parts, [h, d] = tt(t, e);
     if (this.el = E.createElement(h, i), A.currentNode = this.el.content, e === 2) {
       const c = this.el.content, $ = c.firstChild;
       $.remove(), c.append(...$.childNodes);
     }
-    for (; (s = A.nextNode()) !== null && o.length < a; ) {
+    for (; (s = A.nextNode()) !== null && r.length < a; ) {
       if (s.nodeType === 1) {
         if (s.hasAttributes()) {
           const c = [];
@@ -64,9 +64,9 @@ class E {
               const m = d[l++];
               if (c.push($), m !== void 0) {
                 const X = s.getAttribute(m.toLowerCase() + D).split(p), T = /([.?@])?(.*)/.exec(m);
-                o.push({ type: 1, index: r, name: T[2], strings: X, ctor: T[1] === "." ? it : T[1] === "?" ? nt : T[1] === "@" ? lt : N });
+                r.push({ type: 1, index: o, name: T[2], strings: X, ctor: T[1] === "." ? it : T[1] === "?" ? nt : T[1] === "@" ? lt : N });
               } else
-                o.push({ type: 6, index: r });
+                r.push({ type: 6, index: o });
             }
           for (const $ of c)
             s.removeAttribute($);
@@ -76,19 +76,19 @@ class E {
           if ($ > 0) {
             s.textContent = _ ? _.emptyScript : "";
             for (let m = 0; m < $; m++)
-              s.append(c[m], H()), A.nextNode(), o.push({ type: 2, index: ++r });
+              s.append(c[m], H()), A.nextNode(), r.push({ type: 2, index: ++o });
             s.append(c[$], H());
           }
         }
       } else if (s.nodeType === 8)
         if (s.data === q)
-          o.push({ type: 2, index: r });
+          r.push({ type: 2, index: o });
         else {
           let c = -1;
           for (; (c = s.data.indexOf(p, c + 1)) !== -1; )
-            o.push({ type: 7, index: r }), c += p.length - 1;
+            r.push({ type: 7, index: o }), c += p.length - 1;
         }
-      r++;
+      o++;
     }
   }
   static createElement(t, e) {
@@ -97,12 +97,12 @@ class E {
   }
 }
 function y(n, t, e = n, i) {
-  var s, r, l, a;
+  var s, o, l, a;
   if (t === x)
     return t;
-  let o = i !== void 0 ? (s = e._$Co) === null || s === void 0 ? void 0 : s[i] : e._$Cl;
+  let r = i !== void 0 ? (s = e._$Co) === null || s === void 0 ? void 0 : s[i] : e._$Cl;
   const h = w(t) ? void 0 : t._$litDirective$;
-  return (o == null ? void 0 : o.constructor) !== h && ((r = o == null ? void 0 : o._$AO) === null || r === void 0 || r.call(o, !1), h === void 0 ? o = void 0 : (o = new h(n), o._$AT(n, e, i)), i !== void 0 ? ((l = (a = e)._$Co) !== null && l !== void 0 ? l : a._$Co = [])[i] = o : e._$Cl = o), o !== void 0 && (t = y(n, o._$AS(n, t.values), o, i)), t;
+  return (r == null ? void 0 : r.constructor) !== h && ((o = r == null ? void 0 : r._$AO) === null || o === void 0 || o.call(r, !1), h === void 0 ? r = void 0 : (r = new h(n), r._$AT(n, e, i)), i !== void 0 ? ((l = (a = e)._$Co) !== null && l !== void 0 ? l : a._$Co = [])[i] = r : e._$Cl = r), r !== void 0 && (t = y(n, r._$AS(n, t.values), r, i)), t;
 }
 class et {
   constructor(t, e) {
@@ -116,17 +116,17 @@ class et {
   }
   u(t) {
     var e;
-    const { el: { content: i }, parts: s } = this._$AD, r = ((e = t == null ? void 0 : t.creationScope) !== null && e !== void 0 ? e : f).importNode(i, !0);
-    A.currentNode = r;
-    let l = A.nextNode(), a = 0, o = 0, h = s[0];
+    const { el: { content: i }, parts: s } = this._$AD, o = ((e = t == null ? void 0 : t.creationScope) !== null && e !== void 0 ? e : f).importNode(i, !0);
+    A.currentNode = o;
+    let l = A.nextNode(), a = 0, r = 0, h = s[0];
     for (; h !== void 0; ) {
       if (a === h.index) {
         let d;
-        h.type === 2 ? d = new M(l, l.nextSibling, this, t) : h.type === 1 ? d = new h.ctor(l, h.name, h.strings, this, t) : h.type === 6 && (d = new rt(l, this, t)), this._$AV.push(d), h = s[++o];
+        h.type === 2 ? d = new M(l, l.nextSibling, this, t) : h.type === 1 ? d = new h.ctor(l, h.name, h.strings, this, t) : h.type === 6 && (d = new ot(l, this, t)), this._$AV.push(d), h = s[++r];
       }
       a !== (h == null ? void 0 : h.index) && (l = A.nextNode(), a++);
     }
-    return A.currentNode = f, r;
+    return A.currentNode = f, o;
   }
   v(t) {
     let e = 0;
@@ -136,8 +136,8 @@ class et {
 }
 class M {
   constructor(t, e, i, s) {
-    var r;
-    this.type = 2, this._$AH = u, this._$AN = void 0, this._$AA = t, this._$AB = e, this._$AM = i, this.options = s, this._$Cp = (r = s == null ? void 0 : s.isConnected) === null || r === void 0 || r;
+    var o;
+    this.type = 2, this._$AH = u, this._$AN = void 0, this._$AA = t, this._$AB = e, this._$AM = i, this.options = s, this._$Cp = (o = s == null ? void 0 : s.isConnected) === null || o === void 0 || o;
   }
   get _$AU() {
     var t, e;
@@ -168,11 +168,11 @@ class M {
   }
   g(t) {
     var e;
-    const { values: i, _$litType$: s } = t, r = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = E.createElement(z(s.h, s.h[0]), this.options)), s);
-    if (((e = this._$AH) === null || e === void 0 ? void 0 : e._$AD) === r)
+    const { values: i, _$litType$: s } = t, o = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = E.createElement(z(s.h, s.h[0]), this.options)), s);
+    if (((e = this._$AH) === null || e === void 0 ? void 0 : e._$AD) === o)
       this._$AH.v(i);
     else {
-      const l = new et(r, this), a = l.u(this.options);
+      const l = new et(o, this), a = l.u(this.options);
       l.v(i), this.$(a), this._$AH = l;
     }
   }
@@ -184,8 +184,8 @@ class M {
     O(this._$AH) || (this._$AH = [], this._$AR());
     const e = this._$AH;
     let i, s = 0;
-    for (const r of t)
-      s === e.length ? e.push(i = new M(this.k(H()), this.k(H()), this, this.options)) : i = e[s], i._$AI(r), s++;
+    for (const o of t)
+      s === e.length ? e.push(i = new M(this.k(H()), this.k(H()), this, this.options)) : i = e[s], i._$AI(o), s++;
     s < e.length && (this._$AR(i && i._$AB.nextSibling, s), e.length = s);
   }
   _$AR(t = this._$AA.nextSibling, e) {
@@ -201,8 +201,8 @@ class M {
   }
 }
 class N {
-  constructor(t, e, i, s, r) {
-    this.type = 1, this._$AH = u, this._$AN = void 0, this.element = t, this.name = e, this._$AM = s, this.options = r, i.length > 2 || i[0] !== "" || i[1] !== "" ? (this._$AH = Array(i.length - 1).fill(new String()), this.strings = i) : this._$AH = u;
+  constructor(t, e, i, s, o) {
+    this.type = 1, this._$AH = u, this._$AN = void 0, this.element = t, this.name = e, this._$AM = s, this.options = o, i.length > 2 || i[0] !== "" || i[1] !== "" ? (this._$AH = Array(i.length - 1).fill(new String()), this.strings = i) : this._$AH = u;
   }
   get tagName() {
     return this.element.tagName;
@@ -211,15 +211,15 @@ class N {
     return this._$AM._$AU;
   }
   _$AI(t, e = this, i, s) {
-    const r = this.strings;
+    const o = this.strings;
     let l = !1;
-    if (r === void 0)
+    if (o === void 0)
       t = y(this, t, e, 0), l = !w(t) || t !== this._$AH && t !== x, l && (this._$AH = t);
     else {
       const a = t;
-      let o, h;
-      for (t = r[0], o = 0; o < r.length - 1; o++)
-        h = y(this, a[i + o], e, o), h === x && (h = this._$AH[o]), l || (l = !w(h) || h !== this._$AH[o]), h === u ? t = u : t !== u && (t += (h ?? "") + r[o + 1]), this._$AH[o] = h;
+      let r, h;
+      for (t = o[0], r = 0; r < o.length - 1; r++)
+        h = y(this, a[i + r], e, r), h === x && (h = this._$AH[r]), l || (l = !w(h) || h !== this._$AH[r]), h === u ? t = u : t !== u && (t += (h ?? "") + o[r + 1]), this._$AH[r] = h;
     }
     l && !s && this.j(t);
   }
@@ -245,22 +245,22 @@ class nt extends N {
   }
 }
 class lt extends N {
-  constructor(t, e, i, s, r) {
-    super(t, e, i, s, r), this.type = 5;
+  constructor(t, e, i, s, o) {
+    super(t, e, i, s, o), this.type = 5;
   }
   _$AI(t, e = this) {
     var i;
     if ((t = (i = y(this, t, e, 0)) !== null && i !== void 0 ? i : u) === x)
       return;
-    const s = this._$AH, r = t === u && s !== u || t.capture !== s.capture || t.once !== s.once || t.passive !== s.passive, l = t !== u && (s === u || r);
-    r && this.element.removeEventListener(this.name, this, s), l && this.element.addEventListener(this.name, this, t), this._$AH = t;
+    const s = this._$AH, o = t === u && s !== u || t.capture !== s.capture || t.once !== s.once || t.passive !== s.passive, l = t !== u && (s === u || o);
+    o && this.element.removeEventListener(this.name, this, s), l && this.element.addEventListener(this.name, this, t), this._$AH = t;
   }
   handleEvent(t) {
     var e, i;
     typeof this._$AH == "function" ? this._$AH.call((i = (e = this.options) === null || e === void 0 ? void 0 : e.host) !== null && i !== void 0 ? i : this.element, t) : this._$AH.handleEvent(t);
   }
 }
-class rt {
+class ot {
   constructor(t, e, i) {
     this.element = t, this.type = 6, this._$AN = void 0, this._$AM = e, this.options = i;
   }
@@ -275,23 +275,23 @@ const j = k.litHtmlPolyfillSupport;
 j == null || j(E, M), ((B = k.litHtmlVersions) !== null && B !== void 0 ? B : k.litHtmlVersions = []).push("2.8.0");
 const Z = (n, t, e) => {
   var i, s;
-  const r = (i = e == null ? void 0 : e.renderBefore) !== null && i !== void 0 ? i : t;
-  let l = r._$litPart$;
+  const o = (i = e == null ? void 0 : e.renderBefore) !== null && i !== void 0 ? i : t;
+  let l = o._$litPart$;
   if (l === void 0) {
     const a = (s = e == null ? void 0 : e.renderBefore) !== null && s !== void 0 ? s : null;
-    r._$litPart$ = l = new M(t.insertBefore(H(), a), a, void 0, e ?? {});
+    o._$litPart$ = l = new M(t.insertBefore(H(), a), a, void 0, e ?? {});
   }
   return l._$AI(n), l;
 };
-class ot {
+class rt {
   constructor({
     el: t,
     getData: e,
     itemHeight: i,
     createItem: s,
-    overflow: r = 0
+    overflow: o = 0
   }) {
-    this.data = [], this.renderStart = -1, this.renderEnd = -1, this.viewStart = 0, this.viewEnd = 0, this.throttle = !1, this.cleared = !1, this.el = t, this.getData = e, this.itemHeight = i, this.createItem = s, this.overflow = r, this.renderStart = -1, this.renderEnd = -1, this.viewStart = 0, this.viewEnd = 0, this.throttle = !1, this.cleared = !1, this.el.classList.add("vlist-container"), this.$content = document.createElement("div"), this.$content.classList.add("vlist-content"), this.el.appendChild(this.$content), this.el.addEventListener("scroll", () => {
+    this.data = [], this.renderStart = -1, this.renderEnd = -1, this.viewStart = 0, this.viewEnd = 0, this.throttle = !1, this.cleared = !1, this.el = t, this.getData = e, this.itemHeight = i, this.createItem = s, this.overflow = o, this.renderStart = -1, this.renderEnd = -1, this.viewStart = 0, this.viewEnd = 0, this.throttle = !1, this.cleared = !1, this.el.classList.add("vlist-container"), this.$content = document.createElement("div"), this.$content.classList.add("vlist-content"), this.el.appendChild(this.$content), this.el.addEventListener("scroll", () => {
       this.cleared || this.handleScroll();
     }), this.reload();
   }
@@ -312,27 +312,27 @@ class ot {
   render(t, e) {
     const i = this.renderStart, s = this.renderEnd;
     if (this.renderStart = this.getViewStart(e) - this.overflow, this.renderEnd = this.getViewEnd(e, t) + this.overflow, this.renderStart < i) {
-      const r = document.createDocumentFragment(), l = Math.max(this.renderStart, 0), a = Math.min(i - 1, this.renderEnd, this.data.length - 1);
-      for (let o = l; o <= a; o++)
-        r.appendChild(this.createItem(this.data[o], o, this.data));
-      this.$content.insertBefore(r, this.$content.firstElementChild);
+      const o = document.createDocumentFragment(), l = Math.max(this.renderStart, 0), a = Math.min(i - 1, this.renderEnd, this.data.length - 1);
+      for (let r = l; r <= a; r++)
+        o.appendChild(this.createItem(this.data[r], r, this.data));
+      this.$content.insertBefore(o, this.$content.firstElementChild);
     } else {
-      const r = Math.max(i, 0), l = Math.min(this.renderStart - 1, s);
-      for (let a = r; a <= l; a++) {
-        const o = this.$content.firstElementChild;
-        o && this.$content.removeChild(o);
+      const o = Math.max(i, 0), l = Math.min(this.renderStart - 1, s);
+      for (let a = o; a <= l; a++) {
+        const r = this.$content.firstElementChild;
+        r && this.$content.removeChild(r);
       }
     }
     if (this.renderEnd > s) {
-      const r = document.createDocumentFragment(), l = Math.max(s + 1, this.renderStart), a = Math.min(this.renderEnd, this.data.length - 1);
-      for (let o = l; o <= a; o++)
-        r.appendChild(this.createItem(this.data[o], o, this.data));
-      this.$content.appendChild(r);
+      const o = document.createDocumentFragment(), l = Math.max(s + 1, this.renderStart), a = Math.min(this.renderEnd, this.data.length - 1);
+      for (let r = l; r <= a; r++)
+        o.appendChild(this.createItem(this.data[r], r, this.data));
+      this.$content.appendChild(o);
     } else {
-      const r = Math.min(s, this.data.length - 1), l = Math.max(this.renderEnd + 1, i);
-      for (let a = r; a >= l; a--) {
-        const o = this.$content.lastElementChild;
-        o && this.$content.removeChild(o);
+      const o = Math.min(s, this.data.length - 1), l = Math.max(this.renderEnd + 1, i);
+      for (let a = o; a >= l; a--) {
+        const r = this.$content.lastElementChild;
+        r && this.$content.removeChild(r);
       }
     }
     this.$content.style.paddingTop = `${this.renderStart > 0 ? this.renderStart * this.itemHeight : 0}px`, this.$content.style.paddingBottom = `${this.renderEnd < this.data.length - 1 ? (this.data.length - this.renderEnd - 1) * this.itemHeight : 0}px`;
@@ -389,13 +389,13 @@ const at = (n) => C`
       </div>
       ${e.length ? C` <div class="list-operate">
             ${e(n).map(
-    ([r, l]) => C`<div
+    ([o, l]) => C`<div
                 class="list-operate-btn"
                 @click=${() => {
       l(n);
     }}
               >
-                ${r}
+                ${o}
               </div>`
   )}
           </div>` : ""}
@@ -418,12 +418,12 @@ class dt {
   }
   init() {
     const t = this.player.danmaku.api, e = this.player.danmaku.operate;
-    this.list = new ot({
+    this.list = new rt({
       el: this.$container,
       getData: () => this.data,
       itemHeight: 24,
-      createItem: (i, s) => ht(i, s, (r) => {
-        const l = r.user == this.player.userId;
+      createItem: (i, s) => ht(i, s, (o) => {
+        const l = o.user == this.player.userId;
         return [
           [
             "举报",
@@ -466,8 +466,8 @@ class dt {
   /** 弹幕列表排序 */
   sort(t, e = 1) {
     this.sortedBy = t, this.sortOrder = e, this.data.sort((i, s) => {
-      const r = i[this.sortedBy], l = s[this.sortedBy];
-      return r > l ? e : r == l ? 0 : -e;
+      const o = i[this.sortedBy], l = s[this.sortedBy];
+      return o > l ? e : o == l ? 0 : -e;
     }), this.list.reload();
   }
   /** 装填弹幕(重载列表) */
@@ -500,14 +500,14 @@ class dt {
     this.autoScroll = t, t && (this.sort("time"), this.locateByTime(this.player.time));
   }
 }
-const ct = () => {
+const ct = "danmakuList", ut = () => {
   let n;
   return {
-    id: "danmakuList",
-    create: (t) => (n = new dt(t), {
+    id: ct,
+    create: (t, e) => (n = new dt(t), {
       el: n.el
     }),
-    init: (t) => {
+    init: (t, e) => {
       n.init();
     },
     destroy: (t) => {
@@ -515,6 +515,6 @@ const ct = () => {
   };
 };
 export {
-  ct as default
+  ut as default
 };
 //# sourceMappingURL=danmaku-list.es.js.map

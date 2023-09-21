@@ -3,12 +3,11 @@ import { PlayerOptions, PlayerPlugin } from "@/types"
 
 export class PluginManager {
   player: MfunsPlayer
-  list: ReturnType<PlayerPlugin>[] = []
+  list: PlayerPlugin[] = []
   constructor(player: MfunsPlayer, list?: PlayerPlugin[]) {
     this.player = player
     const names: string[] = []
-    list?.forEach((item) => {
-      const plugin = item()
+    list?.forEach((plugin) => {
       if (names.indexOf(plugin.id) > -1) {
         return
       } else {
@@ -18,13 +17,13 @@ export class PluginManager {
     })
   }
   /** 创建所有插件 */
-  pluginCreate(options: PlayerOptions) {
+  pluginCreate(options: PlayerOptions<PlayerPlugin>) {
     this.list.forEach((plugin) => {
-      this.player.plugin[plugin.id] = plugin.create?.(this.player, options)
+      this.player.plugin[plugin.id] = plugin.create?.(this.player, options) || {}
     })
   }
   /** 初始化所有插件 */
-  pluginInit(options: PlayerOptions) {
+  pluginInit(options: PlayerOptions<PlayerPlugin>) {
     this.list.forEach((plugin) => {
       plugin.init?.(this.player, options)
     })

@@ -375,7 +375,6 @@
                 solid: true,
                 webfull: true,
             },
-            plugins: [danmakuList]
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",
             //   editor: 1,
@@ -417,7 +416,7 @@
 
         }
         console.log(mfunsPlayerConfig)
-        mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
+        mfPlayer = new MfunsPlayer(mfunsPlayerConfig, [danmakuList()]);
         window.mfPlayer = mfPlayer
         console.log(mfPlayer)
         mfPlayer.on("play", () => {

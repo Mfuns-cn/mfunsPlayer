@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PlayerPlugin } from "@/types"
+import { EmptyObject, PlayerPlugin } from "@/types"
 import DanmakuList from "./DanmakuList"
 
-const plugin: PlayerPlugin = () => {
+const id = "danmakuList"
+
+const plugin = (): PlayerPlugin<typeof id, EmptyObject, { el: HTMLElement }> => {
   let danmakuList: DanmakuList
   return {
-    id: "danmakuList",
-    create: (player) => {
+    id,
+    create: (player, options) => {
       danmakuList = new DanmakuList(player)
       return {
         el: danmakuList.el,
       }
     },
-    init: (player) => {
+    init: (player, options) => {
       danmakuList.init()
     },
     destroy: (player) => {},

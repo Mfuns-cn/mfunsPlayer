@@ -4,20 +4,59 @@ import MfunsPlayer from "@/player"
 /** 插件上下文 */
 type PluginContext = any
 
+/** 插件扩展设置 */
+type PlayerPluginOptions = Record<string, unknown>
+
+/** 插件暴露 */
+type PlayerExposed = Record<string, unknown>
+
 /** 播放器插件 */
-export type PlayerPlugin = () => {
+export interface PlayerPlugin<
+  N extends string = string,
+  O extends PlayerPluginOptions = EmptyObject,
+  E extends PlayerExposed = EmptyObject
+> {
   /** 插件id */
-  readonly id: string
+  readonly id: N
   /** 插件创建 */
-  readonly create?: (player: MfunsPlayer, options: PlayerOptions) => PluginContext
+  readonly create?: (player: MfunsPlayer, options: PlayerOptions<this>) => E
   /** 插件初始化 */
-  readonly init?: (player: MfunsPlayer, options: PlayerOptions) => void
+  readonly init?: (player: MfunsPlayer, options: PlayerOptions<this>) => void
   /** 插件销毁 */
-  readonly destroy?: (player: MfunsPlayer) => void
+  readonly destroy?: (player: MfunsPlayer<PlayerPlugin<N, EmptyObject, E>>) => void
 }
 
+export type EmptyObject = Record<string, unknown>
+
+/** 获取插件的扩展配置项 */
+export type PluginOptionType<P extends PlayerPlugin> = P extends PlayerPlugin<string, infer O>
+  ? O
+  : EmptyObject
+
+/** 获取插件的导出内容 */
+export type PluginExposedType<P extends PlayerPlugin> = P extends PlayerPlugin<
+  string,
+  EmptyObject,
+  infer E
+>
+  ? E
+  : EmptyObject
+
+/** 获取所有插件的导出内容 */
+export type AllPluginExposed<P extends PlayerPlugin> = UnionToIntersection<
+  P extends any
+    ? P extends PlayerPlugin<infer N, EmptyObject, infer E>
+      ? { [K in N]: E }
+      : never
+    : never
+>
+
+/** 联合类型转交叉类型 */
+type ToUnionOfFunction<T> = T extends any ? (x: T) => any : never
+type UnionToIntersection<T> = ToUnionOfFunction<T> extends (x: infer P) => any ? P : never
+
 /** 播放器初始化选项 */
-export interface PlayerOptions {
+export interface PlayerOptionsBase {
   /** 播放器容器 */
   container: HTMLElement
   /** 视频信息 */
@@ -35,8 +74,6 @@ export interface PlayerOptions {
   autoPlay?: boolean
   /** 循环播放 */
   loop?: boolean
-  /** 使用插件 */
-  plugins: PlayerPlugin[]
   /** 弹幕设置 */
   danmaku?: {
     /** 弹幕api */
@@ -92,6 +129,9 @@ export interface PlayerOptions {
     lightOff?: boolean
   }
 }
+
+export type PlayerOptions<T extends PlayerPlugin = PlayerPlugin> = PlayerOptionsBase &
+  PluginOptionType<T>
 
 export interface OperationResult {
   success: boolean
