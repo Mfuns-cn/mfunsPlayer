@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
 import { classPrefix } from "@/const"
-import MfunsPlayer from "@/player"
+import Player from "@/player"
 import { PlayerOptions } from "@/types"
 import ProgressBar from "./ProgressBar"
 import { fullScreenEnabled, pictureInPictureEnabled } from "@/utils"
@@ -15,8 +15,6 @@ import ButtonPart from "./button/ButtonPart"
 import ButtonWebfull from "./button/ButtonWebfull"
 import ButtonPrev from "./button/ButtonPrev"
 import ButtonNext from "./button/ButtonNext"
-import ButtonDanmakulist from "./button/ButtonDanmakulist"
-import DanmakuBar from "./DanmakuBar"
 
 const template = () => html`
   <div class="${classPrefix}-controller-mask"></div>
@@ -32,7 +30,7 @@ const template = () => html`
 
 /** 控制栏 */
 export default class Controller {
-  player: MfunsPlayer
+  player: Player
   container: HTMLElement
   el: HTMLElement
 
@@ -43,26 +41,11 @@ export default class Controller {
   $right: HTMLElement
 
   progressBar: ProgressBar
-  danmakuBar: DanmakuBar
-
-  buttonPlay: ButtonPlay
-  buttonPrev: ButtonPrev
-  buttonNext: ButtonNext
-  buttonLoop: ButtonLoop
-  buttonVolume: ButtonVolume
-  buttonSettings: ButtonSettings
-  // buttonDanmakulist: ButtonDanmakulist
-  buttonPart: ButtonPart
-  buttonPip?: ButtonPip
-  buttonWebfull?: ButtonWebfull
-  buttonFullScreen?: ButtonFullscreen
-
-  labelTime: LabelTime
 
   isHover = false
   isControl = false
 
-  constructor(player: MfunsPlayer, options: PlayerOptions) {
+  constructor(player: Player, options: PlayerOptions) {
     this.player = player
     this.container = player.template.$controllerWrap
     const fragment = new DocumentFragment()
@@ -76,30 +59,12 @@ export default class Controller {
 
     // 进度条
     this.progressBar = new ProgressBar(this, options)
-    // 弹幕栏
-    this.danmakuBar = new DanmakuBar(this, options)
-
-    // 控制栏左侧部件
-    this.buttonPrev = new ButtonPrev(this.player, this.$left)
-    this.buttonPlay = new ButtonPlay(this.player, this.$left)
-    this.buttonNext = new ButtonNext(this.player, this.$left)
-    this.labelTime = new LabelTime(this.player, this.$left)
-    this.buttonLoop = new ButtonLoop(this.player, this.$left)
-    // 控制栏右侧部件
-    // this.buttonDanmakulist = new ButtonDanmakulist(this.player, this.$right)
-    this.buttonPart = new ButtonPart(this.player, this.$right)
-    this.buttonVolume = new ButtonVolume(this.player, this.$right)
-    this.buttonSettings = new ButtonSettings(this.player, this.$right, options)
-    if (pictureInPictureEnabled) this.buttonPip = new ButtonPip(this.player, this.$right)
-    if (options.feature?.webfull) this.buttonWebfull = new ButtonWebfull(this.player, this.$right)
-    if (fullScreenEnabled) this.buttonFullScreen = new ButtonFullscreen(this.player, this.$right)
 
     this.init()
 
     this.container.appendChild(fragment)
   }
   init() {
-    this.buttonPrev.show(false)
     this.container.addEventListener("mouseenter", () => {
       this.isHover = true
     })

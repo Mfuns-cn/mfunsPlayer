@@ -23,10 +23,10 @@
     </div>
   </body>
   <script>
-    console.log(MfunsPlayer)
+    console.log(Player)
     let mfPlayer
     const testVersion = document.querySelector(".test-version")
-    testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash
+    testVersion.innerText = "v" + Player.version + "-" + Player.gitHash
     window.onload = () => {
       const container = document.querySelector(".content")
       const playerExtra = document.querySelector(".extra")
@@ -135,7 +135,7 @@
         }
       }
       console.log(mfunsPlayerConfig)
-      mfPlayer = new MfunsPlayer(mfunsPlayerConfig)
+      mfPlayer = new Player(mfunsPlayerConfig)
       console.log(mfPlayer)
       mfPlayer.on("play", () => {
         console.log("play")

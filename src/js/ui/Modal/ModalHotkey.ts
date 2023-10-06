@@ -1,6 +1,6 @@
-import MfunsPlayer from "@/player"
-import { classPrefix, developers, repositoryLink } from "@/const"
-import { html, render } from "lit-html"
+import Player from "@/player";
+import { classPrefix, developers, repositoryLink } from "@/const";
+import { html, render } from "lit-html";
 
 const template = (list: HotkeyInfo[]) => html`
   <div class="${classPrefix}-modal-panel ${classPrefix}-hotkey">
@@ -15,16 +15,16 @@ const template = (list: HotkeyInfo[]) => html`
       )}
     </div>
   </div>
-`
+`;
 
 interface HotkeyInfo {
-  key: string
-  description: string
+  key: string;
+  description: string;
 }
 
 export default class ModalHotkey {
-  title = "快捷键说明"
-  el: HTMLElement
+  title = "快捷键说明";
+  el: HTMLElement;
   constructor() {
     const hotkeyInfoList = [
       { key: "Space", description: "播放/暂停" },
@@ -32,10 +32,10 @@ export default class ModalHotkey {
       { key: "←", description: "快退5秒" },
       { key: "↑", description: "音量增加10%" },
       { key: "↓", description: "音量降低10%" },
-    ]
+    ];
 
-    const fragment = new DocumentFragment()
-    render(template(hotkeyInfoList), fragment)
-    this.el = fragment.querySelector(`.${classPrefix}-modal-panel`)!
+    const fragment = new DocumentFragment();
+    render(template(hotkeyInfoList), fragment);
+    this.el = fragment.querySelector(`.${classPrefix}-modal-panel`)!;
   }
 }

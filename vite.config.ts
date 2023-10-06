@@ -8,8 +8,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: ["src/js/index.ts"],
-      fileName: (format) => `mfuns-player.${format}.js`,
-      name: "MfunsPlayer",
+      fileName: (format) => `player.${format}.js`,
+      name: "Player",
     },
     sourcemap: true,
     emptyOutDir: false,

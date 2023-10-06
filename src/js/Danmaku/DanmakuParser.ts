@@ -1,27 +1,27 @@
-import { randomId } from "@/utils/randomId"
-import { DanmakuItem } from "../types"
+import { randomId } from "@/utils/randomId";
+import { DanmakuItem } from "@/types";
 
 interface DanmakuParseItem {
-  data: any
-  type: string
-  origin?: string
+  data: any;
+  type: string;
+  origin?: string;
 }
 
 interface DanmakuParserOptions {
-  defaultParser: string
-  list?: Record<string, DanmakuParserFunction>
+  defaultParser: string;
+  list?: Record<string, DanmakuParserFunction>;
 }
 
-type DanmakuParserFunction = (data: any) => DanmakuItem[]
+type DanmakuParserFunction = (data: any) => DanmakuItem[];
 
 /** 弹幕格式转换，将获取到的弹幕转换为播放器弹幕格式 */
 export default class DanmakuParser {
-  defaultParser: string
+  defaultParser: string;
 
-  list: Record<string, DanmakuParserFunction>
+  list: Record<string, DanmakuParserFunction>;
 
   constructor({ defaultParser }: DanmakuParserOptions) {
-    this.defaultParser = defaultParser || "bilibili-xml"
+    this.defaultParser = defaultParser || "bilibili-xml";
     this.list = {
       dplayer: (data: [number, number, number, number | string, string, number, number][]) =>
         data.map((item, i) => ({
@@ -47,23 +47,23 @@ export default class DanmakuParser {
         })),
       "bilibili-xml": (data: string) => {
         const bilibiliXMLParser = (xmlData: string) => {
-          const dan: [string, any[]][] = []
-          const xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml")
+          const dan: [string, any[]][] = [];
+          const xmlDoc = new DOMParser().parseFromString(xmlData, "text/xml");
           // 获取xml文档的所有子节点
-          const nodeList = xmlDoc.childNodes
+          const nodeList = xmlDoc.childNodes;
           const generate = (nodeList: any) => {
             for (let i = 0; i < nodeList.length; i++) {
-              const currentNode = nodeList[i]
+              const currentNode = nodeList[i];
               if (currentNode?.attributes?.length && i > 0) {
-                const m = currentNode.attributes[0].nodeValue.split(",")
-                const c = currentNode.innerHTML
-                dan.push([c, m])
+                const m = currentNode.attributes[0].nodeValue.split(",");
+                const c = currentNode.innerHTML;
+                dan.push([c, m]);
               } else if (currentNode.childNodes.length > 0) {
-                generate(currentNode.childNodes)
+                generate(currentNode.childNodes);
               }
             }
-          }
-          generate(nodeList)
+          };
+          generate(nodeList);
           return dan.map(([c, m]) => ({
             time: +m[0],
             mode: +m[1],
@@ -73,20 +73,20 @@ export default class DanmakuParser {
             size: +m[2] ?? 25,
             date: +m[4] ?? 0,
             id: +m[7],
-          }))
-        }
-        return bilibiliXMLParser(data)
+          }));
+        };
+        return bilibiliXMLParser(data);
       },
-    }
+    };
   }
 
   /** 将获取到的弹幕转换为播放器弹幕格式 */
   parse({ data, type }: DanmakuParseItem) {
-    const parser = this.list[type]
+    const parser = this.list[type];
     try {
-      return parser(data)
+      return parser(data);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   }
 }

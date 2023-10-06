@@ -13,7 +13,6 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
-    semi: ["error", "never"], // [x]强制不使用分号
     quotes: ["error", "double"], // [x]强制使用双引号
     "no-unexpected-multiline": "error", // [x]禁止可能产生ASI危险的多行语句
     "linebreak-style": ["error", "unix"], // [x]强制使用Unix行尾(LF)

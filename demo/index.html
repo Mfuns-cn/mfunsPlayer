@@ -13,7 +13,6 @@
 </head>
 <script src="../static/echarts.js"></script>
 <script src="../dist/mfuns-player.umd.js"></script>
-<script src="../dist/danmaku-list.umd.js"></script>
 
 <body>
 
@@ -416,7 +415,7 @@
 
         }
         console.log(mfunsPlayerConfig)
-        mfPlayer = new MfunsPlayer(mfunsPlayerConfig, [danmakuList()]);
+        mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
         window.mfPlayer = mfPlayer
         console.log(mfPlayer)
         mfPlayer.on("play", () => {

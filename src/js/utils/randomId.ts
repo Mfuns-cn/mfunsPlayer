@@ -1,4 +1,4 @@
-let count = 1000
+let count = 1000;
 const ar = [
   "1",
   "2",
@@ -36,14 +36,14 @@ const ar = [
   "x",
   "y",
   "z",
-]
+];
 
 export function randomId() {
-  const hs = []
-  const al = ar.length
+  const hs = [];
+  const al = ar.length;
   for (let i = 0; i < 8; i++) {
-    hs.push(ar[Math.floor(Math.random() * al)])
+    hs.push(ar[Math.floor(Math.random() * al)]);
   }
-  count++
-  return hs.join("") + `${count}`
+  count++;
+  return hs.join("") + `${count}`;
 }

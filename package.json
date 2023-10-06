@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:plugin": "ts-node ./vite.build-plugin.ts",
+    "build:player": "ts-node ./vite.build-player.ts",
     "preview": "vite preview"
   },
   "files": [

@@ -45,6 +45,19 @@
       }
     }
   }
+  &-controller-wide {
+    .mp-icon-wide-exit {
+      display: none;
+    }
+    &.state-wide {
+      .mp-icon-wide {
+        display: none;
+      }
+      .mp-icon-wide-exit {
+        display: block;
+      }
+    }
+  }
   &-controller-play {
     .mp-icon-play {
       display: none;

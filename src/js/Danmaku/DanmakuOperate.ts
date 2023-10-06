@@ -1,13 +1,13 @@
-import { DanmakuItem, DanmakuSendItem, OperationResult } from "@/types"
-import MfunsPlayer from "@/player"
-import Danmaku from "."
+import { DanmakuItem, DanmakuSendItem, OperationResult } from "@/types";
+import Player from "@/player";
+import Danmaku from ".";
 
 export default class DanmakuOperate {
-  danmaku: Danmaku
-  player: MfunsPlayer
+  danmaku: Danmaku;
+  player: Player;
   constructor(danmaku: Danmaku) {
-    this.danmaku = danmaku
-    this.player = danmaku.player
+    this.danmaku = danmaku;
+    this.player = danmaku.player;
   }
 
   /**
@@ -20,11 +20,11 @@ export default class DanmakuOperate {
       api: this.danmaku.api.url,
       id: this.player.video.list[this.player.video.part].danmakuId || 0,
       danmaku,
-    })
+    });
     result ??= {
       success: false,
       message: "发送失败",
-    }
+    };
     // 操作成功后将弹幕添加到弹幕池
     if (result.success) {
       this.danmaku.add([
@@ -36,9 +36,9 @@ export default class DanmakuOperate {
           },
           danmaku
         ),
-      ])
+      ]);
     }
-    return result
+    return result;
   }
 
   /**
@@ -47,16 +47,16 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async report(danmaku: DanmakuItem): Promise<OperationResult> {
-    let result = await this.danmaku?.api?.report?.({ api: this.danmaku.api.url, danmaku })
+    let result = await this.danmaku?.api?.report?.({ api: this.danmaku.api.url, danmaku });
     result ??= {
       success: false,
       message: "操作失败",
-    }
+    };
     // 操作成功后从弹幕池移除该弹幕
     if (result.success) {
-      this.danmaku.remove([danmaku.id])
+      this.danmaku.remove([danmaku.id]);
     }
-    return result
+    return result;
   }
 
   /**
@@ -65,16 +65,16 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async delete(danmaku: DanmakuItem[]): Promise<OperationResult> {
-    let result = await this.danmaku?.api?.delete?.({ api: this.danmaku.api.url, danmaku })
+    let result = await this.danmaku?.api?.delete?.({ api: this.danmaku.api.url, danmaku });
     result ??= {
       success: false,
       message: "操作失败",
-    }
+    };
     // 操作成功后从弹幕池移除该弹幕
     if (result.success) {
-      this.danmaku.remove(danmaku.map((dm) => dm.id))
+      this.danmaku.remove(danmaku.map((dm) => dm.id));
     }
-    return result
+    return result;
   }
 
   /**
@@ -83,15 +83,15 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async recall(danmaku: DanmakuItem): Promise<OperationResult> {
-    let result = await this.danmaku?.api?.recall?.({ api: this.danmaku.api.url, danmaku })
+    let result = await this.danmaku?.api?.recall?.({ api: this.danmaku.api.url, danmaku });
     result ??= {
       success: false,
       message: "操作失败",
-    }
+    };
     if (result.success) {
-      this.danmaku.remove([danmaku.id])
+      this.danmaku.remove([danmaku.id]);
     }
-    return result
+    return result;
   }
 
   /**
@@ -101,17 +101,17 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async blockUser(user: string | number, flag: boolean): Promise<OperationResult> {
-    let result = await this.danmaku?.api?.blockUser?.({ api: this.danmaku.api.url, user, flag })
+    let result = await this.danmaku?.api?.blockUser?.({ api: this.danmaku.api.url, user, flag });
     result ??= {
       success: false,
       message: "操作失败",
-    }
+    };
     // 操作成功后在弹幕池屏蔽该用户
     if (result.success) {
-      this.danmaku.engine.setUserFilter(user, flag)
-      this.player.events.trigger("danmaku:block_user", user, flag)
+      this.danmaku.engine.setUserFilter(user, flag);
+      this.player.events.trigger("danmaku:block_user", user, flag);
     }
-    return result
+    return result;
   }
 
   /**
@@ -125,16 +125,16 @@ export default class DanmakuOperate {
       api: this.danmaku.api.url,
       content,
       flag,
-    })
+    });
     result ??= {
       success: false,
       message: "操作失败",
-    }
+    };
     // 操作成功后在弹幕池屏蔽该内容
     if (result.success) {
-      this.danmaku.engine.setContentFilter(content, flag)
-      this.player.events.trigger("danmaku:block_content", content, flag)
+      this.danmaku.engine.setContentFilter(content, flag);
+      this.player.events.trigger("danmaku:block_content", content, flag);
     }
-    return result
+    return result;
   }
 }

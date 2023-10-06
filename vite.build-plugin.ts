@@ -23,8 +23,8 @@ async function buildPlugins() {
               external: ["mfuns-player", "@/player"],
               output: {
                 globals: {
-                  "mfuns-player": "MfunsPlayer",
-                  "@/player": "MfunsPlayer",
+                  "mfuns-player": "Player",
+                  "@/player": "Player",
                 },
               },
             },

@@ -1,24 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { EmptyObject, PlayerPlugin } from "@/types"
-import DanmakuList from "./DanmakuList"
+import { EmptyObject, PlayerPlugin } from "@/types";
+import DanmakuList from "./DanmakuList";
+import "./style.scss";
 
-const id = "danmakuList"
+const name = "danmakuList";
 
-const plugin = (): PlayerPlugin<typeof id, EmptyObject, { el: HTMLElement }> => {
-  let danmakuList: DanmakuList
+export type PluginDanmakuList = PlayerPlugin<
+  typeof name,
+  {
+    danmakuList: {
+      autoScroll: boolean;
+    };
+  },
+  DanmakuList
+>;
+
+/** 弹幕列表插件 */
+const pluginDanmakuList = (): PluginDanmakuList => {
+  let danmakuList: DanmakuList;
   return {
-    id,
-    create: (player, options) => {
-      danmakuList = new DanmakuList(player)
-      return {
-        el: danmakuList.el,
-      }
+    name,
+    create: (player) => {
+      danmakuList = new DanmakuList(player);
+      return danmakuList;
     },
-    init: (player, options) => {
-      danmakuList.init()
+    init: () => {
+      danmakuList.init();
     },
-    destroy: (player) => {},
-  }
-}
+  };
+};
 
-export default plugin
+export default pluginDanmakuList;
