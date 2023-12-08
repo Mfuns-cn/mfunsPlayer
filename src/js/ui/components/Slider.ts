@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 import { createArray, nameMap } from "@/utils";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const template = ({ divider }: { divider: number }) => html` <div
   class="${classPrefix}-slider ${classPrefix}-slider-horizontal"
@@ -26,9 +26,9 @@ const template = ({ divider }: { divider: number }) => html` <div
       ></div>
       ${divider
         ? html`
-            <ul class="${classPrefix}-slider-divider">
-              ${createArray(divider, html`<li class="${classPrefix}-slider-divider-dot"></li>`)}
-            </ul>
+            <div class="${classPrefix}-slider-divider">
+              ${createArray(divider, html`<div class="${classPrefix}-slider-divider-dot"></div>`)}
+            </div>
           `
         : ""}
     </div>
@@ -75,7 +75,7 @@ export class Slider implements SliderOptions {
   onDrag?: (value: number) => void;
 
   // 部件
-  el: HTMLElement;
+  $el: HTMLElement;
 
   $track: HTMLElement;
 
@@ -110,14 +110,14 @@ export class Slider implements SliderOptions {
 
     render(template({ divider: this.divider }), container);
 
-    this.el = this.container.querySelector(`.${classPrefix}-slider`)!;
-    this.$track = this.el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
+    this.$el = this.container.querySelector(`.${classPrefix}-slider`)!;
+    this.$track = this.$el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
     this.$bar = this.$track.querySelector(`.${classPrefix}-slider-bar`)!; // 滑动条痕迹
     this.$thumbTrack = this.$track.querySelector(`.${classPrefix}-slider-thumb-track`)!; // 滑块轨道
     this.$thumb = this.$track.querySelector(`.${classPrefix}-slider-thumb`)!; // 滑块
 
     // 滑动条事件
-    this.el.addEventListener("mousedown", (event: MouseEvent) => {
+    this.$el.addEventListener("mousedown", (event: MouseEvent) => {
       const e: MouseEvent = event;
       // 鼠标X位置
       const { clientX } = e;
@@ -129,7 +129,7 @@ export class Slider implements SliderOptions {
       // 滑块轨道与总轨道距离差
       const thumbTrackX = (trackLength - nMax) / 2;
       // 滑动条位置
-      const nLeft = this.el.getBoundingClientRect().left;
+      const nLeft = this.$el.getBoundingClientRect().left;
       // 计算滑块位置
       let nLength = clientX - nLeft - thumbTrackX;
       // 限制滑块移动位置

@@ -19,7 +19,7 @@ module.exports = {
 
     camelcase: "error", // [x]强制标识符和属性使用camelCase
     "new-cap": "error", // [x]强制构造器函数/类使用PascalCase
-    "no-underscore-dangle": "error", // [x]禁止标识符和属性前置/后置下划线
+    "no-underscore-dangle": ["error", { allowAfterThis: true }], // [x]禁止标识符和属性前置/后置下划线
     "no-unneeded-ternary": "error", // [x]禁止不必要的三元运算符
     "nonblock-statement-body-position": "error", // [x]禁止非语句块控制语句换行
     "spaced-comment": "warn", // [!]警告注释未使用空格分隔
@@ -30,4 +30,4 @@ module.exports = {
     "@typescript-eslint/no-extra-semi": "off", // [o]允许多余分号(与.prettierrc/semi:false冲突)
     "@typescript-eslint/ban-ts-comment": "warn", // [!]警告ts注释
   },
-}
+};

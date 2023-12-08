@@ -15,5 +15,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src", "plugins", "playground", "player"]
+  "include": ["src", "plugins", "player"]
 }

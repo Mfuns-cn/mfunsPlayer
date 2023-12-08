@@ -10,8 +10,8 @@
   font-display: block;
 }
 
-[class^="mp-icon-"],
-[class*=" mp-icon-"] {
+[class^="mpicon-"],
+[class*=" mpicon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "mfunsPlayerIcon" !important;
   font-style: normal;
@@ -25,88 +25,88 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.mp-icon-play:before {
+.mpicon-play:before {
   content: "\e900";
 }
-.mp-icon-pause:before {
+.mpicon-pause:before {
   content: "\e901";
 }
-.mp-icon-prev:before {
+.mpicon-prev:before {
   content: "\e902";
 }
-.mp-icon-next:before {
+.mpicon-next:before {
   content: "\e903";
 }
-.mp-icon-loop:before {
+.mpicon-loop:before {
   content: "\e904";
 }
-.mp-icon-loop-off:before {
+.mpicon-loop-off:before {
   content: "\e905";
 }
-.mp-icon-volume-off:before {
+.mpicon-volume-off:before {
   content: "\e90c";
 }
-.mp-icon-volume:before {
+.mpicon-volume:before {
   content: "\e90f";
 }
 
-.mp-icon-wide:before {
+.mpicon-wide:before {
   content: "\e910";
 }
-.mp-icon-wide-exit:before {
+.mpicon-wide-exit:before {
   content: "\e911";
 }
-.mp-icon-webfull:before {
+.mpicon-webfull:before {
   content: "\e912";
 }
-.mp-icon-webfull-exit:before {
+.mpicon-webfull-exit:before {
   content: "\e913";
 }
-.mp-icon-pip:before {
+.mpicon-pip:before {
   content: "\e914";
 }
-.mp-icon-pip-exit:before {
+.mpicon-pip-exit:before {
   content: "\e915";
 }
-.mp-icon-fullscreen:before {
+.mpicon-fullscreen:before {
   content: "\e91e";
 }
-.mp-icon-fullscreen-exit:before {
+.mpicon-fullscreen-exit:before {
   content: "\e91f";
 }
 
-.mp-icon-danmaku:before {
+.mpicon-danmaku:before {
   content: "\e920";
 }
-.mp-icon-danmaku-off:before {
+.mpicon-danmaku-off:before {
   content: "\e921";
 }
-.mp-icon-danmaku-settings:before {
+.mpicon-danmaku-settings:before {
   content: "\e923";
 }
-.mp-icon-advanced-danmaku:before {
+.mpicon-advanced-danmaku:before {
   content: "\e928";
 }
-.mp-icon-text:before {
+.mpicon-text:before {
   content: "\e92a";
 }
-.mp-icon-send-danmaku:before {
+.mpicon-send-danmaku:before {
   content: "\e92f";
 }
 
-.mp-icon-settings:before {
+.mpicon-settings:before {
   content: "\e930";
 }
-.mp-icon-caption:before {
+.mpicon-caption:before {
   content: "\e931";
 }
 
-.mp-icon-left-arrow:before {
+.mpicon-left-arrow:before {
   content: "\e940";
 }
-.mp-icon-right-arrow:before {
+.mpicon-right-arrow:before {
   content: "\e941";
 }
-.mp-icon-close:before {
+.mpicon-close:before {
   content: "\e945";
 }

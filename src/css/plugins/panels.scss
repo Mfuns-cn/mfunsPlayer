@@ -1,0 +1,91 @@
+@import "@css/theme";
+
+.#{$prefix} {
+  /** 快捷键说明 */
+  &-hotkeys {
+    &-list {
+      padding: 5px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      &-item {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      &-key {
+        display: inline-block;
+        width: 80px;
+      }
+      &-description {
+        display: inline-block;
+        width: 180px;
+      }
+    }
+  }
+
+  /** 关于 */
+  &-about {
+    padding: 10px 10px;
+    &-logo {
+      width: 360px;
+      height: 60px;
+      background-image: url("@icon/logo.svg");
+      background-size: cover;
+    }
+    a {
+      color: $primary-color;
+    }
+  }
+
+  /** 分P列表 */
+  &-partlist {
+    &-list {
+      height: 100%;
+      padding: 5px 0;
+      overflow-y: auto;
+    }
+    &-item {
+      padding: 0 8px;
+      height: 30px;
+      line-height: 30px;
+      display: flex;
+      cursor: pointer;
+      &:hover {
+        background-color: $fg-dark-xs;
+      }
+      &.state-selected {
+        color: $primary-color;
+      }
+      &-id {
+        display: inline-block;
+        width: 40px;
+        flex-shrink: 0;
+      }
+      &-title {
+        display: inline-block;
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.#{$prefix} {
+  &-panel-row {
+    display: flex;
+    padding: 5px 0;
+  }
+  &-row-label {
+    flex-shrink: 0;
+    height: 22px;
+    line-height: 22px;
+    padding-right: 10px;
+  }
+  &-row-value {
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+  }
+}

@@ -1,50 +1,42 @@
-import { EmptyObject, PlayerPlugin } from "@/types";
-import ButtonWide from "./ButtonWide";
+import type { PlayerOptions } from "@/types";
+import Player from "@/player";
+import { BasePlugin } from "@/plugin";
 
-const name = "wide";
-
-export type PluginWide = PlayerPlugin<
-  typeof name,
-  EmptyObject,
-  {
-    /** 进入宽屏模式 */
-    enter: () => void;
-    /** 退出宽屏模式 */
-    exit: () => void;
-    /** 当前状态 */
-    status: boolean;
+declare module "@/types" {
+  interface PluginExports {
+    wide?: Wide;
   }
->;
+  interface PlayerOptions {
+    wide?: boolean;
+    wideHandler?: (flag: boolean) => void;
+  }
+  interface PlayerEventMap {
+    wide_enter: () => void;
+    wide_exit: () => void;
+  }
+}
 
 /** 宽屏模式插件 */
 
-const pluginWide = (): PluginWide => {
-  let button: ButtonWide;
-  let isWide = false;
-  return {
-    name,
-    create: (player, options) => {
-      button = new ButtonWide(player, player.controller.$right, 8);
-      const plugin = {
-        button,
-        enter: () => {
-          player.template.el.classList.add("mode-wide");
-          player.events.trigger("wide");
-          isWide = true;
-        },
-        exit: () => {
-          player.template.el.classList.remove("mode-wide");
-          player.events.trigger("wide_exit");
-          isWide = false;
-        },
-        get status() {
-          return isWide;
-        },
-      };
-      options.mode?.wide && plugin.enter();
-      return plugin;
-    },
-  };
-};
-
-export default pluginWide;
+export default class Wide extends BasePlugin {
+  static readonly pluginName = "wide";
+  handler?: (flag: boolean) => void;
+  constructor(player: Player, options: PlayerOptions) {
+    super(player);
+    options.wide && this.enter();
+    this.handler = options.wideHandler;
+  }
+  enter() {
+    this.player.$el.classList.add("state-wide");
+    this.handler?.(true);
+    this.player.emit("wide_enter");
+  }
+  exit() {
+    this.player.$el.classList.remove("state-wide");
+    this.handler?.(false);
+    this.player.emit("wide_exit");
+  }
+  get status() {
+    return this.player.$el.classList.contains("state-wide");
+  }
+}

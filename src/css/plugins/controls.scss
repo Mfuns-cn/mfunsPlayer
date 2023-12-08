@@ -1,0 +1,103 @@
+.#{$prefix} {
+  &-controls {
+    &-button {
+      position: relative;
+      height: 30px;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      &-icon {
+        padding: 0 7px;
+        transition: transform 0.3s ease;
+        i {
+          font-size: 21px;
+          line-height: 30px;
+          display: none;
+          &:nth-child(1) {
+            display: block;
+          }
+        }
+      }
+      &.state-on &-icon {
+        i {
+          &:nth-child(1) {
+            display: none;
+          }
+          &:nth-child(2) {
+            display: block;
+          }
+        }
+      }
+      &-text {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 30px;
+      }
+      &:hover {
+        .mpui-tooltip {
+          display: block;
+        }
+        .#{$prefix}-controls-panel-wrap {
+          display: block;
+        }
+        .#{$prefix}-controls-button-icon {
+          transform: translateY(-2px);
+          &:active {
+            transform: translateY(1px);
+          }
+        }
+      }
+      &.state-control {
+        .#{$prefix}-controls-panel-wrap {
+          display: block;
+        }
+        .#{$prefix}-controls-icon {
+          transform: translateY(-2px);
+        }
+      }
+    }
+    &-panel-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      transform: translateX(-50%);
+      display: none;
+      cursor: default;
+    }
+    &-panel {
+      margin-bottom: 20px;
+      background-color: $bg-black;
+      color: $fg-dark;
+      border-radius: $border-radius;
+    }
+  }
+
+  &-videotime {
+    width: 90px;
+    text-align: center;
+    font-size: 13px;
+    margin: 0 5px;
+    cursor: pointer;
+    &-label {
+      width: 100%;
+      white-space: nowrap;
+      text-align: center;
+    }
+    &-input {
+      display: none;
+      width: 60px;
+      margin: auto;
+      font-size: 13px;
+      text-align: center;
+    }
+    &.state-input & {
+      &-label {
+        display: none;
+      }
+      &-input {
+        display: block;
+      }
+    }
+  }
+}

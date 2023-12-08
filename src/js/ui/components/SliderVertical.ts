@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const template = () => html`
   <div
@@ -67,7 +67,7 @@ export class SliderVertical implements SliderVerticalOptions {
   onDragEnd?: (value: number) => void;
   onDrag?: (value: number) => void;
   // 部件
-  el: HTMLElement;
+  $el: HTMLElement;
   $track: HTMLElement;
   $bar: HTMLElement;
   $thumbTrack: HTMLElement;
@@ -96,15 +96,15 @@ export class SliderVertical implements SliderVerticalOptions {
 
     render(template(), container);
 
-    this.el = this.container.querySelector(`.${classPrefix}-slider`)!;
-    this.$track = this.el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
+    this.$el = this.container.querySelector(`.${classPrefix}-slider`)!;
+    this.$track = this.$el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
     this.$bar = this.$track.querySelector(`.${classPrefix}-slider-bar`)!; // 滑动条痕迹
     this.$thumbTrack = this.$track.querySelector(`.${classPrefix}-slider-thumb-track`)!; // 滑块轨道
     this.$thumb = this.$track.querySelector(`.${classPrefix}-slider-thumb`)!; // 滑块
 
     // 滑动条事件
     // 点击鼠标事件
-    this.el.addEventListener("mousedown", (event: MouseEvent) => {
+    this.$el.addEventListener("mousedown", (event: MouseEvent) => {
       const e: MouseEvent = event;
       // 鼠标Y位置
       const { clientY } = e;
@@ -116,7 +116,7 @@ export class SliderVertical implements SliderVerticalOptions {
       // 滑块轨道与总轨道距离差
       const thumbTrackY = (trackLength - nMax) / 2;
       // 滑动条位置
-      const nTop = this.el.getBoundingClientRect().top;
+      const nTop = this.$el.getBoundingClientRect().top;
       // 计算滑块位置
       let nLength = nMax - (clientY - nTop - thumbTrackY);
       // 限制滑块移动位置

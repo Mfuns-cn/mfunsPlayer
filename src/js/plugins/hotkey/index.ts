@@ -1,20 +1,51 @@
-import { EmptyObject, PlayerPlugin } from "@/types";
-import Hotkey from "./Hotkey";
+import { PlayerOptions } from "@/types";
+import Player from "@/player";
+import { keyCode } from "@/utils/KeyCode.enum";
 
-const name = "hotkey";
+export default class Hotkey {
+  static readonly pluginName = "hotkey";
+  player: Player;
+  controlMask: HTMLElement;
 
-export type PluginHotkey = PlayerPlugin<typeof name, EmptyObject, Hotkey>;
+  constructor(player: Player, options: PlayerOptions) {
+    this.player = player;
+    this.controlMask = this.player.$area;
+    this.initKey();
+    this.initMask();
+  }
 
-/** 快捷键和手势操作插件 */
-const pluginHotkey = (): PluginHotkey => {
-  let hotkey: Hotkey;
-  return {
-    name,
-    create: (player, options) => {
-      hotkey = new Hotkey(player, options);
-      return hotkey;
-    },
-  };
-};
+  initKey() {
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (this.player.focused) {
+        switch (e.keyCode) {
+          case keyCode.Space:
+            e.preventDefault();
+            this.player.toggle();
+            break;
+          case keyCode.LeftArrow:
+            e.preventDefault();
+            this.player.seek(this.player.time - 5);
+            break;
+          case keyCode.RightArrow:
+            e.preventDefault();
+            this.player.seek(this.player.time + 5);
+            break;
+          case keyCode.UpArrow:
+            e.preventDefault();
+            this.player.setVolume(this.player.volume + 0.1);
+            break;
+          case keyCode.DownArrow:
+            e.preventDefault();
+            this.player.setVolume(this.player.volume - 0.1);
+            break;
+        }
+      }
+    });
+  }
 
-export default pluginHotkey;
+  initMask() {
+    this.controlMask.addEventListener("click", () => {
+      this.player.toggle();
+    });
+  }
+}

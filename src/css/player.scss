@@ -2,35 +2,38 @@
 @import "./theme";
 
 .#{$prefix} {
+  user-select: none;
   width: 100%;
   height: 100%;
   font-size: 12px;
+  display: flex;
+  flex-direction: column;
   &-main {
     position: relative;
     width: 100%;
-    height: calc(100% - $footbar-height);
+    flex-grow: 1;
     overflow: hidden;
   }
   // 视频展示区
-  &-video-area {
+  &-area {
     position: relative;
     width: 100%;
     height: 100%;
-    // 视频容器
-    .#{$prefix}-video-wrap {
+  }
+  // 视频容器
+  &-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    box-sizing: border-box;
+    video {
+      display: block;
       width: 100%;
       height: 100%;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: black;
-      box-sizing: border-box;
-      video {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
     }
   }
   &-head-wrap {
@@ -56,10 +59,6 @@
     height: 100%;
     top: 0;
     left: 0;
-  }
-  &-footbar {
-    height: $footbar-height;
-    background-color: $bg-white;
   }
   &-danmaku-wrap {
     position: absolute;
@@ -87,14 +86,14 @@
     line-height: 20px;
     padding: 0 4px;
     font-size: 12px;
-    background-color: $panel-black;
-    color: $text-white;
+    background-color: $bg-black;
+    color: $fg-dark;
     border-radius: $border-radius;
   }
   li {
     list-style: none;
   }
-  &.mode-webfull {
+  &.state-webfull {
     z-index: 233333;
     .#{$prefix} {
       &-main {

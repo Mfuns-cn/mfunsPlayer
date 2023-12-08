@@ -1,3 +1,5 @@
+import { TemplateResult, html as litHtml, render as litRender } from "lit-html";
+
 const isMobile = /mobile/i.test(window.navigator.userAgent);
 
 /** 创建特定长度的填充数组 */
@@ -45,7 +47,7 @@ export const timeToSecond = (str: string): number => {
 export const debounce = (fn: (...args: unknown[]) => void, delay: number, immediate = false) => {
   let timer: ReturnType<typeof setTimeout> | null = null;
   let isInvoke = false;
-  return function (this: unknown, ...args: unknown[]) {
+  const f = function (this: unknown, ...args: unknown[]) {
     if (timer) clearTimeout(timer);
     if (immediate && !isInvoke) {
       fn.apply(this, args);
@@ -59,7 +61,25 @@ export const debounce = (fn: (...args: unknown[]) => void, delay: number, immedi
       }, delay);
     }
   };
+  /*   f.clear = () => {
+    if (timer) clearTimeout(timer);
+  }; */
+  return f;
 };
+
+/** 创建元素 */
+export function createElement<T extends keyof HTMLElementTagNameMap>(
+  tagName: T,
+  attributes?: Record<string, string>
+) {
+  const el = document.createElement(tagName);
+  if (attributes) {
+    for (const name in attributes) {
+      el.setAttribute(name, attributes[name]);
+    }
+  }
+  return el;
+}
 
 /**
  * 节流
@@ -262,7 +282,7 @@ const dateFormatMap = {
 
 // date: 时间对象, pattern: 日期格式
 export const dateFormat = (date: Date, format: string) => {
-  return format.replace(/yy|yyyy|MM|dd|HH|mm|ss/g, (match) =>
+  return format.replace(/yyyy|yy|MM|dd|HH|mm|ss/g, (match) =>
     dateFormatMap[match as keyof typeof dateFormatMap]?.(date)
   );
 };

@@ -1,0 +1,10 @@
+.#{$prefix} {
+  &-settings {
+    &-play,
+    &-others {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 10px;
+    }
+  }
+}

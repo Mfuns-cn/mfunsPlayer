@@ -1,0 +1,58 @@
+@import "@css/theme";
+
+.#{$prefix} {
+  &-contextmenu-wrap {
+    display: none;
+    &.state-show {
+      display: block;
+    }
+  }
+  &-contextmenu {
+    user-select: none;
+    position: absolute;
+    min-width: 200px;
+    color: $fg-dark;
+    li {
+      height: 36px;
+      line-height: 36px;
+      cursor: pointer;
+      padding: 0 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      & + li {
+        border-top: 1px solid $fg-dark-xs;
+      }
+      &:hover {
+        background-color: $fg-dark-xs;
+      }
+    }
+    &-danmaku,
+    &-menu {
+      background-color: $bg-black;
+      border-radius: $border-radius;
+      overflow: hidden;
+    }
+    &-danmaku {
+      margin-bottom: 4px;
+      max-width: 400px;
+      &-item {
+        display: flex;
+        justify-content: space-between;
+        &-content {
+          flex-grow: 1;
+        }
+        &-operate {
+          display: flex;
+          flex-shrink: 0;
+          &-btn {
+            padding: 0 4px;
+            &:hover {
+              background-color: $fg-dark-xs;
+            }
+          }
+        }
+      }
+    }
+  }
+}

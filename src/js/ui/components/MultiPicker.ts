@@ -1,5 +1,5 @@
 import { html, render, TemplateResult } from "lit-html";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const templateWrap = ({
   list,
@@ -63,7 +63,7 @@ export class MultiPicker implements MultiPickerOptions {
 
   onToggle?: (value: string, flag: boolean) => void;
 
-  el!: HTMLElement;
+  $el!: HTMLElement;
 
   /** 选择项标签集合 */
   private $items!: NodeListOf<HTMLElement>;
@@ -80,8 +80,8 @@ export class MultiPicker implements MultiPickerOptions {
   /** 重载，一般用于列表项更改 */
   public reload(value?: string[]) {
     render(templateWrap({ list: this.list, template: this.template }), this.container);
-    this.el = this.container.querySelector(`.${classPrefix}-picker`)!;
-    this.$items = this.el.querySelectorAll(`.${classPrefix}-picker-item`); // 标签集合
+    this.$el = this.container.querySelector(`.${classPrefix}-picker`)!;
+    this.$items = this.$el.querySelectorAll(`.${classPrefix}-picker-item`); // 标签集合
     this.$items.forEach((item) => {
       item.addEventListener("click", () => {
         this.toggle(item.getAttribute("data-value")!);

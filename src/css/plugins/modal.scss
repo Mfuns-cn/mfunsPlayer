@@ -1,0 +1,61 @@
+@import "@css/theme";
+
+.#{$prefix} {
+  &-modal-wrap {
+    display: none;
+    &.state-show {
+      display: block;
+    }
+  }
+  &-modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 200px;
+    min-height: 150px;
+    background-color: $bg-black;
+    border-radius: $border-radius;
+    color: $fg-dark;
+    &-mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    &-head {
+      position: relative;
+      height: 30px;
+      font-size: 14px;
+    }
+    &-title {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      line-height: 36px;
+    }
+    &-close {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+      i {
+        padding: 0 8px;
+        font-size: 21px;
+        line-height: 36px;
+      }
+    }
+    &-content > * {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: none;
+      &.state-show {
+        display: block;
+      }
+    }
+    .#{$prefix}-controller-icon {
+      cursor: pointer;
+      font-size: 21px;
+      line-height: 30px;
+    }
+  }
+}

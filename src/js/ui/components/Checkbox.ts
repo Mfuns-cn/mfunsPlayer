@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const templateWrap = ({ label }: { label?: string }) => html`
   <div class="${classPrefix}-checkbox">
@@ -36,7 +36,7 @@ export class Checkbox implements CheckboxOptions {
   /** 当前值 */
   value: boolean;
 
-  el: HTMLElement;
+  $el: HTMLElement;
 
   constructor({ container, value = false, onChange, onToggle, label }: CheckboxOptions) {
     this.container = container;
@@ -47,8 +47,8 @@ export class Checkbox implements CheckboxOptions {
     // 注入模板
     render(templateWrap({ label: this.label }), this.container);
 
-    this.el = this.container.querySelector(`.${classPrefix}-checkbox`)!;
-    this.el.addEventListener("click", () => {
+    this.$el = this.container.querySelector(`.${classPrefix}-checkbox`)!;
+    this.$el.addEventListener("click", () => {
       this.toggle();
     });
 
@@ -58,7 +58,7 @@ export class Checkbox implements CheckboxOptions {
   /** 设置开关状态 */
   public setValue(value: boolean) {
     this.value = value;
-    this.el.classList.toggle("state-checked", value);
+    this.$el.classList.toggle("state-checked", value);
     this.onChange?.(value);
   }
 

@@ -1,104 +1,131 @@
-import { AllPluginExposed, EmptyObject } from "./types";
-import { PluginManager } from "./plugin/PluginManager";
-import Controller from "@/ui/Controller";
-import Events from "@/Events";
-import Template from "@/ui/Template";
-import { PlayerOptions, PlayerPlugin } from "@/types";
+import { LoadInfo, PluginExports, VideoInfo } from "./types";
+import { PluginManager } from "./pluginManager";
+import Events from "@/events";
+import { PlayerOptions } from "@/types";
 import Video from "@/Video";
-import Mode from "@/Mode";
-import Side from "@/ui/Side";
-import Modal from "@/ui/Modal";
-import Theme from "@/ui/Theme";
-import State from "@/ui/State";
-import Danmaku from "@/danmaku";
-import { PlayerEventsMap } from "./Events/PlayerEventsMap";
-
-export default class Player<T extends PlayerPlugin = PlayerPlugin> {
+import Sizing from "@/sizing";
+import State from "@/state";
+import { PlayerEventMap, PlayerPropertyMap } from "./types/PlayerEventMap";
+import { createElement } from "./utils";
+import { classPrefix } from "./config";
+import Hooks from "./hooks";
+/**
+ * @event
+ */
+export class Player {
   static readonly version = MFUNSPLAYER_VERSION;
   static readonly gitHash = GIT_HASH;
   /** 容器 */
   readonly container: HTMLElement;
-  /** 视频模块 */
-  video: Video;
-  /** 播放列表模块 */
-  playlist: any;
-  /** 插件 */
-  plugin = {} as AllPluginExposed<T>;
+  /** 播放器元素 */
+  readonly $el: HTMLDivElement;
+  /** 播放器主要区域 */
+  readonly $main: HTMLDivElement;
+  /** 播放器视频区域 */
+  readonly $area: HTMLDivElement;
+  /** 播放器视频容器 */
+  readonly $content: HTMLDivElement;
+  /** 播放器尺寸模块 */
+  protected sizing: Sizing;
+  /** 状态控制模块 */
+  protected state: State;
   /** 插件管理 */
-  pluginManager: PluginManager;
+  protected pluginManager: PluginManager;
+  /** 视频模块 */
+  protected video: Video;
   /** 事件模块 */
-  events: Events;
-  /** 弹幕模块 */
-  danmaku: Danmaku;
-  /** 播放器模式控制 */
-  mode: Mode;
-  /** 播放器状态控制 */
-  state: State;
-  /** 模板 */
-  template: Template;
-  /** 主题样式 */
-  theme: Theme;
-  /** 控制栏 */
-  controller: Controller;
-  /** 控制栏 */
-  side: Side;
-  /** 模态框 */
-  modal: Modal;
-  /** 用户id */
-  userId: string | number = 0;
-  /** 视频作者id */
-  authorId: string | number | null = null;
+  protected event = new Events();
+  /** hook */
+  hook = new Hooks();
+  /** 插件 */
+  plugin: PluginExports = {};
+  /** 视频信息 */
+  videoInfo: VideoInfo = {};
 
-  constructor(options: PlayerOptions<T>, plugins?: T[]) {
-    this.events = new Events();
+  constructor(options: PlayerOptions) {
     this.container = options.container;
-    // 注入模板
-    this.template = new Template(this, options);
 
-    // 视频核心功能
+    this.$el = createElement("div", { class: classPrefix });
+    this.$main = this.$el.appendChild(createElement("div", { class: `${classPrefix}-main` }));
+    this.$area = this.$main.appendChild(createElement("div", { class: `${classPrefix}-area` }));
+    this.$content = this.$area.appendChild(
+      createElement("div", { class: `${classPrefix}-content` })
+    );
+
+    this.pluginManager = new PluginManager(this);
     this.video = new Video(this, options);
 
-    // 插件管理
-    this.pluginManager = new PluginManager(this, plugins);
-
-    // 初始化主题样式模块
-    this.theme = new Theme(this, options);
-
-    // 模式
-    this.mode = new Mode(this, options);
+    this.sizing = new Sizing(this, options);
     this.state = new State(this, options);
-    this.danmaku = new Danmaku(this, options);
 
-    // 注入ui
-    this.controller = new Controller(this, options);
-    this.side = new Side(this, options);
-    this.modal = new Modal(this, options);
+    // 注册列表中的插件
+    this.pluginManager.pluginsRegister(options);
 
-    // 插件执行created函数(搭建界面、实现基本功能)
-    this.pluginManager.pluginCreate(options);
+    // 列表中插件注册完毕
+    this.pluginManager.pluginsReady(options);
 
-    // 插件执行init函数(配置初始化)
-    this.pluginManager.pluginInit(options);
+    // 播放器挂载
+    this.container.appendChild(this.$el);
+    this.pluginManager.playerMounted(options);
 
-    // 播放器初始化完毕，加载第1P
-    this.setPart(1);
+    this.setVideo(options.video, options.autoPlay, options.time);
+  }
 
-    // --- 测试 --- //
+  get $video(): HTMLVideoElement {
+    return this.video.$video;
+  }
 
-    this.on("part", (p) => {
-      console.log(`当前分P - ${p}`);
+  // --- 播放相关 --- //
+
+  /** 加载视频 */
+  public setVideo(info: VideoInfo, play?: boolean, time?: number) {
+    this.videoInfo = info;
+    this.hook.call("setVideo", info).then((res) => {
+      if (res) {
+        this.emit("video_change", info);
+        if (info.url) {
+          this.loadVideo({ url: info.url, type: info.type, play, time });
+        } else {
+          throw "缺少视频播放信息";
+        }
+      }
     });
   }
-  /** 播放相关 */
 
-  /** 播放 */
-  public play() {
-    this.video.play();
+  /** 加载视频 */
+  public loadVideo(info: LoadInfo) {
+    this.videoInfo.url = info.url;
+    this.videoInfo.type = info.type;
+    this.hook.call("loadVideo", info).then((res) => {
+      if (res) {
+        this.video.load(info);
+      }
+    });
   }
 
-  /** 暂停 */
+  /** 切换视频 */
+  public switchVideo(info: LoadInfo) {
+    this.videoInfo.url = info.url;
+    this.videoInfo.type = info.type;
+    this.hook.call("switchVideo", info).then((res) => {
+      if (res) {
+        this.video.load({ time: this.time, play: !this.paused, ...info });
+      }
+    });
+  }
+
+  /** 开始播放 */
+  public play() {
+    this.hook.call("play").then((res) => {
+      if (res) this.video.play();
+    });
+  }
+
+  /** 暂停播放 */
   public pause() {
-    this.video.pause();
+    this.hook.call("pause").then((res) => {
+      if (res) this.video.pause();
+    });
   }
 
   /** 切换播放/暂停状态 */
@@ -110,33 +137,49 @@ export default class Player<T extends PlayerPlugin = PlayerPlugin> {
     }
   }
 
-  /** 上一P */
+  /** 切换上一个 */
   public prev() {
-    this.video.prev();
+    this.hook.call("prev");
   }
 
-  /** 下一P */
+  /** 切换下一个 */
   public next() {
-    this.video.next();
+    this.hook.call("next");
   }
 
+  /** 当前播放器暂停状态 */
   get paused() {
     return this.video.paused;
   }
 
-  /** 跳转 */
-  public seek(value: number) {
-    this.video.seek(value);
+  /** 跳转
+   * @param time 跳转时间点（秒）
+   */
+  public seek(time: number) {
+    this.hook.call("seek").then((res) => {
+      if (res) this.video.seek(time);
+    });
   }
 
-  /** 设置音量 */
-  public setVolume(value: number) {
-    this.video.setVolume(value);
+  /** 设置音量
+   * @param volume 音量（0-1）
+   */
+  public setVolume(volume: number) {
+    this.video.setVolume(volume);
   }
 
-  /** 静音 */
-  public mute(flag = true) {
-    this.video.mute(flag);
+  /**
+   * 静音
+   */
+  public mute() {
+    this.video.setMute(true);
+  }
+
+  /**
+   * 取消静音
+   */
+  public unmute() {
+    this.video.setMute(false);
   }
 
   /** 设置倍速 */
@@ -144,9 +187,13 @@ export default class Player<T extends PlayerPlugin = PlayerPlugin> {
     this.video.setPlaybackRate(value);
   }
 
-  /** 跳转分P */
-  public setPart(p: number, play = false) {
-    this.video.setPart(p, play);
+  /** 设置视频循环 */
+  public setLoop(flag: boolean) {
+    this.video.setLoop(flag);
+  }
+  /** 设置视频循环 */
+  public setRatio(value: [number, number] | null) {
+    this.video.setRatio(value);
   }
 
   /** 当前播放时间 */
@@ -154,14 +201,24 @@ export default class Player<T extends PlayerPlugin = PlayerPlugin> {
     return this.video.currentTime;
   }
 
-  /** 音量 */
+  /** 当前播放总时间 */
+  public get duration() {
+    return this.video.duration;
+  }
+
+  /** 当前播放音量 */
   public get volume() {
     return this.video.volume;
   }
 
-  /** 静音 */
+  /** 当前静音状态 */
   public get muted() {
     return this.video.muted;
+  }
+
+  /** 当前静音状态 */
+  public get loop() {
+    return this.video.loop;
   }
 
   /** 当前播放速度 */
@@ -169,80 +226,145 @@ export default class Player<T extends PlayerPlugin = PlayerPlugin> {
     return this.video.playbackRate;
   }
 
-  /** 尺寸模式相关 */
+  // --- 尺寸模式相关 ---//
 
-  /** 全屏 */
-  public fullscreen() {
-    this.mode.fullscreen();
+  /** 播放器进入全屏 */
+  public enterFullscreen() {
+    this.sizing.fullscreen.enter();
   }
 
-  /** 退出全屏 */
+  /** 播放器退出全屏 */
   public exitFullscreen() {
-    this.mode.exitFullscreen();
+    this.sizing.fullscreen.exit();
   }
 
-  /** 是否处于全屏模式 */
+  /** 当前播放器是否处于全屏模式 */
   get isFullscreen() {
-    return this.mode.isFullscreen;
+    return this.sizing.fullscreen.status;
   }
 
-  /** 网页全屏 */
-  public webfull() {
-    this.mode.webfull();
+  /** 播放器进入网页全屏 */
+  public enterWebfull() {
+    this.sizing.webfull.enter();
   }
 
-  /** 退出网页全屏 */
+  /** 播放器退出网页全屏 */
   public exitWebfull() {
-    this.mode.exitWebfull();
+    this.sizing.webfull.exit();
   }
 
-  /** 是否处于网页全屏 */
+  /** 当前播放器是否处于网页全屏模式 */
   get isWebfull() {
-    return this.mode.isWebfull;
+    return this.sizing.webfull.status;
   }
 
-  /** 画中画模式 */
-  public pip() {
-    this.mode.pip();
+  /** 播放器进入画中画模式 */
+  public enterPip() {
+    this.sizing.pip.enter();
   }
 
-  /** 退出画中画模式 */
+  /** 播放器退出画中画模式 */
   public exitPip() {
-    this.mode.exitPip();
+    this.sizing.pip.exit();
   }
 
-  /** 是否处于画中画模式 */
+  /** 当前播放器是否处于画中画模式 */
   get isPip() {
-    return this.mode.isPip;
+    return this.sizing.pip.status;
   }
 
-  /** 宽屏模式 */
-  public wide() {
-    this.mode.wide();
+  // --- 播放器状态控制 --- //
+
+  /** 播放器进入聚焦状态 */
+  public focus() {
+    this.state.focus();
+  }
+  /** 播放器取消聚焦状态 */
+  public blur() {
+    this.state.blur();
+  }
+  /** 当前播放器聚焦状态 */
+  get focused() {
+    return this.state.focused;
+  }
+  /** 播放器进入活跃状态 */
+  public setActive() {
+    this.state.setActive();
+  }
+  /** 播放器取消活跃状态 */
+  public removeActive() {
+    this.state.removeActive();
   }
 
-  /** 退出宽屏模式 */
-  public exitWide() {
-    this.mode.exitWide();
+  /** 当前播放器活跃状态 */
+  get active() {
+    return this.state.active;
+  }
+  /** 播放器进入控制状态 */
+  set controlled(val: boolean) {
+    this.state.controlled = val;
+  }
+  /** 播放器取消控制状态 */
+  get controlled() {
+    return this.state.controlled;
   }
 
-  /** 是否处于宽屏模式 */
-  get isWide() {
-    return this.mode.isWide;
+  // --- 事件 --- //
+
+  /** 绑定新的视频元素 */
+  public bindVideo(el: HTMLVideoElement) {
+    this.video.$video = el;
+    this.video.detachEvent();
+    this.video.attachEvent(el);
   }
 
   /** 监听事件 */
-  public on<T extends keyof PlayerEventsMap>(name: T, listener: PlayerEventsMap[T]) {
-    this.events.on(name, listener);
+  public on<T extends keyof PlayerEventMap>(name: T, listener: PlayerEventMap[T]) {
+    this.event.on(name, listener);
   }
 
   /** 取消监听事件 */
-  public off<T extends keyof PlayerEventsMap>(name: T, listener: PlayerEventsMap[T]) {
-    this.events.off(name, listener);
+  public off<T extends keyof PlayerEventMap>(name: T, listener: PlayerEventMap[T]) {
+    this.event.off(name, listener);
+  }
+
+  /** 一次性监听事件 */
+  public once<T extends keyof PlayerEventMap>(name: T, listener: PlayerEventMap[T]) {
+    this.event.once(name, listener);
+  }
+
+  /** 发送事件 */
+  public emit<T extends keyof PlayerEventMap>(name: T, ...args: Parameters<PlayerEventMap[T]>) {
+    this.event.emit(name, ...args);
+  }
+
+  /** 发送属性变化 */
+  public emitChange<T extends keyof PlayerPropertyMap>(name: T, value: PlayerPropertyMap[T]) {
+    this.event.emit("change", name, value);
+    this.event.emit(`change:${name}` as any, value);
+  }
+
+  /** 监听属性变化 */
+  public watch<T extends keyof PlayerPropertyMap>(
+    name: T,
+    listener: (value: PlayerPropertyMap[T]) => any
+  ) {
+    this.event.on(`change:${name}` as any, listener);
+  }
+
+  /** 取消监听属性变化 */
+  public unwatch<T extends keyof PlayerPropertyMap>(
+    name: T,
+    listener: (value: PlayerPropertyMap[T]) => any
+  ) {
+    this.event.off(`change:${name}` as any, listener);
   }
 
   /** 播放器销毁 */
   public destroy() {
     // 所有插件执行destroy函数
+    this.pluginManager.destroy();
   }
 }
+
+export default Player;

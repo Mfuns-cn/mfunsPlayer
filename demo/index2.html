@@ -89,6 +89,13 @@
         </div>
 </body>
 <script>
+    function setStorage(key, value) {
+        localStorage.setItem(key, JSON.stringify(value))
+    }
+    function getStorage(key) {
+        const s = localStorage.getItem(key)
+        return s && JSON.parse(s)
+    }
     console.log(MfunsPlayer)
     let mfPlayer
     const testVersion = document.querySelector(".test-version");
@@ -125,7 +132,7 @@
                 title: "【4月】命运石之门 【KFCX雪酷X曙光】",
                 list: [/**
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/av106",
                             type: "mp4"
                         }],
@@ -141,7 +148,7 @@
                         ]
                     },**/
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
                             type: "mp4"
                         }],
@@ -158,7 +165,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1Sx411c7wA",
                             type: "mp4",
                         }],
@@ -174,7 +181,7 @@
 
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://bj.bcebos.com/ksv-video-upload/bb37487f579b9ef8b59487f93740ab1996c5b991",
                             type: "mp4",
                         }],
@@ -189,7 +196,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1kx411c7kz",
                             type: "mp4",
                         }],
@@ -204,7 +211,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1kx411c7Gm",
                             type: "mp4",
                         }],
@@ -219,7 +226,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1Cx411c7ix",
                             type: "mp4",
                         }],
@@ -234,7 +241,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1Cx411c7Pa",
                             type: "mp4",
                         }],
@@ -249,7 +256,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1yx411c7QQ",
                             type: "mp4",
                         }],
@@ -264,7 +271,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1yx411c75j",
                             type: "mp4",
                         }],
@@ -279,7 +286,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1dx411c7Ye",
                             type: "mp4",
                         }],
@@ -294,7 +301,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1Zx411c7Fz",
                             type: "mp4",
                         }],
@@ -309,7 +316,7 @@
                         ]
                     },
                     {
-                        src: [{
+                        sources: [{
                             url: "https://video_api.kms233.com/bili/BV1ox411c7hx",
                             type: "mp4",
                         }],
@@ -370,10 +377,10 @@
                 ],
                 modeList: [1, 5, 4, 6]
             },
-            feature: {
-                solid: true,
-                webfull: true,
-            },
+            seekLast: getStorage("seekLast"),
+            lastPosition: getStorage("lastPosition"),
+            autoPlay: getStorage("autoPlay"),
+
             // advancedDanmaku:{
             //   api: "https://www.mfuns.fun/wp-json/mfuns",
             //   editor: 1,
@@ -418,7 +425,7 @@
         mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
         window.mfPlayer = mfPlayer
         console.log(mfPlayer)
-        playerExtra.appendChild(mfPlayer.plugin.danmakuList.el)
+        mfPlayer.plugin.danmakuList.mount(playerExtra)
         
         mfPlayer.on("play", () => {
             console.log("play")
@@ -429,15 +436,43 @@
         mfPlayer.on("part_change", (p) => {
             console.log("part_change", p)
         })
-        mfPlayer.on("wide", () => {
+
+        mfPlayer.on("resize", ([width, height])=>{
+            console.log(`${width}-${height}`)
+        })
+
+        mfPlayer.on("timeupdate",(t) => {
+            setStorage("lastPosition", t)
+        })
+        mfPlayer.on("change", (k, v)=> {
+            setStorage(k, v)
+        })
+        mfPlayer.on("seeking",(t) => {
+            setStorage("lastPosition", t)
+        })
+        mfPlayer.on("webfull_enter", () => {
+            mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList)
+        })
+        mfPlayer.on("fullscreen_enter", () => {
+            mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList)
+        })
+        mfPlayer.on("webfull_exit", () => {
+            mfPlayer.plugin.danmakuList.mount(playerExtra)
+        })
+        mfPlayer.on("fullscreen_exit", () => {
+            mfPlayer.plugin.danmakuList.mount(playerExtra)
+        })
+        mfPlayer.on("wide_exit", () => {
+            mfPlayer.plugin.danmakuList.mount(playerExtra)
+        })
+        mfPlayer.on("wide_enter", () => {
+            mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList)
+        })
+        mfPlayer.on("wide_enter", () => {
             playerExtra.style.display = "none"
         })
         mfPlayer.on("wide_exit", () => {
             playerExtra.style.display = ""
-        })
-
-        mfPlayer.on("resize", ([width, height])=>{
-            console.log(`${width}-${height}`)
         })
     }
 

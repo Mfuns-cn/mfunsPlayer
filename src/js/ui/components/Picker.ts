@@ -1,5 +1,5 @@
 import { html, render, TemplateResult } from "lit-html";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const templateWrap = ({
   list,
@@ -61,7 +61,7 @@ export class Picker implements PickerOptions {
 
   onPick?: (value: string | number | null) => void;
 
-  el!: HTMLElement;
+  $el!: HTMLElement;
 
   /** 相等条件 */
   condition?: (item: string, value: string | number | null) => boolean;
@@ -83,8 +83,8 @@ export class Picker implements PickerOptions {
   /** 重载，一般用于列表项更改 */
   public reload(value?: string) {
     render(templateWrap({ list: this.list, template: this.template }), this.container);
-    this.el = this.container.querySelector(`.${classPrefix}-picker`)!;
-    this.$items = this.el.querySelectorAll(`.${classPrefix}-picker-item`); // 标签集合
+    this.$el = this.container.querySelector(`.${classPrefix}-picker`)!;
+    this.$items = this.$el.querySelectorAll(`.${classPrefix}-picker-item`); // 标签集合
     this.$items.forEach((item) => {
       item.addEventListener("click", () => {
         this.pick(item.getAttribute("data-value"));

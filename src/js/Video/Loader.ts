@@ -3,7 +3,8 @@ import HlsJs from "@lib/types/hls";
 import DashJs from "@lib/types/dash";
 import Player from "@/player";
 import Video from "@/Video";
-import { VideoSource } from "@/types";
+
+type VideoSource = { type?: string; url: string };
 
 declare global {
   let flvjs: typeof FlvJs | undefined;
@@ -42,11 +43,11 @@ export default class VideoLoader {
   }
   /** 一般加载方式 */
   public loadNormal(src: VideoSource) {
-    this.video.el.src = src.url;
+    this.video.$video.src = src.url;
     this.current = {
       ...src,
       destroy: () => {
-        this.video.el.src = "";
+        this.video.$video.src = "";
       },
     };
   }
@@ -54,11 +55,11 @@ export default class VideoLoader {
   public loadFlv(src: VideoSource) {
     if (flvjs?.isSupported()) {
       const flvPlayer = flvjs.createPlayer({
-        type: src.type,
+        type: src.type || "flv",
         url: src.url,
         cors: true,
       });
-      flvPlayer.attachMediaElement(this.video.el);
+      flvPlayer.attachMediaElement(this.video.$video);
       flvPlayer.load();
       this.current = {
         ...src,
@@ -74,7 +75,7 @@ export default class VideoLoader {
   public loadHls(src: VideoSource) {
     if (Hls?.isSupported()) {
       const hls = new Hls();
-      hls.attachMedia(this.video.el);
+      hls.attachMedia(this.video.$video);
       hls.loadSource(src.url);
       this.current = {
         ...src,
@@ -91,7 +92,7 @@ export default class VideoLoader {
     if (dashjs) {
       // eslint-disable-next-line new-cap
       const dashPlayer = dashjs.MediaPlayer().create();
-      dashPlayer.initialize(this.video.el, src.url, true);
+      dashPlayer.initialize(this.video.$video, src.url, true);
       this.current = {
         ...src,
         destroy: () => {

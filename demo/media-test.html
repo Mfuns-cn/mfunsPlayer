@@ -10,7 +10,7 @@
     <title>Mfuns Player v3测试 - 媒体播放测试</title>
   </head>
   <script src="../src/static/echarts.js"></script>
-  <script src="../dist/mfuns-player.min.umd.js"></script>
+  <script src="../dist/mfuns-player.umd.js"></script>
 
   <body>
     <h2 class="test-title">mfuns-player v3 测试</h2>
@@ -23,22 +23,22 @@
     </div>
   </body>
   <script>
-    console.log(Player)
-    let mfPlayer
-    const testVersion = document.querySelector(".test-version")
-    testVersion.innerText = "v" + Player.version + "-" + Player.gitHash
+    console.log(MfunsPlayer);
+    let mfPlayer;
+    const testVersion = document.querySelector(".test-version");
+    testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash;
     window.onload = () => {
-      const container = document.querySelector(".content")
-      const playerExtra = document.querySelector(".extra")
-      const playerSettings = { player: {}, danmaku: {} }
+      const container = document.querySelector(".content");
+      const playerExtra = document.querySelector(".extra");
+      const playerSettings = { player: {}, danmaku: {} };
       localStorage.mfunsPlayerSettings ??
-        localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings))
+        localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings));
       localStorage.mfuns_video_point ??
-        localStorage.setItem("mfuns_video_point", JSON.stringify([]))
-      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings
-      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player
-      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku
-      console.log(player, danmaku)
+        localStorage.setItem("mfuns_video_point", JSON.stringify([]));
+      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings;
+      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player;
+      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku;
+      console.log(player, danmaku);
 
       const mfunsPlayerConfig = {
         container,
@@ -48,16 +48,30 @@
           title: "媒体播放测试",
           list: [
             {
-              src: [
+              sources: [
                 {
-                  url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4",
+                  url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4",
                   type: "mp4",
+                  quality: "720P",
+                  label: "720P 高清",
+                },
+                {
+                  url: "https://sample-videos.com/video123/mp4/480/big_buck_bunny_480p_20mb.mp4",
+                  type: "mp4",
+                  quality: "480P",
+                  label: "480P 清晰",
+                },
+                {
+                  url: "https://sample-videos.com/video123/mp4/360/big_buck_bunny_360p_10mb.mp4",
+                  type: "mp4",
+                  quality: "360P",
+                  label: "360P 流畅",
                 },
               ],
               title: "[MP4 720P] Big Buck Bunny",
             },
             {
-              src: [
+              sources: [
                 {
                   url: "https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd",
                   type: "dash",
@@ -66,7 +80,7 @@
               title: "[DASH] Envivio",
             },
             {
-              src: [
+              sources: [
                 {
                   url: "http://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/flv/xgplayer-demo-720p.flv",
                   type: "flv",
@@ -75,7 +89,7 @@
               title: "[FLV] 西瓜播放器测试",
             },
             {
-              src: [
+              sources: [
                 {
                   url: "https://sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/hls/xgplayer-demo.m3u8",
                   type: "m3u8",
@@ -84,7 +98,7 @@
               title: "[M3U8] 西瓜播放器测试",
             },
             {
-              src: [
+              sources: [
                 {
                   url: "https://livedoc.cgtn.com/500d/prog_index.m3u8",
                   type: "m3u8",
@@ -116,37 +130,37 @@
         //         link: "https://www.mfuns.fun"
         //     }
         // ]
-      }
+      };
       for (let key in player) {
-        if (key) mfunsPlayerConfig[key] = player[key]
+        if (key) mfunsPlayerConfig[key] = player[key];
       }
       for (let key in danmaku) {
-        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key]
+        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key];
       }
       for (let i = 0; i < mfunsPlayerConfig.video.length; i++) {
-        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point)
-        if (!mfuns_video_point.length) break
+        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point);
+        if (!mfuns_video_point.length) break;
         else {
           for (let j = 0; j < mfuns_video_point.length; j++) {
             if (mfunsPlayerConfig.video[i].url === mfuns_video_point[j].link) {
-              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position
+              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position;
             }
           }
         }
       }
-      console.log(mfunsPlayerConfig)
-      mfPlayer = new Player(mfunsPlayerConfig)
-      console.log(mfPlayer)
+      console.log(mfunsPlayerConfig);
+      mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
+      console.log(mfPlayer);
       mfPlayer.on("play", () => {
-        console.log("play")
-      })
+        console.log("play");
+      });
       mfPlayer.on("pause", () => {
-        console.log("pause")
-      })
+        console.log("pause");
+      });
       mfPlayer.on("part_change", (p) => {
-        console.log("part_change", p)
-      })
-    }
+        console.log("part_change", p);
+      });
+    };
   </script>
   <style type="text/css">
     * {
@@ -230,7 +244,7 @@
 
     .player {
       width: 1000px;
-      /* height: 460px; */
+      min-height: 460px;
       margin: 20px auto;
       display: flex;
       justify-content: center;

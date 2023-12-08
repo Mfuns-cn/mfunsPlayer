@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { classPrefix } from "@/const";
+import { classPrefix } from "@/config";
 
 const templateWrap = ({ label }: { label?: string }) =>
   html` <div class="${classPrefix}-switch">${label}</div> `;
@@ -32,7 +32,7 @@ export class Switch implements SwitchOptions {
   /** 当前值 */
   value: boolean;
 
-  el: HTMLElement;
+  $el: HTMLElement;
 
   constructor({ container, value = false, onChange, onToggle }: SwitchOptions) {
     this.container = container;
@@ -42,8 +42,8 @@ export class Switch implements SwitchOptions {
     // 注入模板
     render(templateWrap({ label: this.label }), this.container);
 
-    this.el = this.container.querySelector(`.${classPrefix}-switch`)!;
-    this.el.addEventListener("click", () => {
+    this.$el = this.container.querySelector(`.${classPrefix}-switch`)!;
+    this.$el.addEventListener("click", () => {
       this.toggle(!this.value);
     });
 
@@ -53,7 +53,7 @@ export class Switch implements SwitchOptions {
   /** 设置开关状态 */
   public setValue(value: boolean) {
     this.value = value;
-    this.el.classList.toggle("state-on", value);
+    this.$el.classList.toggle("state-on", value);
     this.onChange?.(value);
   }
 

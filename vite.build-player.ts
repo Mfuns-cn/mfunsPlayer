@@ -40,7 +40,7 @@ async function buildPlayers() {
           build: {
             emptyOutDir: false,
           },
-          plugins: [cssInjectedByJsPlugin()],
+          plugins: [cssInjectedByJsPlugin({ topExecutionPriority: false })],
           resolve: {
             alias: {
               "@": path.resolve(__dirname, "src/js"),
