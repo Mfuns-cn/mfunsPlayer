@@ -47,8 +47,8 @@ declare module "@/types" {
   interface PlayerOptions {
     /** 弹幕设置 */
     danmaku?: {
-      /** 弹幕api */
-      api?: DanmakuApiOptions;
+      /** 弹幕格式类型 */
+      format?: string;
       /** 类型屏蔽 */
       filter?: string[];
       /** 弹幕不透明度 */
@@ -65,31 +65,27 @@ declare module "@/types" {
       bold?: boolean;
     };
   }
-  interface DanmakuApiOptions {
-    /** 基准url */
-    url: string;
-    /** 弹幕格式类型 */
-    type: string;
+  interface ApiCallbacks {
     /** 获取弹幕 */
-    get: (arg: {
+    danmakuGet?: (arg: {
       id: string | number;
       offset?: string | number;
       limit?: number;
     }) => Promise<unknown>;
     /** 发送弹幕 */
-    send?: (danmaku: DanmakuSendItem, id: string | number) => Promise<void>;
+    danmakuSend?: (danmaku: DanmakuSendItem, id: string | number) => Promise<void>;
     /** 举报弹幕 */
-    report?: (danmaku: DanmakuItem) => Promise<void>;
+    danmakuReport?: (danmaku: DanmakuItem) => Promise<void>;
     /** 视频作者删除弹幕 */
-    delete?: (danmaku: DanmakuItem[]) => Promise<void>;
+    danmakuDelete?: (danmaku: DanmakuItem[]) => Promise<void>;
     /** 撤回自己发送的弹幕 */
-    recall?: (danmaku: DanmakuItem) => Promise<void>;
+    danmakuRecall?: (danmaku: DanmakuItem) => Promise<void>;
     /** 添加内容屏蔽 */
-    blockContent?: (content: string, flag: boolean) => Promise<void>;
+    danmakuBlockContent?: (content: string, flag: boolean) => Promise<void>;
     /** 添加用户屏蔽 */
-    blockUser?: (user: string | number, flag: boolean) => Promise<void>;
+    danmakuBlockUser?: (user: string | number, flag: boolean) => Promise<void>;
     /** 获取屏蔽列表 */
-    getBlockList?: (list: any) => Promise<unknown>;
+    // danmakuGetBlockList?: (list: any) => Promise<unknown>;
   }
   interface VideoInfo {
     danmakuId?: string | number;
@@ -103,17 +99,17 @@ declare module "@/types" {
 
     // 弹幕加载
     /** 弹幕开始加载 */
-    "danmaku:load_start": () => void;
+    "danmaku:loading": () => void;
     /** 弹幕加载完毕 */
-    "danmaku:load_end": (dan: DanmakuItem[], err?: any) => void;
+    "danmaku:loaded": (dan: DanmakuItem[], err?: any) => void;
     /** 附加弹幕开始加载 */
-    "danmaku:load_addition_start": (url: string) => void;
+    "danmaku:addition_loading": (url: string) => void;
     /** 附加弹幕加载完毕 */
-    "danmaku:load_addition_end": (url: string, dan: DanmakuItem[], err?: any) => void;
+    "danmaku:addition_loaded": (url: string, dan: DanmakuItem[], err?: any) => void;
     /** 加载新增弹幕 */
-    "danmaku:load_new_start": (offset: number | string) => void;
+    "danmaku:new_loading": (offset: number | string) => void;
     /** 新增弹幕加载完毕 */
-    "danmaku:load_new_end": (offset: number | string, dan: DanmakuItem[], err?: any) => void;
+    "danmaku:new_loaded": (offset: number | string, dan: DanmakuItem[], err?: any) => void;
 
     // --- 弹幕播放操作 --- //
     /** 开启弹幕 */

@@ -84,6 +84,8 @@ export interface PlayerEventMap {
 
   /** 播放器自定义属性更改 */
   change: <T extends keyof PlayerPropertyMap>(key: T, value: PlayerPropertyMap[T]) => void;
+
+  error: (err: Error) => void;
 }
 
 type PlayerPropertyChangeEventMap = {

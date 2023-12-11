@@ -58,6 +58,19 @@ export default class Video {
 
     this.attachEvent(this.$video);
     this.initKeepRatio();
+
+    this.player.on("play", () => {
+      this.player.$el.classList.remove("state-paused");
+    });
+    this.player.on("pause", () => {
+      this.player.$el.classList.add("state-paused");
+    });
+    this.player.on("waiting", () => {
+      this.player.$el.classList.add("state-loading");
+    });
+    this.player.on("playing", () => {
+      this.player.$el.classList.remove("state-loading");
+    });
   }
 
   /** 加载视频 */

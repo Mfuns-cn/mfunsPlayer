@@ -8,8 +8,8 @@ const template = () => html`
   <div class="${classPrefix}-about">
     <div class="${classPrefix}-about-logo"></div>
     <div class="${classPrefix}-about-version">version ${Player.version}-${Player.gitHash}</div>
-    <div>github: <a href="${repositoryLink}" target="_blank">mfuns-cn/mfunsPlayer</a></div>
-    <div>开发者</div>
+    <div>github：<a href="${repositoryLink}" target="_blank">mfuns-cn/mfunsPlayer</a></div>
+    <div>开发者：</div>
     <ul class="${classPrefix}-about-developers">
       ${developers.map(
         ({ name, link }) => html`

@@ -1,7 +1,7 @@
 @import "@css/theme";
 
 .#{$prefix} {
-  .#{$prefix}-video-wrap {
+  .#{$prefix}-content {
     padding: var(--padding, 0);
   }
   &.state-wide,

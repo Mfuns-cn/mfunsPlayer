@@ -12,8 +12,10 @@ declare module "@/types" {
     login: (userId: number) => void;
   }
   interface PlayerOptions {
-    userId: number;
-    login: () => Promise<Partial<PlayerOptions> | void>;
+    userId?: number;
+  }
+  interface ApiCallbacks {
+    login?: () => Promise<Partial<PlayerOptions> | void>;
   }
 }
 
@@ -22,7 +24,7 @@ export default class User extends BasePlugin {
 
   private apiLogin?: () => Promise<Partial<PlayerOptions> | void>;
   created(options: PlayerOptions) {
-    this.apiLogin = options.login;
+    this.apiLogin = options.apis?.login;
     this.player.on("options_set", ({ userId }) => {
       if (userId != null) {
         this.player.userId = userId;

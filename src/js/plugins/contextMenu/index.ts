@@ -169,21 +169,21 @@ export default class ContextMenu extends BasePlugin {
               (dm: DanmakuItem) => {
                 operate?.report(dm);
               },
-              !myDanmaku && api?.report,
+              !myDanmaku && api?.danmakuReport,
             ],
             [
               "屏蔽",
               (dm: DanmakuItem) => {
                 operate?.blockUser(dm.user, true);
               },
-              !myDanmaku && api?.blockUser,
+              !myDanmaku && api?.danmakuBlockUser,
             ],
             [
               "撤回",
               (dm: DanmakuItem) => {
                 operate?.recall(dm);
               },
-              myDanmaku && api?.recall,
+              myDanmaku && api?.danmakuRecall,
             ],
             [
               "复制",

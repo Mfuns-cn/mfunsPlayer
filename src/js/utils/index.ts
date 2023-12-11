@@ -70,13 +70,17 @@ export const debounce = (fn: (...args: unknown[]) => void, delay: number, immedi
 /** 创建元素 */
 export function createElement<T extends keyof HTMLElementTagNameMap>(
   tagName: T,
-  attributes?: Record<string, string>
+  attributes?: Record<string, string>,
+  children?: Node
 ) {
   const el = document.createElement(tagName);
   if (attributes) {
     for (const name in attributes) {
       el.setAttribute(name, attributes[name]);
     }
+  }
+  if (children) {
+    el.append(children);
   }
   return el;
 }

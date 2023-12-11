@@ -1,0 +1,97 @@
+@import "@css/theme";
+
+.#{$prefix} {
+  &-videostatus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  &-videostatus {
+    &-paused {
+      display: none;
+      position: absolute;
+      bottom: 60px;
+      right: 20px;
+      width: 65px;
+      height: 55px;
+      background: url(../icon/play.png);
+      background-size: 100% 100%;
+    }
+    &-loading {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      &-icon {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        height: 35px;
+        & > span {
+          width: 20px;
+          height: 35px;
+          font-size: 16px;
+          text-align: center;
+          line-height: 16px;
+          color: $primary-color;
+          animation: loading-float 1.4s ease-in-out infinite;
+          text-shadow: 1px 1px #666;
+          &:nth-child(2) {
+            animation-delay: -1.2s;
+          }
+          &:nth-child(3) {
+            animation-delay: -1s;
+          }
+          &:nth-child(4) {
+            animation-delay: -0.8s;
+          }
+          &:nth-child(5) {
+            animation-delay: -0.6s;
+          }
+          &:nth-child(6) {
+            animation-delay: -0.4s;
+          }
+          &:nth-child(7) {
+            animation-delay: -0.2s;
+          }
+        }
+      }
+      &-content {
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px #666;
+      }
+    }
+  }
+  &.state-paused & {
+    &-videostatus-paused {
+      display: block;
+    }
+  }
+  &.state-loading & {
+    &-videostatus-loading {
+      display: block;
+    }
+  }
+}
+
+@keyframes loading-float {
+  0%,
+  100% {
+    height: 35px;
+  }
+  50% {
+    height: 20px;
+  }
+}

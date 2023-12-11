@@ -86,7 +86,7 @@ export class Player {
         if (info.url) {
           this.loadVideo({ url: info.url, type: info.type, play, time });
         } else {
-          throw "缺少视频播放信息";
+          this.throw(new Error("缺少视频播放信息"));
         }
       }
     });
@@ -358,6 +358,11 @@ export class Player {
     listener: (value: PlayerPropertyMap[T]) => any
   ) {
     this.event.off(`change:${name}` as any, listener);
+  }
+
+  public throw(err: Error) {
+    console.error(err);
+    this.emit("error", err);
   }
 
   /** 播放器销毁 */

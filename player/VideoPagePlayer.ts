@@ -25,6 +25,8 @@ import PartList from "@/plugins/panels/partList";
 import ButtonDanmakulist from "@/plugins/controls/button/ButtonDanmakulist";
 import Quality from "@/plugins/quality";
 import ButtonQuality from "@/plugins/controls/button/ButtonQuality";
+import VideoStatus from "@/plugins/videoStatus";
+import LoadingMask from "@/plugins/loadingMask";
 
 /** 内置插件 */
 const plugins = [
@@ -40,6 +42,8 @@ const plugins = [
   SeekLast,
   Theme,
   Quality,
+  VideoStatus,
+  LoadingMask,
 ];
 
 const panels = [About, Hotkeys, PartList];

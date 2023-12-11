@@ -68,6 +68,7 @@ export interface PlayerOptions {
       mount?: (player: Player) => PanelContainer;
     }
   >;
+  apis?: ApiCallbacks;
 }
 
 export interface OperationResult {
@@ -117,3 +118,6 @@ export interface LoadInfo {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PluginExports {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ApiCallbacks {}

@@ -235,7 +235,7 @@ export default class DanmakuList extends PanelPlugin {
     }
   }
   created() {
-    const api = this.danmaku.api;
+    const api = this.danmaku?.api;
     const operate = this.danmaku.operate;
     this.list = new VirtualList({
       el: this.$container,
@@ -253,21 +253,21 @@ export default class DanmakuList extends PanelPlugin {
                 (dm: DanmakuItem) => {
                   operate.report(dm);
                 },
-                !myDanmaku && api?.report,
+                !myDanmaku && api?.danmakuReport,
               ],
               [
                 "屏蔽",
                 (dm: DanmakuItem) => {
                   operate.blockUser(dm.user, true);
                 },
-                !myDanmaku && api?.blockUser,
+                !myDanmaku && api?.danmakuBlockUser,
               ],
               [
                 "撤回",
                 (dm: DanmakuItem) => {
                   operate.recall(dm);
                 },
-                myDanmaku && api?.recall,
+                myDanmaku && api?.danmakuRecall,
               ],
             ].filter((v) => v[2]) as [string, (dm: DanmakuItem) => void, unknown][];
           },
@@ -306,13 +306,13 @@ export default class DanmakuList extends PanelPlugin {
     this.player.on("video_change", () => {
       this.clear();
     });
-    this.player.on("danmaku:load_end", (dan) => {
+    this.player.on("danmaku:loaded", (dan) => {
       this.fill(dan);
       if (this.autoScroll) {
         this.sort("time");
       }
     });
-    this.player.on("danmaku:load_addition_end", (url, dan) => {
+    this.player.on("danmaku:addition_loaded", (url, dan) => {
       this.fill(dan);
       if (this.autoScroll) {
         this.sort("time");

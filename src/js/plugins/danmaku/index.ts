@@ -1,5 +1,5 @@
 import { DanmakuItem, DanmakuSource } from "./types";
-import { PlayerOptions, DanmakuApiOptions, PluginConstructor } from "@/types";
+import { ApiCallbacks, PlayerOptions } from "@/types";
 import Player from "@/player";
 import DanmakuEngine from "./DanmakuEngine";
 import { classPrefix } from "@/config";
@@ -38,8 +38,11 @@ export default class Danmaku extends BasePlugin {
   /** 弹幕格式转换 */
   parser: DanmakuParser;
 
-  /** 弹幕api */
-  api?: DanmakuApiOptions;
+  /** 操作api */
+  api: ApiCallbacks;
+
+  /** 操作api */
+  format: string;
 
   /** 弹幕操作 */
   operate: DanmakuOperate;
@@ -60,9 +63,10 @@ export default class Danmaku extends BasePlugin {
 
   constructor(player: Player, options: PlayerOptions) {
     super(player);
-    this.parser = new DanmakuParser({ defaultParser: "mfuns" });
+    this.format = options.danmaku?.format || "mfuns";
+    this.parser = new DanmakuParser({ defaultParser: this.format });
     this.operate = new DanmakuOperate(this.player);
-    this.api = options.danmaku?.api;
+    this.api = options.apis || {};
     this.allowNewDanmaku = false;
 
     this.$el = createElement("div", { class: `${classPrefix}-danmaku-wrap` });
@@ -118,62 +122,60 @@ export default class Danmaku extends BasePlugin {
         const dan = this.parser.parse({ data: danmakuData, type });
         if (dan) {
           dan && this.add(dan);
-          this.player.emit("danmaku:load_addition_end", url, dan);
+          this.player.emit("danmaku:addition_loaded", url, dan);
         } else {
           throw "无法正确解析弹幕格式";
         }
       })
       .catch((err) => {
-        this.player.emit("danmaku:load_addition_end", url, [], err);
+        this.player.emit("danmaku:addition_loaded", url, [], err);
         console.error(err);
       });
   }
 
   /** 加载弹幕 */
   private load(id: string | number) {
-    const api = this.api;
-    api
-      ?.get({ id })
+    this.api
+      .danmakuGet?.({ id })
       .then((data) => {
-        const dan = this.parser.parse({ data, type: api.type });
+        const dan = this.parser.parse({ data, type: this.format });
         if (dan) {
           this.add(dan);
           this.lastDanmakuId = dan[dan.length - 1].id;
-          this.player.emit("danmaku:load_end", dan);
+          this.player.emit("danmaku:loaded", dan);
         } else {
           throw "无法正确解析弹幕格式";
         }
       })
       .catch((err) => {
-        this.player.emit("danmaku:load_end", [], err);
+        this.player.emit("danmaku:loaded", [], err);
       });
   }
 
   /** 加载实时新增弹幕 */
   loadNew(id: string | number) {
     const offset = this.lastDanmakuId;
-    this.player.emit("danmaku:load_new_start", offset);
-    const api = this.api;
-    api
-      ?.get({ id, offset: this.lastDanmakuId })
+    this.player.emit("danmaku:new_loading", offset);
+    this.api
+      .danmakuGet?.({ id, offset: this.lastDanmakuId })
       .then((data) => {
-        const dan = this.parser.parse({ data, type: api.type });
+        const dan = this.parser.parse({ data, type: this.format });
         if (dan) {
           this.add(dan);
           this.lastDanmakuId = dan[dan.length - 1].id;
-          this.player.emit("danmaku:load_new_end", offset, dan);
+          this.player.emit("danmaku:new_loaded", offset, dan);
         } else {
           throw "无法正确解析弹幕格式";
         }
       })
       .catch((err) => {
-        this.player.emit("danmaku:load_new_end", offset, [], err);
+        this.player.emit("danmaku:new_loaded", offset, [], err);
       });
   }
 
   /** 重载弹幕 */
   public async reload(id?: string | number, addition?: DanmakuSource[]) {
-    this.player.emit("danmaku:load_start");
+    this.player.emit("danmaku:loading");
     // 清空弹幕池
     this.engine.reset();
     id && this.load(id);

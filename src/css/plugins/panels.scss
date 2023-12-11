@@ -40,8 +40,14 @@
   /** 分P列表 */
   &-partlist {
     &-list {
+      scrollbar-width: thin;
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: gray;
+      }
       height: 100%;
-      padding: 5px 0;
       overflow-y: auto;
     }
     &-item {
