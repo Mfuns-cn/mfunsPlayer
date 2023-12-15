@@ -280,7 +280,15 @@
             console.log(
               `向 id:${id}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
             );
-            mfPlayer.controller.danmakuBar.setCoolDown(5);
+            mfPlayer.plugin.danmakuBar.setCoolDown(5);
+            mfPlayer.plugin.danmakuList.add([
+              {
+                id: `send:${Date.now()}`,
+                date: Math.floor(Date.now() / 1000),
+                user: mfPlayer.userId || 0,
+                ...danmaku,
+              },
+            ]);
             return {
               success: true,
               message: "发送成功",

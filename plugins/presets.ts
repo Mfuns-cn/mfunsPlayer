@@ -21,12 +21,13 @@ import Sources from "@/plugins/core/sources";
 import Side from "@/plugins/ui/side";
 import Pip from "@/plugins/screen/pip";
 import Fullscreen from "@/plugins/screen/fullscreen";
+import User from "@/plugins/user";
 
 /** 核心插件 */
 export const corePlugins = [Sources, Pip, Fullscreen];
 
 /** 基础插件 */
-export const basicPlugins = [Modal, Side, Controller, Settings, Hotkey, ContextMenu];
+export const basicPlugins = [Modal, Side, Controller, Settings, Hotkey, ContextMenu, User];
 
 /** 基础控件 */
 export const basicControls = [

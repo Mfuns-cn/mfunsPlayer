@@ -16,10 +16,8 @@ const template = html`
     <div class="${classPrefix}-danmakubar-input-wrap">
       <div class="${classPrefix}-danmakubar-input-slot"></div>
       <input type="text" autocompleted="new-password" class="${classPrefix}-danmakubar-input" />
-      <!-- 
       <div class="${classPrefix}-danmakubar-status-loading">弹幕功能加载中...</div>
-      <div class="${classPrefix}-danmakubar-status-login">需要登录后才能发送弹幕哦~</div>
-      -->
+      <div class="${classPrefix}-danmakubar-status-login">需要<a>登录</a>后才能发送弹幕哦~</div>
       <div class="${classPrefix}-danmakubar-send">发送</div>
     </div>
   </div>
@@ -37,6 +35,8 @@ declare module "@/types" {
       fontSizeList?: [number, string][];
       /** 弹幕模式列表 */
       modeList?: number[];
+      /** 需要登录 */
+      loginRequired?: boolean;
     };
   }
   interface PluginExports {
@@ -56,12 +56,16 @@ export default class DanmakuBar extends BasePlugin {
   $slot: HTMLElement;
   $inputSlot: HTMLElement;
 
+  $logina: HTMLElement;
+
   controller: Controller;
   danmaku: Danmaku;
 
   danmakuColor = 16777215;
   danmakuMode = 1;
   danmakuFontSize = 25;
+
+  loginRequired: boolean;
 
   /** 冷却计时器 */
   coolDownTimer = 0;
@@ -73,6 +77,7 @@ export default class DanmakuBar extends BasePlugin {
     this.$wrap = this.player.$el.appendChild(
       createElement("div", { class: `${classPrefix}-danmakubar-wrap mpui-background` })
     );
+    this.loginRequired = options.danmakuBar?.loginRequired || false;
 
     render(template, this.$wrap);
     this.$el = this.$wrap.querySelector(`.${classPrefix}-danmakubar`)!;
@@ -80,9 +85,28 @@ export default class DanmakuBar extends BasePlugin {
     this.$input = this.$el.querySelector(`.${classPrefix}-danmakubar-input`)!;
     this.$slot = this.$el.querySelector(`.${classPrefix}-danmakubar-slot`)!;
     this.$inputSlot = this.$el.querySelector(`.${classPrefix}-danmakubar-input-slot`)!;
+    this.$logina = this.$el.querySelector(`.${classPrefix}-danmakubar-status-login a`)!;
+
+    this.$logina.onclick = () => this.plugin.user.login();
 
     this.buttonDanmakuStyle = new ButtonDanmakuStyle(this, this.$inputSlot, options);
 
+    if (this.loginRequired && !options.userId) {
+      this.setLoginLimit(true);
+    }
+
+    this.player.on("video_change", () => {
+      this.setLoading(true);
+    });
+    this.player.on("loadeddata", () => {
+      this.setLoading(false);
+    });
+
+    this.player.on("login", (userId) => {
+      if (userId) {
+        this.setLoginLimit(false);
+      }
+    });
     this.player.on("fullscreen:exit", () => {
       this.moveToWrap();
     });
@@ -156,6 +180,22 @@ export default class DanmakuBar extends BasePlugin {
       color: this.danmakuColor,
       size: this.danmakuFontSize,
     };
+  }
+  /** 设置登录限制 */
+  private setLoginLimit(flag: boolean) {
+    if (flag) {
+      this.$el.classList.add("state-login");
+    } else {
+      this.$el.classList.remove("state-login");
+    }
+  }
+  /** 设置加载状态 */
+  private setLoading(flag: boolean) {
+    if (flag) {
+      this.$el.classList.add("state-loading");
+    } else {
+      this.$el.classList.remove("state-loading");
+    }
   }
 }
 

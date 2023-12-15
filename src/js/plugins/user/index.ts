@@ -8,6 +8,9 @@ declare module "@/player" {
   }
 }
 declare module "@/types" {
+  interface PluginExports {
+    user: User;
+  }
   interface PlayerEventMap {
     login: (userId: number) => void;
   }

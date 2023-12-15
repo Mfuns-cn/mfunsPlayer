@@ -157,13 +157,16 @@ export default class DanmakuEngine {
   }
 
   /** 弹幕池添加弹幕 */
-  add(dan: DanmakuItem[]) {
+  add(dan: DanmakuItem[], play?: boolean) {
     dan.forEach((dm) => {
       /** 按时间顺序插入弹幕 */
       const index = this.danmakuPool.findIndex((d) => dm.time <= d.time);
       this.danmakuPool.splice(index === -1 ? this.danmakuPool.length : index, 0, dm);
       // 若插入弹幕的时间小于当前时间，则待添加弹幕索引+1
-      if (dm.time < this.time) this.currentIndex += 1;
+      if (dm.time < this.time) {
+        this.currentIndex += 1;
+        play && this.draw(dan);
+      }
     });
   }
 
@@ -481,6 +484,9 @@ export default class DanmakuEngine {
       }
       item.style.opacity = this.opacity.toString();
       item.style.fontSize = +dm.size * this.fontScale + "px";
+      if (dm.fromHere) {
+        item.style.border = "2px solid white";
+      }
       /** 弹幕运动结束后，从DOM中移除该弹幕 */
       item.addEventListener("animationend", () => {
         if ([...this.container.children].indexOf(item) > -1) this.container.removeChild(item);

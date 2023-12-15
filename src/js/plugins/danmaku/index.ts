@@ -65,7 +65,7 @@ export default class Danmaku extends BasePlugin {
     super(player);
     this.format = options.danmaku?.format || "mfuns";
     this.parser = new DanmakuParser({ defaultParser: this.format });
-    this.operate = new DanmakuOperate(this.player);
+    this.operate = new DanmakuOperate(this.player, this);
     this.api = options.danmakuApi || {};
     this.allowNewDanmaku = false;
 
@@ -187,8 +187,9 @@ export default class Danmaku extends BasePlugin {
   /**
    * 添加弹幕到弹幕池
    * @param dan 要添加的弹幕
+   * @param play 是否立即播放超时弹幕
    * */
-  add(dan: DanmakuItem[]) {
+  add(dan: DanmakuItem[], play?: boolean) {
     const basicDanmaku: DanmakuItem[] = [];
     const advancedDanmaku: Record<number, DanmakuItem[]> = {};
     dan.forEach((dm) => {
@@ -202,7 +203,7 @@ export default class Danmaku extends BasePlugin {
         }
       }
     });
-    basicDanmaku.length && this.engine.add(basicDanmaku);
+    basicDanmaku.length && this.engine.add(basicDanmaku, play);
     for (const mode in advancedDanmaku) {
       this.handler[mode]?.(advancedDanmaku[mode]);
     }

@@ -16,7 +16,10 @@ export default class Hotkey {
 
   initKey() {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
+      const tag = document.activeElement?.tagName.toUpperCase();
+      const editable = document.activeElement?.getAttribute("contenteditable");
       if (this.player.focused) {
+        if (tag == "INPUT" || tag == "TEXTAREA" || editable == "" || editable == "true") return;
         switch (e.keyCode) {
           case keyCode.Space:
             e.preventDefault();

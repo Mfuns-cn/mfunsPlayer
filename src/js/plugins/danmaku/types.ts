@@ -26,6 +26,8 @@ export interface DanmakuItem {
   date: number;
   /** 发送用户 */
   user: string | number;
+  /** 弹幕是否在此播放器上发送 */
+  fromHere?: boolean;
 }
 
 /** 弹幕发送对象接口 */

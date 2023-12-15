@@ -5,9 +5,9 @@ import Danmaku from ".";
 export default class DanmakuOperate {
   danmaku: Danmaku;
   player: Player;
-  constructor(player: Player) {
+  constructor(player: Player, danmaku: Danmaku) {
     this.player = player;
-    this.danmaku = player.plugin.danmaku!;
+    this.danmaku = danmaku;
   }
 
   /**
@@ -20,16 +20,20 @@ export default class DanmakuOperate {
     return await this.danmaku.api
       .send(danmaku, this.player.videoInfo.danmakuId || 0)
       .then((res) => {
-        this.danmaku.add([
-          Object.assign(
-            {
-              id: `send:${Date.now()}`,
-              date: Math.floor(Date.now() / 1000),
-              user: 0,
-            },
-            danmaku
-          ),
-        ]);
+        this.danmaku.add(
+          [
+            Object.assign(
+              {
+                id: `send:${Date.now()}`,
+                date: Math.floor(Date.now() / 1000),
+                user: this.player.userId || 0,
+                fromHere: true,
+              },
+              danmaku
+            ),
+          ],
+          true
+        );
         return res;
       })
       .catch((e) => {
