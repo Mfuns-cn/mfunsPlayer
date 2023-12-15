@@ -2,7 +2,7 @@ import { classPrefix } from "@/config";
 import Player from "@/player";
 import { BasePlugin } from "@/plugin";
 import { PlayerOptions } from "@/types";
-import { Checkbox, Picker } from "@/ui/components";
+import { Checkbox, Picker } from "@/components";
 import { html, render } from "lit-html";
 
 declare module "@/types" {

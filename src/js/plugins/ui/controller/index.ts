@@ -7,7 +7,7 @@ import { BasePlugin } from "@/plugin";
 
 const template = () => html`
   <div class="${classPrefix}-controller-mask"></div>
-  <div class="${classPrefix}-controller mpui-crystal">
+  <div class="${classPrefix}-controller mpui-black">
     <div class="${classPrefix}-controller-top"></div>
     <div class="${classPrefix}-controller-content">
       <div class="${classPrefix}-controller-left"></div>
@@ -37,7 +37,7 @@ export default class Controller extends BasePlugin {
 
   isHover = false;
 
-  protected inactiveHook: () => boolean;
+  protected inactiveHook: () => boolean | void;
   protected mouseEnterHandler: () => void;
   protected mouseLeaveHandler: () => void;
 
@@ -56,7 +56,7 @@ export default class Controller extends BasePlugin {
     this.$right = this.$el.querySelector(`.${classPrefix}-controller-right`)!;
     this.player.$main.append(this.container);
 
-    this.inactiveHook = () => !this.isHover;
+    this.inactiveHook = () => !this.isHover && void 0;
     this.mouseEnterHandler = () => {
       this.isHover = true;
     };

@@ -30,7 +30,7 @@ export default class Seamless extends BasePlugin {
           "canplay",
           () => {
             this.player.emit("video_load", info);
-            this.player.isPip && video.requestPictureInPicture();
+            this.plugin.pip?.status && video.requestPictureInPicture();
             this.player.bindVideo(video);
             oldVideo.remove();
             play == true && this.player.paused && this.player.play();

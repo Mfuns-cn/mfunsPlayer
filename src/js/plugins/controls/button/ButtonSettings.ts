@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { Picker } from "@/ui/components";
+import { Picker } from "@/components";
 import Player from "@/player";
 import { classPrefix } from "@/config";
 import { PlayerOptions } from "@/types";
@@ -41,6 +41,6 @@ export default class ButtonSettings extends ControlsPlugin {
   }
 
   created(options: PlayerOptions) {
-    this.$panel.appendChild(this.player.plugin.settings!.$el);
+    this.$panel.appendChild(this.plugin.settings!.$el);
   }
 }

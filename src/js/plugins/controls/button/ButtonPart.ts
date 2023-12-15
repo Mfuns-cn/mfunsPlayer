@@ -38,7 +38,7 @@ export default class ButtonPart extends ControlsPlugin {
 
   created() {
     this.$icon.addEventListener("click", () => {
-      this.player.plugin.partList?.toggle();
+      this.plugin.partList?.toggle();
     });
     this.player.on("video_change", (info) => {
       this.$text.innerText = `P${info.part}`;

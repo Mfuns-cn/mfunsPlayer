@@ -27,5 +27,25 @@
       height: 24px;
       padding: 0 8px;
     }
+    &-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &-image {
+      width: 96px;
+      height: 96px;
+      background: url("@icon/loading.gif") center/contain no-repeat;
+      filter: invert(25%) drop-shadow(2px 2px #222);
+      image-rendering: pixelated;
+    }
+  }
+  &.mpui-white &-loadingmask {
+    background: white;
+    color: $fg-light;
+    &-image {
+      filter: invert(10%) drop-shadow(2px 2px #aaa);
+    }
   }
 }

@@ -68,10 +68,10 @@ export default class DanmakuBar extends BasePlugin {
 
   constructor(player: Player, options: PlayerOptions) {
     super(player);
-    this.controller = this.player.plugin.controller!;
-    this.danmaku = this.player.plugin.danmaku!;
+    this.controller = this.plugin.controller!;
+    this.danmaku = this.plugin.danmaku!;
     this.$wrap = this.player.$el.appendChild(
-      createElement("div", { class: `${classPrefix}-danmakubar-wrap` })
+      createElement("div", { class: `${classPrefix}-danmakubar-wrap mpui-background` })
     );
 
     render(template, this.$wrap);
@@ -83,17 +83,21 @@ export default class DanmakuBar extends BasePlugin {
 
     this.buttonDanmakuStyle = new ButtonDanmakuStyle(this, this.$inputSlot, options);
 
-    this.player.on("fullscreen_enter", () => {
-      this.moveToController();
-    });
-    this.player.on("webfull_enter", () => {
-      this.moveToController();
-    });
-    this.player.on("fullscreen_exit", () => {
+    this.player.on("fullscreen:exit", () => {
       this.moveToWrap();
     });
-    this.player.on("webfull_exit", () => {
+    this.player.on("webscreen:exit", () => {
       this.moveToWrap();
+    });
+    this.player.on("fullscreen:enter", () => {
+      requestAnimationFrame(() => {
+        this.moveToController();
+      });
+    });
+    this.player.on("webscreen:enter", () => {
+      requestAnimationFrame(() => {
+        this.moveToController();
+      });
     });
     this.$input.addEventListener("keydown", (e) => {
       if (e.keyCode == keyCode.Enter) {

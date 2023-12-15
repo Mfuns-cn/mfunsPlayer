@@ -1,5 +1,4 @@
-import { Checkbox } from "@/ui/components";
-import "./style.scss";
+import { Checkbox } from "@/components";
 import Player from "@/player";
 import { PlayerOptions } from "@/types";
 import { BasePlugin } from "@/plugin";
@@ -20,12 +19,13 @@ declare module "@/types" {
 export default class BlackBorder extends BasePlugin {
   static pluginName: "blackBorder";
   padding: string;
+  checkbox?: Checkbox;
   constructor(player: Player, options: PlayerOptions) {
     super(player);
     this.padding = options.blackBorderPadding || "8px";
     if (player.plugin.buttonSettings) {
       const container = document.createElement("div");
-      new Checkbox({
+      this.checkbox = new Checkbox({
         container,
         value: !this.status,
         onToggle: (val) => {

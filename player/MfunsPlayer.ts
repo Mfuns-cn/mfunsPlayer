@@ -2,7 +2,7 @@ import Player from "@/index";
 import { PlayerOptions } from "@/types";
 import DanmakuList from "../plugins/danmakuList";
 import DanmakuBar from "@/plugins/danmakuBar";
-import { ButtonWebfull } from "@/plugins/controls";
+import { ButtonWebscreen } from "@/plugins/controls";
 import Danmaku from "@/plugins/danmaku";
 import ButtonDanmakuToggle from "@/plugins/controls/button/ButtonDanmakuToggle";
 import ButtonDanmakuSettings from "@/plugins/controls/button/ButtonDanmakuSettings";
@@ -20,9 +20,12 @@ import ButtonQuality from "@/plugins/controls/button/ButtonQuality";
 import Quality from "@/plugins/quality";
 import VideoStatus from "@/plugins/videoStatus";
 import LoadingMask from "@/plugins/loadingMask";
+import VideoTitle from "@/plugins/controls/videoTitle";
+import Header from "@/plugins/ui/header";
 
 /** 预设插件 */
 const plugins = [
+  Header,
   Part,
   Seamless,
   Danmaku,
@@ -36,11 +39,12 @@ const plugins = [
   LoadingMask,
 ];
 const controls = [
-  ButtonWebfull,
+  ButtonWebscreen,
   ButtonDanmakuToggle,
   ButtonDanmakuSettings,
   ButtonDanmakulist,
   ButtonQuality,
+  VideoTitle,
 ];
 const panels = [About, Hotkeys, PartList];
 

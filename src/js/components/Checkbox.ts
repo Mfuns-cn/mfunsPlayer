@@ -1,10 +1,9 @@
 import { html, render } from "lit-html";
-import { classPrefix } from "@/config";
 
 const templateWrap = ({ label }: { label?: string }) => html`
-  <div class="${classPrefix}-checkbox">
-    <div class="${classPrefix}-checkbox-icon"></div>
-    <div class="${classPrefix}-checkbox-label">${label}</div>
+  <div class="mpui-checkbox">
+    <div class="mpui-checkbox-icon"></div>
+    <div class="mpui-checkbox-label">${label}</div>
   </div>
 `;
 
@@ -47,7 +46,7 @@ export class Checkbox implements CheckboxOptions {
     // 注入模板
     render(templateWrap({ label: this.label }), this.container);
 
-    this.$el = this.container.querySelector(`.${classPrefix}-checkbox`)!;
+    this.$el = this.container.querySelector(".mpui-checkbox")!;
     this.$el.addEventListener("click", () => {
       this.toggle();
     });

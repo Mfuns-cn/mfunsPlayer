@@ -85,13 +85,13 @@ export default class ContextMenu extends BasePlugin {
       {
         name: "快捷键说明",
         onClick: () => {
-          this.player.plugin.hotkeys?.toggle(true);
+          this.plugin.hotkeys?.toggle(true);
         },
       },
       {
         name: `Mfuns Player v${Player.version}-${Player.gitHash}`,
         onClick: () => {
-          this.player.plugin.about?.toggle(true);
+          this.plugin.about?.toggle(true);
         },
       },
     ];
@@ -129,7 +129,7 @@ export default class ContextMenu extends BasePlugin {
     });
   }
   pluginsReady() {
-    this.danmaku = this.player.plugin.danmaku;
+    this.danmaku = this.plugin.danmaku;
   }
   show(x: number, y: number) {
     this.container.classList.add("state-show");
@@ -169,21 +169,21 @@ export default class ContextMenu extends BasePlugin {
               (dm: DanmakuItem) => {
                 operate?.report(dm);
               },
-              !myDanmaku && api?.danmakuReport,
+              !myDanmaku && api?.report,
             ],
             [
               "屏蔽",
               (dm: DanmakuItem) => {
                 operate?.blockUser(dm.user, true);
               },
-              !myDanmaku && api?.danmakuBlockUser,
+              !myDanmaku && api?.blockUser,
             ],
             [
               "撤回",
               (dm: DanmakuItem) => {
                 operate?.recall(dm);
               },
-              myDanmaku && api?.danmakuRecall,
+              myDanmaku && api?.recall,
             ],
             [
               "复制",

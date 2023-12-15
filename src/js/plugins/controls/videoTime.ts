@@ -29,7 +29,7 @@ export default class VideoTime extends ControlsPlugin {
     const fragment = new DocumentFragment();
     render(template, fragment);
     super(player, options, {
-      name: "time",
+      name: "videoTime",
       defaultOptions: {
         container: (p) => p.plugin.controller?.$left,
         order: 3,

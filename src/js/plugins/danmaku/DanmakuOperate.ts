@@ -16,9 +16,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async send(danmaku: DanmakuSendItem): Promise<void> {
-    if (!this.danmaku?.api?.danmakuSend) throw "发送失败";
+    if (!this.danmaku?.api?.send) throw "发送失败";
     return await this.danmaku.api
-      .danmakuSend(danmaku, this.player.videoInfo.danmakuId || 0)
+      .send(danmaku, this.player.videoInfo.danmakuId || 0)
       .then((res) => {
         this.danmaku.add([
           Object.assign(
@@ -43,9 +43,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async report(danmaku: DanmakuItem): Promise<void> {
-    if (!this.danmaku?.api?.danmakuReport) throw "操作失败";
+    if (!this.danmaku?.api?.report) throw "操作失败";
     return await this.danmaku.api
-      .danmakuReport(danmaku)
+      .report(danmaku)
       .then((res) => {
         // 操作成功后从弹幕池移除该弹幕
         this.danmaku.remove([danmaku.id]);
@@ -62,9 +62,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async delete(danmaku: DanmakuItem[]): Promise<void> {
-    if (!this.danmaku?.api?.danmakuDelete) throw "操作失败";
+    if (!this.danmaku?.api?.delete) throw "操作失败";
     return await this.danmaku.api
-      .danmakuDelete(danmaku)
+      .delete(danmaku)
       .then((res) => {
         // 操作成功后从弹幕池移除该弹幕
         this.danmaku.remove(danmaku.map((dm) => dm.id));
@@ -81,9 +81,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async recall(danmaku: DanmakuItem): Promise<void> {
-    if (!this.danmaku?.api?.danmakuRecall) throw "操作失败";
+    if (!this.danmaku?.api?.recall) throw "操作失败";
     return await this.danmaku.api
-      .danmakuRecall(danmaku)
+      .recall(danmaku)
       .then((res) => {
         // 操作成功后从弹幕池移除该弹幕
         this.danmaku.remove([danmaku.id]);
@@ -101,9 +101,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async blockUser(user: string | number, flag: boolean): Promise<void> {
-    if (!this.danmaku?.api?.danmakuBlockUser) throw "操作失败";
+    if (!this.danmaku?.api?.blockUser) throw "操作失败";
     return await this.danmaku.api
-      .danmakuBlockUser(user, flag)
+      .blockUser(user, flag)
       .then(() => {
         // 操作成功后在弹幕池屏蔽该用户
         this.danmaku.engine.setUserFilter(user, flag);
@@ -121,9 +121,9 @@ export default class DanmakuOperate {
    * @return 操作结果
    * */
   async blockContent(content: string, flag: boolean): Promise<void> {
-    if (!this.danmaku?.api?.danmakuBlockContent) throw "操作失败";
+    if (!this.danmaku?.api?.blockContent) throw "操作失败";
     return await this.danmaku.api
-      .danmakuBlockContent(content, flag)
+      .blockContent(content, flag)
       .then((res) => {
         this.danmaku.engine.setContentFilter(content, flag);
         this.player.emit("danmaku:block_content", content, flag);

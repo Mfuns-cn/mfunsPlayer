@@ -3,18 +3,24 @@ import { PluginManager } from "./pluginManager";
 import Events from "@/events";
 import { PlayerOptions } from "@/types";
 import Video from "@/Video";
-import Sizing from "@/sizing";
 import State from "@/state";
 import { PlayerEventMap, PlayerPropertyMap } from "./types/PlayerEventMap";
 import { createElement } from "./utils";
 import { classPrefix } from "./config";
 import Hooks from "./hooks";
+import * as Utils from "@/utils";
+import * as Components from "@/components";
+
 /**
  * @event
  */
 export class Player {
   static readonly version = MFUNSPLAYER_VERSION;
   static readonly gitHash = GIT_HASH;
+  /** 工具函数 */
+  static Utils = Utils;
+  /** 组件 */
+  static Components = Components;
   /** 容器 */
   readonly container: HTMLElement;
   /** 播放器元素 */
@@ -25,8 +31,6 @@ export class Player {
   readonly $area: HTMLDivElement;
   /** 播放器视频容器 */
   readonly $content: HTMLDivElement;
-  /** 播放器尺寸模块 */
-  protected sizing: Sizing;
   /** 状态控制模块 */
   protected state: State;
   /** 插件管理 */
@@ -45,7 +49,7 @@ export class Player {
   constructor(options: PlayerOptions) {
     this.container = options.container;
 
-    this.$el = createElement("div", { class: classPrefix });
+    this.$el = createElement("div", { class: `${classPrefix} mpui` });
     this.$main = this.$el.appendChild(createElement("div", { class: `${classPrefix}-main` }));
     this.$area = this.$main.appendChild(createElement("div", { class: `${classPrefix}-area` }));
     this.$content = this.$area.appendChild(
@@ -55,7 +59,6 @@ export class Player {
     this.pluginManager = new PluginManager(this);
     this.video = new Video(this, options);
 
-    this.sizing = new Sizing(this, options);
     this.state = new State(this, options);
 
     // 注册列表中的插件
@@ -67,6 +70,7 @@ export class Player {
     // 播放器挂载
     this.container.appendChild(this.$el);
     this.pluginManager.playerMounted(options);
+    this.emit("mounted");
 
     this.setVideo(options.video, options.autoPlay, options.time);
   }
@@ -226,53 +230,6 @@ export class Player {
     return this.video.playbackRate;
   }
 
-  // --- 尺寸模式相关 ---//
-
-  /** 播放器进入全屏 */
-  public enterFullscreen() {
-    this.sizing.fullscreen.enter();
-  }
-
-  /** 播放器退出全屏 */
-  public exitFullscreen() {
-    this.sizing.fullscreen.exit();
-  }
-
-  /** 当前播放器是否处于全屏模式 */
-  get isFullscreen() {
-    return this.sizing.fullscreen.status;
-  }
-
-  /** 播放器进入网页全屏 */
-  public enterWebfull() {
-    this.sizing.webfull.enter();
-  }
-
-  /** 播放器退出网页全屏 */
-  public exitWebfull() {
-    this.sizing.webfull.exit();
-  }
-
-  /** 当前播放器是否处于网页全屏模式 */
-  get isWebfull() {
-    return this.sizing.webfull.status;
-  }
-
-  /** 播放器进入画中画模式 */
-  public enterPip() {
-    this.sizing.pip.enter();
-  }
-
-  /** 播放器退出画中画模式 */
-  public exitPip() {
-    this.sizing.pip.exit();
-  }
-
-  /** 当前播放器是否处于画中画模式 */
-  get isPip() {
-    return this.sizing.pip.status;
-  }
-
   // --- 播放器状态控制 --- //
 
   /** 播放器进入聚焦状态 */
@@ -286,6 +243,10 @@ export class Player {
   /** 当前播放器聚焦状态 */
   get focused() {
     return this.state.focused;
+  }
+  /** 当前播放器视口相交状态 */
+  get intersecting() {
+    return this.state.intersecting;
   }
   /** 播放器进入活跃状态 */
   public setActive() {

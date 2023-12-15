@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { SliderVertical } from "@/ui/components";
+import { SliderVertical } from "@/components";
 import Player from "@/player";
 import { classPrefix } from "@/config";
 import { ControlsPlugin } from "@/plugin";

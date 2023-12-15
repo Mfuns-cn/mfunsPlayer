@@ -37,19 +37,21 @@ export default class ButtonPip extends ControlsPlugin {
   }
 
   created() {
-    this.player.on("pip_enter", () => {
+    this.player.on("pip:enter", () => {
       this.$el.classList.add("state-on");
       this.$tooltip.innerText = "退出画中画";
     });
-    this.player.on("pip_exit", () => {
+    this.player.on("pip:exit", () => {
       this.$el.classList.remove("state-on");
       this.$tooltip.innerText = "画中画";
     });
     this.$icon.addEventListener("click", () => {
-      if (this.player.isPip) {
-        this.player.exitPip();
+      const { pip } = this.plugin;
+      if (!pip) return;
+      if (pip.status) {
+        pip.exit();
       } else {
-        this.player.enterPip();
+        pip.enter();
       }
     });
   }

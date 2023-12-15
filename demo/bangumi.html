@@ -272,11 +272,11 @@
         danmaku: {
           format: "bilibili-xml",
         },
-        apis: {
-          danmakuGet: async ({ id }) => {
+        danmakuApi: {
+          get: async ({ id }) => {
             return await fetch(`../static/danmaku/steingate/${id}.xml`).then((res) => res.text());
           },
-          danmakuSend: async (danmaku, id) => {
+          send: async (danmaku, id) => {
             console.log(
               `向 id:${id}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
             );
@@ -286,21 +286,21 @@
               message: "发送成功",
             };
           },
-          danmakuRecall: async () => {
+          recall: async () => {
             console.log("撤回成功");
             return {
               success: true,
               message: "撤回成功",
             };
           },
-          danmakuReport: async () => {
+          report: async () => {
             console.log("举报成功");
             return {
               success: true,
               message: "举报成功",
             };
           },
-          danmakuBlockUser: async () => {
+          blockUser: async () => {
             console.log("屏蔽成功");
             return {
               success: true,
@@ -333,6 +333,11 @@
         seekLast: getStorage("seekLast"),
         lastPosition: getStorage("lastPosition"),
         autoPlay: getStorage("autoPlay"),
+        mini: getStorage("mini"),
+        widescreenToggle: (flag) => {
+          console.log(flag);
+          playerExtra.style.display = flag ? "none" : "";
+        },
 
         // advancedDanmaku:{
         //   api: "https://www.mfuns.fun/wp-json/mfuns",
@@ -383,13 +388,6 @@
       mfPlayer.on("pause", () => {
         console.log("pause");
       });
-      mfPlayer.on("part_change", (p) => {
-        console.log("part_change", p);
-      });
-
-      mfPlayer.on("resize", ([width, height]) => {
-        console.log(`${width}-${height}`);
-      });
 
       mfPlayer.on("timeupdate", (t) => {
         setStorage("lastPosition", t);
@@ -400,29 +398,23 @@
       mfPlayer.on("seeking", (t) => {
         setStorage("lastPosition", t);
       });
-      mfPlayer.on("webfull_enter", () => {
+      mfPlayer.on("webscreen:enter", () => {
         mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
       });
-      mfPlayer.on("fullscreen_enter", () => {
+      mfPlayer.on("fullscreen:enter", () => {
         mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
       });
-      mfPlayer.on("webfull_exit", () => {
+      mfPlayer.on("webscreen:exit", () => {
         mfPlayer.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("fullscreen_exit", () => {
+      mfPlayer.on("fullscreen:exit", () => {
         mfPlayer.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("wide_exit", () => {
+      mfPlayer.on("widescreen:exit", () => {
         mfPlayer.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("wide_enter", () => {
+      mfPlayer.on("widescreen:enter", () => {
         mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
-      });
-      mfPlayer.on("wide_enter", () => {
-        playerExtra.style.display = "none";
-      });
-      mfPlayer.on("wide_exit", () => {
-        playerExtra.style.display = "";
       });
     };
   </script>

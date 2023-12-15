@@ -1,5 +1,3 @@
-import { TemplateResult, html as litHtml, render as litRender } from "lit-html";
-
 const isMobile = /mobile/i.test(window.navigator.userAgent);
 
 /** 创建特定长度的填充数组 */

@@ -66,9 +66,8 @@
       cursor: default;
     }
     &-panel {
+      @extend .mpui-background;
       margin-bottom: 20px;
-      background-color: $bg-black;
-      color: $fg-dark;
       border-radius: $border-radius;
     }
   }
@@ -99,5 +98,9 @@
         display: block;
       }
     }
+  }
+  &-videotitle {
+    font-size: 16px;
+    white-space: nowrap;
   }
 }

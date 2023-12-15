@@ -50,16 +50,16 @@
   content: "\e90f";
 }
 
-.mpicon-wide:before {
+.mpicon-widescreen:before {
   content: "\e910";
 }
-.mpicon-wide-exit:before {
+.mpicon-widescreen-exit:before {
   content: "\e911";
 }
-.mpicon-webfull:before {
+.mpicon-webscreen:before {
   content: "\e912";
 }
-.mpicon-webfull-exit:before {
+.mpicon-webscreen-exit:before {
   content: "\e913";
 }
 .mpicon-pip:before {

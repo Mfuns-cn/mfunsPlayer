@@ -19,9 +19,11 @@ import Settings from "@/plugins/settings";
 import { PlayerOptions } from "@/types";
 import Sources from "@/plugins/core/sources";
 import Side from "@/plugins/ui/side";
+import Pip from "@/plugins/screen/pip";
+import Fullscreen from "@/plugins/screen/fullscreen";
 
 /** 核心插件 */
-export const corePlugins = [Sources];
+export const corePlugins = [Sources, Pip, Fullscreen];
 
 /** 基础插件 */
 export const basicPlugins = [Modal, Side, Controller, Settings, Hotkey, ContextMenu];

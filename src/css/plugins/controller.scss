@@ -29,7 +29,6 @@
     right: 0;
     height: 50px;
     margin: 0 15px;
-    color: $fg-dark;
     &-content {
       height: calc(100% - 20px);
       position: relative;
@@ -70,183 +69,14 @@
       cursor: pointer;
       box-sizing: border-box;
     }
-    &-button {
-      position: relative;
-      height: 30px;
-      font-size: 12px;
-      display: flex;
-      justify-content: center;
-      cursor: pointer;
-      .#{$prefix}-controller-icon {
-        font-size: 21px;
-        line-height: 30px;
-      }
-      .#{$prefix}-controls-text {
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 30px;
-      }
-      &:hover {
-        .#{$prefix}-tooltip {
-          display: block;
-        }
-        .#{$prefix}-controls-panel-wrap {
-          display: block;
-        }
-        .#{$prefix}-controller-icon-wrap {
-          transform: translateY(-2px);
-          &:active {
-            transform: translateY(1px);
-          }
-        }
-      }
-      &.state-control {
-        .#{$prefix}-controls-panel-wrap {
-          display: block;
-        }
-        .#{$prefix}-controller-icon-wrap {
-          transform: translateY(-2px);
-        }
-      }
-    }
-    &-icon-wrap {
-      padding: 0 7px;
-      transition: transform 0.3s ease;
-    }
-    &-panel-wrap {
-      position: absolute;
-      left: 50%;
-      bottom: 100%;
-      transform: translateX(-50%);
-      display: none;
-      cursor: default;
-    }
-    &-panel {
-      margin-bottom: 20px;
-      background-color: $bg-black;
-      color: $fg-dark;
-      border-radius: $border-radius;
-    }
-    &-time {
-      width: 90px;
-      text-align: center;
-      font-size: 13px;
-      margin: 0 5px;
-      cursor: pointer;
-      &-label {
-        width: 100%;
-        white-space: nowrap;
-        text-align: center;
-      }
-      &-input {
-        display: none;
-        width: 60px;
-        margin: auto;
-        font-size: 13px;
-        text-align: center;
-      }
-      &.state-input & {
-        &-label {
-          display: none;
-        }
-        &-input {
-          display: block;
-        }
-      }
-    }
   }
-  &.state-active & {
+  &.state-active &,
+  &.state-start & {
     &-controller-wrap {
       bottom: 0;
     }
     &-controller-mask {
       opacity: 1;
-    }
-  }
-  // 控制栏固定模式
-  &.mode-solid {
-    .#{$prefix} {
-      &-video-area {
-        width: 100%;
-        height: calc(100% - $controller-fixed-height);
-      }
-      &-controller-wrap {
-        position: relative;
-        bottom: 0;
-        background: $bg-light;
-        height: $controller-fixed-height;
-      }
-      &-controller {
-        height: 100%;
-        margin: 0;
-        color: $fg-light;
-        &-mask {
-          display: none;
-        }
-        &-content {
-          height: calc(100% - 6px);
-          margin: 6px 0 0;
-        }
-        &-progress {
-          height: 14px;
-          padding-bottom: 2px;
-          top: -8px;
-          align-items: end;
-        }
-        &-panel {
-          background-color: $bg-light;
-          color: $fg-light;
-        }
-        &,
-        &-panel {
-          .#{$prefix}-slider {
-            &-track {
-              background: $fg-light-xs;
-            }
-          }
-          .#{$prefix}-checkbox {
-            &-icon {
-              border-color: $fg-light-s;
-            }
-          }
-          .mp-input {
-            color: $fg-light;
-            border: 1px solid $fg-light-xs;
-            &:hover {
-              border-color: $fg-light-s;
-            }
-            &:focus {
-              border-color: $primary-color;
-            }
-          }
-          .mp-button {
-            color: $fg-light;
-            border: 1px solid $fg-light-s;
-            &:hover {
-              color: $primary-color;
-              border-color: $primary-color;
-            }
-          }
-        }
-      }
-    }
-    &.state-fullscreen {
-      .#{$prefix} {
-        &-video-area {
-          height: 100%;
-        }
-        &-controller-wrap {
-          position: absolute;
-          bottom: -50px;
-        }
-      }
-      &.state-active {
-        .#{$prefix} {
-          &-controller-wrap {
-            bottom: 0;
-          }
-        }
-      }
     }
   }
 }

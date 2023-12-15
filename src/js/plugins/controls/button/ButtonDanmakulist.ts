@@ -37,7 +37,7 @@ export default class ButtonDanmakulist extends ControlsPlugin {
 
   created() {
     this.$icon.addEventListener("click", () => {
-      this.player.plugin.danmakuList?.toggle();
+      this.plugin.danmakuList?.toggle();
     });
   }
 }

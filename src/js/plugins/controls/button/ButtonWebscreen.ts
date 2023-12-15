@@ -1,22 +1,21 @@
 import { html, render } from "lit-html";
 import Player from "@/player";
 import { classPrefix } from "@/config";
-import {} from "../../wide";
 import { PlayerOptions } from "@/types";
 import { ControlsPlugin } from "@/plugin";
 
 const template = html`
-  <div class="${classPrefix}-controls-button ${classPrefix}-button_wide">
+  <div class="${classPrefix}-controls-button ${classPrefix}-button_webscreen">
     <div class="${classPrefix}-controls-button-icon">
-      <i class="mpicon-wide"></i>
-      <i class="mpicon-wide-exit"></i>
+      <i class="mpicon-webscreen"></i>
+      <i class="mpicon-webscreen-exit"></i>
     </div>
-    <div class="mpui-tooltip">宽屏模式</div>
+    <div class="mpui-tooltip">网页全屏</div>
   </div>
 `;
 
-export default class ButtonWide extends ControlsPlugin {
-  static pluginName = "buttonWide";
+export default class ButtonWebscreen extends ControlsPlugin {
+  static pluginName = "buttonWebscreen";
   $icon: HTMLElement;
   $tooltip: HTMLElement;
 
@@ -24,32 +23,33 @@ export default class ButtonWide extends ControlsPlugin {
     const fragment = new DocumentFragment();
     render(template, fragment);
     super(player, options, {
-      name: "buttonWide",
+      name: "buttonWebscreen",
       defaultOptions: {
         container: (p) => p.plugin.controller?.$right,
-        order: 8,
+        order: 9,
       },
       el: fragment.querySelector(`.${classPrefix}-controls-button`)!,
     });
-
     this.$icon = this.$(`.${classPrefix}-controls-button-icon`)!;
     this.$tooltip = this.$(".mpui-tooltip")!;
   }
 
   created() {
-    this.player.on("wide_enter", () => {
+    this.player.on("webscreen:enter", () => {
       this.$el.classList.add("state-on");
-      this.$tooltip.innerText = "退出宽屏模式";
+      this.$tooltip.innerText = "退出网页全屏";
     });
-    this.player.on("wide_exit", () => {
+    this.player.on("webscreen:exit", () => {
       this.$el.classList.remove("state-on");
-      this.$tooltip.innerText = "宽屏模式";
+      this.$tooltip.innerText = "网页全屏";
     });
     this.$icon.addEventListener("click", () => {
-      if (this.player.plugin.wide?.status) {
-        this.player.plugin.wide?.exit();
+      const { webscreen } = this.plugin;
+      if (!webscreen) return;
+      if (!webscreen.status) {
+        webscreen.enter();
       } else {
-        this.player.plugin.wide?.enter();
+        webscreen.exit();
       }
     });
   }

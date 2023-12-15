@@ -1,5 +1,4 @@
 import { html, render, TemplateResult } from "lit-html";
-import { classPrefix } from "@/config";
 
 const templateWrap = ({
   list,
@@ -8,10 +7,10 @@ const templateWrap = ({
   list: PickerOptionsItem[];
   template?: PickerItemTemplate;
 }) => html`
-  <ul class="${classPrefix}-picker">
+  <ul class="mpui-picker">
     ${list.map(
       (item, index) => html`
-        <li class="${classPrefix}-picker-item" data-value="${item.value}">
+        <li class="mpui-picker-item" data-value="${item.value}">
           ${template?.(item, index) || item.label || item.value}
         </li>
       `
@@ -80,8 +79,8 @@ export class MultiPicker implements MultiPickerOptions {
   /** 重载，一般用于列表项更改 */
   public reload(value?: string[]) {
     render(templateWrap({ list: this.list, template: this.template }), this.container);
-    this.$el = this.container.querySelector(`.${classPrefix}-picker`)!;
-    this.$items = this.$el.querySelectorAll(`.${classPrefix}-picker-item`); // 标签集合
+    this.$el = this.container.querySelector(".mpui-picker")!;
+    this.$items = this.$el.querySelectorAll(".mpui-picker-item"); // 标签集合
     this.$items.forEach((item) => {
       item.addEventListener("click", () => {
         this.toggle(item.getAttribute("data-value")!);
@@ -95,9 +94,9 @@ export class MultiPicker implements MultiPickerOptions {
     this.valueSet = new Set(value);
     this.$items.forEach((n, i) => {
       if (this.valueSet.has(n.getAttribute("data-value")!)) {
-        n.classList.add("state-picked");
+        n.classList.add("state-checked");
       } else {
-        n.classList.remove("state-picked");
+        n.classList.remove("state-checked");
       }
     });
     this.onChange?.(value);
@@ -113,7 +112,7 @@ export class MultiPicker implements MultiPickerOptions {
     }
     this.$items.forEach((n, i) => {
       if (n.getAttribute("data-value") == value) {
-        n.classList.toggle("state-picked", b);
+        n.classList.toggle("state-checked", b);
       }
     });
     this.onChange?.(this.value);

@@ -75,32 +75,37 @@ export default class ButtonQuality extends ControlsPlugin {
       if (s?.quality) {
         this._select(s?.quality, s.label);
       } else {
-        const { videoWidth, videoHeight } = this.player.$video;
-        this._select(`${Math.min(videoWidth, videoHeight)}P`);
+        this.player.once("loadedmetadata", () => {
+          const { videoWidth, videoHeight } = this.player.$video;
+          this._select(`${Math.min(videoWidth, videoHeight)}P`);
+        });
       }
     });
   }
 
   private _update(sources?: VideoSource[]) {
-    if (sources == this._list) return;
+    if (sources && sources == this._list) return;
     const list: { quality: string; label?: string }[] = [];
     sources?.forEach(({ quality, label }) => {
       if (quality && !list.find((s) => s.quality == quality)) {
         list.push({ quality, label });
       }
     });
-    if (!list?.length) {
-      const { videoWidth, videoHeight } = this.player.$video;
-      render(
-        templateList([{ quality: `${Math.min(videoWidth, videoHeight)}P` }], (q) => {
-          this.player.plugin.quality?.set(q);
-        }),
-        this.$list
-      );
+    if (!list.length) {
+      this.player.once("loadedmetadata", () => {
+        const { videoWidth, videoHeight } = this.player.$video;
+        render(
+          templateList([{ quality: `${Math.min(videoWidth, videoHeight)}P` }], (q) => {
+            this.plugin.quality?.set(q);
+          }),
+          this.$list
+        );
+      });
     } else {
+      console.log("mmmmmmmm");
       render(
         templateList(list, (q) => {
-          this.player.plugin.quality?.set(q);
+          this.plugin.quality?.set(q);
         }),
         this.$list
       );

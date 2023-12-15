@@ -1,5 +1,5 @@
-import { DanmakuItem, DanmakuSource } from "./types";
-import { ApiCallbacks, PlayerOptions } from "@/types";
+import { DanmakuApi, DanmakuItem, DanmakuSource } from "./types";
+import { PlayerOptions } from "@/types";
 import Player from "@/player";
 import DanmakuEngine from "./DanmakuEngine";
 import { classPrefix } from "@/config";
@@ -39,7 +39,7 @@ export default class Danmaku extends BasePlugin {
   parser: DanmakuParser;
 
   /** 操作api */
-  api: ApiCallbacks;
+  api: DanmakuApi;
 
   /** 操作api */
   format: string;
@@ -66,7 +66,7 @@ export default class Danmaku extends BasePlugin {
     this.format = options.danmaku?.format || "mfuns";
     this.parser = new DanmakuParser({ defaultParser: this.format });
     this.operate = new DanmakuOperate(this.player);
-    this.api = options.apis || {};
+    this.api = options.danmakuApi || {};
     this.allowNewDanmaku = false;
 
     this.$el = createElement("div", { class: `${classPrefix}-danmaku-wrap` });
@@ -136,7 +136,7 @@ export default class Danmaku extends BasePlugin {
   /** 加载弹幕 */
   private load(id: string | number) {
     this.api
-      .danmakuGet?.({ id })
+      .get?.({ id })
       .then((data) => {
         const dan = this.parser.parse({ data, type: this.format });
         if (dan) {
@@ -157,7 +157,7 @@ export default class Danmaku extends BasePlugin {
     const offset = this.lastDanmakuId;
     this.player.emit("danmaku:new_loading", offset);
     this.api
-      .danmakuGet?.({ id, offset: this.lastDanmakuId })
+      .get?.({ id, offset: this.lastDanmakuId })
       .then((data) => {
         const dan = this.parser.parse({ data, type: this.format });
         if (dan) {

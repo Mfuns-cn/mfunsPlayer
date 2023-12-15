@@ -1,21 +1,22 @@
 import { html, render } from "lit-html";
 import Player from "@/player";
 import { classPrefix } from "@/config";
+import {} from "../../screen/widescreen";
 import { PlayerOptions } from "@/types";
 import { ControlsPlugin } from "@/plugin";
 
 const template = html`
-  <div class="${classPrefix}-controls-button ${classPrefix}-button_webfull">
+  <div class="${classPrefix}-controls-button ${classPrefix}-button_widescreen">
     <div class="${classPrefix}-controls-button-icon">
-      <i class="mpicon-webfull"></i>
-      <i class="mpicon-webfull-exit"></i>
+      <i class="mpicon-widescreen"></i>
+      <i class="mpicon-widescreen-exit"></i>
     </div>
-    <div class="mpui-tooltip">网页全屏</div>
+    <div class="mpui-tooltip">宽屏模式</div>
   </div>
 `;
 
-export default class ButtonWebfull extends ControlsPlugin {
-  static pluginName = "buttonWebfull";
+export default class ButtonWidescreen extends ControlsPlugin {
+  static pluginName = "buttonWidescreen";
   $icon: HTMLElement;
   $tooltip: HTMLElement;
 
@@ -23,10 +24,10 @@ export default class ButtonWebfull extends ControlsPlugin {
     const fragment = new DocumentFragment();
     render(template, fragment);
     super(player, options, {
-      name: "buttonWebfull",
+      name: "buttonWide",
       defaultOptions: {
         container: (p) => p.plugin.controller?.$right,
-        order: 9,
+        order: 8,
       },
       el: fragment.querySelector(`.${classPrefix}-controls-button`)!,
     });
@@ -36,19 +37,21 @@ export default class ButtonWebfull extends ControlsPlugin {
   }
 
   created() {
-    this.player.on("webfull_enter", () => {
+    this.player.on("widescreen:enter", () => {
       this.$el.classList.add("state-on");
-      this.$tooltip.innerText = "退出网页全屏";
+      this.$tooltip.innerText = "退出宽屏模式";
     });
-    this.player.on("webfull_exit", () => {
+    this.player.on("widescreen:exit", () => {
       this.$el.classList.remove("state-on");
-      this.$tooltip.innerText = "网页全屏";
+      this.$tooltip.innerText = "宽屏模式";
     });
     this.$icon.addEventListener("click", () => {
-      if (this.player.isWebfull) {
-        this.player.exitWebfull();
+      const { widescreen } = this.plugin;
+      if (!widescreen) return;
+      if (!widescreen.status) {
+        widescreen.enter();
       } else {
-        this.player.enterWebfull();
+        widescreen.exit();
       }
     });
   }

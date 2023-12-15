@@ -1,7 +1,21 @@
 import Player from "@/player";
 import { getFullscreenElement } from "@/utils";
 
+declare module "@/types" {
+  interface PluginExports {
+    fullscreen?: Fullscreen;
+  }
+  interface PlayerEventMap {
+    /** 进入全屏模式 */
+    "fullscreen:enter": () => void;
+    /** 退出全屏模式 */
+    "fullscreen:exit": () => void;
+  }
+}
+
 export default class Fullscreen {
+  static pluginName = "fullscreen";
+
   player: Player;
 
   $el: HTMLElement;
@@ -13,10 +27,10 @@ export default class Fullscreen {
     const fullScreenChangeHandler = () => {
       if (this.status) {
         this.player.$el.classList.add("state-fullscreen");
-        this.player.emit("fullscreen_enter");
+        this.player.emit("fullscreen:enter");
       } else {
         this.player.$el.classList.remove("state-fullscreen");
-        this.player.emit("fullscreen_exit");
+        this.player.emit("fullscreen:exit");
       }
     };
     this.$el.addEventListener("fullscreenchange", fullScreenChangeHandler);

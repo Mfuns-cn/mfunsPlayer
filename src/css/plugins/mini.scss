@@ -1,0 +1,15 @@
+.#{$prefix} {
+  &-mini {
+    background-color: black;
+    position: fixed;
+    width: 400px;
+    height: 225px;
+    right: 40px;
+    bottom: 40px;
+    display: none;
+    overflow: hidden;
+    &.state-show {
+      display: block;
+    }
+  }
+}

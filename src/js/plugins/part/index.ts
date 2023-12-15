@@ -46,6 +46,8 @@ export default class Part extends BasePlugin {
         return false;
       }
     });
+    this.player.hook.register("hasNext", () => (this.list && this.part! < this.num) || void 0);
+    this.player.hook.register("hasPrev", () => (this.list && this.part! > 1) || void 0);
   }
   /** 设置分P */
   set(p: number, play?: boolean) {

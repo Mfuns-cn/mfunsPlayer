@@ -43,7 +43,7 @@ export default class ButtonDanmakuToggle extends ControlsPlugin {
       this._change(false);
     });
     this.$icon.addEventListener("click", () => {
-      this.player.plugin.danmaku?.toggle();
+      this.plugin.danmaku?.toggle();
     });
   }
 

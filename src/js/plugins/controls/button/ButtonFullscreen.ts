@@ -37,19 +37,21 @@ export default class ButtonFullscreen extends ControlsPlugin {
   }
 
   created() {
-    this.player.on("fullscreen_enter", () => {
+    this.player.on("fullscreen:enter", () => {
       this.$el.classList.add("state-on");
       this.$tooltip.innerText = "退出全屏";
     });
-    this.player.on("fullscreen_exit", () => {
+    this.player.on("fullscreen:exit", () => {
       this.$el.classList.remove("state-on");
       this.$tooltip.innerText = "进入全屏";
     });
     this.$icon.addEventListener("click", () => {
-      if (this.player.isFullscreen) {
-        this.player.exitFullscreen();
+      const { fullscreen } = this.plugin;
+      if (!fullscreen) return;
+      if (!fullscreen.status) {
+        fullscreen.enter();
       } else {
-        this.player.enterFullscreen();
+        fullscreen.exit();
       }
     });
   }

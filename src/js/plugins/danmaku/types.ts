@@ -42,7 +42,28 @@ export interface DanmakuSource {
   // platform?: string // 平台名称，用于标记平台信息
   // name?: string // 弹幕来源名称
 }
-
+export interface DanmakuApi {
+  /** 获取弹幕 */
+  get?: (arg: {
+    id: string | number;
+    offset?: string | number;
+    limit?: number;
+  }) => Promise<unknown>;
+  /** 发送弹幕 */
+  send?: (danmaku: DanmakuSendItem, id: string | number) => Promise<void>;
+  /** 举报弹幕 */
+  report?: (danmaku: DanmakuItem) => Promise<void>;
+  /** 视频作者删除弹幕 */
+  delete?: (danmaku: DanmakuItem[]) => Promise<void>;
+  /** 撤回自己发送的弹幕 */
+  recall?: (danmaku: DanmakuItem) => Promise<void>;
+  /** 添加内容屏蔽 */
+  blockContent?: (content: string, flag: boolean) => Promise<void>;
+  /** 添加用户屏蔽 */
+  blockUser?: (user: string | number, flag: boolean) => Promise<void>;
+  /** 获取屏蔽列表 */
+  // danmakuGetBlockList?: (list: any) => Promise<unknown>;
+}
 declare module "@/types" {
   interface PlayerOptions {
     /** 弹幕设置 */
@@ -64,29 +85,9 @@ declare module "@/types" {
       /** 字体加粗 */
       bold?: boolean;
     };
+    danmakuApi?: DanmakuApi;
   }
-  interface ApiCallbacks {
-    /** 获取弹幕 */
-    danmakuGet?: (arg: {
-      id: string | number;
-      offset?: string | number;
-      limit?: number;
-    }) => Promise<unknown>;
-    /** 发送弹幕 */
-    danmakuSend?: (danmaku: DanmakuSendItem, id: string | number) => Promise<void>;
-    /** 举报弹幕 */
-    danmakuReport?: (danmaku: DanmakuItem) => Promise<void>;
-    /** 视频作者删除弹幕 */
-    danmakuDelete?: (danmaku: DanmakuItem[]) => Promise<void>;
-    /** 撤回自己发送的弹幕 */
-    danmakuRecall?: (danmaku: DanmakuItem) => Promise<void>;
-    /** 添加内容屏蔽 */
-    danmakuBlockContent?: (content: string, flag: boolean) => Promise<void>;
-    /** 添加用户屏蔽 */
-    danmakuBlockUser?: (user: string | number, flag: boolean) => Promise<void>;
-    /** 获取屏蔽列表 */
-    // danmakuGetBlockList?: (list: any) => Promise<unknown>;
-  }
+
   interface VideoInfo {
     danmakuId?: string | number;
     danmakuAddition?: DanmakuSource[];

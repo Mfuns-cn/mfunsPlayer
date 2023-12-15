@@ -98,24 +98,13 @@
       border-radius: 0 $border-radius $border-radius 0;
       cursor: pointer;
     }
-  }
-
-  &.mode-solid &-controller {
-    .#{$prefix}-danmakubar {
-      &-input {
-        color: $fg-light;
-        &::-webkit-input-placeholder {
-          color: $fg-light-s;
-        }
-      }
-      &-input-wrap {
-        background-color: $fg-light-xs;
-      }
+    .#{$prefix}-controls-panel {
+      @extend .mpui-black;
     }
   }
+
   &-danmakubar-wrap {
     height: 40px;
-    background: white;
   }
   &-danmakubar-wrap &-danmakubar {
     .#{$prefix}-controller-icon-wrap {

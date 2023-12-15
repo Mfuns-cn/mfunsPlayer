@@ -71,6 +71,11 @@ export default class Video {
     this.player.on("playing", () => {
       this.player.$el.classList.remove("state-loading");
     });
+    this.player.on("ended", () => {
+      this.player.hook.call("end").then((res) => {
+        if (res) this.player.emit("end");
+      });
+    });
   }
 
   /** 加载视频 */
@@ -207,7 +212,7 @@ export default class Video {
   }
   /** 保持视频比例 */
   private initKeepRatio() {
-    this.player.on("resize", ([cWidth, cHeight]) => {
+    this.player.on("video_resize", ([cWidth, cHeight]) => {
       if (this.ratio) {
         this.$video.style.width = "";
         this.$video.style.height = "";

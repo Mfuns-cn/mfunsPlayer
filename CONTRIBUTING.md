@@ -35,20 +35,18 @@
 
 🟥 此类规范具有强制约束性，不符合条件的代码无法通过 eslint 检查  
 🟨 此类规范请尽量遵守，不符合条件的代码会在检查过程中抛出警告  
-⬜ 此类规范不具有约束性，但请尽可能遵守这类规则
 
 - 🟥 缩进必须为两行空格
-- 🟥 语句结尾不添加分号，如遇到语句开头存在可能引起 ASI 歧义的情况(如以`([`等符号开头)，请在开头添加分号
+- 🟥 语句结尾需添加分号
 - 🟥 换行模式为 LF
 - 🟥 除模板字符串外，字符串强制使用双引号
-- 🟥 标识符和属性应使用 `camelCase`，类和构造器函数应使用 `PascalCase`，不要使用前置/后置下划线
-- 🟥 尽量使用 `a || b` `a && b` `a ?? b` 的形式而不是形如 `a ? a : b` 的形式
+- 🟥 标识符和属性应使用 `camelCase`，类和构造器函数应使用 `PascalCase`，私有属性可以用下划线开头
+- 🟥 应使用 `a || b` `a && b` `a ?? b` 的形式而不是形如 `a ? a : b` 的形式
 - 🟥 控制语句如果没有使用语句块，应放在一行内，不应拆分
 - 🟨 注释符号与内容使用空格分隔，例如 `// 注释内容`
 - 🟨 避免出现未使用变量
 - 🟨 避免空函数
 - 🟨 尽量避免使用 `//@ts-ignore` 注释
-- ⬜ 多行对象和数组的最后一项需添加逗号，单行对象和数组的最后一项不添加分号
 
 在上传更改前，请使用 `npm run lint` 命令进行代码质量检查并对报错的地方进行修改
 
@@ -59,32 +57,60 @@
 项目已配置下列路径别名，在 ts 文件中跨父文件夹的导入请使用别名导入:
 
 - `@/` : `src/js/`
-- `@css/` : `src/js/`
+- `@css/` : `src/css/`
+- `@icon/` : `src/icon/`
 
-#### 功能模块
+#### 核心模块
 
-- 功能模块是实现播放器基础功能的模块，位于 `src/js/` 文件夹下
-- 功能模块包含下列部分
-  - `Danmaku` - 弹幕模块
-  - `Events` - 事件模块
-  - `Mode` - 播放器模式
-  - `Video` - 视频模块
+- 核心模块是实现播放器核心功能的模块，位于 `src/js/` 文件夹下
+- 包含下列模块
+  - `event` - 事件模块(protected)
+  - `hook` - 钩子模块
+  - `video` - 视频模块(protected)
+  - `state` - 状态模块(protected)
+  - `pluginManager` - 插件管理模块(protected)
+  - `Utils` - 工具类函数
+  - `Components` - 组件类
 
-#### 界面模块
+#### 插件
+- 插件构成播放器的各种功能，不同插件组合可以实现不同的功能，应用于不同的场景。插件位于 `src/plugin/` 文件夹下
+##### 核心插件
 
-- 界面模块是构成播放器操作界面的模块，位于 `src/js/ui/` 文件夹下
-- 界面模块包含下列部分
-  - `Controller` - 底部控制栏
-  - `Footbar` - 底栏，用于弹幕发送相关
-  - `Header` - 顶部信息栏(尚未开发)
-  - `Hotkey` - 快捷键控制
-  - `Modal` - 模态框(尚未开发)
-  - `Toast` - toast 通知(尚未开发)
-  - `Side` - 侧边栏(尚未开发)
-  - `Loading` - 播放器加载画面(尚未开发)
-  - `VideoStatus` - 视频状态显示(尚未开发)
-  - `ContextMenu` - 右键菜单(尚未开发)
-- 界面模块包含 DOM 模板时，应先使用
+- 核心插件是实现播放器核心功能的插件，绝大部分情况下需要这些插件的支持。
+- 插件包含下列模块
+  - `sources` - 视频源
+  - `pip` - 画中画
+  - `fullscreen` - 全屏
+
+##### 基础插件
+- 基础插件是实现播放器的基本功能的插件，涵盖了常用功能，一些其他插件需要依赖这些插件的支持。
+- 基础功能插件包含下列模块
+  - `hotkey` - 快捷键
+- 基础界面插件包含下列模块
+  - `controller` - 控制栏
+  - `modal` - 模态框
+  - `side` - 侧边栏
+  - `settings` - 设置面板
+  - `contextMenu` - 右键菜单
+
+##### 控制插件
+- 控制插件是用于控制播放器，或显示状态的组件，可以按需求嵌入播放器任何位置，位于 `src/plugin/controls` 文件夹下
+
+##### 拓展插件
+- 拓展插件是拓展播放器功能的插件。
+- 功能拓展插件包含下列模块
+  - part 视频分P
+  - danmaku 弹幕模块
+  - widescreen 宽屏模式
+  - webscreen 网页全屏
+
+- 界面拓展插件包含下列模块
+  - header 顶栏
+  - danmakuBar 弹幕栏
+- 待补充
+
+##### 插件开发
+- 含有较复杂界面的插件包含 DOM 模板时，应先使用
   ```typescript
   const template = html`...`
   ```
@@ -96,22 +122,16 @@
     constructor(player, container) {
       // 一般属性
       this.myValue = "#233333"
-      // 容器使用container，根元素使用el
-      this.container = container
-      this.el = this.container.querySelector(`.${classPrefix}-mywidget`)!
-      // 子元素需要在开头加$
+      // 私有属性名以下划线开头
+      this._status = false
+      // HTML元素以$开头
+      this.$container = container
+      this.$el = this.container.querySelector(`.${classPrefix}-mywidget`)!
       this.$button = this.el.querySelector(`.${classPrefix}-mywidget-button`)!
       this.$colorInput = this.el.querySelector(`.${classPrefix}-mywidget-color-input`)!
     }
   }
   ```
-
-#### 插件模块
-
-- 插件是拓展播放器功能和界面操作的模块，没有这些模块播放器也能正常运行
-- 内置插件位于 `src/js/plugins` 文件夹下，目前含有下列内置插件
-  - `DanmakuList` - 弹幕列表(尚未开发)
-- 外置插件可通过播放器实例化参数配置引入
 
 #### 工具函数
 

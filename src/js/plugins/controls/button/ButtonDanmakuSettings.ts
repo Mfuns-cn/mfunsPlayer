@@ -1,4 +1,4 @@
-import { MultiPicker, Slider } from "@/ui/components";
+import { MultiPicker, Slider } from "@/components";
 import { html, render } from "lit-html";
 import Player from "@/player";
 import { classPrefix } from "@/config";

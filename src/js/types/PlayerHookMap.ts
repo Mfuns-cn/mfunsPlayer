@@ -11,6 +11,10 @@ export interface PlayerHookMap {
   prev: void;
   /** 切换下一个 */
   next: void;
+  /** 可切换到上一个视频 */
+  hasPrev: void;
+  /** 可切换到下一个视频 */
+  hasNext: void;
   /** 跳转视频 */
   seek: void;
 

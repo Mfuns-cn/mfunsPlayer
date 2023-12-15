@@ -1,38 +1,40 @@
 import { html, render } from "lit-html";
-import { classPrefix } from "@/config";
+import { createArray } from "@/utils";
 
-const template = () => html`
+const template = ({ divider }: { divider: number }) => html` <div
+  class="mpui-slider mpui-slider-horizontal"
+  style="position: relative; width: 100%; height: 100%"
+>
   <div
-    class="${classPrefix}-slider ${classPrefix}-slider-vertical"
-    style="position: relative; width: 100%; height: 100%"
+    class="mpui-slider-track"
+    style="
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
   >
-    <div
-      class="${classPrefix}-slider-track"
-      style="
-        position: absolute;
-        height: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        justify-content: center;
-        align-items: center
-      "
-    >
+    <div class="mpui-slider-bar" style="position: absolute; left: 0; height: 100%"></div>
+    <div class="mpui-slider-thumb-track" style="height: 0px">
       <div
-        class="${classPrefix}-slider-bar"
-        style="position: absolute; bottom: 0; width: 100%"
+        class="mpui-slider-thumb"
+        style="position: absolute; transform: translate(-50%, -50%)"
       ></div>
-      <div class="${classPrefix}-slider-thumb-track" style="width: 0px">
-        <div
-          class="${classPrefix}-slider-thumb"
-          style="position: absolute; transform: translate(-50%, -50%)"
-        ></div>
-      </div>
+      ${divider
+        ? html`
+            <div class="mpui-slider-divider">
+              ${createArray(divider, html`<div class="mpui-slider-divider-dot"></div>`)}
+            </div>
+          `
+        : ""}
     </div>
   </div>
-`;
+</div>`;
 
-interface SliderVerticalOptions {
+interface SliderOptions {
   /** 挂载容器 */
   container: HTMLElement;
   /** 最小值 */
@@ -41,6 +43,8 @@ interface SliderVerticalOptions {
   max: number;
   /** 步长(若不填或为0，则没有步长限制) */
   step?: number;
+  /** 分割线 */
+  divider?: number | boolean;
   /** 默认值(不填的情况下默认值为0) */
   value?: number;
   /** 数值更改时触发 */
@@ -54,23 +58,30 @@ interface SliderVerticalOptions {
 }
 
 /** 横向滑动条 */
-export class SliderVertical implements SliderVerticalOptions {
+export class Slider implements SliderOptions {
   readonly container: HTMLElement;
   readonly min: number;
   readonly max: number;
   /** 步长 */
   readonly step: number;
+  /** 分割线 */
+  readonly divider: number;
   /** 数值 */
   value: number;
   onChange?: (value: number) => void;
   onDragStart?: (value: number) => void;
   onDragEnd?: (value: number) => void;
   onDrag?: (value: number) => void;
+
   // 部件
   $el: HTMLElement;
+
   $track: HTMLElement;
+
   $bar: HTMLElement;
+
   $thumbTrack: HTMLElement;
+
   $thumb: HTMLElement;
 
   constructor({
@@ -78,47 +89,48 @@ export class SliderVertical implements SliderVerticalOptions {
     min,
     max,
     step,
+    divider = 0,
     value = 0,
     onChange,
     onDragStart,
     onDragEnd,
     onDrag,
-  }: SliderVerticalOptions) {
+  }: SliderOptions) {
     this.container = container;
     this.min = min;
     this.max = max;
     this.step = step || 0;
+    this.divider = divider ? (typeof divider === "boolean" ? this.step : divider) : 0;
     this.value = isNaN(value) ? value : Number(value);
     this.onChange = onChange;
     this.onDragStart = onDragStart;
     this.onDragEnd = onDragEnd;
     this.onDrag = onDrag;
 
-    render(template(), container);
+    render(template({ divider: this.divider }), container);
 
-    this.$el = this.container.querySelector(`.${classPrefix}-slider`)!;
-    this.$track = this.$el.querySelector(`.${classPrefix}-slider-track`)!; // 滑动条轨道
-    this.$bar = this.$track.querySelector(`.${classPrefix}-slider-bar`)!; // 滑动条痕迹
-    this.$thumbTrack = this.$track.querySelector(`.${classPrefix}-slider-thumb-track`)!; // 滑块轨道
-    this.$thumb = this.$track.querySelector(`.${classPrefix}-slider-thumb`)!; // 滑块
+    this.$el = this.container.querySelector(".mpui-slider")!;
+    this.$track = this.$el.querySelector(".mpui-slider-track")!; // 滑动条轨道
+    this.$bar = this.$track.querySelector(".mpui-slider-bar")!; // 滑动条痕迹
+    this.$thumbTrack = this.$track.querySelector(".mpui-slider-thumb-track")!; // 滑块轨道
+    this.$thumb = this.$track.querySelector(".mpui-slider-thumb")!; // 滑块
 
     // 滑动条事件
-    // 点击鼠标事件
     this.$el.addEventListener("mousedown", (event: MouseEvent) => {
       const e: MouseEvent = event;
-      // 鼠标Y位置
-      const { clientY } = e;
+      // 鼠标X位置
+      const { clientX } = e;
       // 滑块长度
-      const trackLength = this.$track.offsetHeight;
+      const trackLength = this.$track.offsetWidth;
       // 滑块可滑动距离
-      let nMax = this.$thumbTrack.offsetHeight;
+      let nMax = this.$thumbTrack.offsetWidth;
       nMax = nMax || trackLength;
       // 滑块轨道与总轨道距离差
-      const thumbTrackY = (trackLength - nMax) / 2;
+      const thumbTrackX = (trackLength - nMax) / 2;
       // 滑动条位置
-      const nTop = this.$el.getBoundingClientRect().top;
+      const nLeft = this.$el.getBoundingClientRect().left;
       // 计算滑块位置
-      let nLength = nMax - (clientY - nTop - thumbTrackY);
+      let nLength = clientX - nLeft - thumbTrackX;
       // 限制滑块移动位置
       nLength = nLength >= nMax ? nMax : nLength <= 0 ? 0 : nLength;
       const value = this.step
@@ -134,12 +146,12 @@ export class SliderVertical implements SliderVerticalOptions {
       const mousemoveEvent = (event: MouseEvent) => {
         const e: MouseEvent = event;
         // 鼠标X位置
-        const { clientY } = e;
+        const { clientX } = e;
         // 鼠标移动时取消默认行为，避免选中其他元素或文字
         e.preventDefault();
         e.stopPropagation();
         // 获取鼠标移动后滑块应该移动到的位置
-        let nLength = nMax - (clientY - nTop - thumbTrackY);
+        let nLength = clientX - nLeft - thumbTrackX;
         // 限制滑块移动位置
         nLength = nLength >= nMax ? nMax : nLength <= 0 ? 0 : nLength;
 
@@ -153,6 +165,7 @@ export class SliderVertical implements SliderVerticalOptions {
         }
         window.getSelection()?.removeAllRanges();
       };
+
       const removeEvent = (event: MouseEvent) => {
         const e: MouseEvent = event;
         e.stopPropagation();
@@ -165,26 +178,26 @@ export class SliderVertical implements SliderVerticalOptions {
       document.addEventListener("mousemove", mousemoveEvent);
       document.addEventListener("mouseup", removeEvent);
     });
+
     // 设置滑块初始位置
     this.setValue(this.value);
   }
 
   /** 设置滑动条值 */
-  setValue(value: number) {
-    // this.value = value <= this.min ? this.min : value >= this.max ? this.max : value;
-    this.value = Math.max(Math.min(value, this.max), this.min);
+  public setValue(value: number) {
+    this.value = value <= this.min ? this.min : value >= this.max ? this.max : value;
     // 计算滑块位置
     const per = (this.value - this.min) / (this.max - this.min);
     // 修改滑块位置
-    this.$thumb.style.top = `${(1 - per) * 100}%`;
+    this.$thumb.style.left = `${per * 100}%`;
     // 修改滑动痕迹高度
-    this.$bar.style.height = `${Math.max(Math.min(per, 1), 0) * 100}%`;
-    // 执行相应函数
-    this.onChange?.(value);
+    this.$bar.style.width = `${per * 100}%`;
+    // 触发数据更改事件
+    this.onChange?.(this.value);
   }
 
   /** 拖动滑动条到特定的值 */
-  private drag(value: number) {
+  public drag(value: number) {
     this.setValue(value);
     // 触发拖动事件
     this.onDrag?.(this.value);

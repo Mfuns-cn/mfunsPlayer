@@ -56,19 +56,10 @@ export interface PlayerEventMap {
   /** 配置选项更改 */
   options_set: (options: Partial<PlayerOptions>) => void;
 
-  // --- 播放器状态事件 --- //
-  /** 进入全屏模式 */
-  fullscreen_enter: () => void;
-  /** 退出全屏模式 */
-  fullscreen_exit: () => void;
-  /** 进入画中画模式 */
-  pip_enter: () => void;
-  /** 退出画中画模式 */
-  pip_exit: () => void;
   /** 进入网页全屏模式 */
-  webfull_enter: () => void;
+  "webscreen:enter": () => void;
   /** 退出网页全屏模式 */
-  webfull_exit: () => void;
+  "webscreen:exit": () => void;
 
   /** 播放器聚焦 */
   focus: () => void;
@@ -80,7 +71,15 @@ export interface PlayerEventMap {
   inactive: () => void;
 
   /** 播放器视频区域界面大小改变 */
+  video_resize: (size: [number, number]) => void;
+
+  /** 播放器尺寸改变 */
   resize: (size: [number, number]) => void;
+
+  /** 播放器与视口相交区域改变 */
+  intersection: (flag: boolean) => void;
+
+  mounted: () => void;
 
   /** 播放器自定义属性更改 */
   change: <T extends keyof PlayerPropertyMap>(key: T, value: PlayerPropertyMap[T]) => void;

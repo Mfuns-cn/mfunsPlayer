@@ -11,14 +11,37 @@ export default class State {
   active = false;
   /** 播放器控制状态 */
   controlled = false;
+  /** 播放器相交状态 */
+  intersecting = true;
   /** 播放器鼠标活跃状态，鼠标在播放器区域内移动时活跃 */
   mousemove = false;
 
   activeTime: number;
 
+  resizeObserver?: ResizeObserver;
+
+  intersectionObserver?: ResizeObserver;
+
   constructor(player: Player, options: PlayerOptions) {
     this.player = player;
     this.activeTime = options.activeTime ?? 3000;
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(([item]) => {
+        const { width, height } = item.contentRect;
+        this.player.emit("resize", [width, height]);
+      });
+    }
+    if (window.IntersectionObserver) {
+      this.intersectionObserver = new window.IntersectionObserver(([item]) => {
+        const { isIntersecting } = item;
+        this.intersecting = isIntersecting;
+        this.player.emit("intersection", isIntersecting);
+      });
+    }
+    this.player.once("mounted", () => {
+      this.resizeObserver?.observe(this.player.$el);
+      this.intersectionObserver?.observe(this.player.$el);
+    });
     this.init();
   }
   focus() {
@@ -63,6 +86,12 @@ export default class State {
       this.mousemove = false;
       this.removeActive();
     });
+    this.player.on("video_change", () => {
+      this.player.$el.classList.add("state-start");
+    });
+    this.player.on("play", () => {
+      this.player.$el.classList.remove("state-start");
+    });
   }
   /** 设置播放器活跃状态 */
   public setActive() {
@@ -82,10 +111,3 @@ export default class State {
     });
   }
 }
-
-/**
- * 活跃状态Active判定:
- * - 鼠标位于播放器主体范围内并持续移动，超过一定时间不移动或移出区域会取消Active状态
- * - 鼠标位于控制栏/顶栏区域
- * - 控制栏处于正在控制状态
- */

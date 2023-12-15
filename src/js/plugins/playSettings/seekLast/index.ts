@@ -1,7 +1,7 @@
 import Player from "@/player";
 import { BasePlugin } from "@/plugin";
 import { PlayerOptions } from "@/types";
-import { Checkbox } from "@/ui/components";
+import { Checkbox } from "@/components";
 
 declare module "@/types" {
   interface PlayerPropertyMap {
@@ -35,7 +35,7 @@ export default class SeekLast extends BasePlugin {
   }
 
   pluginsReady() {
-    if (this.player.plugin.settings) {
+    if (this.plugin.settings) {
       const container = document.createElement("div");
       this.checkbox = new Checkbox({
         container,
@@ -45,7 +45,7 @@ export default class SeekLast extends BasePlugin {
         },
         label: "断点续播",
       });
-      this.player.plugin.settings.$play.appendChild(container);
+      this.plugin.settings.$play.appendChild(container);
     }
   }
 

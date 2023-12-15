@@ -62,7 +62,7 @@ export default class PartList extends PanelPlugin {
     this._list = list;
     render(
       templateList(list || [], (p) => {
-        this.player.plugin.part?.set(p);
+        this.plugin.part?.set(p);
       }),
       this.$list
     );

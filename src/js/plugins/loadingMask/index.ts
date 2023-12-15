@@ -1,6 +1,6 @@
 import { classPrefix } from "@/config";
 import { BasePlugin } from "@/plugin";
-import { ApiCallbacks, PlayerOptions } from "@/types";
+import { PlayerOptions } from "@/types";
 import { createElement } from "@/utils";
 import MfunsPlayer from "@/player";
 import { html, render } from "lit-html";
@@ -15,6 +15,9 @@ declare module "@/types" {
 }
 
 const template = html`
+  <div class="${classPrefix}-loadingmask-icon">
+    <div class="${classPrefix}-loadingmask-image"></div>
+  </div>
   <div class="${classPrefix}-loadingmask-info"></div>
   <div class="${classPrefix}-loadingmask-tips">Loading...</div>
 `;

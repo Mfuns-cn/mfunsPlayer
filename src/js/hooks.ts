@@ -36,11 +36,20 @@ export default class Hooks {
 
   call<T extends keyof PlayerHookMap>(
     name: PlayerHookMap[T] extends void ? T : never,
-    ctx: void
+    ctx: void,
+    flag?: boolean
   ): Promise<boolean>;
-  call<T extends keyof PlayerHookMap>(name: T, ctx: PlayerHookMap[T]): Promise<boolean>;
-  /** 调用钩子函数 */
-  async call<T extends keyof PlayerHookMap>(name: T, ctx: PlayerHookMap[T]) {
+  call<T extends keyof PlayerHookMap>(
+    name: T,
+    ctx: PlayerHookMap[T],
+    flag?: boolean
+  ): Promise<boolean>;
+  /** 调用钩子函数
+   * @param name 钩子名称
+   * @param ctx 钩子上下文
+   * @param flag 钩子在正常遍历完毕后是否执行默认行为，默认值为true
+   */
+  async call<T extends keyof PlayerHookMap>(name: T, ctx: PlayerHookMap[T], flag = true) {
     const hook = this.hooks[name];
     if (hook?.length) {
       for (const f of hook) {
@@ -58,6 +67,6 @@ export default class Hooks {
     }
     console.log(`钩子调用完毕: ${name}`);
     console.log(ctx);
-    return true;
+    return flag;
   }
 }

@@ -1,7 +1,7 @@
 import { PlayerOptions } from "@/types";
 import { html, render } from "lit-html";
 import { classPrefix } from "@/config";
-import { Picker } from "@/ui/components";
+import { Picker } from "@/components";
 import { color2Number } from "@/utils";
 import DanmakuBar from ".";
 

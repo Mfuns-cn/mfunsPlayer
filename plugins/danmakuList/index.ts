@@ -253,21 +253,21 @@ export default class DanmakuList extends PanelPlugin {
                 (dm: DanmakuItem) => {
                   operate.report(dm);
                 },
-                !myDanmaku && api?.danmakuReport,
+                !myDanmaku && api?.report,
               ],
               [
                 "屏蔽",
                 (dm: DanmakuItem) => {
                   operate.blockUser(dm.user, true);
                 },
-                !myDanmaku && api?.danmakuBlockUser,
+                !myDanmaku && api?.blockUser,
               ],
               [
                 "撤回",
                 (dm: DanmakuItem) => {
                   operate.recall(dm);
                 },
-                myDanmaku && api?.danmakuRecall,
+                myDanmaku && api?.recall,
               ],
             ].filter((v) => v[2]) as [string, (dm: DanmakuItem) => void, unknown][];
           },

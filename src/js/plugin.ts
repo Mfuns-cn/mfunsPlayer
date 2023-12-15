@@ -1,11 +1,13 @@
-import { PlayerOptions, Plugin } from "@/types";
+import { PlayerOptions, Plugin, PluginExports } from "@/types";
 import Player from ".";
 
 export abstract class BasePlugin implements Plugin {
   static pluginName: string;
   protected player: Player;
+  protected plugin: PluginExports;
   constructor(player: Player) {
     this.player = player;
+    this.plugin = player.plugin;
   }
 }
 

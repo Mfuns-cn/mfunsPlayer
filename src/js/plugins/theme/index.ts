@@ -6,10 +6,9 @@ const themeOptionsVars = {
   primaryColor: "--mp-primary-color",
   secondaryColor: "--mp-secondary-color",
   borderRadius: "--mp-border-radius",
-  bgWhite: "--mp-bg-white",
+  bgLight: "--mp-bg-light",
+  bgDark: "--mp-bg-dark",
   bgBlack: "--mp-bg-black",
-  panelWhite: "--mp-panel-white",
-  panelBlack: "--mp-panel-black",
 };
 
 export type ThemeOptions = Partial<Record<keyof typeof themeOptionsVars, string>>;
@@ -20,18 +19,28 @@ declare module "@/types" {
   }
   interface PlayerOptions {
     theme?: ThemeOptions;
+    /** 颜色模式 */
+    colorScheme?: ThemeColorScheme;
   }
 }
+
+export type ThemeColorScheme = "light" | "dark" | "auto";
 
 export default class Theme extends BasePlugin {
   static pluginName = "theme";
   private properties: ThemeOptions = {};
   /** 绑定了主题变量的DOM元素 */
   private themeElement: HTMLElement[];
+  /** 匹配暗黑模式 */
+  private _matchDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+  private _handleDarkScheme: (e: MediaQueryListEvent) => void;
   constructor(player: Player, options: PlayerOptions) {
     super(player);
     this.themeElement = [this.player.container];
     this.setTheme(options.theme || {});
+    this._handleDarkScheme = (e) => {
+      this.player.$el.classList.toggle("mpui-dark", e.matches);
+    };
   }
   /** 设置主题 */
   setTheme(theme: ThemeOptions) {
@@ -54,12 +63,20 @@ export default class Theme extends BasePlugin {
     return this.properties[name];
   }
   /** 为元素绑定主题变量 */
-  public addThemeElement(el: HTMLElement) {
+  public bind(el: HTMLElement) {
     this.themeElement.push(el);
     let name: keyof typeof themeOptionsVars;
     for (name in this.properties) {
       const value = this.properties[name];
       value && el.style.setProperty(themeOptionsVars[name], value);
+    }
+  }
+  setColorScheme(scheme: ThemeColorScheme) {
+    this.player.$el.classList.toggle("mpui-dark", scheme == "dark");
+    if (scheme == "auto") {
+      this._matchDarkScheme.addEventListener("change", this._handleDarkScheme);
+    } else {
+      this._matchDarkScheme.removeEventListener("change", this._handleDarkScheme);
     }
   }
 }

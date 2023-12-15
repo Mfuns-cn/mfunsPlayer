@@ -8,7 +8,8 @@ import ButtonPart from "./button/ButtonPart";
 import ButtonVolume from "./button/ButtonVolume";
 import ButtonSettings from "./button/ButtonSettings";
 import ButtonPip from "./button/ButtonPip";
-import ButtonWebfull from "./button/ButtonWebfull";
+import ButtonWidescreen from "./button/ButtonWidescreen";
+import ButtonWebscreen from "./button/ButtonWebscreen";
 import ButtonFullscreen from "./button/ButtonFullscreen";
 
 export {
@@ -21,7 +22,8 @@ export {
   ButtonVolume,
   ButtonSettings,
   ButtonPip,
-  ButtonWebfull,
+  ButtonWidescreen,
+  ButtonWebscreen,
   ButtonFullscreen,
 };
 
@@ -36,7 +38,7 @@ declare module "@/types" {
     buttonVolume?: ButtonVolume;
     buttonSettings?: ButtonSettings;
     buttonPip?: ButtonPip;
-    buttonWebfull?: ButtonWebfull;
+    buttonWebscreen?: ButtonWebscreen;
     buttonFullscreen?: ButtonFullscreen;
   }
 }
