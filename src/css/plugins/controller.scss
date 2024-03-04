@@ -54,7 +54,7 @@
     }
     &-center {
       flex-grow: 1;
-      &.state-bar {
+      &.is-bar {
         margin: 0 60px;
         max-width: 600px;
       }
@@ -70,8 +70,8 @@
       box-sizing: border-box;
     }
   }
-  &.state-active &,
-  &.state-start & {
+  &.is-active &,
+  &.is-start & {
     &-controller-wrap {
       bottom: 0;
     }

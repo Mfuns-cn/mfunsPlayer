@@ -90,22 +90,12 @@
   </body>
   <script>
     console.log(MfunsPlayer);
-    let mfPlayer;
+    let player;
     const testVersion = document.querySelector(".test-version");
     testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash;
     window.onload = () => {
       const container = document.querySelector(".content");
       const playerExtra = document.querySelector(".extra");
-      const playerSettings = { player: {}, danmaku: {} };
-      localStorage.mfunsPlayerSettings ??
-        localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings));
-      localStorage.mfuns_video_point ??
-        localStorage.setItem("mfuns_video_point", JSON.stringify([]));
-      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings;
-      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player;
-      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku;
-      console.log(player, danmaku);
-
       const mfunsPlayerConfig = {
         container,
         uid: 2333,
@@ -114,12 +104,8 @@
           title: "【鏡音リン・初音ミク】ねぇねぇねぇ。 (呐呐呐。)【ピノキオピー】",
           list: [
             {
-              sources: [
-                {
-                  url: "https://video_api.kms233.com/bili/BV1aL411n7tQ",
-                  type: "mp4",
-                },
-              ],
+              url: "https://video_api.kms233.com/bili/BV1aL411n7tQ",
+              type: "mp4",
               title: "ねぇねぇねぇ。",
             },
           ],
@@ -127,7 +113,7 @@
         danmaku: {
           api: "https://www.mfuns.xyz/wp-json/mfuns",
         },
-        danmakuBar: {
+        danmakuStyle: {
           colorList: [
             "#FE0302",
             "#FFFF00",
@@ -139,11 +125,9 @@
             "#02c3fb",
             "#fde202",
           ],
-          placeholder: "呐呐呐，不发条弹幕嘛~",
         },
-        feature: {
-          solid: true,
-          webscreen: true,
+        danmakuBar: {
+          placeholder: "呐呐呐，不发条弹幕嘛~",
         },
         theme: themes.miku,
         // advancedDanmaku:{
@@ -166,33 +150,16 @@
         //     }
         // ]
       };
-      for (let key in player) {
-        if (key) mfunsPlayerConfig[key] = player[key];
-      }
-      for (let key in danmaku) {
-        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key];
-      }
-      for (let i = 0; i < mfunsPlayerConfig.video.length; i++) {
-        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point);
-        if (!mfuns_video_point.length) break;
-        else {
-          for (let j = 0; j < mfuns_video_point.length; j++) {
-            if (mfunsPlayerConfig.video[i].url === mfuns_video_point[j].link) {
-              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position;
-            }
-          }
-        }
-      }
       console.log(mfunsPlayerConfig);
-      mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
-      console.log(mfPlayer);
-      mfPlayer.on("play", () => {
+      player = new MfunsPlayer(mfunsPlayerConfig);
+      console.log(player);
+      player.on("play", () => {
         console.log("play");
       });
-      mfPlayer.on("pause", () => {
+      player.on("pause", () => {
         console.log("pause");
       });
-      mfPlayer.on("part_change", (p) => {
+      player.on("part_change", (p) => {
         console.log("part_change", p);
       });
     };
@@ -225,11 +192,11 @@
       },
     };
     function setTheme(id) {
-      mfPlayer.plugin.theme.setTheme(themes[id]);
+      player.plugin.theme.setTheme(themes[id]);
       console.log("已设置主题", id);
     }
     function setRadius(r) {
-      mfPlayer.plugin.theme.set("borderRadius", r);
+      player.plugin.theme.set("borderRadius", r);
       console.log("已设置圆角", r);
     }
   </script>

@@ -113,7 +113,7 @@
       border: transparent solid 1px;
       transition: color 0.2s;
       cursor: pointer;
-      &.state-checked {
+      &.is-checked {
         border: transparent solid 1px;
         border-color: $primary-color;
         color: $primary-color;
@@ -168,7 +168,7 @@
         color: $primary-color;
       }
     }
-    &.state-checked & {
+    &.is-checked & {
       &-icon {
         background-color: $primary-color;
         border-color: $primary-color;

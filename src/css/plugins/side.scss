@@ -3,7 +3,7 @@
 .#{$prefix} {
   &-side-wrap {
     display: none;
-    &.state-show {
+    &.is-show {
       display: block;
     }
   }
@@ -39,7 +39,7 @@
         width: 100%;
         height: 100%;
         display: none;
-        &.state-show {
+        &.is-show {
           display: block;
         }
       }
@@ -63,7 +63,7 @@
 
   &-side &-side-panel {
     display: none;
-    &.state-show {
+    &.is-show {
       display: block;
     }
   }

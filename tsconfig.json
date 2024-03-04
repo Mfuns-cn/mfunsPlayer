@@ -4,16 +4,19 @@
     "target": "es2020",
     "module": "commonjs",
     "paths": {
-      "@/*": ["./src/js/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@css/*": ["./src/css/*"]
+      "@core": ["./src/core"],
+      "@/*": ["./src/core/*"],
+      "@css/*": ["./src/css/*"],
+      "@plugin/*": ["./src/plugin/*"]
     },
+    "lib": ["ES2018", "DOM", "DOM.Iterable"],
     "noEmit": true,
     "allowJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": "./lib"
   },
-  "include": ["src", "plugins", "player"]
+  "include": ["src", "mfuns-plugin", "player"]
 }

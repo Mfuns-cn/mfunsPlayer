@@ -1,2 +1,2 @@
-declare const MFUNSPLAYER_VERSION: string
-declare const GIT_HASH: string
+declare const __MFUNSPLAYER_VERSION__: string;
+declare const __GIT_HASH__: string;

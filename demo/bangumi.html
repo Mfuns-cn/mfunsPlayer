@@ -94,21 +94,12 @@
       return s && JSON.parse(s);
     }
     console.log(MfunsPlayer);
-    let mfPlayer;
+    let player;
     const testVersion = document.querySelector(".test-version");
     testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash;
     window.onload = () => {
       const container = document.querySelector(".content");
       const playerExtra = document.querySelector(".extra");
-      const playerSettings = { player: {}, danmaku: {} };
-      localStorage.mfunsPlayerSettings ??
-        localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings));
-      localStorage.mfuns_video_point ??
-        localStorage.setItem("mfuns_video_point", JSON.stringify([]));
-      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings;
-      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player;
-      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku;
-      console.log(player, danmaku);
 
       const mfunsPlayerConfig = {
         container,
@@ -119,7 +110,7 @@
           list: [
             /**
                     {
-                        sources: [{
+                        qualities: [{
                             url: "https://video_api.kms233.com/bili/av106",
                             type: "mp4"
                         }],
@@ -135,41 +126,29 @@
                         ]
                     },**/
             {
-              sources: [
-                {
-                  url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
-                  type: "mp4",
-                },
-              ],
+              url: "https://video_api.kms233.com/bili/BV1mx411c7QS",
+              type: "mp4",
               // pic: "http://www.dmoe.cc/random.php?165529917318",
               title: "第一话 起源与终结的序章 TurningPoint",
               thumbnails: "../static/thumbnails/steingate/1.png",
               danmakuId: "01",
             },
             {
-              sources: [
-                {
-                  url: "https://video_api.kms233.com/bili/BV1Sx411c7wA",
-                  type: "mp4",
-                },
-              ],
+              url: "https://video_api.kms233.com/bili/BV1Sx411c7wA",
+              type: "mp4",
               title: "第二话 时间跳跃的偏执狂 TimeTravelParanoia",
               thumbnails: "../static/thumbnails/steingate/2.png",
               danmakuId: "02",
             },
             {
-              sources: [
-                {
-                  url: "https://bj.bcebos.com/ksv-video-upload/bb37487f579b9ef8b59487f93740ab1996c5b991",
-                  type: "mp4",
-                },
-              ],
+              url: "https://bj.bcebos.com/ksv-video-upload/bb37487f579b9ef8b59487f93740ab1996c5b991",
+              type: "mp4",
               title: "第三话 并列过程的偏执狂 ParallelWorldParanoia",
               thumbnails: "../static/thumbnails/steingate/3.png",
               danmakuId: "03",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1kx411c7kz",
                   type: "mp4",
@@ -180,7 +159,7 @@
               danmakuId: "04",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1kx411c7Gm",
                   type: "mp4",
@@ -191,7 +170,7 @@
               danmakuId: "05",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Cx411c7ix",
                   type: "mp4",
@@ -202,7 +181,7 @@
               danmakuId: "06",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Cx411c7Pa",
                   type: "mp4",
@@ -213,7 +192,7 @@
               danmakuId: "07",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1yx411c7QQ",
                   type: "mp4",
@@ -224,7 +203,7 @@
               danmakuId: "08",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1yx411c75j",
                   type: "mp4",
@@ -235,7 +214,7 @@
               danmakuId: "09",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1dx411c7Ye",
                   type: "mp4",
@@ -246,7 +225,7 @@
               danmakuId: "10",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Zx411c7Fz",
                   type: "mp4",
@@ -257,7 +236,7 @@
               danmakuId: "11",
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1ox411c7hx",
                   type: "mp4",
@@ -270,22 +249,24 @@
           ],
         },
         danmaku: {
-          format: "bilibili-xml",
+          type: "bilibili-xml",
         },
         danmakuApi: {
-          get: async ({ id }) => {
-            return await fetch(`../static/danmaku/steingate/${id}.xml`).then((res) => res.text());
-          },
-          send: async (danmaku, id) => {
-            console.log(
-              `向 id:${id}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
+          get: async ({ danmakuId }) => {
+            return await fetch(`../static/danmaku/steingate/${danmakuId}.xml`).then((res) =>
+              res.text()
             );
-            mfPlayer.plugin.danmakuBar.setCoolDown(5);
-            mfPlayer.plugin.danmakuList.add([
+          },
+          send: async (danmaku, { danmakuId }) => {
+            console.log(
+              `向 id:${danmakuId}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
+            );
+            player.plugin.danmakuBar.setCoolDown(5);
+            player.plugin.danmakuList.add([
               {
                 id: `send:${Date.now()}`,
                 date: Math.floor(Date.now() / 1000),
-                user: mfPlayer.userId || 0,
+                user: player.userId || 0,
                 ...danmaku,
               },
             ]);
@@ -367,62 +348,44 @@
         //     }
         // ]
       };
-      for (let key in player) {
-        if (key) mfunsPlayerConfig[key] = player[key];
-      }
-      for (let key in danmaku) {
-        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key];
-      }
-      for (let i = 0; i < mfunsPlayerConfig.video.length; i++) {
-        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point);
-        if (!mfuns_video_point.length) break;
-        else {
-          for (let j = 0; j < mfuns_video_point.length; j++) {
-            if (mfunsPlayerConfig.video[i].url === mfuns_video_point[j].link) {
-              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position;
-            }
-          }
-        }
-      }
-      console.log(mfunsPlayerConfig);
-      mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
-      window.mfPlayer = mfPlayer;
-      console.log(mfPlayer);
-      mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player = new MfunsPlayer(mfunsPlayerConfig);
+      window.player = player;
+      console.log(player);
+      player.plugin.danmakuList.mount(playerExtra);
 
-      mfPlayer.on("play", () => {
+      player.on("play", () => {
         console.log("play");
       });
-      mfPlayer.on("pause", () => {
+      player.on("pause", () => {
         console.log("pause");
       });
 
-      mfPlayer.on("timeupdate", (t) => {
+      player.on("timeupdate", (t) => {
         setStorage("lastPosition", t);
       });
-      mfPlayer.on("change", (k, v) => {
+      player.on("change", (k, v) => {
         setStorage(k, v);
       });
-      mfPlayer.on("seeking", (t) => {
+      player.on("seeking", (t) => {
         setStorage("lastPosition", t);
       });
-      mfPlayer.on("webscreen:enter", () => {
-        mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
+      player.on("webscreen:enter", () => {
+        player.plugin.side.mount(player.plugin.danmakuList);
       });
-      mfPlayer.on("fullscreen:enter", () => {
-        mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
+      player.on("fullscreen:enter", () => {
+        player.plugin.side.mount(player.plugin.danmakuList);
       });
-      mfPlayer.on("webscreen:exit", () => {
-        mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.on("webscreenExit", () => {
+        player.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("fullscreen:exit", () => {
-        mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.on("fullscreenExit", () => {
+        player.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("widescreen:exit", () => {
-        mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.on("widescreenExit", () => {
+        player.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("widescreen:enter", () => {
-        mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
+      player.on("widescreen:enter", () => {
+        player.plugin.side.mount(player.plugin.danmakuList);
       });
     };
   </script>

@@ -5,30 +5,30 @@ import { execSync } from "child_process";
 
 import path from "path";
 
-const configs: UserConfig[] = [
-  {
-    build: {
-      lib: {
-        entry: path.resolve(__dirname, "./player/MfunsPlayer.ts"),
-        fileName: (format) => `mfuns-player.${format}.js`,
-        name: "MfunsPlayer",
-      },
-      sourcemap: true,
-    },
-  },
-  {
-    build: {
-      lib: {
-        entry: path.resolve(__dirname, "./player/VideoPagePlayer.ts"),
-        fileName: (format) => `video-page-player.${format}.js`,
-        name: "MfunsPlayer",
-      },
-      sourcemap: true,
-    },
-  },
-];
+import fs from "fs";
 
-async function buildPlayers() {
+fs.readdir(path.resolve("./player"), (err, files) => {
+  if (err) {
+    console.error(err, "无法正确读取文件夹");
+  } else {
+    const configs: UserConfig[] = files.map((fileName) => {
+      const name = fileName.substring(0, fileName.lastIndexOf("."));
+      return {
+        build: {
+          lib: {
+            entry: path.resolve(__dirname, `./player/${fileName}`),
+            fileName: (format) => `${name}.${format}.js`,
+            name: "MfunsPlayer",
+          },
+          sourcemap: true,
+        },
+      };
+    });
+    buildPlayers(configs);
+  }
+});
+
+async function buildPlayers(configs: UserConfig[]) {
   // 查找plugin文件夹内所有含打包配置的文件
 
   for await (const config of configs) {
@@ -43,16 +43,17 @@ async function buildPlayers() {
           plugins: [cssInjectedByJsPlugin({ topExecutionPriority: false })],
           resolve: {
             alias: {
-              "@": path.resolve(__dirname, "src/js"),
-              "@lib": path.resolve(__dirname, "src/lib"),
+              "@": path.resolve(__dirname, "src/core"),
+              "@core": path.resolve(__dirname, "src/core"),
+              "@plugin": path.resolve(__dirname, "src/plugin"),
               "@css": path.resolve(__dirname, "src/css"),
               "@icon": path.resolve(__dirname, "./src/icon"),
             },
           },
           define: {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            MFUNSPLAYER_VERSION: JSON.stringify(require("./package.json").version),
-            GIT_HASH: JSON.stringify(
+            __MFUNSPLAYER_VERSION__: JSON.stringify(require("./package.json").version),
+            __GIT_HASH__: JSON.stringify(
               execSync("git rev-parse HEAD").toString().trim().substring(0, 7)
             ),
           },
@@ -63,5 +64,3 @@ async function buildPlayers() {
   }
   console.log("OK");
 }
-
-buildPlayers();

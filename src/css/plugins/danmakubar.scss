@@ -23,7 +23,7 @@
     .#{$prefix}-controller-icon-wrap {
       padding: 0 5px;
     }
-    &.state-login {
+    &.is-login {
       .#{$prefix}-danmakubar-input,
       .#{$prefix}-danmakubar-input-slot {
         display: none;
@@ -40,14 +40,14 @@
         cursor: not-allowed;
       }
       @at-root .mpui-dark {
-        .#{$prefix}-danmakubar.state-login {
+        .#{$prefix}-danmakubar.is-login {
           .#{$prefix}-danmakubar-input-wrap {
             background-color: $fg-dark-xs;
           }
         }
       }
     }
-    &.state-loading {
+    &.is-loading {
       .#{$prefix}-controls-button {
         pointer-events: none;
       }
@@ -67,7 +67,7 @@
         cursor: not-allowed;
       }
       @at-root .mpui-dark {
-        .#{$prefix}-danmakubar.state-loading {
+        .#{$prefix}-danmakubar.is-loading {
           .#{$prefix}-danmakubar-input-wrap {
             background-image: linear-gradient(
               90deg,
@@ -195,7 +195,7 @@
       background: $primary-color;
       border-radius: $border-radius;
       margin-right: 6px;
-      &.state-disabled {
+      &.is-disabled {
         background: $fg-light-xs;
         color: $fg-light-s;
         cursor: not-allowed;

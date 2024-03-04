@@ -87,21 +87,16 @@
   </body>
   <script>
     console.log(MfunsPlayer);
-    let mfPlayer;
+    let player;
     const testVersion = document.querySelector(".test-version");
     testVersion.innerText = "v" + MfunsPlayer.version + "-" + MfunsPlayer.gitHash;
     window.onload = () => {
       const container = document.querySelector(".content");
       const playerExtra = document.querySelector(".extra");
-      const playerSettings = { player: {}, danmaku: {} };
       localStorage.mfunsPlayerSettings ??
         localStorage.setItem("mfunsPlayerSettings", JSON.stringify(playerSettings));
       localStorage.mfuns_video_point ??
         localStorage.setItem("mfuns_video_point", JSON.stringify([]));
-      const { player, danmaku } = JSON.parse(localStorage.mfunsPlayerSettings) || playerSettings;
-      const { autoPlay, autoSwitch, autoSkip, blackBorder, volume } = player;
-      const { danmakuCatch, keepOutSubtitle, limitArea, opacity, size, speed } = danmaku;
-      console.log(player, danmaku);
 
       const mfunsPlayerConfig = {
         container,
@@ -112,13 +107,13 @@
           list: [
             /**
                     {
-                        sources: [{
+                        qualities: [{
                             url: "https://video_api.kms233.com/bili/av106",
                             type: "mp4"
                         }],
                         // pic: "http://www.dmoe.cc/random.php?165529917318",
                         title: "最终鬼畜蓝蓝路",
-                        danmakuAddition: [
+                        danmaku: [
                             {
 
                                 url: "../static/danmaku/steingate/01.xml",
@@ -128,7 +123,7 @@
                         ]
                     },**/
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1mx411c7QS?tag=1080P",
                   type: "mp4",
@@ -145,7 +140,7 @@
               // pic: "http://www.dmoe.cc/random.php?165529917318",
               title: "第一话 起源与终结的序章 TurningPoint",
               thumbnails: "../static/thumbnails/steingate/1.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/01.xml",
                   type: "bilibili-xml",
@@ -154,7 +149,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Sx411c7wA",
                   type: "mp4",
@@ -162,7 +157,7 @@
               ],
               title: "第二话 时间跳跃的偏执狂 TimeTravelParanoia",
               thumbnails: "../static/thumbnails/steingate/2.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/02.xml",
                   type: "bilibili-xml",
@@ -171,7 +166,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://bj.bcebos.com/ksv-video-upload/bb37487f579b9ef8b59487f93740ab1996c5b991",
                   type: "mp4",
@@ -179,7 +174,7 @@
               ],
               title: "第三话 并列过程的偏执狂 ParallelWorldParanoia",
               thumbnails: "../static/thumbnails/steingate/3.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/03.xml",
                   type: "bilibili-xml",
@@ -188,7 +183,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1kx411c7kz",
                   type: "mp4",
@@ -196,7 +191,7 @@
               ],
               title: "第四话 空理彷徨的交汇 InterpreterRendezvous ",
               thumbnails: "../static/thumbnails/steingate/4.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/04.xml",
                   type: "bilibili-xml",
@@ -205,7 +200,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1kx411c7Gm",
                   type: "mp4",
@@ -213,7 +208,7 @@
               ],
               title: "第五话 电荷冲突的交汇 StarmineRendezvous",
               thumbnails: "../static/thumbnails/steingate/5.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/05.xml",
                   type: "bilibili-xml",
@@ -222,7 +217,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Cx411c7ix",
                   type: "mp4",
@@ -230,7 +225,7 @@
               ],
               title: "第六话 蝶翼的偏差值 ButterflyEffect",
               thumbnails: "../static/thumbnails/steingate/6.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/06.xml",
                   type: "bilibili-xml",
@@ -239,7 +234,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Cx411c7Pa",
                   type: "mp4",
@@ -247,7 +242,7 @@
               ],
               title: "第七话 断层的变动率 DivergenceSingularity",
               thumbnails: "../static/thumbnails/steingate/7.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/07.xml",
                   type: "bilibili-xml",
@@ -256,7 +251,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1yx411c7QQ",
                   type: "mp4",
@@ -264,7 +259,7 @@
               ],
               title: "第八话 梦幻的自平衡 ChaosTheoryHomeostasis",
               thumbnails: "../static/thumbnails/steingate/8.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/08.xml",
                   type: "bilibili-xml",
@@ -273,7 +268,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1yx411c75j",
                   type: "mp4",
@@ -281,7 +276,7 @@
               ],
               title: "第九话 幻像的自平衡 ChaosTheoryHomeostasis",
               thumbnails: "../static/thumbnails/steingate/9.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/09.xml",
                   type: "bilibili-xml",
@@ -290,7 +285,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1dx411c7Ye",
                   type: "mp4",
@@ -298,7 +293,7 @@
               ],
               title: "第十话 相生的自平衡 ChaosTheoryHomeostasis",
               thumbnails: ".../static/thumbnails/steingate/10.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/10.xml",
                   type: "bilibili-xml",
@@ -307,7 +302,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1Zx411c7Fz",
                   type: "mp4",
@@ -315,7 +310,7 @@
               ],
               title: "第十一话 时空境界的教条 DogmainEventHorizon",
               thumbnails: "../static/thumbnails/steingate/11.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/11.xml",
                   type: "bilibili-xml",
@@ -324,7 +319,7 @@
               ],
             },
             {
-              sources: [
+              qualities: [
                 {
                   url: "https://video_api.kms233.com/bili/BV1ox411c7hx",
                   type: "mp4",
@@ -332,7 +327,7 @@
               ],
               title: "第十二话 静止限界的教条 DogmainErgosphere",
               thumbnails: "../static/thumbnails/steingate/12.png",
-              danmakuAddition: [
+              danmaku: [
                 {
                   url: "../static/danmaku/steingate/012.xml",
                   type: "bilibili-xml",
@@ -342,17 +337,17 @@
             },
           ],
         },
-        danmakuApi: {
-          send: async (danmaku, id) => {
+        danmakuInvoke: {
+          send: async (danmaku, { part }) => {
             console.log(
-              `向 id:${id}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
+              `向 P${part}@${danmaku.time}s 发送一条弹幕: \n${danmaku.content}\n模式${danmaku.mode} 颜色${danmaku.color} 字号${danmaku.size}`
             );
-            mfPlayer.plugin.danmakuBar.setCoolDown(5);
-            mfPlayer.plugin.danmakuList.add([
+            player.plugin.danmakuBar.setCoolDown(5);
+            player.plugin.danmakuList.add([
               {
                 id: `send:${Date.now()}`,
                 date: Math.floor(Date.now() / 1000),
-                user: mfPlayer.userId || 0,
+                user: player.userId || 0,
                 ...danmaku,
               },
             ]);
@@ -384,7 +379,7 @@
           },
         },
 
-        danmakuBar: {
+        danmakuStyle: {
           fontSizeList: [
             [12, "极小"],
             [18, "小"],
@@ -394,10 +389,6 @@
             [64, "特大"],
           ],
           modeList: [1, 5, 4, 6],
-        },
-        feature: {
-          solid: true,
-          webscreen: true,
         },
         // advancedDanmaku:{
         //   api: "https://www.mfuns.fun/wp-json/mfuns",
@@ -419,50 +410,33 @@
         //     }
         // ]
       };
-      for (let key in player) {
-        if (key) mfunsPlayerConfig[key] = player[key];
-      }
-      for (let key in danmaku) {
-        if (key) mfunsPlayerConfig.danmaku[key] = danmaku[key];
-      }
-      for (let i = 0; i < mfunsPlayerConfig.video.length; i++) {
-        const mfuns_video_point = JSON.parse(localStorage.mfuns_video_point);
-        if (!mfuns_video_point.length) break;
-        else {
-          for (let j = 0; j < mfuns_video_point.length; j++) {
-            if (mfunsPlayerConfig.video[i].url === mfuns_video_point[j].link) {
-              mfunsPlayerConfig.video[i].lastPosition = mfuns_video_point[j].position;
-            }
-          }
-        }
-      }
       console.log(mfunsPlayerConfig);
-      mfPlayer = new MfunsPlayer(mfunsPlayerConfig);
-      window.mfPlayer = mfPlayer;
-      console.log(mfPlayer);
-      mfPlayer.on("play", () => {
+      player = new MfunsPlayer(mfunsPlayerConfig);
+      window.player = player;
+      console.log(player);
+      player.on("play", () => {
         console.log("play");
       });
-      mfPlayer.on("pause", () => {
+      player.on("pause", () => {
         console.log("pause");
       });
-      mfPlayer.on("ended", () => {
+      player.on("ended", () => {
         console.log("视频播放结束");
       });
 
-      mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.plugin.danmakuList.mount(playerExtra);
 
-      mfPlayer.on("webscreen:enter", () => {
-        mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
+      player.on("webscreenEnter", () => {
+        player.plugin.side.mount(player.plugin.danmakuList);
       });
-      mfPlayer.on("fullscreen:enter", () => {
-        mfPlayer.plugin.side.mount(mfPlayer.plugin.danmakuList);
+      player.on("fullscreenEnter", () => {
+        player.plugin.side.mount(player.plugin.danmakuList);
       });
-      mfPlayer.on("webscreen:exit", () => {
-        mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.on("webscreenExit", () => {
+        player.plugin.danmakuList.mount(playerExtra);
       });
-      mfPlayer.on("fullscreen:exit", () => {
-        mfPlayer.plugin.danmakuList.mount(playerExtra);
+      player.on("fullscreenExit", () => {
+        player.plugin.danmakuList.mount(playerExtra);
       });
     };
   </script>

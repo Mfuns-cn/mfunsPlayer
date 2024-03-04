@@ -1,7 +1,7 @@
-import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js"
-import { defineConfig } from "vite"
-import path from "path"
-import { execSync } from "child_process"
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import { defineConfig } from "vite";
+import path from "path";
+import { execSync } from "child_process";
 
 /** 播放器本体打包配置 */
 export default defineConfig({
@@ -17,15 +17,16 @@ export default defineConfig({
   plugins: [cssInjectedByJsPlugin()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src/js"),
-      "@lib": path.resolve(__dirname, "src/lib"),
+      "@": path.resolve(__dirname, "src/core"),
+      "@core": path.resolve(__dirname, "src/core"),
+      "@plugin": path.resolve(__dirname, "src/plugin"),
       "@css": path.resolve(__dirname, "src/css"),
       "@icon": path.resolve(__dirname, "./src/icon"),
     },
   },
   define: {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    MFUNSPLAYER_VERSION: JSON.stringify(require("./package.json").version),
-    GIT_HASH: JSON.stringify(execSync("git rev-parse HEAD").toString().trim().substring(0, 7)),
+    __MFUNSPLAYER_VERSION__: JSON.stringify(require("./package.json").version),
+    __GIT_HASH__: JSON.stringify(execSync("git rev-parse HEAD").toString().trim().substring(0, 7)),
   },
-})
+});

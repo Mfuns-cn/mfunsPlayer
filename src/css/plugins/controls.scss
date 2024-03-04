@@ -19,7 +19,7 @@
           }
         }
       }
-      &.state-on &-icon {
+      &.is-on &-icon {
         i {
           &:nth-child(1) {
             display: none;
@@ -48,7 +48,7 @@
           }
         }
       }
-      &.state-control {
+      &.is-control {
         .#{$prefix}-controls-panel-wrap {
           display: block;
         }
@@ -69,6 +69,7 @@
       @extend .mpui-background;
       margin-bottom: 20px;
       border-radius: $border-radius;
+      overflow: hidden;
     }
   }
 
@@ -90,7 +91,7 @@
       font-size: 13px;
       text-align: center;
     }
-    &.state-input & {
+    &.is-input & {
       &-label {
         display: none;
       }

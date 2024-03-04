@@ -1,6 +1,6 @@
 .#{$prefix} {
   /* 关灯模式 */
-  &.state-lightoff {
+  &.is-lightoff {
     @extend .mpui-dark;
     position: relative;
     z-index: 233333;
@@ -16,7 +16,7 @@
     left: 0;
     right: 0;
   }
-  &.state-lightoff &-lightoff-mask {
+  &.is-lightoff &-lightoff-mask {
     display: block;
   }
 
@@ -24,9 +24,9 @@
   .#{$prefix}-content {
     padding: var(--padding, 0);
   }
-  &.state-widescreen,
-  &.state-webscreen,
-  &.state-fullscreen {
+  &.is-widescreen,
+  &.is-webscreen,
+  &.is-fullscreen {
     .#{$prefix}-video-wrap {
       padding: 0;
     }

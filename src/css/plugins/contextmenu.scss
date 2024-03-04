@@ -3,7 +3,7 @@
 .#{$prefix} {
   &-contextmenu-wrap {
     display: none;
-    &.state-show {
+    &.is-show {
       display: block;
     }
   }
@@ -27,29 +27,31 @@
         background-color: $fg-dark-xs;
       }
     }
-    &-danmaku,
-    &-menu {
+    > ul {
       background-color: $bg-black;
       border-radius: $border-radius;
       overflow: hidden;
-    }
-    &-danmaku {
       margin-bottom: 4px;
-      max-width: 400px;
-      &-item {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  &-contextmenu-danmaku {
+    max-width: 400px;
+    &-item {
+      display: flex;
+      justify-content: space-between;
+      &-content {
+        flex-grow: 1;
+      }
+      &-operate {
         display: flex;
-        justify-content: space-between;
-        &-content {
-          flex-grow: 1;
-        }
-        &-operate {
-          display: flex;
-          flex-shrink: 0;
-          &-btn {
-            padding: 0 4px;
-            &:hover {
-              background-color: $fg-dark-xs;
-            }
+        flex-shrink: 0;
+        &-btn {
+          padding: 0 4px;
+          &:hover {
+            background-color: $fg-dark-xs;
           }
         }
       }

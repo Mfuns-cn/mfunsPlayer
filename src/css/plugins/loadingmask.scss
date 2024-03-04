@@ -12,7 +12,7 @@
     flex-direction: column;
     overflow: hidden;
     color: $fg-dark;
-    &.state-show {
+    &.is-show {
       display: flex;
     }
     &-info {

@@ -74,12 +74,12 @@
       }
     }
   }
-  &.state-paused & {
+  &.is-paused & {
     &-videostatus-paused {
       display: block;
     }
   }
-  &.state-loading & {
+  &.is-loading & {
     &-videostatus-loading {
       display: block;
     }

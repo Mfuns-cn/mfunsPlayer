@@ -1,11 +1,11 @@
 @import "@css/theme";
 
 .#{$prefix} {
-  &-button_volume {
+  &-button-volume {
     .mpicon-volume-off {
       display: none;
     }
-    &.state-muted {
+    &.is-muted {
       .mpicon-volume {
         display: none;
       }
@@ -27,19 +27,19 @@
       padding: 4px 0 6px;
     }
   }
-  &-button_settings {
+  &-button-settings {
     .#{$prefix}-controls-panel {
       width: 250px;
       padding: 5px 15px;
     }
   }
-  &-button_part {
+  &-button-part {
     display: none;
-    &.state-show {
+    &.is-show {
       display: flex;
     }
   }
-  &-button_quality {
+  &-button-quality {
     &-list {
       min-width: 50px;
       height: 100%;
@@ -54,12 +54,12 @@
       &:hover {
         background-color: $fg-dark-xs;
       }
-      &.state-selected {
+      &.is-selected {
         color: $primary-color;
       }
     }
   }
-  &-button_next {
+  &-button-next {
     &:hover {
       .#{$prefix}-controls-button-icon {
         transform: translateX(2px);
@@ -69,7 +69,7 @@
       }
     }
   }
-  &-button_prev {
+  &-button-prev {
     &:hover {
       .#{$prefix}-controls-button-icon {
         transform: translateX(-2px);
@@ -79,13 +79,13 @@
       }
     }
   }
-  &-button_next,
-  &-button_prev {
+  &-button-next,
+  &-button-prev {
     display: flex;
-    &.state-disabled {
+    &.is-disabled {
       color: $fg-dark-s;
       cursor: not-allowed;
-      &.state-autohide {
+      &.is-autohide {
         display: none;
       }
       &:hover {
@@ -97,26 +97,26 @@
         }
       }
     }
-    &.state-hidden {
+    &.is-hidden {
       display: none;
     }
     .#{$prefix}-controls-button-icon i {
       font-size: 16px;
     }
   }
-  &.state-webscreen &-button_widescreen,
-  &.state-fullscreen &-button_widescreen {
+  &.is-webscreen &-button-widescreen,
+  &.is-fullscreen &-button-widescreen {
     display: none;
   }
-  &-button_danmakutoggle {
+  &-button-danmakutoggle {
     .mpicon-danmaku {
       display: none;
     }
-    &.state-on {
+    &.is-on {
       color: $primary-color;
     }
   }
-  &-button_danmakusettings {
+  &-button-danmakusettings {
     .#{$prefix}-controls-panel {
       width: 270px;
       padding: 5px 15px;
@@ -125,7 +125,7 @@
       width: 160px;
     }
   }
-  &-button_danmakustyle {
+  &-button-danmakustyle {
     .#{$prefix}-controls-panel {
       width: 250px;
       padding: 5px 15px;
@@ -157,7 +157,7 @@
           border: 2px solid #00000040;
           border-radius: $border-radius;
         }
-        &.state-checked {
+        &.is-checked {
           border: none;
           & > div {
             border-color: #ffffff;
@@ -175,7 +175,7 @@
             border-color: #00000020;
             border-radius: $border-radius;
           }
-          &.state-checked > div {
+          &.is-checked > div {
             border-color: #00000080;
           }
         }

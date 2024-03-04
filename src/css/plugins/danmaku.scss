@@ -8,7 +8,7 @@
     top: 0;
     bottom: 0;
     color: #fff;
-    &.state-paused {
+    &.is-paused {
       .#{$prefix}-danmaku-item {
         animation-play-state: paused;
       }
