@@ -47,7 +47,7 @@ export default (options) => {
                 keepOutSubtitle: false,
                 showDanmaku: true,
             },
-            options.danmaku || {}
+            options.danmaku
         );
     }
     options.contextmenu = options.contextmenu.concat([
