@@ -370,8 +370,8 @@ export class Switch {
         this.el.classList.toggle('switch-on', value);
         this.onChange?.(value);
     }
-    toggle(value) {
+    toggle(value, nonotice = false) {
         this.setValue(value);
-        this.onToggle?.(value);
+        this.onToggle?.(value, nonotice);
     }
 }
