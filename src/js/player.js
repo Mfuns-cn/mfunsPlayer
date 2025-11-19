@@ -492,7 +492,7 @@ export default class mfunsPlayer {
             }
         });
         this.on('progress', (e) => {
-            const percentage = video.buffered.length ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
+            const percentage = video.buffered.length > 0 ? video.buffered.end(video.buffered.length - 1) / video.duration : 0;
             this.bar.set('loaded', percentage, 'width');
         });
         this.on('play', () => {
