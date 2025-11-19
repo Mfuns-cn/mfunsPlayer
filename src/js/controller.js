@@ -763,7 +763,7 @@ class Controller {
         this.components.danmakuCatchSwitch = new Switch({
             el: this.template.danmaku_catch_switch,
             value: this.player.options.danmaku.danmakuCatch,
-            onToggle: (value) => {
+            onToggle: (value, nonotice = false) => {
                 this.player.template.danmakuTipMask.style.display = value ? '' : 'none'; // 打开弹幕捕获模式，则取消tipMask的隐藏
                 !nonotice && this.player.notice(value ? '已开启弹幕捕获模式' : '已关闭弹幕捕获模式');
                 this.player.events?.trigger('setDanmaku', {
