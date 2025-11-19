@@ -5,3 +5,5 @@ src/static/video
 src/static/danmaku/steingate/2011
 src/static/danmaku/steingate/history
 test/
+
+.DS_Store

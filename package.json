@@ -1,6 +1,6 @@
 {
   "name": "@mfuns/pc-player",
-  "version": "2.1.2",
+  "version": "2.1.4",
   "description": "Mfuns开源PC端弹幕播放器",
   "main": "dist/mfunsPlayer.min.es.js",
   "module": "dist/mfunsPlayer.min.es.js",

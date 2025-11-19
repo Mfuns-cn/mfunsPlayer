@@ -154,7 +154,7 @@ class DanmakuList {
         this.template.danmaku_list_status.classList.toggle('status-loading', status === 'loading');
         this.template.danmaku_list_status.classList.toggle('status-failed', status === 'failed');
         this.template.danmaku_list_status.classList.toggle('status-empty', status === 'empty');
-        console.log('弹幕加载状态' + status);
+        console.log('[mfuns-player] 弹幕加载状态' + status);
     }
     locateByTime(time) {
         let viewEnd = this.list.viewEnd;

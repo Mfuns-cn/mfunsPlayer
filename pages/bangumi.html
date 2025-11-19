@@ -380,9 +380,9 @@
             }, 300)
         })
         mp.on("toLogin", () => {
-            console.log("log")
+            console.log("[mfuns-player] log")
             if (confirm("登录")) {
-                console.log("111")
+                console.log("[mfuns-player] 111")
             }
         })
         mp.on("setPlayer", (setting) => {
@@ -411,9 +411,9 @@
             }
             localStorage.setItem("mfuns_video_point", JSON.stringify(mfuns_video_point))
         })
-        mp.on("webfullscreen_cancel", () => { console.log("11111") })
-        mp.on("darkmode_on", () => { console.log("关灯") })
-        mp.on("darkmode_off", () => { console.log("开灯") })
+        mp.on("webfullscreen_cancel", () => { console.log("[mfuns-player] 11111") })
+        mp.on("darkmode_on", () => { console.log("[mfuns-player] 关灯") })
+        mp.on("darkmode_off", () => { console.log("[mfuns-player] 开灯") })
     }
 
 

@@ -684,7 +684,7 @@ class Controller {
             value: showArea * 20,
             onDragStart: () => {
                 // 开始调节滑动条（点按）
-                console.log('--------');
+                console.log('[mfuns-player] --------');
                 this.isControl = true;
                 this.template.danmakuSettings_panel.classList.add('show');
             },
@@ -740,7 +740,7 @@ class Controller {
             value: danmakuSpeed * 100,
             onDragStart: () => {
                 // 开始调节滑动条（点按）
-                console.log('--------');
+                console.log('[mfuns-player] --------');
                 this.isControl = true;
                 this.template.danmakuSettings_panel.classList.add('show');
             },
@@ -792,7 +792,7 @@ class Controller {
             onPick: (value) => {
                 // 有关字体大小值的更改请写在此处
                 this.danmakuFontsize = value;
-                // console.log(`已选择字体大小：${THIS.danmakuFontsize}`);
+                // console.log(`[mfuns-player] 已选择字体大小：${THIS.danmakuFontsize}`);
             },
         });
         this.components.danmakuModePicker = new Picker({
@@ -801,7 +801,7 @@ class Controller {
             onPick: (value) => {
                 // 有关弹幕模式值的更改请写在此处
                 this.danmakuType = value;
-                // console.log(`已选择弹幕模式：${THIS.danmakuType}`);
+                // console.log(`[mfuns-player] 已选择弹幕模式：${THIS.danmakuType}`);
             },
         });
         this.components.danmakuColorPicker = new Picker({
@@ -811,7 +811,7 @@ class Controller {
                 if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
                     // 有关弹幕颜色值的更改请写在此处
                     this.danmakuColor = utils.color2Number(value);
-                    // console.log(`已选择弹幕颜色：${THIS.danmakuColor}`);
+                    // console.log(`[mfuns-player] 已选择弹幕颜色：${THIS.danmakuColor}`);
                     this.template.danmaku_color_input.value = value;
                     this.template.danmaku_color_preview.style['background-color'] = value;
                     if (value != value.toUpperCase()) {

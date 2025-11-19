@@ -206,7 +206,7 @@ class Template {
     }
     buildSmallWindow() {}
     buildVideo(hasBlackborder) {
-        console.log('dfdbffsdfdoisif---------------------', hasBlackborder);
+        console.log('[mfuns-player] has black border', hasBlackborder);
 
         if (!hasBlackborder) {
             this.videoMask.classList.remove('border');

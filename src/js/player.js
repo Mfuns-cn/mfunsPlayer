@@ -66,7 +66,7 @@ export default class mfunsPlayer {
                 speed: this.options.danmaku.speed ?? 1,
                 limitArea: this.options.danmaku.limitArea ?? 4,
                 callback: (length, advDanData, isReload) => {
-                    console.log(length);
+                    console.log(`[mfuns-player] 共 ${length} 条弹幕`);
                     this.danLength = length;
                     this.template.danmakuCount.innerHTML = `共 ${length} 条弹幕`;
                     this.danmakuLoaded = true;
@@ -193,7 +193,7 @@ export default class mfunsPlayer {
         }
     }
     seek(time, autoSkip) {
-        console.log('seek');
+        console.log('[mfuns-player] seek');
         this.canplay = false;
         time = Math.max(time, 0);
         if (this.video.duration) {
@@ -226,7 +226,7 @@ export default class mfunsPlayer {
         this.template.activityMask.classList.add('show');
     }
     play(forcePlay = false) {
-        // console.log("play");
+        // console.log("[mfuns-player] play");
         this.timer.enable('loading');
         if (!this.canplay) {
             this.timer.enable('loading');
@@ -234,11 +234,11 @@ export default class mfunsPlayer {
         this.video
             .play()
             .then(() => {
-                console.log('play');
+                console.log('[mfuns-player] play');
                 this.template.activityMask.classList.remove('show');
             })
             .catch((e) => {
-                console.log('can not play!');
+                console.log('[mfuns-player] can not play!');
                 this.notice('视频播放异常，如果无法正常播放，请', true, {
                     callback: () => {
                         this.reload();
@@ -417,7 +417,7 @@ export default class mfunsPlayer {
             this.template.pagelistItem[this.options.currentVideo].classList.add('focus');
         }
         this.on('canplay', () => {
-            console.log('canplay');
+            console.log('[mfuns-player] canplay');
             this.videoLoaded && this.template.loading.classList.remove('show');
             this.canplay = true;
         });
@@ -496,7 +496,7 @@ export default class mfunsPlayer {
             this.bar.set('loaded', percentage, 'width');
         });
         this.on('play', () => {
-            // console.log("pppp");
+            // console.log("[mfuns-player] pppp");
             clearTimeout(this.playTimer);
             this.playEnd && this.danmaku && this.danmaku.seek();
             this.danmaku && this.danmaku.play();
@@ -546,7 +546,7 @@ export default class mfunsPlayer {
             this.autoSwitch && !this.video.loop && this.switchVideo(this.currentVideo + 1);
         });
         this.on('seeking', () => {
-            console.log('seeking');
+            console.log('[mfuns-player] seeking');
             this.timer.enable('loading');
             this.template.loading.classList.add('show');
             this.bar.set('played', this.video.currentTime / this.video.duration, 'width');
@@ -593,6 +593,7 @@ export default class mfunsPlayer {
         this.handleSwitchVideo(index, total);
 
         this.showMask();
+        this.events.trigger('switchVideo_start', index);
         const currentVideo = this.options.video[index];
         this.danmaku &&
             this.danmaku.reload(
@@ -631,7 +632,7 @@ export default class mfunsPlayer {
     }
 
     initResolution() {
-        console.log(`当前视频分辨率为${this.video.videoWidth} * ${this.video.videoHeight}`);
+        console.log(`[mfuns-player] 当前视频分辨率为${this.video.videoWidth} * ${this.video.videoHeight}`);
         const currentVideoOption = this.options.video[this.currentVideo];
         const resolution = currentVideoOption?.resolution?.find((el) => el.isDefault).name ?? utils.getVideoResolution(this.video);
 
@@ -656,8 +657,6 @@ export default class mfunsPlayer {
         // this.off("canplay", this.initResolution);
     }
     switchResolution(resolution, cb = () => {}) {
-        console.log(resolution);
-
         const { name, url, type, label } = resolution;
 
         if (this.resolution.name === resolution.name || this.switchingResolution) {
@@ -733,7 +732,7 @@ export default class mfunsPlayer {
         });
     }
     updateVideoPosition(time) {
-        // console.log("--------", time, this.currentVideo);
+        // console.log("[mfuns-player] --------", time, this.currentVideo);
         if (this.template.mask.classList.contains('mfunsPlayer-mask-show')) return;
         this.options.video[this.currentVideo].lastPosition = time;
         this.events &&
@@ -785,7 +784,7 @@ export default class mfunsPlayer {
     }
     update(url) {}
     reload() {
-        console.log('reload');
+        console.log('[mfuns-player] reload');
         this.template.activityMask.classList.remove('show');
         clearTimeout(this.timeUpdateTimer);
         this.showMask();
