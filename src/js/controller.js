@@ -98,6 +98,27 @@ class Controller {
         this.initSpeedButton();
         this.initSettingsButton();
     }
+
+    /**
+     * 安全获取客户端X坐标，兼容鼠标和触摸事件
+     * @param {Event} e - 事件对象
+     * @returns {number} 客户端X坐标，如果无法获取则返回0
+     */
+    _getClientX(e) {
+        // 优先使用鼠标事件的clientX
+        if (e.clientX !== undefined) {
+            return e.clientX;
+        }
+
+        // 对于触摸事件，检查changedTouches是否存在且有触摸点
+        if (e.changedTouches && e.changedTouches.length > 0) {
+            return e.changedTouches[0].clientX;
+        }
+
+        // 如果都无法获取，返回0作为安全值
+        return 0;
+    }
+
     isControllerfocus() {
         this.template.controller.onmouseenter = () => {
             this.isControl = true;
@@ -166,7 +187,7 @@ class Controller {
         const allTip = document.querySelectorAll('.mfunsPlayer-controller-tip');
         const showTip = (e) => {
             const px = this.player.template.barWrap.getBoundingClientRect().left;
-            const tx = (e.clientX || e.changedTouches[0].clientX) - px;
+            const tx = this._getClientX(e) - px;
             const tw = this.player.template.barTime.offsetWidth;
             // const pw = this.player.template.barWrap
             const time = this.player.video.duration * (tx / this.player.template.barWrap.offsetWidth);
@@ -203,7 +224,7 @@ class Controller {
         };
         const thumbMove = (e) => {
             this.isControl = true;
-            let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getBoundingClientRectViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
+            let percentage = (this._getClientX(e) - utils.getBoundingClientRectViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
             percentage = Math.max(percentage, 0);
             percentage = Math.min(percentage, 1);
             [...allPanel, ...allTip].forEach((el) => {
@@ -220,7 +241,7 @@ class Controller {
             this.player.unableTimeupdate = false;
             document.removeEventListener(utils.nameMap.dragEnd, thumbUp);
             document.removeEventListener(utils.nameMap.dragMove, thumbMove);
-            let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getBoundingClientRectViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
+            let percentage = (this._getClientX(e) - utils.getBoundingClientRectViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
             percentage = Math.max(percentage, 0);
             percentage = Math.min(percentage, 1);
             [...allPanel, ...allTip].forEach((el) => {
