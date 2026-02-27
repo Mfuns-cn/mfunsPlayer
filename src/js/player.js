@@ -231,21 +231,28 @@ export default class mfunsPlayer {
         if (!this.canplay) {
             this.timer.enable('loading');
         }
-        this.video
-            .play()
-            .then(() => {
-                console.log('[mfuns-player] play');
-                this.template.activityMask.classList.remove('show');
-            })
-            .catch((e) => {
-                console.log('[mfuns-player] can not play!');
-                this.notice('视频播放异常，如果无法正常播放，请', true, {
-                    callback: () => {
-                        this.reload();
-                    },
-                    text: '重新加载',
+        const playPromise = this.video.play();
+
+        // 兼容旧版浏览器和部分 WebView，play() 可能不返回 Promise
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    console.log('[mfuns-player] play');
+                    this.template.activityMask.classList.remove('show');
+                })
+                .catch((e) => {
+                    console.log('[mfuns-player] can not play!');
+                    this.notice('视频播放异常，如果无法正常播放，请', true, {
+                        callback: () => {
+                            this.reload();
+                        },
+                        text: '重新加载',
+                    });
                 });
-            });
+        } else {
+            console.log('[mfuns-player] play');
+            this.template.activityMask.classList.remove('show');
+        }
 
         if (this.options.mutex) {
             for (let i = 0; i < instances.length; i++) {
