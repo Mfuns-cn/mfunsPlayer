@@ -83,7 +83,10 @@ class FullScreen {
   handleFullscrren(type) {
     const danmakuRoot = this.player.template.danmakuRoot;
     if (this.player.danmaku && !danmakuRoot.classList.contains("hide") && !this.isFullScreen(type)) {
-      this.player.template.footBarWrap.removeChild(danmakuRoot);
+      // 检查 danmakuRoot 是否在 footBarWrap 中，避免 Safari 浏览器上的 NotFoundError
+      if (this.player.template.footBarWrap.contains(danmakuRoot)) {
+        this.player.template.footBarWrap.removeChild(danmakuRoot);
+      }
       this.player.template.controllerWrap.appendChild(danmakuRoot);
     }
     this.player.videoLoaded && this.player.template.videoWrap.addEventListener("wheel", this.scrollToVolume);
@@ -135,7 +138,10 @@ class FullScreen {
   handleExitFullscreen(type) {
     const danmakuRoot = this.player.template.danmakuRoot;
     if (this.player.danmaku && !danmakuRoot.classList.contains("hide") && this.isFullScreen(type)) {
-      this.player.template.controllerWrap.removeChild(danmakuRoot);
+      // 检查 danmakuRoot 是否在 controllerWrap 中，避免 NotFoundError
+      if (this.player.template.controllerWrap.contains(danmakuRoot)) {
+        this.player.template.controllerWrap.removeChild(danmakuRoot);
+      }
       this.player.template.footBarWrap.appendChild(danmakuRoot);
     }
     this.player.template.videoWrap.removeEventListener("wheel", this.scrollToVolume);
