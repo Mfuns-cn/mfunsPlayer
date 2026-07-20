@@ -2,8 +2,11 @@
     <div class="mfunsPlayer-controller-panel mfunsPlayer-resolution-list">
         {{if $data.resolution}}
         {{each $data.resolution}}
-        <div class="mfunsPlayer-resolution-item {{if $value.isDefault}}focus{{/if}}" data-resolution="{{ $value }}">
-            {{ $value.name + ' ' + $value.label }}
+        <div class="mfunsPlayer-resolution-item {{if $value.isDefault}}focus{{/if}} {{if !$value.url}}locked{{/if}}" data-resolution="{{ $value }}">
+            <span class="mfunsPlayer-resolution-name">{{ $value.name + ' ' + $value.label }}</span>
+            {{if $value.needPremium}}
+            <span class="mfunsPlayer-resolution-tag">会员</span>
+            {{/if}}
         </div>
         {{/each}}
         {{/if}}

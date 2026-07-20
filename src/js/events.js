@@ -39,6 +39,7 @@ class Events {
             'notice_show',
             'notice_hide',
             'toLogin',
+            'toPremium',
             'destroy',
             'resize',
             'fullscreen', // 进入全屏模式

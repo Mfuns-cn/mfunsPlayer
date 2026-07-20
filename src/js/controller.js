@@ -398,6 +398,14 @@ class Controller {
         for (let i = 0; i < this.player.template.resolutionItem.length; i++) {
             this.player.template.resolutionItem[i].addEventListener('click', (event) => {
                 const currentResolution = JSON.parse(this.player.template.resolutionItem[i].dataset.resolution);
+                if (!currentResolution.url) {
+                    if (currentResolution.needPremium) {
+                        this.player.events.trigger('toPremium');
+                    } else {
+                        this.player.events.trigger('toLogin');
+                    }
+                    return;
+                }
                 this.player.switchResolution(currentResolution);
                 this.template.resolutionItem[i].classList.add('focus');
                 this.template.resolutionInfo.innerHTML = currentResolution.name + ' ' + currentResolution.label;

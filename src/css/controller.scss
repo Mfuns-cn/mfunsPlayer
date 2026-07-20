@@ -358,12 +358,17 @@
 
 
 							.mfunsPlayer-resolution-item {
-								width: 100px;
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								min-width: 140px;
+								width: auto;
+								padding: 0 12px;
 								height: 30px;
 								box-sizing: border-box;
-								text-align: center;
 								line-height: 30px;
 								cursor: pointer;
+								white-space: nowrap;
 
 								&.focus {
 									color: $theme-color;
@@ -371,6 +376,20 @@
 
 								&:hover {
 									background-color: rgba(255, 255, 255, 0.1);
+								}
+
+								&.locked {
+									color: rgba(255, 255, 255, 0.4);
+								}
+
+								.mfunsPlayer-resolution-tag {
+									font-size: 11px;
+									line-height: 1;
+									padding: 2px 6px;
+									border-radius: 3px;
+									background: linear-gradient(135deg, #ff6b9d, #c44dff);
+									color: #fff;
+									flex-shrink: 0;
 								}
 							}
 						}

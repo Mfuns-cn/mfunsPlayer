@@ -666,6 +666,15 @@ export default class mfunsPlayer {
     switchResolution(resolution, cb = () => {}) {
         const { name, url, type, label } = resolution;
 
+        if (!url) {
+            if (resolution.needPremium) {
+                this.events.trigger('toPremium');
+            } else {
+                this.events.trigger('toLogin');
+            }
+            return;
+        }
+
         if (this.resolution.name === resolution.name || this.switchingResolution) {
             return;
         } else {
