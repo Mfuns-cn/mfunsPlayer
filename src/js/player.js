@@ -41,6 +41,7 @@ export default class mfunsPlayer {
         this.playTimer = null;
         this.loadTimer = null;
         this.video = this.template.video;
+        this.video.volume = this.options.volume;
         this.currentVideo = this.options.currentVideo ?? 0;
         this.danmakuAuxiliary = null;
         this.arrow = this.container.offsetWidth <= 500;
