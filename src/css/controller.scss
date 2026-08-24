@@ -200,6 +200,12 @@
 					.icon-repeat {
 						display: block;
 					}
+
+					// 激活时主题色高亮，便于区分开关状态
+					.mfunsPlayer-controller-icon {
+						color: $theme-color;
+						fill: $theme-color;
+					}
 				}
 			}
 
@@ -267,6 +273,140 @@
 
 								&:hover {
 									background: rgba(255, 255, 255, 0);
+								}
+							}
+
+							&.mfunsPlayer-series-list-wrap {
+								max-width: 360px;
+							}
+
+							.mfunsPlayer-series-header {
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								padding: 8px 15px;
+								border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+								.mfunsPlayer-series-title {
+									font-size: 14px;
+									color: #fff;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									max-width: 240px;
+								}
+
+								.mfunsPlayer-series-order {
+									flex-shrink: 0;
+									margin-left: 10px;
+									padding: 2px 8px;
+									font-size: 12px;
+									color: $light-grey;
+									border: 1px solid rgba(255, 255, 255, 0.2);
+									border-radius: 10px;
+									cursor: pointer;
+									user-select: none;
+
+									&:hover {
+										color: #fff;
+										border-color: rgba(255, 255, 255, 0.5);
+									}
+								}
+							}
+
+							.mfunsPlayer-series-items {
+								overflow-y: auto;
+							}
+
+							.mfunsPlayer-series-item {
+								.mfunsPlayer-series-item-row {
+									display: flex;
+									align-items: center;
+									padding: 0 15px;
+									height: 42px;
+									cursor: pointer;
+
+									.mfunsPlayer-series-item-no {
+										flex-shrink: 0;
+										width: 28px;
+										font-size: 12px;
+										color: $text-grey;
+									}
+
+									.mfunsPlayer-series-item-title {
+										flex: 1;
+										font-size: 13px;
+										color: $light-grey;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+
+										&:hover {
+											color: #fff;
+										}
+									}
+
+									.mfunsPlayer-series-item-arrow {
+										flex-shrink: 0;
+										width: 0;
+										height: 0;
+										margin-left: 8px;
+										border-left: 4px solid transparent;
+										border-right: 4px solid transparent;
+										border-top: 5px solid $text-grey;
+										transition: transform 0.2s ease;
+									}
+								}
+
+								.mfunsPlayer-series-parts {
+									border-left: 2px solid rgba(255, 255, 255, 0.1);
+									margin: 0 15px 6px 35px;
+
+									.mfunsPlayer-series-part {
+										padding: 0 10px;
+										height: 32px;
+										line-height: 32px;
+										font-size: 12px;
+										color: $text-grey;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+										cursor: pointer;
+
+										&:hover {
+											color: #fff;
+										}
+
+										&.mfunsPlayer-series-part-current {
+											color: $theme-color;
+										}
+									}
+								}
+
+								&.mfunsPlayer-series-item-current {
+									.mfunsPlayer-series-item-row {
+										.mfunsPlayer-series-item-no,
+										.mfunsPlayer-series-item-title {
+											color: $theme-color;
+										}
+
+										.mfunsPlayer-series-item-arrow {
+											border-top-color: $theme-color;
+											transform: rotate(180deg);
+										}
+									}
+								}
+
+								&.mfunsPlayer-series-item-fold {
+									.mfunsPlayer-series-item-row {
+										.mfunsPlayer-series-item-arrow {
+											transform: rotate(0deg);
+										}
+									}
+
+									.mfunsPlayer-series-parts {
+										display: none;
+									}
 								}
 							}
 
@@ -849,6 +989,33 @@
 					color: $translucent-white;
 				}
 			}
+		}
+	}
+}
+
+// 容器尺寸分级：缩小时逐步隐藏次要控制器按钮（ResizeObserver 在容器上切换）
+// sm (<620px)：隐藏 洗脑循环/分辨率/选集/倍速/设置/小窗/宽屏/播放时长
+.mfunsPlayer-size-sm {
+	.mfunsPlayer-controller {
+		&-repeat,
+		&-resolution,
+		&-pagelist,
+		&-speed,
+		&-settings,
+		&-pip,
+		&-widescreen,
+		&-time {
+			display: none;
+		}
+	}
+}
+
+// xs (<440px)：再隐藏 音量/网页全屏
+.mfunsPlayer-size-xs {
+	.mfunsPlayer-controller {
+		&-volume,
+		&-webfull {
+			display: none;
 		}
 	}
 }

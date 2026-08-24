@@ -81,6 +81,8 @@ class Template {
         this.pagelistItem = $all('.mfunsPlayer-pagelist-item');
         this.pageListLabel = $('.mfunsPlayer-controller-label.mfunsPlayer-pagelist-info');
         this.pagelist = $('.mfunsPlayer-pagelist-list');
+        this.seriesItems = $('.mfunsPlayer-series-items');
+        this.seriesOrderBtn = $('.mfunsPlayer-series-order');
         this.volume_btn = $('.mfunsPlayer-controller-volume'); // 音量按钮
         this.volumeMask = $('.mfunsPlayer-controller-volume-mask');
         this.volumeBarWrap = $('.mfunsPlayer-controller-volume-wrap');

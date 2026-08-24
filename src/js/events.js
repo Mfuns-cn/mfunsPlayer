@@ -67,6 +67,8 @@ class Events {
             'resolution_start',
             'resolution_end',
             'switchVideo_start', // 开始切换视频
+            'switch_series', // 点击合集条目，由宿主处理跳转
+            'series_order', // 合集排序切换
         ];
     }
 

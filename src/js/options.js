@@ -21,6 +21,9 @@ export default (options) => {
         currentVideo: 0,
         apiBackend: defaultApiBackend,
         video: [],
+        // 合集配置：开启后播放器选集面板展示合集条目，点击抛出 switch_series 事件由宿主处理跳转
+        // { title: string, currentId: number, order: 'sequential' | 'reverse', items: [{ id: number, title: string }] }
+        series: null,
 
         contextmenu: [],
         mutex: true,

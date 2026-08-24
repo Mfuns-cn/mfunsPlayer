@@ -52,6 +52,13 @@ export default class mfunsPlayer {
         this.bar = new Bar(this.template);
         this.controller = new Controller(this);
         this.timer = new Timer(this);
+        // 容器尺寸分级：缩小时逐步隐藏次要控制器按钮
+        this.sizeObserver = new ResizeObserver((entries) => {
+            const width = entries[0].contentRect.width;
+            this.container.classList.toggle('mfunsPlayer-size-sm', width < 620);
+            this.container.classList.toggle('mfunsPlayer-size-xs', width < 440);
+        });
+        this.sizeObserver.observe(this.container);
         this.fullScreen = new FullScreen(this);
         this.contextMenu = new ContextMenu(this);
         this.hotkey = new HotKey(this);
@@ -264,6 +271,7 @@ export default class mfunsPlayer {
         }
     }
     checkAutoPlay() {
+        const switched = this.isSwitched;
         if (this.autoPlay || this.isReloaded || this.isSwitched) {
             //chrome禁止自动播放视频
             if (this.autoPlay && !this.isSwitched) {
@@ -284,7 +292,9 @@ export default class mfunsPlayer {
             this.isSwitched = false;
             this.isReloaded = false;
         }
-        this.checkAutoSkip();
+        // 分P切换（自动连播/手动选集）后的首个分P不做内部断点续播，
+        // 持久化的断点续播由宿主按场景决定
+        if (!switched) this.checkAutoSkip();
     }
     checkAutoSkip() {
         const lastPosition = this.options.video[this.currentVideo].lastPosition ?? 0;
@@ -421,7 +431,7 @@ export default class mfunsPlayer {
     }
     initVideo(video, type) {
         this.initMSE(video, type);
-        if (this.options.video.length > 1 && this.options.currentVideo <= this.template.pagelistItem.length) {
+        if (this.options.video.length > 1 && this.template.pagelistItem[this.options.currentVideo]) {
             this.template.pagelistItem[this.options.currentVideo].classList.add('focus');
         }
         this.on('canplay', () => {
@@ -459,6 +469,8 @@ export default class mfunsPlayer {
             }
         });
         this.on('error', (error) => {
+            // destroy 清空 src 触发的空源 error 不处理
+            if (!this.video.src) return;
             //检查视频链接
             console.error(error);
             this.template.videoLoad.innerHTML = '请求视频数据中... [失败]';
@@ -629,14 +641,67 @@ export default class mfunsPlayer {
             this.template.danmakuCount.innerHTML = '弹幕装填中...';
         }
         this.template.activityMask.classList.remove('show');
-        this.template.prev_btn.classList[index === 0 ? 'add' : 'remove']('disabled');
-        this.template.next_btn.classList[index === total ? 'add' : 'remove']('disabled');
-        this.template.pagelistItem[index].classList.add('focus');
-        this.template.pagelistItem.forEach((element, i) => {
-            if (i !== index) {
-                element.classList.remove('focus');
-            }
-        });
+        // 软换源后按钮可能不存在（旧视频单P未渲染），防护
+        this.template.prev_btn?.classList[index === 0 ? 'add' : 'remove']('disabled');
+        this.template.next_btn?.classList[index === total ? 'add' : 'remove']('disabled');
+        if (this.options.series) {
+            this.controller.buildSeriesList();
+        } else if (this.template.pagelistItem[index]) {
+            this.template.pagelistItem[index].classList.add('focus');
+            this.template.pagelistItem.forEach((element, i) => {
+                if (i !== index) {
+                    element.classList.remove('focus');
+                }
+            });
+        }
+    }
+
+    // 更新合集配置（排序变化等场景由宿主调用），并重建选集面板
+    setSeries(series) {
+        this.options.series = series;
+        if (this.template.seriesOrderBtn) {
+            this.template.seriesOrderBtn.innerText = series.order === 'reverse' ? '倒序' : '正序';
+        }
+        this.controller.buildSeriesList();
+    }
+
+    // 合集切视频：整体替换视频列表并从P1加载，保持播放器实例与全屏等状态
+    loadSeriesVideo(videos, series) {
+        this.options.video = videos;
+        if (series) {
+            this.options.series = series;
+        }
+        this.currentVideo = 0;
+        this.isSwitched = true;
+        this.danmakuLoaded = false;
+        this.videoLoaded = false;
+        this.template.initHitokoto(this.options);
+        this.template.currentTime.innerText = '00:00';
+        this.template.totalTime.innerText = '00:00';
+        this.bar.set('loaded', 0, 'width');
+        this.bar.set('played', 0, 'width');
+        clearTimeout(this.timeUpdateTimer);
+        this.handleSwitchVideo(0, videos.length - 1);
+        this.showMask();
+        this.events.trigger('switchVideo_start', 0);
+        const currentVideo = videos[0];
+        this.danmaku &&
+            this.danmaku.reload(
+                currentVideo.danId,
+                currentVideo.advDanId
+                    ? {
+                          id: currentVideo.advDanId,
+                          address: this.options.advancedDanmaku.api,
+                          token: this.options.advancedDanmaku.token,
+                      }
+                    : null,
+                currentVideo.danmakuAddition,
+                currentVideo.otherDanParams
+            );
+        this.controller.thumbnails && this.controller.thumbnails.reload(currentVideo.thumbnails);
+        this.video.poster = currentVideo.pic ?? '';
+        this.video.src = currentVideo.url;
+        this.template.headTitle.innerText = `${currentVideo.title}`;
     }
 
     initResolution() {
@@ -925,6 +990,7 @@ export default class mfunsPlayer {
     }
     destroy() {
         instances.splice(instances.indexOf(this), 1);
+        this.sizeObserver && this.sizeObserver.disconnect();
         this.pause();
         this.controller.destroy();
         this.timer.destroy();

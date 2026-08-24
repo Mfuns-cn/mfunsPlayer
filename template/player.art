@@ -61,7 +61,7 @@
                 </div>
                 <div class="mfunsPlayer-controller-wrap ">
                     <div class="mfunsPlayer-controller-left">
-                        {{ if video.length > 1 }}
+                        {{ if series || video.length > 1 }}
                         <div
                             class="mfunsPlayer-controller-button mfunsPlayer-controller-prev {{currentVideo===0?'disabled':'' }}">
                             <i class="mfunsPlayer-controller-icon rt180 icon-next"></i>
@@ -72,7 +72,7 @@
                             <div class="mfunsPlayer-controller-icon icon-play"></div>
                             <div class="mfunsPlayer-controller-icon icon-pause"></div>
                         </div>
-                        {{ if video.length > 1}}
+                        {{ if series || video.length > 1}}
                         <div
                             class="mfunsPlayer-controller-button mfunsPlayer-controller-next {{currentVideo===video.length-1?'disabled':'' }}">
                             <i class="mfunsPlayer-controller-icon icon-next "></i>
@@ -106,15 +106,25 @@
                                 </div>
                             </div> -->
                         </div>
-                         {{if video.length>1}}
+                         {{if series || video.length>1}}
                         <div class="mfunsPlayer-controller-button mfunsPlayer-controller-pagelist">
                             <div class="mfunsPlayer-controller-label mfunsPlayer-pagelist-info">选集</div>
                             <div class="mfunsPlayer-controller-panel-mask mfunsPlayer-pagelist-mask">
+                                {{if series}}
+                                <div class="mfunsPlayer-controller-panel mfunsPlayer-pagelist-list mfunsPlayer-series-list-wrap">
+                                    <div class="mfunsPlayer-series-header">
+                                        <div class="mfunsPlayer-series-title">{{series.title}}</div>
+                                        <div class="mfunsPlayer-series-order">{{series.order === 'reverse' ? '倒序' : '正序'}}</div>
+                                    </div>
+                                    <div class="mfunsPlayer-series-items"></div>
+                                </div>
+                                {{else}}
                                 <div class="mfunsPlayer-controller-panel mfunsPlayer-pagelist-list">
                                     {{ each video }}
                                     <div class="mfunsPlayer-pagelist-item">{{ $value.title }}</div>
                                     {{ /each }}
                                 </div>
+                                {{/if}}
                             </div>
                         </div>
                         {{ /if }}
@@ -176,7 +186,7 @@
                                             </div>
                                             <div class="mfunsPlayer-switch mfunsPlayer-video-nextpage-switch">
                                                 <div class="mfunsPlayer-switch-checkbox"></div>
-                                                <div class="mfunsPlayer-switch-label">分P连播</div>
+                                                <div class="mfunsPlayer-switch-label">自动连播</div>
                                             </div>
                                             <div class="mfunsPlayer-switch mfunsPlayer-video-autoSkip-switch">
                                                 <div class="mfunsPlayer-switch-checkbox"></div>

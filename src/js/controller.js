@@ -43,7 +43,7 @@ class Controller {
             this.initDanmakuEmit();
         }
 
-        if (player.options.video.length > 1) {
+        if (player.options.video.length > 1 || player.options.series) {
             this.initPagelistButton();
         }
         // if (player.options.video[player.options.currentVideo].resolution) {
@@ -343,6 +343,7 @@ class Controller {
         });
         this.player.template.pageListLabel.addEventListener('mouseenter', (e) => {
             // if (this.player.currentVideo > 9) {
+            if (this.player.options.series) return;
             const offsetScroll = this.player.template.pagelist.scrollHeight - this.player.template.pagelist.offsetHeight;
             const scrollRate = (offsetScroll * this.player.currentVideo) / (this.player.options.video.length - 1);
             this.player.template.pagelist.scrollTo(0, scrollRate);
@@ -360,21 +361,147 @@ class Controller {
             // };
             // scrollAnime();
         });
-        for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
-            this.player.template.pagelistItem[i].addEventListener('click', (event) => {
-                window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
-                this.player.switchVideo(i);
+        if (this.player.options.series) {
+            this.buildSeriesList();
+            this.player.template.seriesOrderBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const order = this.player.options.series.order === 'reverse' ? 'sequential' : 'reverse';
+                this.player.options.series.order = order;
+                this.player.template.seriesOrderBtn.innerText = order === 'reverse' ? '倒序' : '正序';
+                this.buildSeriesList();
+                this.player.events.trigger('series_order', order);
             });
+        } else {
+            for (let i = 0; i < this.player.template.pagelistItem.length; i++) {
+                this.player.template.pagelistItem[i].addEventListener('click', (event) => {
+                    window.event ? (window.event.cancelBubble = true) : event.stopPropagation();
+                    this.player.switchVideo(i);
+                });
+            }
         }
 
-        this.player.template.next_btn.addEventListener('click', () => {
-            const nextVideo = this.player.currentVideo + 1;
-            this.player.switchVideo(nextVideo);
+        // 单P视频（含单P合集视频）没有上一P/下一P按钮
+        if (this.player.template.next_btn) {
+            this.player.template.next_btn.addEventListener('click', () => {
+                this.switchAdjacent(1);
+            });
+        }
+        if (this.player.template.prev_btn) {
+            this.player.template.prev_btn.addEventListener('click', () => {
+                this.switchAdjacent(-1);
+            });
+        }
+    }
+
+    // 上一集/下一集：分P内优先切换分P，到边界后切换合集相邻项
+    switchAdjacent(direction) {
+        const player = this.player;
+        const series = player.options.series;
+        const total = player.options.video.length - 1;
+        const cur = player.currentVideo;
+        if (direction > 0 && cur < total) {
+            player.switchVideo(cur + 1);
+            return;
+        }
+        if (direction < 0 && cur > 0) {
+            player.switchVideo(cur - 1);
+            return;
+        }
+        if (!series) return;
+        const items = series.order === 'reverse' ? [...series.items].reverse() : series.items;
+        const idx = items.findIndex((item) => item.id === series.currentId);
+        const target = items[idx + direction];
+        if (target) {
+            player.events.trigger('switch_series', target.id);
+        }
+    }
+
+    // 合集模式下按合集边界更新上一集/下一集禁用态
+    updateAdjacentDisabled() {
+        const player = this.player;
+        const series = player.options.series;
+        if (!series || !player.template.prev_btn || !player.template.next_btn) return;
+        const items = series.order === 'reverse' ? [...series.items].reverse() : series.items;
+        const idx = items.findIndex((item) => item.id === series.currentId);
+        const total = player.options.video.length - 1;
+        const cur = player.currentVideo;
+        const isFirst = idx <= 0 && cur === 0;
+        const isLast = idx >= items.length - 1 && cur === total;
+        player.template.prev_btn.classList[isFirst ? 'add' : 'remove']('disabled');
+        player.template.next_btn.classList[isLast ? 'add' : 'remove']('disabled');
+    }
+
+    // 构建合集选集列表（DOM 动态构建，排序切换 / setSeries 更新时重建）
+    buildSeriesList() {
+        const series = this.player.options.series;
+        if (!series || !this.player.template.seriesItems) return;
+        const container = this.player.template.seriesItems;
+        container.innerHTML = '';
+        const sorted = series.order === 'reverse' ? [...series.items].reverse() : series.items;
+        const parts = this.player.options.video;
+        sorted.forEach((item, index) => {
+            const isCurrent = item.id === series.currentId;
+            const el = document.createElement('div');
+            el.className = isCurrent
+                ? 'mfunsPlayer-series-item mfunsPlayer-series-item-current'
+                : 'mfunsPlayer-series-item';
+            const row = document.createElement('div');
+            row.className = 'mfunsPlayer-series-item-row';
+            const no = document.createElement('div');
+            no.className = 'mfunsPlayer-series-item-no';
+            no.innerText = index + 1;
+            const title = document.createElement('div');
+            title.className = 'mfunsPlayer-series-item-title';
+            title.innerText = item.title;
+            title.title = item.title;
+            row.appendChild(no);
+            row.appendChild(title);
+            if (isCurrent && parts.length > 1) {
+                const arrow = document.createElement('div');
+                arrow.className = 'mfunsPlayer-series-item-arrow';
+                row.appendChild(arrow);
+            }
+            el.appendChild(row);
+            if (isCurrent && parts.length > 1) {
+                const sublist = document.createElement('div');
+                sublist.className = 'mfunsPlayer-series-parts';
+                parts.forEach((part, pIndex) => {
+                    const pEl = document.createElement('div');
+                    pEl.className = pIndex === this.player.currentVideo
+                        ? 'mfunsPlayer-series-part mfunsPlayer-series-part-current'
+                        : 'mfunsPlayer-series-part';
+                    pEl.innerText = part.title;
+                    pEl.title = part.title;
+                    pEl.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        this.player.switchVideo(pIndex);
+                    });
+                    sublist.appendChild(pEl);
+                });
+                row.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    sublist.classList.toggle('mfunsPlayer-series-parts-fold');
+                    el.classList.toggle('mfunsPlayer-series-item-fold');
+                });
+                el.appendChild(sublist);
+            } else if (!isCurrent) {
+                row.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    this.player.events.trigger('switch_series', item.id);
+                });
+            }
+            container.appendChild(el);
         });
-        this.player.template.prev_btn.addEventListener('click', () => {
-            const prevVideo = this.player.currentVideo - 1;
-            this.player.switchVideo(prevVideo);
-        });
+        // 当前条目滚动到可视区
+        const current = container.querySelector('.mfunsPlayer-series-item-current');
+        if (current) {
+            const containerRect = container.getBoundingClientRect();
+            const currentRect = current.getBoundingClientRect();
+            if (currentRect.top < containerRect.top || currentRect.bottom > containerRect.bottom) {
+                current.scrollIntoView({ block: 'center' });
+            }
+        }
+        this.updateAdjacentDisabled();
     }
 
     initSpeedButton() {
@@ -501,13 +628,13 @@ class Controller {
                 this.player.resize();
             },
         });
-        //分P连播
+        //自动连播
         this.components.videoNextpageSwitch = new Switch({
             el: this.template.video_nextpage_switch,
             value: this.player.autoSwitch,
             onToggle: (value) => {
                 this.player.autoSwitch = value;
-                this.player.videoLoaded && this.player.notice(value ? '已开启分P连播' : '已关闭分P连播');
+                this.player.videoLoaded && this.player.notice(value ? '已开启自动连播' : '已关闭自动连播');
                 this.player.events?.trigger('setPlayer', {
                     key: 'autoSwitch',
                     value: value,
