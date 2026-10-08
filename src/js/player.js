@@ -202,6 +202,10 @@ export default class mfunsPlayer {
     }
     seek(time, autoSkip) {
         console.log('[mfuns-player] seek');
+        // 视频元数据未加载完时 duration 为 NaN，进度条换算出的 time 可能为 NaN，忽略本次跳转
+        if (!Number.isFinite(time)) {
+            return;
+        }
         this.canplay = false;
         time = Math.max(time, 0);
         if (this.video.duration) {
@@ -771,7 +775,11 @@ export default class mfunsPlayer {
         this.events.trigger('resolution_start', this.resolution.name);
         const loadedmetadata = () => {
             if (this.prevVideo) {
-                videoEle.currentTime = this.prevVideo.currentTime;
+                // 旧视频加载异常时 currentTime 可能为 NaN，非有限值时跳过位置同步
+                const prevTime = this.prevVideo.currentTime;
+                if (Number.isFinite(prevTime)) {
+                    videoEle.currentTime = prevTime;
+                }
                 const canplay = () => {
                     if (this.prevVideo) {
                         const paused = this.prevVideo.paused;
@@ -789,7 +797,9 @@ export default class mfunsPlayer {
                         this.events.trigger('resolution_end');
                     }
                 };
-                this.video.currentTime = this.prevVideo.currentTime;
+                if (Number.isFinite(prevTime)) {
+                    this.video.currentTime = prevTime;
+                }
 
                 videoEle.addEventListener('canplay', canplay);
             }
